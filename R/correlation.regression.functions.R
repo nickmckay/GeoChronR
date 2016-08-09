@@ -19,7 +19,7 @@ effectiveN = function(X,Y){
 pvalPearson.serial.corrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
-  Tval = r * sqrt(n-2/(1-r^2))
+  Tval = r * sqrt((n-2)/(1-r^2))
   
   #two tailed test
   p = pt(-abs(Tval),df = n-2)*2
@@ -33,6 +33,7 @@ matrix.corr.and.pvalue = function(M1,M2){
   if(nrow(M1)!=nrow(M2)){stop("M1 and M2 must have the same number of rows")}
   
   p=matrix(NA,nrow = ncol(M1)*ncol(M2))
+  pAdj=p;
   r=p
   nens=nrow(p)
   pb <- txtProgressBar(min=1,max=nens,style=3)
@@ -41,11 +42,12 @@ matrix.corr.and.pvalue = function(M1,M2){
     for(j in 1:ncol(M2)){
       r[j+ncol(M1)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
       effN = effectiveN(M1[,i],M2[,j])
-      p[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],effN)
+      pAdj[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],effN)
+      p[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
     }
     setTxtProgressBar(pb, j+ncol(M1)*(i-1))
   }
-  out = data.frame("r"=r,"p"=p)
+  out = data.frame("r"=r,"p"=p,"pAdj"=pAdj)
   close(pb)
   return(out)
 }
@@ -193,7 +195,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
 
   
   #calculate some default statistics
-  if(!is.na(percentiles)){
+  if(!all(is.na(percentiles))){
     cormatS = sort(cor.df$r)
     N=length(cormatS)
     corStats = data.frame(percentiles,"values" = cormatS[round(percentiles*N)])
@@ -209,9 +211,17 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     cor.ens.data$plot.r = plot.hist.ens(cor.df$r,ensStats = corStats)
     perc = data.frame("percentiles=0.05","values"=0.05)
     row.names(perc)= "a = 0.05"
-    cor.ens.data$plot.p = plot.hist.ens(cor.df$p,ensStats = perc)
+    cor.ens.data$plot.p = plot.hist.ens(cor.df$p)
+    if(max(cor.df$pAdj>0.05)){
+    cor.ens.data$plot.p = plot.hist.ens(cor.df$pAdj,ensStats = perc,fill="red",alp=0.5,add.to.plot = cor.ens.data$plot.p)
+    }else{#dont show line
+      cor.ens.data$plot.p = plot.hist.ens(cor.df$pAdj,fill="red",alp=0.5,add.to.plot = cor.ens.data$plot.p)
+      }
   }
-  
+  cor.ens.data$plot.p=cor.ens.data$plot.p+scale_fill_manual(values=c("gray50", "red"), 
+                    name="p-value",
+                    breaks=c("p", "pAdj"),
+                    labels=c("raw p-value", "Bretherton-corrected p-value"))
   return(cor.ens.data)
   
 }

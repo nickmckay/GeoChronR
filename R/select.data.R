@@ -1,4 +1,4 @@
-select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA){
+select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA,always.choose=TRUE,altNames=NA){
   #paleo or chron
   P = L[[where]]
   
@@ -30,7 +30,7 @@ select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA
   #this is the table of interest  
   MTD=MT[[which.mt]]
   
-  ind = getVariableIndex(MTD,varName = varName,always.choose = TRUE)
+  ind = getVariableIndex(MTD,varName = varName,always.choose = always.choose,altNames = altNames)
   
 varList = MTD[[ind]]
   

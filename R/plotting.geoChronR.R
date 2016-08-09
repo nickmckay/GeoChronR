@@ -29,6 +29,8 @@ map.lipds = function(D,color= sapply(D,"[[","archiveType"),size=8,shape = 16 ){
 
 #show a map, timeseries, and age model diagram..
 summary.plot = function(L){
+  library(grid)
+  library(gridExtra)
   map = map.lipd(L)
   
   #plot paleoData
@@ -73,7 +75,7 @@ summary.plot = function(L){
                c(3,3,4,4))
 
    
-   dataSetText = paste(L$dataSetName,"\n","Archive Type: ",L$archiveType,"\n","Publication Metadata: ",L$pub)
+   dataSetText = paste(L$dataSetName,"\n","Archive Type: ",L$archiveType,"\n","Authors: ",L$pub[[1]]$author)
    summaryText = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)), textGrob(dataSetText) )
    
    summary = grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
@@ -208,15 +210,15 @@ plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
 
 
 
-plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats)){
+plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
   ensData = data.frame("r"=ensData)
   library(ggplot2)
   
 
   
-  histPlot = ggplot(data=ensData)+
-    geom_histogram(aes(x=r,y=..density..),colour="white",bins=bins)+
+  histPlot = add.to.plot+
+    geom_histogram(data=ensData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
     theme_bw()+
     ylab("Probability density")
   if(!all(is.na(ensStats))){
