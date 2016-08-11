@@ -6,10 +6,11 @@ load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,bacon
       cat("please select your Bacon.R file","\n")
       baconFile=file.choose()
       baconDir<<-dirname(baconFile)
+      baconDir=baconDir
     }else{
-      baconDir=get("baconDir",envir = .GlobalEnv)
       baconFile = "Bacon.R"
     }
+    baconDir=get("baconDir",envir = .GlobalEnv)
   }else{
     baconFile = "Bacon.R"
   }
@@ -18,6 +19,8 @@ load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   #see if there's an appropriate folder.
   setwd(baconDir)
   setwd("Cores")
+  
+  print(dir())
   if(!any(grepl(site.name,dir()))){
     print(paste0("can't find a directory called",site.name))
     return(L)

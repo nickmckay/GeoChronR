@@ -14,9 +14,9 @@ select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA
   }
   
   #initialize measurement table number
+  mti=which(grepl(names(P[[which.data]]),pattern = "MeasurementTable"))
+  MT = P[[which.data]][[mti]]
   if(is.na(which.mt)){
-    mti=which(grepl(names(P[[which.data]]),pattern = "MeasurementTable"))
-    MT = P[[which.data]][[mti]]
     if(length(MT)==1){
       #only one pmt
       which.mt=1

@@ -16,11 +16,11 @@ if(is.na(baconDir)){
     cat("please select your Bacon.R file","\n")
     baconFile=file.choose()
     baconDir<<-dirname(baconFile)
+    baconDir=baconDir
   }else{
-  baconDir=get("baconDir",envir = .GlobalEnv)
   baconFile = "Bacon.R"
   }
-  
+  baconDir=get("baconDir",envir = .GlobalEnv)
 }else{
   baconFile = "Bacon.R"
 }
@@ -47,9 +47,10 @@ if(is.na(modelNum)){
   setwd(baconDir)
   source(baconFile)
   Bacon(core=site.name,thick=thick)
-
+  
+  print("taking a short break...")
+  Sys.sleep(5)
   #pull bacon data into LiPD structure
-
   L = load.Bacon.output.LiPD(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
     return(L)
 }

@@ -10,14 +10,27 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
     }
   }
 
-
+  #initialize bacon directory
   if(is.na(baconDir)){
-    cat("please select your Bacon.R file","\n")
-    d=file.choose()
-    baconDir=dirname(d)
+    #check global first
+    if(!exists("baconDir",where = .GlobalEnv)){
+      cat("please select your Bacon.R file","\n")
+      baconFile=file.choose()
+      baconDir<<-dirname(baconFile)
+      baconDir=baconDir
+    }else{
+      baconFile = "Bacon.R"
+    }
+    baconDir=get("baconDir",envir = .GlobalEnv)
+  }else{
+    baconFile = "Bacon.R"
   }
-
+  
+  
+  
   #pull out chronology
+  
+  
   C=L$chronData[[which.chron]]
 
   #check for measurementTables
@@ -115,7 +128,7 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
     print("If your data are in abolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
     print("Take a look at the values")
     print(head(reservoir))
-    R=as.numeric(readline(prompt = "enter a number to subtract from your data (0 leaves the data unchanged of course) "))
+    R=as.numeric(readline(prompt = "enter the number of years you'd like to subtract from your data (0 leaves the data unchanged of course) "))
     reservoir=reservoir-R
   }
 
