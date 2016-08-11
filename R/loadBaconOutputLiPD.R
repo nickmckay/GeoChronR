@@ -1,9 +1,17 @@
 load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
   #initialize bacon directory
   if(is.na(baconDir)){
-    cat("please select your Bacon.R file","\n")
-    baconFile=file.choose()
-    baconDir=dirname(baconFile)
+    #check global first
+    if(!exists("baconDir",where = .GlobalEnv)){
+      cat("please select your Bacon.R file","\n")
+      baconFile=file.choose()
+      baconDir<<-dirname(baconFile)
+    }else{
+      baconDir=get("baconDir",envir = .GlobalEnv)
+      baconFile = "Bacon.R"
+    }
+  }else{
+    baconFile = "Bacon.R"
   }
   
   cur.dir = getwd()

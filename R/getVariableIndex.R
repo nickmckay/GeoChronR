@@ -69,6 +69,10 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
         }
       }
     }
+    else if(length(idi)==1){
+      print("Found it! Moving on...")
+      
+    }
   }
   
   

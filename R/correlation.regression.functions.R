@@ -8,11 +8,11 @@ effectiveN = function(X,Y){
   arX = AR1(X)
   n = sum(is.finite(X) & is.finite(Y))
   arY = AR1(Y)
-
+  
   if(arX < 0 | arY < 0 ){#calculation is meaningless if either number is less than 0
     effN=n
   }else{
-  effN = n *(1-arX*arY)/(1+arX*arY)
+    effN = n *(1-arX*arY)/(1+arX*arY)
   }
 }
 
@@ -64,6 +64,12 @@ regress=function (X,Y){
 }
 
 regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.reg=TRUE,plot.alpha=0.2){
+  #check to see if time and values are "column lists"
+  if(is.list(timeX)){timeX=timeX$values}
+  if(is.list(timeY)){timeY=timeY$values}
+  if(is.list(valuesX)){valuesX=valuesX$values}
+  if(is.list(valuesY)){valuesY=valuesY$values}
+  
   
   #make them all matrices
   timeX = as.matrix(timeX)
@@ -78,17 +84,27 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     if(is.na(binstep)){
       stop("Either a binvec or binstep must be specified")
     }else{
-      binStart=min(c(timeX,timeY))
-      binStop=max(c(timeX,timeY))
+      #look for common overlap
+      binStart=max(c(min(timeX,na.rm=TRUE),min(timeY,na.rm=TRUE)))
+      binStop=min(c(max(timeX,na.rm=TRUE),max(timeY,na.rm=TRUE)))
       binvec=seq(binStart,binStop,by=binstep)
     }
   }
   
   #create ensemble bins
   dum = bin.ens(time = timeX,values = valuesX,binvec = binvec,binfun=binfun,max.ens=max.ens)
-  binYear = dum$time
+  yearX = dum$time
   binX = dum$matrix
   binY = bin.ens(time = timeY,values = valuesY,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
+  
+  if(is.na(binstep)){#if the binstep isn't specified
+    binstep=abs(mean(diff(binvec)))
+  }
+  
+  #get full X for the reconstruction
+  fullX = bin.ens(time = timeX,values = valuesX,binvec = seq(min(timeX,na.rm=TRUE),max(timeX,na.rm=TRUE),by=binstep),binfun=binfun,max.ens=max.ens)
+  
+  
   
   #how many ensemble members?
   nensPoss = ncol(binX)*ncol(binY)
@@ -121,11 +137,19 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   #setup progress bar
   pb <- txtProgressBar(min=1,max=nens,style=3)
   print(paste("Calculating",nens,"regressions"))
+  
+  modeled.Y.mat = matrix(NA,ncol=nens,nrow=nrow(fullX$matrix))
+  
   #do the regressions
   for(i in 1:nens){
     B=regress(X = cbind(binX[,rX[i]],ones),Y = binY[,rY[i]])
     m[i]=B[1]
     b[i]=B[2]
+    
+    #calculate reconstruction
+    XC=cbind(as.matrix(fullX$matrix[,rX[i]]),matrix(1,nrow=length(as.matrix(fullX$matrix[,rX[i]]))))
+    modeled.Y.mat[,i] = XC%*%B 
+    
     if(i%%100==0){
       setTxtProgressBar(pb, i)
     }
@@ -137,27 +161,66 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     ms = sort(m)
     bs = sort(b)
     N=length(ms)
-    regStats = data.frame(percentiles,"m" = m[round(percentiles*N)],"b" = b[round(percentiles*N)])
+    regStats = data.frame(percentiles,"m" = ms[round(percentiles*N)],"b" = bs[round(percentiles*N)])
     row.names(regStats)=format(regStats$percentiles,digits = 2)
   }
-  reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY",rY)
+  reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat)
   
   if(plot.reg){
     #scatter plot
     regPlot = plot.scatter.ens(binX,binY,alp=plot.alpha)
     #add trendlines
     regPlot = plot.trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot.alpha/10,add.to.plot = regPlot$plot)
+    reg.ens.data$scatterplot = regPlot
     
-    reg.ens.data$plot = regPlot
-   
-  }
+    #plot histograms of m and b
+    mStats = regStats[,1:2]
+    names(mStats)[2]="values"
+    reg.ens.data$mHist = plot.hist.ens(m,ensStats = mStats)+xlab("Slope")
+    bStats = regStats[,c(1,3)]
+    names(bStats)[2]="values"
+    reg.ens.data$bHist = plot.hist.ens(b,ensStats = bStats)+xlab("Intercept")
+    
+    
+    #plot timeseries of regression and target over interval
+    reg.ens.data$XPlot = plot.timeseries.ribbons(yearX,binX)
+    reg.ens.data$YPlot = plot.timeseries.ribbons(yearX,binY,colorHigh = "red")
+    
+    
+    #and plot reconstructions
+    reg.ens.data$modeledYPlot = plot.timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)
+    
+    library(gridExtra)
+    lay = rbind(c(1,1,3,3,4,4),
+                c(2,2,3,3,5,5),
+                c(6,6,6,6,6,6),
+                c(6,6,6,6,6,6))
+    
 
+    reg.ens.data$summaryPlot = grid.arrange(grobs = list(reg.ens.data$YPlot,reg.ens.data$XPlot,reg.ens.data$scatterplot,
+                                                         reg.ens.data$mHist,reg.ens.data$bHist,reg.ens.data$modeledYPlot),
+                                                         layout_matrix=lay)  
+    
+    
+    
+    
+  }
+  
   
   return(reg.ens.data)
   
 }
 
 cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.hist=TRUE){
+  
+  #check to see if time and values are "column lists"
+  if(is.list(time1)){time1=time1$values}
+  if(is.list(time2)){time2=time2$values}
+  if(is.list(values1)){values1=values1$values}
+  if(is.list(values2)){values2=values2$values}
+  
+  
+  
   
   #make them all matrices
   time1 = as.matrix(time1)
@@ -192,7 +255,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   
   #and the significance
   #pairwise observations
-
+  
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
@@ -209,19 +272,12 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   if(plot.hist){
     library(ggplot2)
     cor.ens.data$plot.r = plot.hist.ens(cor.df$r,ensStats = corStats)
-    perc = data.frame("percentiles=0.05","values"=0.05)
-    row.names(perc)= "a = 0.05"
     cor.ens.data$plot.p = plot.hist.ens(cor.df$p)
-    if(max(cor.df$pAdj>0.05)){
-    cor.ens.data$plot.p = plot.hist.ens(cor.df$pAdj,ensStats = perc,fill="red",alp=0.5,add.to.plot = cor.ens.data$plot.p)
-    }else{#dont show line
-      cor.ens.data$plot.p = plot.hist.ens(cor.df$pAdj,fill="red",alp=0.5,add.to.plot = cor.ens.data$plot.p)
-      }
+    perc = data.frame("values"=0.05)
+    row.names(perc)= "α = 0.05"
+    cor.ens.data$plot.p=plot.hist.ens(corout$cor.df$pAdj,fill="red",alp=.5,add.to.plot = corout$plot.p,ensStats = perc)
+  #need to add legend...
   }
-  cor.ens.data$plot.p=cor.ens.data$plot.p+scale_fill_manual(values=c("gray50", "red"), 
-                    name="p-value",
-                    breaks=c("p", "pAdj"),
-                    labels=c("raw p-value", "Bretherton-corrected p-value"))
   return(cor.ens.data)
   
 }
@@ -256,14 +312,14 @@ bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
     nx = ncol(time)
     ny = ncol(values)
     if(!is.na(max.ens)){
-        nens=min(max(nx,ny),max.ens)
+      nens=min(max(nx,ny),max.ens)
     }else{
       nens = max(nx,ny)
     }
     if(nx>=ny){
-    binMat = apply(time[,1:nens],MARGIN = 2,function(x) bin(time = x,values = values[,sample.int(ny,size=1)],binvec = binvec,binfun = binfun)$y)
+      binMat = apply(time[,1:nens],MARGIN = 2,function(x) bin(time = x,values = values[,sample.int(ny,size=1)],binvec = binvec,binfun = binfun)$y)
     }else{
-    binMat = apply(values[,1:nens],MARGIN = 2,function(x) bin(time = time[,sample.int(nx,size=1)],values = x,binvec = binvec,binfun = binfun)$y)
+      binMat = apply(values[,1:nens],MARGIN = 2,function(x) bin(time = time[,sample.int(nx,size=1)],values = x,binvec = binvec,binfun = binfun)$y)
     }
     
     #both are single values

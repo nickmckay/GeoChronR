@@ -1,3 +1,33 @@
+bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
+  df = data.frame(x=c(x),y=c(y))
+  
+  if(is.na(x.bin)){
+    range.x=abs(diff(range(df[,1],na.rm=TRUE)))
+    x.bin <- seq((min(df[,1],na.rm=TRUE)-range.x/2), (max(df[,1],na.rm=TRUE)+range.x/2), length=nbins)
+    }
+  if(is.na(y.bin)){
+    range.y=abs(diff(range(df[,2],na.rm=TRUE)))
+  y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
+  }
+  
+  fiX = as.numeric(findInterval(df[,1], x.bin))
+  fiY = as.numeric(findInterval(df[,2], y.bin))
+  ufX = sort(unique(fiX))
+  ufY=sort(unique(fiY))
+  freq <-  as.data.frame(table(fiX,fiY,deparse.level = 2))
+
+  freq[,1] <- as.numeric(ufX[freq[,1]])
+  freq[,2] <- as.numeric(ufY[freq[,2]])
+  
+  freq2D <- matrix(data=0,nrow=length(y.bin),ncol=length(x.bin))
+  freq2D[cbind(freq[,2], freq[,1])] <- freq[,3]
+  
+  density = (freq2D/sum(freq2D))/(abs(mean(diff(x.bin)))*abs(mean(diff(y.bin))))
+  out = list("density" = density,"x.bin"= x.bin,"y.bin"=y.bin)
+  
+  return(out)
+}
+
 map.lipd = function(L,color="red",size=8,shape = 16,zoom=4){
  library(ggmap)
   dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
@@ -101,6 +131,11 @@ plot.line = function(X,Y,color="black",add.to.plot=ggplot()){
 
 
 plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
+  #check to see if time and values are "column lists"
+  if(is.list(X)){X=X$values}
+  if(is.list(Y)){Y=Y$values}
+  
+  
   X=as.matrix(X)
   Y=as.matrix(Y)
   
@@ -127,7 +162,11 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   return(linePlot)
   
 }
-plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2)){
+plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1){
+  #check to see if time and values are "column lists"
+  if(is.list(X)){X=X$values}
+  if(is.list(Y)){Y=Y$values}
+
   X=as.matrix(X)
   Y=as.matrix(Y)
 
@@ -136,22 +175,74 @@ plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2)){
   }
   
   
-  Xs = t(apply(t(X),2,sort))
-  Ys = t(apply(t(Y),2,sort))
+  binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
   
-  
-  if(!all(is.na(ensStats))){
-    #make labels better
-    goodName= c("-2σ","-1σ","Median","1σ","2σ")
-    realProb= c(pnorm(-2:2))
-    for(i in 1:length(lineLabels)){
-      p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
-      if(length(p)==1){
-        lineLabels[i]=goodName[p]
-      }
-    }
-  
+#find cum sum probabilities  
+  colSums = apply(binned$density,2,sum)
+  sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
+bmcs = apply(binned$density/sumMat,2,cumsum)
+
+good.cols = which(!apply(is.na(bmcs),2,all))
+
+probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+for(p in 1:length(probs)){
+probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
+}
+
+probMat=as.data.frame(probMat)
+lineLabels=as.character(probs)
+
+#make labels better
+goodName= c("-2σ","-1σ","Median","1σ","2σ")
+realProb= c(pnorm(-2:2))
+for(i in 1:length(lineLabels)){
+  p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
+  if(length(p)==1){
+    lineLabels[i]=goodName[p]
   }
+}
+names(probMat) = lineLabels
+
+#plot it!
+#make pairs of bands moving in 
+#if probs is odd, the center one is just a line
+if(ncol(probMat)%%2==1){
+  center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+  
+  bandMat =  probMat[,-(ncol(probMat)/2+1)]
+}else{
+  center =NA
+  bandMat =  probMat
+}
+
+#deal with colors
+fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
+lineColor="black"
+
+
+library(ggplot2)
+for(b in 1:(ncol(bandMat)/2)){
+  if(b==1){
+    bandPlot = ggplot()+theme_bw()
+  }
+  bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
+  bandPlot = bandPlot+
+    geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b])
+}
+
+  if(!is.na(center)){
+    bandPlot = bandPlot+
+      geom_line(data=center,aes(x=x,y=y),colour=lineColor,size=lineWidth)
+  }
+  
+  
+
+return(bandPlot)
+
+
+
+
+  
   
   
 }
@@ -212,7 +303,7 @@ plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
 
 plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
-  ensData = data.frame("r"=ensData)
+  ensData = data.frame("r"=c(ensData))
   library(ggplot2)
   
 
@@ -231,8 +322,9 @@ plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensSt
         lineLabels[i]=goodName[p]
       }
     }
+    ensStats$ll=lineLabels
     histPlot = histPlot + geom_vline(data=ensStats,aes(xintercept = values),colour="red") +
-      geom_label(data = ensStats, aes(x = values, y=0,label=lineLabels))
+      geom_label(data = ensStats, aes(x = values, y=0,label=ll))
     
   }
   return(histPlot)

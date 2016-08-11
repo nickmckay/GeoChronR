@@ -21,9 +21,5 @@ for(f in 1:length(files)){
   source(files[f])
 }
 
-
-
-
-
 setwd(cur.dir)
 
