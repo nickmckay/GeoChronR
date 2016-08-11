@@ -275,7 +275,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     cor.ens.data$plot.p = plot.hist.ens(cor.df$p)
     perc = data.frame("values"=0.05)
     row.names(perc)= "α = 0.05"
-    cor.ens.data$plot.p=plot.hist.ens(corout$cor.df$pAdj,fill="red",alp=.5,add.to.plot = corout$plot.p,ensStats = perc)
+    cor.ens.data$plot.p=plot.hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot.p,ensStats = perc)
   #need to add legend...
   }
   return(cor.ens.data)
