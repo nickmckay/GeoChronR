@@ -46,11 +46,14 @@ ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA
   }
   
   #make sure the ensemble is there, with data
-  if(is.null(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$ageEnsemble$values)){
+  print("Looking for age ensemble....")
+aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable,varName = "ageEnsemble",altNames = c("age","year"))
+    if(is.na(aei)){
     stop("There doesn't seem to be in values in the ensemble table for this model (there may not be an ensembleTable, or even a model)")
   }
   #grab the ensemble
-  ens=L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$ageEnsemble$values
+  ens=L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable[[aei]]$values
+  print(head(ens))
   ensDepth = L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$depth$values
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
