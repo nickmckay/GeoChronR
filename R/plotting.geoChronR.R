@@ -165,7 +165,7 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   return(linePlot)
   
 }
-plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1){
+plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -226,7 +226,7 @@ lineColor="black"
 library(ggplot2)
 for(b in 1:(ncol(bandMat)/2)){
   if(b==1){
-    bandPlot = ggplot()+theme_bw()
+    bandPlot = add.to.plot+theme_bw()
   }
   bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
   bandPlot = bandPlot+
@@ -331,4 +331,112 @@ plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensSt
     
   }
   return(histPlot)
+}
+
+
+plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
+  library(ggmap)
+  library(ggplot2)
+  library(gridExtra)
+  #map.type can be "google" or "polar"
+  
+  #get data out of the TS
+  lat = sapply(TS,"[[","geo_latitude")
+  lon = sapply(TS,"[[","geo_longitude")
+  archive = sapply(TS,"[[","archiveType")
+  
+  
+  #shape by archive!###
+  arch.shape=c()
+  for(i in 1:length(archive)){
+    if(shape.by.archive){
+      if (grepl(tolower(archive[i]),"lake")){arch.shape[i]="lake"}
+      else if (grepl(tolower(archive[i]),"marine sediments")){arch.shape[i]="marine"}
+      else if (grepl(tolower(archive[i]),"speleothem")){arch.shape[i]="speleothem"}
+      #else if (grepl(tolower(archive[i]),"peat")){arch.shape[i]=18}
+      else {arch.shape[i]="unknown"}
+    }else{arch.shape[i]=21} #make them all circles if not shape.by.archive
+  }
+  
+  arch.shape=factor(arch.shape)
+  archiveShapes=c(21,22,24)
+  if(!any(grepl(pattern="speleothem",arch.shape))){archiveShapes = archiveShapes[-3] }
+  if(!any(grepl(pattern="marine",arch.shape))){archiveShapes = archiveShapes[-2] }
+  if(!any(grepl(pattern="lake",arch.shape))){archiveShapes = archiveShapes[-1] }
+  
+  #end shape by archive
+  
+  
+  
+  plotlist=list()
+  maplist=list()
+  
+  
+  
+  #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
+  medianPCs = apply(ens.PC.out$PCs,MARGIN = c(1,2),median,na.rm=TRUE)
+  loadingSDs = apply(ens.PC.out$loadings,MARGIN = c(1,2),sd,na.rm=TRUE)
+  medianLoadings = apply(ens.PC.out$loadings,MARGIN = c(1,2),median,na.rm=TRUE)
+  
+  #get a base map
+  map = base.map(lon,lat,map.type = map.type,f=f,projection = projection,restrict.map.range = restrict.map.range)
+  
+  for (i in 1:length(which.PCs)){
+    #figure out dotsize
+    sdRange = range(loadingSDs[,which.PCs[i]])
+    medianRange = abs(diff(range(medianLoadings[,which.PCs[i]])))
+    sdPct = 2*loadingSDs[,which.PCs[i]]/medianRange
+    sdDots = sdPct
+    
+    
+    #make a data.frame to plot
+    dd=data.frame(lon=lon,lat=lat,medLoad=medianLoadings[,which.PCs[i]],sdDots=sdDots,shape=factor(arch.shape))
+    #sort by dot size
+    # print(order(sdDots))
+    dd = dd[order(sdDots),]
+    row.names(dd)=1:nrow(dd)
+    
+    
+    
+    #infer colors
+    scaleColors = assign.high.low.colors(color)
+    
+    
+    maplist[[i]] = map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd) +
+      scale_shape_manual(values = archiveShapes) +
+      scale_size(range = c(dotsize,1)) +
+      scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colourbar")
+    
+    
+    
+    
+    bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity,age = ens.PC.out$age)
+    #TODO and sample depth plot  
+    plot.sample.depth = ggplot(data=bddf)+geom_bar(aes(x=age,y=sampleDepth),fill="gray20",stat="identity")+
+      ylab("fractional mean sample depth")+
+      xlab("age (yr BP)")+
+      theme_bw()+
+      scale_x_reverse()
+    
+    plotlist[[i]] = plot.timeseries.ribbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
+    medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
+    sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
+    varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"±",as.character(signif(sdVarExp*100,1)))
+    plotlist[[i]] = plotlist[[i]]+ggtitle(paste("Variance explained =",varExpStr,"%"))+
+      scale_x_reverse()+
+      labs(y=paste0("PC",which.PCs[i]),x="Age (yr BP)")
+    
+  }
+  
+  df2=data.frame(age=ens.PC.out$age,sampleDensity = ens.PC.out$meanDataDensity)
+  backDensity = ggplot()+geom_bar(data=df2,aes(x=age,y=sampleDensity),stat = 'identity')
+  alllist = append(maplist,plotlist)
+  tt=1:length(alllist)
+  alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
+  
+  summaryPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
+  
+  return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot.sample.depth))
+  
+  
 }

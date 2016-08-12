@@ -1,16 +1,8 @@
-allRegion = sapply(X = D,function(X) X$geo$AHT.Region)
-
-nf=which(allRegion == "Fennoscandia")
-
-Fenn=D[nf]
-
-
-
-
-
+extract.timeseries = function(D){
+  #preliminary/hacky version. better to come
 TS=list()
 t=1
-for(f in 1:length(Fenn)){
+for(f in 1:length(D)){
   L = D[[f]]
   dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000))
   if(!grepl(pattern = "error",class(dum)))
@@ -25,6 +17,8 @@ for(f in 1:length(Fenn)){
         TS[[t]]=NA
         TS[[t]]$dataSetName = L$dataSetName
         TS[[t]]$archiveType=L$archiveType
+        TS[[t]]$geo_latitude=L$geo$latitude
+        TS[[t]]$geo_AHT.Region = L$geo$AHT.Region
         TS[[t]]$geo_latitude=L$geo$latitude
         TS[[t]]$geo_siteName=L$geo$siteName
         TS[[t]]$geo_longitude=L$geo$longitude
@@ -42,39 +36,12 @@ for(f in 1:length(Fenn)){
           TS[[t]][[names(diffgrab)[dg]]]=PM[[diffgrab[dg]]]$values
           TS[[t]][[paste0(names(diffgrab)[dg],"Units")]]=PM[[diffgrab[dg]]]$units
         }
-        
         t=t+1
-        
-        
-        
       }
-      
-      
     }
-    
-    
   }
-  
-  
-  
+return(TS)
 }
-
-
-civar = lapply(TS,"[[","climateInterpretation_variable")
-newvar=c()
-newvar[sapply(civar,is.null)]=NA
-newvar[!sapply(civar,is.null)]=unlist(civar)
-
-ti=which(newvar=="T")
-agee = lapply(TS,"[[","ageEnsemble")
-has.ageEnsemble = which(!sapply(agee,is.null))
-FTS=TS[intersect(ti,has.ageEnsemble)]
-
-
-
-
-values = lapply(TS,"[[","paleoData_values")
-
 
 
 

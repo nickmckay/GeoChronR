@@ -6,6 +6,7 @@ base.map = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,proje
   
   try(load("bound.box.Rdata"),silent = TRUE)
 if(!exists("bb")){bb=1000}
+  
 bbnew <- make_bbox(lon,lat,f=f)
 if(all(bbnew==bb)){
   lnp=TRUE
@@ -22,13 +23,13 @@ if(all(bbnew==bb)){
 }
 
 if(map.type=="google"){
-  if(lnp){
-    try(load("newmap.Rdata"),silent = TRUE)
-  }
-  if(!exists("newmap")){
+  #if(lnp){
+  #  newmap = try(load("newmap.Rdata"),silent = TRUE)
+  #  if(grepl(class(newmap),pattern="error")){newmap <- get_map(location=bb,maptype="terrain",source="google")}
+  #}else{
     newmap <- get_map(location=bb,maptype="terrain",source="google")
-    save(newmap,file="newmap.RData")
-  }
+  #}
+  save(newmap,file="newmap.RData")
   baseMap = ggmap(newmap,maprange=TRUE) 
 }else if(map.type=="line"){
   
@@ -68,6 +69,8 @@ if(map.type=="google"){
                                 axis.title.x = element_blank(), axis.title.y = element_blank(),
                                 panel.border = element_blank())+
     coord_map(projection)
+}else{
+  stop(paste("Dont recognize map.type =",map.type))
 }
 
 return(baseMap )
