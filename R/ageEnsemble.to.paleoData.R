@@ -14,6 +14,9 @@ ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA
   }
   
   #initialize model number
+  if(length(L$chronData[[which.chron]]$chronModel)==0){
+    stop("No model in this chronData")
+  }
   if(is.na(which.model)){
     if(length(L$chronData[[which.chron]]$chronModel)==1){
       #only one model
@@ -53,11 +56,10 @@ aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensemb
   }
   #grab the ensemble
   ens=L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable[[aei]]$values
-  print(head(ens))
   ensDepth = L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$depth$values
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
-  di = getVariableIndex(L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]],"depth",altNames = "position",always.choose = TRUE)
+  di = getVariableIndex(L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]],"depth",altNames = "position",always.choose = FALSE)
 
   #depthTarget
   depth = L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]][[di]]$values

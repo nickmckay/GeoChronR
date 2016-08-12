@@ -3,11 +3,14 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   
   if(is.na(x.bin)){
     range.x=abs(diff(range(df[,1],na.rm=TRUE)))
-    x.bin <- seq((min(df[,1],na.rm=TRUE)-range.x/2), (max(df[,1],na.rm=TRUE)+range.x/2), length=nbins)
-    }
+    #x.bin <- seq((min(df[,1],na.rm=TRUE)-range.x/2), (max(df[,1],na.rm=TRUE)+range.x/2), length=nbins)
+    x.bin <- approx(1:length(sort(df$x)),sort(df$x),seq(1,length(sort(df$x)),length.out = nbins))$y #adjust it along y
+  }
   if(is.na(y.bin)){
     range.y=abs(diff(range(df[,2],na.rm=TRUE)))
-  y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
+    #y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
+    y.bin <- approx(1:length(sort(df$y)),sort(df$y),seq(1,length(sort(df$y)),length.out = nbins))$y #adjust it along y
+  
   }
   
   fiX = as.numeric(findInterval(df[,1], x.bin))

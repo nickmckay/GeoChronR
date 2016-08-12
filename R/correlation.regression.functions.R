@@ -352,3 +352,19 @@ bin = function(time,values,binvec,binfun = mean){
   
 }
 
+bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
+  timeList = lapply(TS,"[[",timeVar)
+  valueList = lapply(TS,"[[","paleoData_values")
+
+  binMat = vector(mode="list",length = length(timeList))
+  pb <- txtProgressBar(min=1,max=length(timeList),style=3)
+  
+  for(i in 1:length(timeList)){
+    binMat[[i]]=bin.ens(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
+    setTxtProgressBar(pb,i)
+  }
+  close(pb)
+return(binMat)  
+  
+}
+
