@@ -1,3 +1,15 @@
+plot.spectra.ens = function (spec.ens){
+  
+  specPlot = plot.timeseries.ribbons(spec.ens$freqs,spec.ens$power)
+  specPlot = plot.timeseries.ribbons(fMat,pMatSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+  #to do label significant peaks
+  
+  #add pvalues?
+  
+  specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power")
+  return(specPlot)
+}
+
 bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   df = data.frame(x=c(x),y=c(y))
   
@@ -165,7 +177,7 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   return(linePlot)
   
 }
-plot.timeseries.ribbons = function(X,Y,alp=.2,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
+plot.timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -230,7 +242,7 @@ for(b in 1:(ncol(bandMat)/2)){
   }
   bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
   bandPlot = bandPlot+
-    geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b])
+    geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
 }
 
   if(!is.na(center)){

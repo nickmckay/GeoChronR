@@ -14,7 +14,7 @@ for(f in 1:length(files)){
 
 #geoChronR
 setwd("~/GitHub/GeoChronR-package/R/")
-files =  setdiff(dir(pattern="*.R"),dir(pattern="*.RData"))
+files =  setdiff(dir(pattern="*.R"),dir(pattern="*.RData",ignore.case = T))
 files = setdiff(files,"sourceAll.R")
 
 for(f in 1:length(files)){
