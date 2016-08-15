@@ -5,7 +5,32 @@ Version: 0.1
 Date: 2016-08-15
 Author: Nick McKay, Chris Heiser, Deborah Khider, Julien Emile-Geay
 Maintainer: Nick McKay <nick@nau.edu>
-Description: More about what it does (maybe more than one line)
-License: not sure yet
+Description: Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
+License: GNU Public License
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Imports:
+	Bchron,
+	inline,
+	lomb,
+	data.table,
+	devtools,
+	roxygen2,
+	matrixStats,
+	mapproj,
+	maps,
+	pcaMethods,
+	Biobase,
+	BiocGenerics,
+	gridExtra,
+	ggmap,
+	Hmisc,
+	ggplot2,
+	Formula,
+	survival,
+	lattice,
+	plyr,
+	BBmisc,
+	jsonlite,
+	RJSONIO,
+	Kmisc       

@@ -275,7 +275,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   if(plot_hist){
     library(ggplot2)
     cor.ens.data$plot_r = plot_hist.ens(cor.df$r,ensStats = corStats)
-    cor.ens.data$plot_p = plot_hist.ens(cor.df$p)
+    cor.ens.data$plot_p = plot_hist.ens(cor.df$p) + xlab("p-value")
     perc = data.frame("values"=0.05)
     row.names(perc)= "α = 0.05"
     cor.ens.data$plot_p=plot_hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot_p,ensStats = perc)

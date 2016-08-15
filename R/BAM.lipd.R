@@ -1,7 +1,7 @@
 #' @export
 run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000){
   
-  #initialize which.paleo
+    #initialize which.paleo
   if(is.na(which.paleo)){
     if(length(L$paleoData)==1){
       which.paleo=1
@@ -28,7 +28,7 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   #does this lipd have a chronData?
   if(is.null(L$chronData)){
-    L$chronData=list()
+    L$chronData=vector(mode = "list",length=1)
   }
   
   C=L$chronData[[which.chron]]
@@ -126,6 +126,8 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   CM$ensembleTable$timeCorrectionMatrix$values = bamOut$tmc
   CM$ensembleTable$timeCorrectionMatrix$units = NA
   CM$ensembleTable$timeCorrectionMatrix$description = "corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band)"
+  
+  L$chronData[[which.chron]]$chronModel[which.model]=list(CM)
   
   #place into paleoData appropriately.
   #assign into paleoMeasurementTable
