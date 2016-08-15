@@ -1,9 +1,9 @@
 #'  Create an ageEnsemble variable in a paleoMeasurement Table
 #'
-#' @param L a LiPD object
+#' @param L a lipd object
 #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #'
-#' @return L a LiPD object
+#' @return L a lipd object
 #' @export
 ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA){
   #check on the chronModel first

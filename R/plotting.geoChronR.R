@@ -1,8 +1,8 @@
 #' @export
-plot.spectra.ens = function (spec.ens){
+plot_spectra.ens = function (spec.ens){
   
-  specPlot = plot.timeseries.ribbons(spec.ens$freqs,spec.ens$power)
-  specPlot = plot.timeseries.ribbons(fMat,pMatSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+  specPlot = plot_timeseries.ribbons(spec.ens$freqs,spec.ens$power)
+  specPlot = plot_timeseries.ribbons(fMat,pMatSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
   #to do label significant peaks
   
   #add pvalues?
@@ -74,7 +74,7 @@ map.lipds = function(D,color= sapply(D,"[[","archiveType"),size=8,shape = 16 ){
 
 #' @export
 #show a map, timeseries, and age model diagram..
-summary.plot = function(L){
+summary_plot = function(L){
   library(grid)
   library(gridExtra)
   map = map.lipd(L)
@@ -88,7 +88,7 @@ summary.plot = function(L){
   print("What should we plot on the Y-axis?")
   variable=select.data(L)
   
-  paleoPlot = plot.line(age,variable)
+  paleoPlot = plot_line(age,variable)
   paleoPlot = paleoPlot + labs(title = paste("PaleoData:",variable$variableName))
   
   #do chron.
@@ -104,7 +104,7 @@ summary.plot = function(L){
     print("looking for depths....")
     depth=select.data(L,varName = "depth",always.choose = FALSE,where = "chronData")
     c.df = data.frame(x=age2$values,y=depth$values)
-    chronPlot = plot.line(age2,depth)
+    chronPlot = plot_line(age2,depth)
     chronPlot = chronPlot+
       geom_point(data=c.df,aes(x=x,y=y),colour="black",size=7)+
       scale_y_reverse()+
@@ -130,9 +130,9 @@ summary.plot = function(L){
 }
 
 #' @export
-plot.line = function(X,Y,color="black",add.to.plot=ggplot()){
+plot_line = function(X,Y,color="black",add.to.plot=ggplot()){
   
-  #X and Y and are LiPD variables, including values, units, names, etc...
+  #X and Y and are lipd variables, including values, units, names, etc...
   df = data.frame(x = X$values, y = Y$values)
   plot = add.to.plot+ geom_line(data=df,aes(x=x,y=y),colour =color)+
     ylab(paste0(Y$variableName," (",Y$units,")"))+
@@ -148,7 +148,7 @@ plot.line = function(X,Y,color="black",add.to.plot=ggplot()){
 
 
 #' @export
-plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
+plot_timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -181,7 +181,7 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   
 }
 #' @export
-plot.timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
+plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -266,7 +266,7 @@ plot.timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
   
 }
 #' @export
-plot.scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
+plot_scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
   X=as.matrix(X)
   Y=as.matrix(Y)
   
@@ -291,7 +291,7 @@ plot.scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
   return(list("plot" = scatterplot,"pX"=pX,"pY"=pY))
 }
 #' @export
-plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
+plot_trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
   #mb.df = dataframe of slopes (column 1) and intercepts (column 2)
   #xrange = range of x values (min and max)
   #pXY = index of which observations to use
@@ -320,7 +320,7 @@ plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
 
 
 #' @export
-plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
+plot_hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
   ensData = data.frame("r"=c(ensData))
   library(ggplot2)
@@ -428,13 +428,13 @@ plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,
     
     bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity,age = ens.PC.out$age)
     #TODO and sample depth plot  
-    plot.sample.depth = ggplot(data=bddf)+geom_bar(aes(x=age,y=sampleDepth),fill="gray20",stat="identity")+
+    plot_sample.depth = ggplot(data=bddf)+geom_bar(aes(x=age,y=sampleDepth),fill="gray20",stat="identity")+
       ylab("fractional mean sample depth")+
       xlab("age (yr BP)")+
       theme_bw()+
       scale_x_reverse()
     
-    plotlist[[i]] = plot.timeseries.ribbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
+    plotlist[[i]] = plot_timeseries.ribbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
     medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
     sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
     varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"±",as.character(signif(sdVarExp*100,1)))
@@ -452,6 +452,6 @@ plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,
   
   summaryPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
   
-  return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot.sample.depth))
+  return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot_sample.depth))
 
 }

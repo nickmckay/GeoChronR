@@ -8,12 +8,12 @@ ageEnsemble.to.paleoData(L, which.paleo = NA, which.pmt = NA,
   which.chron = NA, which.model = NA, max.ensemble.members = NA)
 }
 \arguments{
-\item{L}{a LiPD object}
+\item{L}{a lipd object}
 
 \item{which.paleo}{an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify}
 }
 \value{
-L a LiPD object
+L a lipd object
 }
 \description{
 Create an ageEnsemble variable in a paleoMeasurement Table

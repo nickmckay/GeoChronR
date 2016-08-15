@@ -6,7 +6,7 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
     if(length(L$chronData)==1){
       which.chron=1
     }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to run Bacon for? "))
+      which.chron=as.integer(readline(prompt = "Which chronData do you want to run bacon for? "))
     }
   }
   
@@ -14,16 +14,16 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   if(is.na(baconDir)){
     #check global first
     if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your Bacon.R file","\n")
+      cat("please select your bacon.R file","\n")
       baconFile=file.choose()
       baconDir<<-dirname(baconFile)
       baconDir=baconDir
     }else{
-      baconFile = "Bacon.R"
+      baconFile = "bacon.R"
     }
     baconDir=get("baconDir",envir = .GlobalEnv)
   }else{
-    baconFile = "Bacon.R"
+    baconFile = "bacon.R"
   }
   
   #initialize model number
@@ -39,7 +39,7 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   
   
   #write bacon file
-  L=write.bacon.LiPD(L,which.chron = which.chron,baconDir = baconDir,remove.reverse = remove.reverse,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
+  L=write.bacon.lipd(L,which.chron = which.chron,baconDir = baconDir,remove.reverse = remove.reverse,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
   
   #estimate thickness parameter
   thick = abs(diff(range(L$chronData[[which.chron]]$chronModel[[modelNum]]$inputTable[,4])))/100
@@ -47,17 +47,17 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   #run bacon
   setwd(baconDir)
   source(baconFile)
-  Bacon(core=site.name,thick=thick)
+  bacon(core=site.name,thick=thick)
   
   print("taking a short break...")
   Sys.sleep(5)
-  #pull bacon data into LiPD structure
-  L = load.Bacon.output.LiPD(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
+  #pull bacon data into lipd structure
+  L = load.bacon.output.lipd(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
   return(L)
 }
 
 #' @export
-sampleBaconAgesLiPD <- function(corename,K=NA,baconDir=NA,maxEns=NA){
+sample.bacon.ages.lipd <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   #from Simon Goring, modified by Nick McKay
   setwd(baconDir)
   setwd("Cores")
@@ -80,7 +80,7 @@ sampleBaconAgesLiPD <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   while(TRUE){
     bacData=try(read.table(bfname,skip=sline,sep=c(",",";")),silent=TRUE)
     if(!is.character(bacData)){
-      if(strsplit(levels(bacData$V1)," ")[[1]][1]=="Bacon"){
+      if(strsplit(levels(bacData$V1)," ")[[1]][1]=="bacon"){
         break
       }
     }else{
@@ -119,7 +119,7 @@ sampleBaconAgesLiPD <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 }
 
 #' @export
-write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){
     if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
@@ -135,16 +135,16 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   if(is.na(baconDir)){
     #check global first
     if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your Bacon.R file","\n")
+      cat("please select your bacon.R file","\n")
       baconFile=file.choose()
       baconDir<<-dirname(baconFile)
       baconDir=baconDir
     }else{
-      baconFile = "Bacon.R"
+      baconFile = "bacon.R"
     }
     baconDir=get("baconDir",envir = .GlobalEnv)
   }else{
-    baconFile = "Bacon.R"
+    baconFile = "bacon.R"
   }
   
   
@@ -156,13 +156,13 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   
   #check for measurementTables
   if(length(C$chronMeasurementTable)!=1){
-    stop("Bacon doesn't know how to handle more (or less) than 1 measurement table. You should teach it!")
+    stop("bacon doesn't know how to handle more (or less) than 1 measurement table. You should teach it!")
   }
   
   MT=C$chronMeasurementTable[[1]]
   
   
-  #go through required fields for BACON
+  #go through required fields for bacon
   
   #labID
   print("Looking for laboratory ID...")
@@ -205,7 +205,7 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   #merge variables as needed
   depth <- MT[[depthi]]$values
   if(is.null(depth)){
-    stop("No depth. Depth is required by BACON")
+    stop("No depth. Depth is required by bacon")
   }
   
   
@@ -244,7 +244,7 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   if(is.null(reservoir)){
     reservoir <- rep(NA,len=length(depth))
   }else{
-    print("Bacon uses delta-R: deviation from the reservoir curve")
+    print("bacon uses delta-R: deviation from the reservoir curve")
     
     print("If your data are in abolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
     print("Take a look at the values")
@@ -385,21 +385,21 @@ write.bacon.LiPD <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
 }
 
 #' @export
-load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
+load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
   #initialize bacon directory
   if(is.na(baconDir)){
     #check global first
     if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your Bacon.R file","\n")
+      cat("please select your bacon.R file","\n")
       baconFile=file.choose()
       baconDir<<-dirname(baconFile)
       baconDir=baconDir
     }else{
-      baconFile = "Bacon.R"
+      baconFile = "bacon.R"
     }
     baconDir=get("baconDir",envir = .GlobalEnv)
   }else{
-    baconFile = "Bacon.R"
+    baconFile = "bacon.R"
   }
   
   cur.dir = getwd()
@@ -420,7 +420,7 @@ load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     if(length(L$chronData)==1){
       which.chron=1
     }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to run Bacon for? "))
+      which.chron=as.integer(readline(prompt = "Which chronData do you want to run bacon for? "))
     }
   }
   
@@ -475,7 +475,7 @@ load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     parameters[[keys[mi]]]=as.character(m[mi])
   }
   methods = list("parameters"=parameters)
-  methods$algorithm = "Bacon"
+  methods$algorithm = "bacon"
   methods$version = 2.2
   
   
@@ -526,7 +526,7 @@ load.Bacon.output.LiPD = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   
   
   #now grab ensemble data.
-  ageEns = sampleBaconAgesLiPD(corename=site.name,baconDir = baconDir)
+  ageEns = sample.bacon.ageslipd(corename=site.name,baconDir = baconDir)
   
   ageEns$depth$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$depth$units
   ageEns$ageEnsemble$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$age$units

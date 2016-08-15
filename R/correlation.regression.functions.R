@@ -66,7 +66,7 @@ regress=function (X,Y){
   return(b)
 }
 #' @export
-regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.reg=TRUE,plot.alpha=0.2){
+regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){timeX=timeX$values}
   if(is.list(timeY)){timeY=timeY$values}
@@ -169,29 +169,29 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   }
   reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat)
   
-  if(plot.reg){
+  if(plot_reg){
     #scatter plot
-    regPlot = plot.scatter.ens(binX,binY,alp=plot.alpha)
+    regPlot = plot_scatter.ens(binX,binY,alp=plot_alpha)
     #add trendlines
-    regPlot = plot.trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot.alpha/10,add.to.plot = regPlot$plot)
+    regPlot = plot_trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot_alpha/10,add.to.plot = regPlot$plot)
     reg.ens.data$scatterplot = regPlot
     
     #plot histograms of m and b
     mStats = regStats[,1:2]
     names(mStats)[2]="values"
-    reg.ens.data$mHist = plot.hist.ens(m,ensStats = mStats)+xlab("Slope")
+    reg.ens.data$mHist = plot_hist.ens(m,ensStats = mStats)+xlab("Slope")
     bStats = regStats[,c(1,3)]
     names(bStats)[2]="values"
-    reg.ens.data$bHist = plot.hist.ens(b,ensStats = bStats)+xlab("Intercept")
+    reg.ens.data$bHist = plot_hist.ens(b,ensStats = bStats)+xlab("Intercept")
     
     
     #plot timeseries of regression and target over interval
-    reg.ens.data$XPlot = plot.timeseries.ribbons(yearX,binX)
-    reg.ens.data$YPlot = plot.timeseries.ribbons(yearX,binY,colorHigh = "red")
+    reg.ens.data$XPlot = plot_timeseries.ribbons(yearX,binX)
+    reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")
     
     
     #and plot reconstructions
-    reg.ens.data$modeledYPlot = plot.timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)
+    reg.ens.data$modeledYPlot = plot_timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)
     
     library(gridExtra)
     lay = rbind(c(1,1,3,3,4,4),
@@ -214,7 +214,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   
 }
 #' @export
-cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.hist=TRUE){
+cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_hist=TRUE){
   
   #check to see if time and values are "column lists"
   if(is.list(time1)){time1=time1$values}
@@ -272,13 +272,13 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   
   cor.ens.data=list(cor.df = cor.df,corStats = corStats)
   
-  if(plot.hist){
+  if(plot_hist){
     library(ggplot2)
-    cor.ens.data$plot.r = plot.hist.ens(cor.df$r,ensStats = corStats)
-    cor.ens.data$plot.p = plot.hist.ens(cor.df$p)
+    cor.ens.data$plot_r = plot_hist.ens(cor.df$r,ensStats = corStats)
+    cor.ens.data$plot_p = plot_hist.ens(cor.df$p)
     perc = data.frame("values"=0.05)
     row.names(perc)= "α = 0.05"
-    cor.ens.data$plot.p=plot.hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot.p,ensStats = perc)
+    cor.ens.data$plot_p=plot_hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot_p,ensStats = perc)
   #need to add legend...
   }
   return(cor.ens.data)

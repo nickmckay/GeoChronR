@@ -1,5 +1,5 @@
 #' @export
-run.BAM.LiPD = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000){
+run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000){
   
   #initialize which.paleo
   if(is.na(which.paleo)){
@@ -26,7 +26,7 @@ run.BAM.LiPD = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   
   
-  #does this LiPD have a chronData?
+  #does this lipd have a chronData?
   if(is.null(L$chronData)){
     L$chronData=list()
   }
