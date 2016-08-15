@@ -299,6 +299,4 @@ extract.timeseries = function(D){
 
 
 
-
-
   
