@@ -1,8 +1,10 @@
+#' @export
 AR1 = function(X){
   ar=cor(X[-1],X[-length(X)],use="pairwise")
   return(ar)
 }
 
+#' @export
 effectiveN = function(X,Y){
   #from Bretherton 1999
   arX = AR1(X)
@@ -16,6 +18,7 @@ effectiveN = function(X,Y){
   }
 }
 
+#' @export
 pvalPearson.serial.corrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
@@ -26,7 +29,7 @@ pvalPearson.serial.corrected = function(r,n){
   return(p)
   
 }
-
+#' @export
 matrix.corr.and.pvalue = function(M1,M2){
   M1=as.matrix(M1)
   M2=as.matrix(M2)
@@ -54,7 +57,7 @@ matrix.corr.and.pvalue = function(M1,M2){
 
 
 
-
+#' @export
 regress=function (X,Y){
   g=which(!apply(is.na(X),1,any) & !is.na(Y))
   X=X[g,]
@@ -62,7 +65,7 @@ regress=function (X,Y){
   b=solve(t(X)%*%X)%*%(t(X)%*%Y)
   return(b)
 }
-
+#' @export
 regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.reg=TRUE,plot.alpha=0.2){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){timeX=timeX$values}
@@ -210,7 +213,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   return(reg.ens.data)
   
 }
-
+#' @export
 cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot.hist=TRUE){
   
   #check to see if time and values are "column lists"
@@ -283,7 +286,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
 }
 
 
-
+#' @export
 bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
   #takes ensembles in time and/or values and creates a matrix of data for future analysis
   time = as.matrix(time)
@@ -334,7 +337,7 @@ bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
   return(binned)
   
 }
-
+#' @export
 bin = function(time,values,binvec,binfun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
   #the bin vector describes the edges of the bins
@@ -351,7 +354,7 @@ bin = function(time,values,binvec,binfun = mean){
   return(binned)
   
 }
-
+#' @export
 bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
   timeList = lapply(TS,"[[",timeVar)
   valueList = lapply(TS,"[[","paleoData_values")

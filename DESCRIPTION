@@ -1,0 +1,11 @@
+Package: geoChronR
+Type: Package
+Title: Tools to analyze and visualize time-uncertain geoscientific data
+Version: 0.1
+Date: 2016-08-15
+Author: Nick McKay, Chris Heiser, Deborah Khider, Julien Emile-Geay
+Maintainer: Nick McKay <nick@nau.edu>
+Description: More about what it does (maybe more than one line)
+License: not sure yet
+LazyData: TRUE
+RoxygenNote: 5.0.1

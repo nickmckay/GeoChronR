@@ -1,3 +1,4 @@
+#' @export
 write.clam.lipd <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){

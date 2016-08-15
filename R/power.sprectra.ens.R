@@ -1,3 +1,4 @@
+#' @export
 create.synthetic = function(time,values,nens=1){
   
   #check to see if time and values are "column lists"
@@ -34,9 +35,7 @@ create.synthetic = function(time,values,nens=1){
   return(synValues)
 }
 
-
-
-
+#' @export
 powerSpectrum.ens = function(time,values,max.ens=NA,plot.opt=FALSE){
   library(lomb)#uses this library, for now...
   

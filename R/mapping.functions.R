@@ -1,4 +1,5 @@
 #make a base map, with some options. 
+#' @export
 base.map = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE){
   library("ggplot2")
   library("ggmap")
@@ -79,7 +80,7 @@ return(baseMap )
 }
 
 
-
+#' @export
 assign.high.low.colors = function(colors){
   
   if(length(colors==1)){

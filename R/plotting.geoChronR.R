@@ -1,3 +1,4 @@
+#' @export
 plot.spectra.ens = function (spec.ens){
   
   specPlot = plot.timeseries.ribbons(spec.ens$freqs,spec.ens$power)
@@ -6,10 +7,10 @@ plot.spectra.ens = function (spec.ens){
   
   #add pvalues?
   
-  specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power")
+  specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
   return(specPlot)
 }
-
+#' @export
 bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   df = data.frame(x=c(x),y=c(y))
   
@@ -22,7 +23,7 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
     range.y=abs(diff(range(df[,2],na.rm=TRUE)))
     #y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
     y.bin <- approx(1:length(sort(df$y)),sort(df$y),seq(1,length(sort(df$y)),length.out = nbins))$y #adjust it along y
-  
+    
   }
   
   fiX = as.numeric(findInterval(df[,1], x.bin))
@@ -30,7 +31,7 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   ufX = sort(unique(fiX))
   ufY=sort(unique(fiY))
   freq <-  as.data.frame(table(fiX,fiY,deparse.level = 2))
-
+  
   freq[,1] <- as.numeric(ufX[freq[,1]])
   freq[,2] <- as.numeric(ufY[freq[,2]])
   
@@ -42,9 +43,9 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   
   return(out)
 }
-
+#' @export
 map.lipd = function(L,color="red",size=8,shape = 16,zoom=4){
- library(ggmap)
+  library(ggmap)
   dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
   basemap = get_googlemap(center = c(dfp$lon,dfp$lat),zoom=zoom)
   map = ggmap(ggmap = basemap)  + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,size=size,shape = shape) 
@@ -54,7 +55,7 @@ map.lipd = function(L,color="red",size=8,shape = 16,zoom=4){
   }
   return(map)
 }
-
+#' @export
 map.lipds = function(D,color= sapply(D,"[[","archiveType"),size=8,shape = 16 ){
   library(ggmap)
   dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),color,shape)
@@ -64,14 +65,14 @@ map.lipds = function(D,color= sapply(D,"[[","archiveType"),size=8,shape = 16 ){
   cent=c(mean(rLon),mean(rLat))
   zoom = calc_zoom(rLon,rLat)
   basemap = get_googlemap(center = cent,zoom=zoom,source = "stamen")
-
   
-
+  
+  
   map = ggmap(ggmap = basemap)  + geom_point(data=dfp,aes(x=lon,y=lat,colour = color),shape = shape,size=7)
   return(map)
 }
 
-
+#' @export
 #show a map, timeseries, and age model diagram..
 summary.plot = function(L){
   library(grid)
@@ -97,42 +98,44 @@ summary.plot = function(L){
     print("looking for ages...")
     age2=select.data(L,varName = "age14C",always.choose = FALSE,altNames="year",where = "chronData")
     
-#     print("looking for age uncertainty")
-#     ageUnc = select.data(L,varName = "age14CUncertainty",always.choose = FALSE,altNames=c("uncertainty","error","age"),where = "chronData")
+    #     print("looking for age uncertainty")
+    #     ageUnc = select.data(L,varName = "age14CUncertainty",always.choose = FALSE,altNames=c("uncertainty","error","age"),where = "chronData")
     
     print("looking for depths....")
     depth=select.data(L,varName = "depth",always.choose = FALSE,where = "chronData")
     c.df = data.frame(x=age2$values,y=depth$values)
-   chronPlot = plot.line(age2,depth)
-   chronPlot = chronPlot+
-     geom_point(data=c.df,aes(x=x,y=y),colour="black",size=7)+
-     scale_y_reverse()+
-     scale_x_reverse()+
-     labs(title = paste("ChronData: chronology"))
-   
+    chronPlot = plot.line(age2,depth)
+    chronPlot = chronPlot+
+      geom_point(data=c.df,aes(x=x,y=y),colour="black",size=7)+
+      scale_y_reverse()+
+      scale_x_reverse()+
+      labs(title = paste("ChronData: chronology"))
+    
   }else{
     chronPlot = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)),textGrob("No chronData"))
   }
-    
-   lay = rbind(c(1,1,2,2),
-               c(3,3,2,2),
-               c(3,3,4,4),
-               c(3,3,4,4))
-
-   
-   dataSetText = paste(L$dataSetName,"\n","Archive Type: ",L$archiveType,"\n","Authors: ",L$pub[[1]]$author)
-   summaryText = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)), textGrob(dataSetText) )
-   
-   summary = grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
-return(summary)
+  
+  lay = rbind(c(1,1,2,2),
+              c(3,3,2,2),
+              c(3,3,4,4),
+              c(3,3,4,4))
+  
+  
+  dataSetText = paste(L$dataSetName,"\n","Archive Type: ",L$archiveType,"\n","Authors: ",L$pub[[1]]$author)
+  summaryText = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)), textGrob(dataSetText) )
+  
+  summary = grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
+  return(summary)
   
 }
 
-#X and Y and are LiPD variables, including values, units, names, etc...
+#' @export
 plot.line = function(X,Y,color="black",add.to.plot=ggplot()){
+  
+  #X and Y and are LiPD variables, including values, units, names, etc...
   df = data.frame(x = X$values, y = Y$values)
   plot = add.to.plot+ geom_line(data=df,aes(x=x,y=y),colour =color)+
-  ylab(paste0(Y$variableName," (",Y$units,")"))+
+    ylab(paste0(Y$variableName," (",Y$units,")"))+
     xlab(paste0(X$variableName," (",X$units,")"))+
     theme_bw()
   if(tolower(X$variableName)=="age"){
@@ -144,7 +147,7 @@ plot.line = function(X,Y,color="black",add.to.plot=ggplot()){
 }
 
 
-
+#' @export
 plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
@@ -168,7 +171,7 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   Yplot = c(rbind(Y[,pY],matrix(NA,ncol=np)))
   dfXY = data.frame("x"=Xplot,"y"=Yplot)
   
- 
+  
   library(ggplot2)
   linePlot = add.to.plot+
     geom_path(data=dfXY,aes(x=x,y=y),colour = color,alpha=alp)+
@@ -177,14 +180,15 @@ plot.timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   return(linePlot)
   
 }
+#' @export
 plot.timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
-
+  
   X=as.matrix(X)
   Y=as.matrix(Y)
-
+  
   if(nrow(X)!=nrow(Y)){
     stop("X and Y must have the same number of observations")
   }
@@ -192,76 +196,76 @@ plot.timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
   
   binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
   
-#find cum sum probabilities  
+  #find cum sum probabilities  
   colSums = apply(binned$density,2,sum)
   sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
-bmcs = apply(binned$density/sumMat,2,cumsum)
-
-good.cols = which(!apply(is.na(bmcs),2,all))
-
-probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
-for(p in 1:length(probs)){
-probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
-}
-
-probMat=as.data.frame(probMat)
-lineLabels=as.character(probs)
-
-#make labels better
-goodName= c("-2σ","-1σ","Median","1σ","2σ")
-realProb= c(pnorm(-2:2))
-for(i in 1:length(lineLabels)){
-  p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
-  if(length(p)==1){
-    lineLabels[i]=goodName[p]
-  }
-}
-names(probMat) = lineLabels
-
-#plot it!
-#make pairs of bands moving in 
-#if probs is odd, the center one is just a line
-if(ncol(probMat)%%2==1){
-  center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+  bmcs = apply(binned$density/sumMat,2,cumsum)
   
-  bandMat =  probMat[,-(ncol(probMat)/2+1)]
-}else{
-  center =NA
-  bandMat =  probMat
-}
-
-#deal with colors
-fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
-lineColor="black"
-
-
-library(ggplot2)
-for(b in 1:(ncol(bandMat)/2)){
-  if(b==1){
-    bandPlot = add.to.plot+theme_bw()
+  good.cols = which(!apply(is.na(bmcs),2,all))
+  
+  probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+  for(p in 1:length(probs)){
+    probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
   }
-  bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
-  bandPlot = bandPlot+
-    geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
-}
-
+  
+  probMat=as.data.frame(probMat)
+  lineLabels=as.character(probs)
+  
+  #make labels better
+  goodName= c("-2σ","-1σ","Median","1σ","2σ")
+  realProb= c(pnorm(-2:2))
+  for(i in 1:length(lineLabels)){
+    p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
+    if(length(p)==1){
+      lineLabels[i]=goodName[p]
+    }
+  }
+  names(probMat) = lineLabels
+  
+  #plot it!
+  #make pairs of bands moving in 
+  #if probs is odd, the center one is just a line
+  if(ncol(probMat)%%2==1){
+    center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+    
+    bandMat =  probMat[,-(ncol(probMat)/2+1)]
+  }else{
+    center =NA
+    bandMat =  probMat
+  }
+  
+  #deal with colors
+  fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
+  lineColor="black"
+  
+  
+  library(ggplot2)
+  for(b in 1:(ncol(bandMat)/2)){
+    if(b==1){
+      bandPlot = add.to.plot+theme_bw()
+    }
+    bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
+    bandPlot = bandPlot+
+      geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
+  }
+  
   if(!is.na(center)){
     bandPlot = bandPlot+
       geom_line(data=center,aes(x=x,y=y),colour=lineColor,size=lineWidth)
   }
   
   
-
-return(bandPlot)
-
-
-
-
+  
+  return(bandPlot)
+  
+  
+  
+  
   
   
   
 }
-
+#' @export
 plot.scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
   X=as.matrix(X)
   Y=as.matrix(Y)
@@ -286,7 +290,7 @@ plot.scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
   
   return(list("plot" = scatterplot,"pX"=pX,"pY"=pY))
 }
-
+#' @export
 plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
   #mb.df = dataframe of slopes (column 1) and intercepts (column 2)
   #xrange = range of x values (min and max)
@@ -315,13 +319,13 @@ plot.trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
 }
 
 
-
+#' @export
 plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
   ensData = data.frame("r"=c(ensData))
   library(ggplot2)
   
-
+  
   
   histPlot = add.to.plot+
     geom_histogram(data=ensData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
@@ -345,7 +349,7 @@ plot.hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensSt
   return(histPlot)
 }
 
-
+#' @export
 plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
   library(ggmap)
   library(ggplot2)
@@ -449,6 +453,5 @@ plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,
   summaryPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
   
   return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot.sample.depth))
-  
-  
+
 }
