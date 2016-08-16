@@ -1,10 +1,15 @@
 #' @export
+#' @param X a 1-column matrix or numeric dataset
+#' @return ar coefficient estimate of AR1
 AR1 = function(X){
   ar=cor(X[-1],X[-length(X)],use="pairwise")
   return(ar)
 }
 
 #' @export
+#' @param X a 1-column matrix or numeric dataset
+#' @param Y a 1-column matrix or numeric dataset of the same length as X
+#' @return effectiveN estimate of the effective sample size
 effectiveN = function(X,Y){
   #from Bretherton 1999
   arX = AR1(X)
@@ -16,9 +21,13 @@ effectiveN = function(X,Y){
   }else{
     effN = n *(1-arX*arY)/(1+arX*arY)
   }
+  return(effN)
 }
 
 #' @export
+#' @param r correlation coefficient
+#' @param n sample size
+#' @return p p-value
 pvalPearson.serial.corrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
@@ -30,6 +39,10 @@ pvalPearson.serial.corrected = function(r,n){
   
 }
 #' @export
+#' @param M1 matrix of age-uncertain columns to correlate and calculate p-values
+#' @param M2 matrix of age-uncertain columns to correlate and calculate p-values
+#' @export out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
+
 matrix.corr.and.pvalue = function(M1,M2){
   M1=as.matrix(M1)
   M2=as.matrix(M2)
@@ -55,9 +68,10 @@ matrix.corr.and.pvalue = function(M1,M2){
   return(out)
 }
 
-
-
 #' @export
+#' @param X a matrix of predictor data
+#' @param Y a vector of predictand data
+#' @return B model coeffiecients
 regress=function (X,Y){
   g=which(!apply(is.na(X),1,any) & !is.na(Y))
   X=X[g,]
@@ -65,6 +79,8 @@ regress=function (X,Y){
   b=solve(t(X)%*%X)%*%(t(X)%*%Y)
   return(b)
 }
+
+
 #' @export
 regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
   #check to see if time and values are "column lists"

@@ -1,4 +1,27 @@
 #' @export
+
+run.clam.lipd=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+  #initialize clam directory
+  if(is.na(clamDir)){
+    #check global first
+    if(!exists("clamDir",where = .GlobalEnv)){
+      cat("please select your clam.R file","\n")
+      clamFile=file.choose()
+      clamDir<<-dirname(clamFile)
+      clamDir=clamDir
+    }else{
+      clamFile = "clam.R"
+    }
+    clamDir=get("clamDir",envir = .GlobalEnv)
+  }else{
+    clamFile = "clam.R"
+  }
+  setwd(clamDir)
+  
+  
+}
+
+#' @export
 write.clam.lipd <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){
