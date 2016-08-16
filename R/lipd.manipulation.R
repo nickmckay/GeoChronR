@@ -18,7 +18,7 @@ return(newvar)
 #'
 #' @return L a lipd object
 #' @export
-ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA){
+ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE){
   #check on the chronModel first
   if(is.null(L$chronData)){
     stop("There's no chronData in this file")
@@ -70,16 +70,22 @@ ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA
   
   #make sure the ensemble is there, with data
   print("Looking for age ensemble....")
+  if(strictSearch){
+    aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable,varName = "ageEnsemble",always.choose = FALSE,strictSearch = strictSearch)
+  }else{
 aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable,varName = "ageEnsemble",altNames = c("age","year"))
+}
     if(is.na(aei)){
     stop("There doesn't seem to be in values in the ensemble table for this model (there may not be an ensembleTable, or even a model)")
   }
   #grab the ensemble
   ens=L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable[[aei]]$values
   ensDepth = L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$depth$values
+  
+  
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
-  di = getVariableIndex(L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]],"depth",altNames = "position",always.choose = FALSE)
+  di = getVariableIndex(L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]],"depth",altNames = "position",always.choose = FALSE,strictSearch = strictSearch)
 
   #depthTarget
   depth = L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]][[di]]$values
@@ -174,7 +180,7 @@ select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA
 }
 
 #' @export
-getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.choose=FALSE){
+getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.choose=FALSE,strictSearch=FALSE){
   #restrict to lists  
   #find variables within the table, and their index
   
@@ -209,7 +215,7 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
     idi=as.numeric(n)
   }else{
     idi=which(cnames==varName)
-    if(length(idi)==0 | always.choose){
+    if((length(idi)==0 | always.choose) & !strictSearch){
       cat(paste0("No variable called ", varName, ", or choosing is enforced (always.choose = TRUE)\n"))
       for(i in 1:(length(altNames)+1)){
         if(i==1){
@@ -269,7 +275,7 @@ extract.timeseries = function(D){
   t=1
   for(f in 1:length(D)){
     L = D[[f]]
-    dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000,which.chron = 1,which.model = 1))
+    dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000,which.chron = 1,which.model = 1,strictSearch = TRUE),silent = TRUE)
     if(!grepl(pattern = "error",class(dum)))
     {L=dum}
     for(p in 1:length(L$paleoData)){

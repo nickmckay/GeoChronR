@@ -70,7 +70,7 @@ for(n in 1:nEns){#for each ensemble member
 close(pb)
 
 #reorient any PCs that have a negative correlation with PC mean
-for (p in 1:length(which.PCs)){
+for (p in 1:nPCs){
   meanPC=apply(PCs[,p,],c(1),median)
   ct = cor(meanPC,PCs[,p,])
   toflip = which(ct<0)

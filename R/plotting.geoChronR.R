@@ -2,7 +2,7 @@
 plot_spectra.ens = function (spec.ens){
   
   specPlot = plot_timeseries.ribbons(spec.ens$freqs,spec.ens$power)
-  specPlot = plot_timeseries.ribbons(fMat,pMatSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+  specPlot = plot_timeseries.ribbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
   #to do label significant peaks
   
   #add pvalues?

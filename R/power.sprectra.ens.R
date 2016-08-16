@@ -36,7 +36,7 @@ create.synthetic = function(time,values,nens=1){
 }
 
 #' @export
-powerSpectrum.ens = function(time,values,max.ens=NA,plot.opt=FALSE){
+powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
   library(lomb)#uses this library, for now...
   
   #check to see if time and values are "column lists"
@@ -60,8 +60,11 @@ powerSpectrum.ens = function(time,values,max.ens=NA,plot.opt=FALSE){
     }
   }
   
+  #how big?
+  noutrow = length(lsp(values[,1],times=time[,1],ofac=ofac,plot = F)$power)
+  
   #preallocate
-  fMat = matrix(NA,ncol=nens,nrow=nrow(time)-1)
+    fMat = matrix(NA,ncol=nens,nrow=noutrow)
   pMat = fMat
   pMatSyn = fMat
   
