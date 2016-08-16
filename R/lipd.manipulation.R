@@ -1,3 +1,16 @@
+pull.data.from.TS = function(TS,var2get){
+  
+#query the TS get only the data you want
+civar = lapply(TS,"[[",var2get)
+newvar=c()
+newvar[sapply(civar,is.null)]=NA
+newvar[!sapply(civar,is.null)]=sapply(TS[!sapply(civar,is.null)],"[[",var2get)
+
+return(newvar)
+}
+
+
+
 #'  Create an ageEnsemble variable in a paleoMeasurement Table
 #'
 #' @param L a lipd object
@@ -256,7 +269,7 @@ extract.timeseries = function(D){
   t=1
   for(f in 1:length(D)){
     L = D[[f]]
-    dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000))
+    dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000,which.chron = 1,which.model = 1))
     if(!grepl(pattern = "error",class(dum)))
     {L=dum}
     for(p in 1:length(L$paleoData)){

@@ -158,76 +158,87 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
   
+  
+  
+  
   X=as.matrix(X)
   Y=as.matrix(Y)
   
-  if(nrow(X)!=nrow(Y)){
-    stop("X and Y must have the same number of observations")
-  }
-#  good =which(!is.)
-  
-  
-  binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
-  
-  #find cum sum probabilities  
-  colSums = apply(binned$density,2,sum)
-  sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
-  bmcs = apply(binned$density/sumMat,2,cumsum)
-  
-  good.cols = which(!apply(is.na(bmcs),2,all))
-  
-  probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
-  for(p in 1:length(probs)){
-    probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
-  }
-  
-  probMat=as.data.frame(probMat)
-  lineLabels=as.character(probs)
-  
-  #make labels better
-  goodName= c("-2σ","-1σ","Median","1σ","2σ")
-  realProb= c(pnorm(-2:2))
-  for(i in 1:length(lineLabels)){
-    p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
-    if(length(p)==1){
-      lineLabels[i]=goodName[p]
-    }
-  }
-  names(probMat) = lineLabels
-  
-  #plot it!
-  #make pairs of bands moving in 
-  #if probs is odd, the center one is just a line
-  if(ncol(probMat)%%2==1){
-    center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+  #check to make sure that at least one is a matrix
+  if(ncol(X)==1 & ncol(Y)==1){
+    #then just plot a line
+    df = data.frame(x=X,y=Y)
+    bandPlot=ggplot(data=df)+geom_line(aes(x=X,y=Y),colour=lineColor)+theme_bw()
     
-    bandMat =  probMat[,-(ncol(probMat)/2+1)]
   }else{
-    center =NA
-    bandMat =  probMat
-  }
-  
-  #deal with colors
-  fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
-  lineColor="black"
-  
-  
-  library(ggplot2)
-  for(b in 1:(ncol(bandMat)/2)){
-    if(b==1){
-      bandPlot = add.to.plot+theme_bw()
+    
+    if(nrow(X)!=nrow(Y)){
+      stop("X and Y must have the same number of observations")
     }
-    bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
-    bandPlot = bandPlot+
-      geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
+    #  good =which(!is.)
+    
+    
+    binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+    
+    #find cum sum probabilities  
+    colSums = apply(binned$density,2,sum)
+    sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
+    bmcs = apply(binned$density/sumMat,2,cumsum)
+    
+    good.cols = which(!apply(is.na(bmcs),2,all))
+    
+    probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+    for(p in 1:length(probs)){
+      probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
+    }
+    
+    probMat=as.data.frame(probMat)
+    lineLabels=as.character(probs)
+    
+    #make labels better
+    goodName= c("-2σ","-1σ","Median","1σ","2σ")
+    realProb= c(pnorm(-2:2))
+    for(i in 1:length(lineLabels)){
+      p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
+      if(length(p)==1){
+        lineLabels[i]=goodName[p]
+      }
+    }
+    names(probMat) = lineLabels
+    
+    #plot it!
+    #make pairs of bands moving in 
+    #if probs is odd, the center one is just a line
+    if(ncol(probMat)%%2==1){
+      center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+      
+      bandMat =  probMat[,-(ncol(probMat)/2+1)]
+    }else{
+      center =NA
+      bandMat =  probMat
+    }
+    
+    #deal with colors
+    fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
+    lineColor="black"
+    
+    
+    library(ggplot2)
+    for(b in 1:(ncol(bandMat)/2)){
+      if(b==1){
+        bandPlot = add.to.plot+theme_bw()
+      }
+      bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
+      bandPlot = bandPlot+
+        geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
+    }
+    
+    if(!is.na(center)){
+      bandPlot = bandPlot+
+        geom_line(data=center,aes(x=x,y=y),colour=lineColor,size=lineWidth)
+    }
+    
   }
-  
-  if(!is.na(center)){
-    bandPlot = bandPlot+
-      geom_line(data=center,aes(x=x,y=y),colour=lineColor,size=lineWidth)
-  }
-  
-  
   
   return(bandPlot)
   
@@ -323,7 +334,7 @@ plot_hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensSt
 }
 
 #' @export
-plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
+plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
   library(ggmap)
   library(ggplot2)
   library(gridExtra)
@@ -426,5 +437,5 @@ plotEnsemblePCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,
   summaryPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
   
   return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot_sample.depth))
-
+  
 }

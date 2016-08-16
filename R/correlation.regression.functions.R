@@ -60,8 +60,9 @@ matrix.corr.and.pvalue = function(M1,M2){
       effN = effectiveN(M1[,i],M2[,j])
       pAdj[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],effN)
       p[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
-    }
+    
     setTxtProgressBar(pb, j+ncol(M1)*(i-1))
+    }
   }
   out = data.frame("r"=r,"p"=p,"pAdj"=pAdj)
   close(pb)
@@ -84,10 +85,18 @@ regress=function (X,Y){
 #' @export
 regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
   #check to see if time and values are "column lists"
-  if(is.list(timeX)){timeX=timeX$values}
-  if(is.list(timeY)){timeY=timeY$values}
-  if(is.list(valuesX)){valuesX=valuesX$values}
-  if(is.list(valuesY)){valuesY=valuesY$values}
+  if(is.list(timeX)){
+    otx=timeX
+    timeX=timeX$values}
+  if(is.list(timeY)){
+    oty=timeY
+  timeY=timeY$values}
+  if(is.list(valuesX)){
+    ovx=valuesX
+    valuesX=valuesX$values}
+  if(is.list(valuesY)){
+    ovy=valuesY
+    valuesY=valuesY$values}
   
   
   #make them all matrices
@@ -147,6 +156,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   #how many ensemble members?
   nensPoss = NCOL(binX)*NCOL(binY)
   nens=nensPoss
+  
 
   
   if(!is.na(max.ens)){
@@ -213,6 +223,16 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     #add trendlines
     regPlot = plot_trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot_alpha/10,add.to.plot = regPlot$plot)
     reg.ens.data$scatterplot = regPlot
+    if(exists("ovx")){
+      pl=ovx
+      reg.ens.data$scatterplot = reg.ens.data$scatterplot+xlab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    if(exists("ovy")){
+      pl=ovy
+      reg.ens.data$scatterplot = reg.ens.data$scatterplot+ylab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    
+    
     
     #plot histograms of m and b
     mStats = regStats[,1:2]
@@ -227,12 +247,39 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     binX[is.nan(binX)]=NA
 
     #plot timeseries of regression and target over interval
-    reg.ens.data$XPlot = plot_timeseries.ribbons(yearX,binX)
-    reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")
+    reg.ens.data$XPlot = plot_timeseries.ribbons(yearX,binX)+ggtitle("Calibration interval predictor")
+    if(exists("otx")){
+      pl=otx
+      reg.ens.data$XPlot = reg.ens.data$XPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    if(exists("ovx")){
+      pl=ovx
+      reg.ens.data$XPlot = reg.ens.data$XPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    
+    reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")+ggtitle("Calibration interval predictand")
+    if(exists("oty")){
+      pl=oty
+      reg.ens.data$YPlot = reg.ens.data$XPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    if(exists("ovy")){
+      pl=ovy
+      reg.ens.data$YPlot = reg.ens.data$XPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    
     
     
     #and plot reconstructions
-    reg.ens.data$modeledYPlot = plot_timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)
+    reg.ens.data$modeledYPlot = plot_timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)+ggtitle("Calibrated record using ensemble regression")
+    if(exists("otx")){
+      pl=otx
+      reg.ens.data$modeledYPlot = reg.ens.data$modeledYPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    if(exists("ovy")){
+      pl=ovy
+      reg.ens.data$modeledYPlot = reg.ens.data$modeledYPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
+    }
+    
     
     library(gridExtra)
     lay = rbind(c(1,1,3,3,4,4),
@@ -257,7 +304,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
 
 
 #' @export
-cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_hist=TRUE){
+cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_hist=TRUE,minObs=10){
   
   #check to see if time and values are "column lists"
   if(is.list(time1)){time1=time1$values}
@@ -277,21 +324,39 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   if(nrow(time1) != nrow(values1)){stop("time1 and values1 must have the same number of rows (observations)")}
   if(nrow(time2) != nrow(values2)){stop("time2 and values2 must have the same number of rows (observations)")}
   
-  if(is.na(binvec)){
+  if(all(is.na(binvec))){
     if(is.na(binstep)){
       stop("Either a binvec or binstep must be specified")
     }else{
-      binStart=min(c(time1,time2),na.rm = TRUE)
-      binStop=max(c(time1,time2),na.rm = TRUE)
+      #look for common overlap
+      binStart=floor(max(c(min(time1,na.rm=TRUE),min(time2,na.rm=TRUE))))
+      binStop=ceil(min(c(max(time1,na.rm=TRUE),max(time2,na.rm=TRUE))))
+      print(paste("binning from",binStart,"to",binStop,"..."))
       binvec=seq(binStart,binStop,by=binstep)
     }
   }
   
   #create ensemble bins
   dum = bin.ens(time = time1,values = values1,binvec = binvec,binfun=binfun,max.ens=max.ens)
-  binYear = dum$time
+  year = dum$time
   bin1 = dum$matrix
   bin2 = bin.ens(time = time2,values = values2,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
+  
+  #remove columns that have less than minObs datapoints
+  good = which(apply(!is.na(bin1),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  bin1 = as.matrix(bin1[,good])
+  
+  
+  good = which(apply(!is.na(bin2),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  bin2 = as.matrix(bin2[,good])
+  
+  
   
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...

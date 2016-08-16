@@ -36,4 +36,5 @@ Imports:
 	jpeg,
 	proto,
 	reshape2,
-	rjson       
+	rjson,
+	neotoma       

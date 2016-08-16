@@ -33,6 +33,8 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
       modelNum=1
     }else{
       print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$chronModel)+1))
+      
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -46,8 +48,9 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   
   #run bacon
   setwd(baconDir)
+  if(is.null(baconFile)){baconFile = "Bacon.R"}
   source(baconFile)
-  bacon(core=site.name,thick=thick)
+  Bacon(core=site.name,thick=thick)
   
   print("taking a short break...")
   Sys.sleep(5)
@@ -67,7 +70,7 @@ sample.bacon.ages.lipd <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   if(is.na(K)){
     t=dir(pattern=".bacon")
     #To do? pick from multiple? 
-    K=as.numeric(regmatches(t[1], gregexpr("[0-9]*?(?=\\.bacon)", t[1], perl=T))[[1]])[1]
+    K=as.numeric(regmatches(t[1], gregexpr("[0-9]*?(?=\\.bacon)", t[1], perl=TRUE))[[1]])[1]
   }
   
   out.file=read.table(paste0(corename,'_',as.character(K),'.out'))
@@ -407,7 +410,6 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   setwd(baconDir)
   setwd("Cores")
   
-  print(dir())
   if(!any(grepl(site.name,dir()))){
     print(paste0("can't find a directory called",site.name))
     return(L)
@@ -433,6 +435,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
       modelNum=1
     }else{
       print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$chronModel)+1))
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -493,7 +496,9 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     cat("select the correct ages.txt file","\n")
     st=file.choose()
   }
-  K=as.numeric(regmatches(st, gregexpr("[0-9]*?(?=\\_ages.txt)", st, perl=T))[[1]])[1]
+  
+  
+  K=as.numeric(regmatches(st, gregexpr("[0-9]*?(?=\\_ages.txt)", st, perl=TRUE))[[1]])[1]
   summTable = read.table(st,header = TRUE)
   
   #assign names in.
@@ -526,7 +531,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   
   
   #now grab ensemble data.
-  ageEns = sample.bacon.ageslipd(corename=site.name,baconDir = baconDir)
+  ageEns = sample.bacon.ages.lipd(corename=site.name,baconDir = baconDir)
   
   ageEns$depth$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$depth$units
   ageEns$ageEnsemble$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$age$units
