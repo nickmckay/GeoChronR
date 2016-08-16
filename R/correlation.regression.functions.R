@@ -66,7 +66,7 @@ regress=function (X,Y){
   return(b)
 }
 #' @export
-regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2){
+regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){timeX=timeX$values}
   if(is.list(timeY)){timeY=timeY$values}
@@ -100,18 +100,39 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   binX = dum$matrix
   binY = bin.ens(time = timeY,values = valuesY,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
   
+  #remove columns that have less than minObs datapoints
+  good = which(apply(!is.na(binX),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  binX = as.matrix(binX[,good])
+  
+  
+  good = which(apply(!is.na(binY),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  binY = as.matrix(binY[,good])
+
+  
   if(is.na(binstep)){#if the binstep isn't specified
-    binstep=abs(mean(diff(binvec)))
+    binstep=abs(mean(diff(binvec,na.rm=TRUE)))
+  }
+  
+  #check for a reconstruction binvec
+  if(all(is.na(recon.binvec))){
+    recon.binvec = seq(min(timeX,na.rm=TRUE),max(timeX,na.rm=TRUE),by=binstep)
   }
   
   #get full X for the reconstruction
-  fullX = bin.ens(time = timeX,values = valuesX,binvec = seq(min(timeX,na.rm=TRUE),max(timeX,na.rm=TRUE),by=binstep),binfun=binfun,max.ens=max.ens)
-  
+  fullX = bin.ens(time = timeX,values = valuesX,binvec = recon.binvec,binfun=binfun,max.ens=max.ens)
   
   
   #how many ensemble members?
-  nensPoss = ncol(binX)*ncol(binY)
+  nensPoss = NCOL(binX)*NCOL(binY)
   nens=nensPoss
+
+  
   if(!is.na(max.ens)){
     if(max.ens<nensPoss){
       nens=max.ens
@@ -127,24 +148,25 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   m=matrix(NA,ncol = nens)
   b=m
   if(randomize){
-    rX = sample.int(ncol(binX),size = nens,replace = TRUE)
-    rY = sample.int(ncol(binY),size = nens,replace = TRUE)
+    rX = sample.int(NCOL(binX),size = nens,replace = TRUE)
+    rY = sample.int(NCOL(binY),size = nens,replace = TRUE)
   }else{
-    rX = c(t(matrix(rep(seq(1,ncol(binX)),times = ncol(binY)),ncol = ncol(binY))))
-    rY = c(matrix(rep(seq(1,ncol(binY)),times = ncol(binX)),ncol = ncol(binX)))
+    rX = c(t(matrix(rep(seq(1,NCOL(binX)),times = NCOL(binY)),ncol = NCOL(binY))))
+    rY = c(matrix(rep(seq(1,NCOL(binY)),times = NCOL(binX)),ncol = NCOL(binX)))
   }
   
   #ones columns
-  ones=matrix(1,nrow = nrow(binX))
+  ones=matrix(1,nrow = NROW(binX))
   
   #setup progress bar
   pb <- txtProgressBar(min=1,max=nens,style=3)
   print(paste("Calculating",nens,"regressions"))
   
-  modeled.Y.mat = matrix(NA,ncol=nens,nrow=nrow(fullX$matrix))
+  modeled.Y.mat = matrix(NA,ncol=nens,nrow=NROW(fullX$matrix))
   
   #do the regressions
   for(i in 1:nens){
+    
     B=regress(X = cbind(binX[,rX[i]],ones),Y = binY[,rY[i]])
     m[i]=B[1]
     b[i]=B[2]
@@ -185,6 +207,9 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     reg.ens.data$bHist = plot_hist.ens(b,ensStats = bStats)+xlab("Intercept")
     
     
+    binY[is.nan(binY)]=NA
+    binX[is.nan(binX)]=NA
+
     #plot timeseries of regression and target over interval
     reg.ens.data$XPlot = plot_timeseries.ribbons(yearX,binX)
     reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")
@@ -199,10 +224,10 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
                 c(6,6,6,6,6,6),
                 c(6,6,6,6,6,6))
     
-
+    
     reg.ens.data$summaryPlot = grid.arrange(grobs = list(reg.ens.data$YPlot,reg.ens.data$XPlot,reg.ens.data$scatterplot,
                                                          reg.ens.data$mHist,reg.ens.data$bHist,reg.ens.data$modeledYPlot),
-                                                         layout_matrix=lay)  
+                                            layout_matrix=lay)  
     
     
     
@@ -213,6 +238,8 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
   return(reg.ens.data)
   
 }
+
+
 #' @export
 cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_hist=TRUE){
   
@@ -279,7 +306,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     perc = data.frame("values"=0.05)
     row.names(perc)= "α = 0.05"
     cor.ens.data$plot_p=plot_hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot_p,ensStats = perc)
-  #need to add legend...
+    #need to add legend...
   }
   return(cor.ens.data)
   
@@ -358,7 +385,7 @@ bin = function(time,values,binvec,binfun = mean){
 bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
   timeList = lapply(TS,"[[",timeVar)
   valueList = lapply(TS,"[[","paleoData_values")
-
+  
   binMat = vector(mode="list",length = length(timeList))
   pb <- txtProgressBar(min=1,max=length(timeList),style=3)
   
@@ -367,7 +394,7 @@ bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
     setTxtProgressBar(pb,i)
   }
   close(pb)
-return(binMat)  
+  return(binMat)  
   
 }
 

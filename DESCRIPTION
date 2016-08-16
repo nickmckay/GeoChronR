@@ -29,4 +29,11 @@ Imports:
 	BBmisc,
 	jsonlite,
 	RJSONIO,
-	Kmisc       
+	Kmisc,
+	scales,
+	RgoogleMaps,
+	geosphere,
+	jpeg,
+	proto,
+	reshape2,
+	rjson       

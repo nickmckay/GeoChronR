@@ -43,41 +43,13 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   
   return(out)
 }
-#' @export
-map.lipd = function(L,color="red",size=8,shape = 16,zoom=4){
-  library(ggmap)
-  dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
-  basemap = get_googlemap(center = c(dfp$lon,dfp$lat),zoom=zoom)
-  map = ggmap(ggmap = basemap)  + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,size=size,shape = shape) 
-  if(!is.null( L$geo$siteName)){
-    dfp$sitename = L$geo$siteName
-    map=map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-1)
-  }
-  return(map)
-}
-#' @export
-map.lipds = function(D,color= sapply(D,"[[","archiveType"),size=8,shape = 16 ){
-  library(ggmap)
-  dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),color,shape)
-  dfp = dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
-  rLat=range(dfp$lat)
-  rLon=range(dfp$lon)
-  cent=c(mean(rLon),mean(rLat))
-  zoom = calc_zoom(rLon,rLat)
-  basemap = get_googlemap(center = cent,zoom=zoom,source = "stamen")
-  
-  
-  
-  map = ggmap(ggmap = basemap)  + geom_point(data=dfp,aes(x=lon,y=lat,colour = color),shape = shape,size=7)
-  return(map)
-}
 
 #' @export
 #show a map, timeseries, and age model diagram..
 summary_plot = function(L){
   library(grid)
   library(gridExtra)
-  map = map.lipd(L)
+  map = map.lipd(L,extend.range = 5)
   
   #plot paleoData
   
@@ -92,7 +64,7 @@ summary_plot = function(L){
   paleoPlot = paleoPlot + labs(title = paste("PaleoData:",variable$variableName))
   
   #do chron.
-  if(any(names(L)=="chronData")){
+  if(!is.null(L$chronData[[1]]$chronMeasurementTable)){
     #looking for age model data.
     
     print("looking for ages...")
@@ -192,6 +164,7 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
   if(nrow(X)!=nrow(Y)){
     stop("X and Y must have the same number of observations")
   }
+#  good =which(!is.)
   
   
   binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)

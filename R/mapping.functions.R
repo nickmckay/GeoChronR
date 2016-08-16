@@ -1,9 +1,38 @@
+#' @export
+map.lipd = function(L,color="red",size=8,shape = 16,zoom=4,map.type="google",extend.range=10){
+  library(ggmap)
+  dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
+  basemap = base.map(dfp$lon,dfp$lat,extend.range=extend.range,map.type = map.type)
+  map = basemap + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,size=size,shape = shape) 
+  if(!is.null( L$geo$siteName)){
+    dfp$sitename = L$geo$siteName
+    map=map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-1)
+  }
+  return(map)
+}
+#' @export
+map.lipds = function(D,shape= 21,size=8,fill = sapply(D,"[[","archiveType") ,map.type="google",f=.3,restrict.map.range=TRUE,boundcirc=FALSE,global=FALSE){
+  library(ggmap)
+  dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),fill,shape)
+  dfp = dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
+  basemap = base.map(dfp$lon,dfp$lat,map.type = map.type,f=f,restrict.map.range = restrict.map.range,boundcirc = boundcirc,global=global)
+  map = basemap  + geom_point(data=dfp,aes(x=lon,y=lat,fill = fill),shape = shape,size=7)
+  return(map)
+}
+
+
 #make a base map, with some options. 
 #' @export
-base.map = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE){
+base.map = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
   library("ggplot2")
   library("ggmap")
   library("mapproj")
+  
+  if(length(lat)==1 & length(lon)==1){
+    lon = lon + c(-extend.range,extend.range)
+    lat = lat + c(-extend.range,extend.range)
+}
+  
   
   try(load("bound.box.Rdata"),silent = TRUE)
 if(!exists("bb")){bb=1000}
@@ -62,7 +91,9 @@ if(map.type=="google"){
   if(restrict.map.range){
     baseMap  = baseMap  +  geom_rect(aes(xmax=bb[3]-.1,xmin=bb[1]+.1,ymax=bb[4]-.1,ymin=bb[2]+.1),fill=NA, colour="black",data=bbdf)
   }else if(boundcirc){
-    boundcirc = data.frame(x = seq(-180,180),y=rep(bb[2]+.1,length.out=length(seq(-180,180))))
+    wbb=which(min(abs(bb[c(2,4)]))==abs(bb[c(2,4)]))
+    wbb=c(2,4)[wbb]
+    boundcirc = data.frame(x = seq(-180,180),y=rep(bb[wbb]+.1,length.out=length(seq(-180,180))))
     baseMap  = baseMap  + geom_path(aes(x = x, y = y), data = boundcirc)
   }
   baseMap  = baseMap  +   
