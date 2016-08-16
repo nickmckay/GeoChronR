@@ -41,7 +41,7 @@ pvalPearson.serial.corrected = function(r,n){
 #' @export
 #' @param M1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param M2 matrix of age-uncertain columns to correlate and calculate p-values
-#' @export out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
+#' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 
 matrix.corr.and.pvalue = function(M1,M2){
   M1=as.matrix(M1)
