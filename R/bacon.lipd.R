@@ -80,11 +80,13 @@ sample.bacon.ages.lipd <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   
   
   sline=1
-  while(TRUE){
+  while(sline<10000){
     bacData=try(read.table(bfname,skip=sline,sep=c(",",";")),silent=TRUE)
     if(!is.character(bacData)){
-      if(strsplit(levels(bacData$V1)," ")[[1]][1]=="bacon"){
+      if(strsplit(levels(bacData$V1)," ")[[1]][1]=="Bacon"){
         break
+      }else{
+        sline=sline+1
       }
     }else{
       sline=sline+1
@@ -439,7 +441,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
-  
+
   if(is.na(makeNew)){
     makeNew = FALSE
   }
@@ -457,12 +459,12 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     }
   }
   
-  
+
   
   
   #grab methods first
-  #   setwd(baconDir)
-  #   setwd("Cores")
+  setwd(baconDir)
+  setwd("Cores")
   setwd(site.name)
   sf=dir(pattern="*settings.txt")
   if(length(sf)!=1){
