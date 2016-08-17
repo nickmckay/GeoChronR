@@ -374,11 +374,12 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     N=length(cormatS)
     corStats = data.frame(percentiles,"values" = cormatS[round(percentiles*N)])
     row.names(corStats)=format(corStats$percentiles,digits = 2)
+    cor.ens.data=list(cor.df = cor.df,corStats = corStats)
+    
+  }else{
+    corStats=NA
+    cor.ens.data=list(cor.df = cor.df)
   }
-  
-  
-  
-  cor.ens.data=list(cor.df = cor.df,corStats = corStats)
   
   if(plot_hist){
     library(ggplot2)
