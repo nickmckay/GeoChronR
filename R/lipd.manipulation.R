@@ -1,3 +1,4 @@
+#@export
 pull.data.from.TS = function(TS,var2get){
   
 #query the TS get only the data you want

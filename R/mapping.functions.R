@@ -49,7 +49,7 @@ if(all(bbnew==bb)){
     bb[2] <- bb[2]-(diff*2)
     bb[4] <- bb[4]-(diff*2)
   }
-  save(bb,file="bound.box.Rdata")
+  #save(bb,file="bound.box.Rdata")
 }
 
 if(map.type=="google"){
@@ -59,7 +59,7 @@ if(map.type=="google"){
   #}else{
     newmap <- get_map(location=bb,maptype="terrain",source="google")
   #}
-  save(newmap,file="newmap.RData")
+#  save(newmap,file="newmap.RData")
   baseMap = ggmap(newmap,maprange=TRUE) 
 }else if(map.type=="line"){
   
