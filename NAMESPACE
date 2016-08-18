@@ -3,6 +3,7 @@
 export(AR1)
 export(BAM_correct)
 export(BAM_simul)
+export(Neotoma2LiPD)
 export(PCA.ens)
 export(ageEnsemble.to.paleoData)
 export(assign.high.low.colors)

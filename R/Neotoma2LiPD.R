@@ -1,3 +1,4 @@
+#'@export
 Neotoma2LiPD = function(site){
   #input information is the site object from the R Neotoma package (use get_site)
   #output is an R LiPD object
