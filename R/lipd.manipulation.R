@@ -1,3 +1,6 @@
+
+
+
 #'@export
 pull.data.from.TS = function(TS,var2get){
   
@@ -11,8 +14,6 @@ return(newvar)
 }
 
 #'@export
-#'
-#'
 flip.coords.lipd = function(L){
   olat = L$geo$latitude
   olon = L$geo$longitude
@@ -241,14 +242,22 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
         for(p in 1:length(cnames)){
           cat(paste(p,"-",cnames[p]), "\n")
         }
-        n = readline(prompt="please type the number for the correct match, or a zero if there are no matches: ")
+        n = readline(prompt="please type the number for the correct match, or a zero if none match: ")
         idi=as.numeric(n)
       }else if(length(idi)>1){
         cat(paste("Multiple possible matches for",varName), "\n")
         for(p in 1:length(idi)){
           cat(paste(p,"-",cnames[idi[p]]), "\n")
         }
-        n = readline(prompt="please type the number for the correct match, or a zero if there are no matches: ")
+        n = readline(prompt="please type the number for the correct match, or a zero if you want more options: ")
+        if(as.numeric(n)==0){
+          cat("OK, here are all your options: ", "\n")
+          for(p in 1:length(cnames)){
+            cat(paste(p,"-",cnames[p]), "\n")
+          }
+          n = readline(prompt="please type the number for the correct match, or a zero if none match: ")
+        }
+        
         if(as.numeric(n)==0){
           idi=0
         }else{
