@@ -64,7 +64,7 @@ powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
   noutrow = length(lsp(values[,1],times=time[,1],ofac=ofac,plot = F)$power)
   
   #preallocate
-    fMat = matrix(NA,ncol=nens,nrow=noutrow)
+  fMat = matrix(NA,ncol=nens,nrow=noutrow)
   pMat = fMat
   pMatSyn = fMat
   
@@ -74,7 +74,8 @@ powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
     v = values[,sample.int(ncol(values),size = 1)]
     out = lsp(v,times=t,ofac=ofac,plot = F)
     syn = create.synthetic(t,v)#create synthetic timeseries
-    pMatSyn[,i] =  lsp(syn,times=t,ofac=ofac,plot = F)$power
+    synOut = lsp(syn,times=t,ofac=ofac,plot = F)$power
+    pMatSyn[1:length( synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned
     pMat[,i]=out$power
     if(i%%round(nens/50)==0){
