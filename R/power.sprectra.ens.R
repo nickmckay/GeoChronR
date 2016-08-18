@@ -9,6 +9,12 @@ create.synthetic = function(time,values,nens=1){
   time = as.matrix(time)
   values = as.matrix(values)
   
+  #find the NAs...
+  tnai = which(is.na(time))
+  vnai = which(is.na(values))
+  
+  
+  
   #measure long term trend
   trend=predict(lm(values~time))
   #remove the trend
@@ -30,8 +36,14 @@ create.synthetic = function(time,values,nens=1){
     #scale the same as data
     rdata=scale(rdata)*s+m
     #add the data trend in
-    synValues[,jj]=rdata+trend
+    withTrend=rdata+trend
+    withTrend[vnai]=NA
+    synValues[,jj]=withTrend
+    
   }
+  
+  
+  
   return(synValues)
 }
 

@@ -258,9 +258,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   
   # Write back into a LiPD file
   
-  # Create the place holder for the LiPD file
-  L$chronData[[which.chron]]$chronModel[[modelNum]]=NA
-  
+  # Create the place holder for the LiPD fil
   # Grab the methods first
   methods = list()
   methods$algorithm = 'Bchron'
@@ -268,7 +266,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   
   #write it out
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$methods=methods
+  L$chronData[[which.chron]]$chronModel[[modelNum]]=list(methods=methods)
   
   
   # Ensemble table since it's easy to access in Bchron

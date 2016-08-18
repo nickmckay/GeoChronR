@@ -380,10 +380,10 @@ write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   
   setwd(cur.dir)
   if(modelNum>length(L$chronData[[which.chron]]$chronModel)){
-    L$chronData[[which.chron]]$chronModel[[modelNum]]=NA
+    L$chronData[[which.chron]]$chronModel[[modelNum]]=list(inputTable = out.table)
+  }else{
+    L$chronData[[which.chron]]$chronModel[[modelNum]]$inputTable = out.table
   }
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$inputTable = out.table
-  
   return(L)
   
   
@@ -441,7 +441,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
-
+  
   if(is.na(makeNew)){
     makeNew = FALSE
   }
@@ -459,7 +459,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     }
   }
   
-
+  
   
   
   #grab methods first
