@@ -74,7 +74,7 @@ powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
     v = values[,sample.int(ncol(values),size = 1)]
     out = lsp(v,times=t,ofac=ofac,plot = F)
     syn = create.synthetic(t,v)#create synthetic timeseries
-    synOut = lsp(syn,times=t,ofac=ofac,plot = F)$power
+    synOut = lsp(syn,times=t,ofac=ofac,plot = F)
     pMatSyn[1:length( synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned
     pMat[,i]=out$power

@@ -256,13 +256,11 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
             cat(paste(p,"-",cnames[p]), "\n")
           }
           n = readline(prompt="please type the number for the correct match, or a zero if none match: ")
-        }
-        
-        if(as.numeric(n)==0){
-          idi=0
+          idi=as.numeric(n)
         }else{
-          idi=idi[as.numeric(n)]
+          idi = idi[as.numeric(n)]
         }
+
       }else{
         cat(paste("Use",cnames[idi], "?"), "\n")
         q = readline(prompt="y or n?")

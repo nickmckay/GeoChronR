@@ -1,5 +1,5 @@
 #'@export
-run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
+run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
   cur.dir = getwd()
   
   #initialize which.chron
@@ -49,7 +49,7 @@ run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   #14C age
   print("Looking for radiocarbon ages...")
   print("If using the normal calibration option, point to the U/Th ages")
-  c14i = getVariableIndex(MT,"age14C",altNames = "age")
+  c14i = getVariableIndex(MT,"age14C")
   if (is.na(c14i)){
     stop("Bchron requires ages.")
   }else{
@@ -146,7 +146,7 @@ run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   # Lab ID (not required by Bchron but needed for LiPD output)
   #labID
   print("Looking for laboratory ID...")
-  idi = getVariableIndex(MT,"labID",altNames = "id")
+  idi = getVariableIndex(MT,"labID")
   if (is.na(idi)){
     print("No LabID provided in the chron measurement table")
   }else{
@@ -229,19 +229,20 @@ run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     #remove the reservoir age correction from the 14C ages
     ages = age14C - reservoir
     # calculate the uncertainty due to the radiocarbon measurement and the reservoir age correction
-    age_sds = sqrt(age14Cuncertainty^2 + reservoirUnc^2)}
-  
-  # perform one more check to make sure that the dates are in the calibration range of the selected 
-  max_ages = ages-3*age_sds
-  min_ages = ages+3*age_sds
-  index_out = which(max_ages<=400 | min_ages>=35000)
-  
-  if (!is.null(index_out)){
-    ages = ages[-index_out]
-    age_sds = age_sds[-index_out]
-    depth = depth[-index_out]
-    labID = LabID[-index_out]
-  } else {
+    age_sds = sqrt(age14Cuncertainty^2 + reservoirUnc^2)
+    
+    # perform one more check to make sure that the dates are in the calibration range of the selected 
+    max_ages = ages-3*age_sds
+    min_ages = ages+3*age_sds
+    index_out = which(max_ages<=400 | min_ages>=35000)
+    
+    if (!is.null(index_out)){
+      ages = ages[-index_out]
+      age_sds = age_sds[-index_out]
+      depth = depth[-index_out]
+      labID = LabID[-index_out]
+    } 
+  }else {
     ages = age14C
     age_sds = age14Cuncertainty
   }
@@ -263,7 +264,8 @@ run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   # Grab the methods first
   methods = list()
   methods$algorithm = 'Bchron'
-  methods$description = 'Some dates not included in the analysis'
+  
+  
   #write it out
   
   L$chronData[[which.chron]]$chronModel[[modelNum]]$methods=methods
@@ -302,9 +304,4 @@ run.bchron.LiPD <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   return(L)
   
 }
-
-
-
-
-
 
