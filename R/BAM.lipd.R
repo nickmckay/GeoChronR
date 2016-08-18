@@ -25,6 +25,42 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   yearData = select.data(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = TRUE)
   
   
+  #make sure that the most recent year is first
+  if(grepl(pattern = "CE",yearData$units,ignore.case = TRUE) | grepl(pattern = "AD",yearData$units,ignore.case = TRUE)){
+    #then its in calendar years
+    calYear=TRUE
+  }else if(grepl(pattern = "ka",yearData$units,ignore.case = TRUE) | grepl(pattern = "BP",yearData$units,ignore.case = TRUE) ){
+    #then its BP
+    calYear=FALSE
+    
+  }else{
+    #then we have to ask
+    answer = as.integer(readline(prompt = "Are the time data in Years (AD or CE) (enter 1) or in Age (BP or ka) (enter 2) ?"))
+    if(answer==1){
+      calYear = TRUE
+    }else if(answer==2){
+      calYear=FALSE
+    }else{
+      stop("You didn't enter 1 or 2")
+    }
+  }
+  
+  
+  #make sure most recent is up.
+  flipped=FALSE
+  ydnn=na.omit(yearData$values)
+  if(calYear){
+    #the largest year should be first
+    if(min(ydnn,na.rm =TRUE)==ydnn[1]){
+      flipped=TRUE
+    }
+  }else{
+    #the largest year should be last
+    if(max(ydnn,na.rm =TRUE)==ydnn[1]){
+      flipped=TRUE
+    }
+  }
+  
   
   #does this lipd have a chronData?
   if(is.null(L$chronData)){
@@ -115,13 +151,23 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
                 ,ns=CM$methods$parameters$nEns,resize=CM$methods$parameters$resize)	
   
   
+  yearDataToRun = as.matrix(yearData$values)
+  if(flipped){
+    #then invert it before running
+    yearDataToRun=as.matrix(yearDataToRun[nrow(yearDataToRun):1,])
+  }
   
   #run BAM
-  bamOut=BAM_simul(as.matrix(yearData$values),as.matrix(yearData$values),ageEnsOut=TRUE,model = model)
+  bamOut=BAM_simul(yearDataToRun,yearDataToRun,ageEnsOut=TRUE,model = model)
   
   #store output appropriately in chronModel
   CM$ensembleTable = list()
-  CM$ensembleTable$ageEnsemble$values = bamOut$ageEns
+  ensOut =  bamOut$ageEns
+  if(flipped){
+    #then flip it back
+    ensOut  = as.matrix(ensOut[nrow(ensOut):1,])
+  }
+  CM$ensembleTable$ageEnsemble$values = ensOut
   CM$ensembleTable$ageEnsemble$units = yearData$units
   CM$ensembleTable$timeCorrectionMatrix$values = bamOut$tmc
   CM$ensembleTable$timeCorrectionMatrix$units = NA
@@ -131,7 +177,7 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   #place into paleoData appropriately.
   #assign into paleoMeasurementTable
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$values = bamOut$ageEns
+  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$values = ensOut
   L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
   L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
   L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronModel = which.model

@@ -10,6 +10,16 @@ newvar[!sapply(civar,is.null)]=sapply(TS[!sapply(civar,is.null)],"[[",var2get)
 return(newvar)
 }
 
+#'@export
+#'
+#'
+flip.coords.lipd = function(L){
+  olat = L$geo$latitude
+  olon = L$geo$longitude
+  L$geo$longitude=olat
+  L$geo$latitude= olon
+  return(L)
+}
 
 
 #'  Create an ageEnsemble variable in a paleoMeasurement Table
