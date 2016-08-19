@@ -284,11 +284,22 @@ write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   ta <- rep(3,len=nrows)
   tb <- rep(4,len=nrows)
   if(is.na(cc)){
-    if(grepl("marine",tolower(L$archiveType))){#assume a marine cal curve if it's marine
-      cc <- rep(2,len=nrows)
-      
+    if(any(names(L)=="archiveType")){
+      if(grepl("marine",tolower(L$archiveType))){#assume a marine cal curve if it's marine
+        cc <- rep(2,len=nrows)
+      }else{
+        cc <- rep(1,len=nrows)
+      }
     }else{
-      cc <- rep(1,len=nrows)
+      useMarine = readline(prompt = "Do you want to use the Marine13 curve?")
+      if(grepl(useMarine,pattern = "y")){
+        cc <- rep(2,len=nrows)
+        
+      }else{
+        cc <- rep(1,len=nrows)
+      } 
+      
+      
     }
   }else{# force it to be what was prescribed
     cc <- rep(cc,len=nrows)

@@ -321,6 +321,9 @@ extract.timeseries = function(D){
           }
           
           diffgrab = which((names(PM) %in% dontinclude) & sapply(PM,is.list))
+          if(length(diffgrab)==0){
+            stop(paste(P$dataSetName,"doesn't have any of",paste(dontinclude,collapse = ", ")))
+          }
           for(dg in 1:length(diffgrab)){
             TS[[t]][[names(diffgrab)[dg]]]=PM[[diffgrab[dg]]]$values
             TS[[t]][[paste0(names(diffgrab)[dg],"Units")]]=PM[[diffgrab[dg]]]$units

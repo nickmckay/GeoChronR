@@ -1,4 +1,18 @@
 #'@export
+#'
+estimate.uncertainty.from.range = function(MT,range1="age.young",range2="age.old"){
+  val1=MT[[range1]]$values
+  val2=MT[[range2]]$values
+  library(matrixStats)
+  diffVals=abs(rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
+  uncVal = diffVals/2
+  MT$unc.estimate$values = uncVal
+  MT$unc.estimate$variableName = "unc.estimate"
+  MT$unc.estimate$units=MT[[range2]]$units
+  return(MT)
+}
+
+#'@export
 Neotoma2LiPD = function(site){
   #input information is the site object from the R Neotoma package (use get_site)
   #output is an R LiPD object
@@ -86,7 +100,7 @@ Neotoma2LiPD = function(site){
     
     for (s in 1:length(smNames)){
       if(!all(is.na(sm[[smNames[s]]]))){
-        pmt[[smNames[s]]]$values = sm[smNames[s]]
+        pmt[[smNames[s]]]$values = as.matrix(sm[smNames[s]])
         pmt[[smNames[s]]]$variableName =smNames[s] 
         if("depth"==smNames[s]){
           pmt[[smNames[s]]]$units = "cm"
@@ -103,7 +117,7 @@ Neotoma2LiPD = function(site){
     
     for (s in 1:length(cNames)){
       if(!all(is.na(co[[cNames[s]]]))){
-        pmt[[cNames[s]]]$values = co[cNames[s]]
+        pmt[[cNames[s]]]$values = as.matrix(co[cNames[s]])
         pmt[[cNames[s]]]$variableName =cNames[s] 
         wtl= which(cNames[s]==tl$taxon.name)
         if (length(wtl)==1){
@@ -125,7 +139,7 @@ Neotoma2LiPD = function(site){
         if(any(defChronId != neo[[n]]$chronologies[[ch]]$chronology.id)){
           #then this is not the default
           pmt[[paste0("age_alt",cc)]]$units = unique(neo[[n]]$chronologies[[ch]]$age.type)
-          pmt[[paste0("age_alt",cc)]]$values = neo[[n]]$chronologies[[ch]]$age
+          pmt[[paste0("age_alt",cc)]]$values = as.matrix(neo[[n]]$chronologies[[ch]]$age)
           pmt[[paste0("age_alt",cc)]]$chronName = paste(unique(neo[[n]]$chronologies[[ch]]$chronology.name),"-",dataSetID)
           cc=cc+1
         }else{
@@ -153,7 +167,7 @@ Neotoma2LiPD = function(site){
         
         
         if(!all(is.na(chron$chron.control[[cNames[s]]]))){
-          cmt[[cNames[s]]]$values = chron$chron.control[cNames[s]]
+          cmt[[cNames[s]]]$values = as.matrix(chron$chron.control[cNames[s]])
           cmt[[cNames[s]]]$variableName =cNames[s] 
           if("depth"==smNames[s] |"thickness"==smNames[s]){
             cmt[[smNames[s]]]$units = "cm"
