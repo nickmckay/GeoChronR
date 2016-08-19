@@ -464,7 +464,7 @@ bin = function(time,values,binvec,binfun = mean){
   
 }
 #' @export
-bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
+bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE){
   timeList = lapply(TS,"[[",timeVar)
   valueList = lapply(TS,"[[","paleoData_values")
   
@@ -473,6 +473,13 @@ bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000){
   
   for(i in 1:length(timeList)){
     binMat[[i]]=bin.ens(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
+    if(na.col.rm){
+      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all))
+      if(length(allNa)>0){
+        binMat[[i]]$matrix = binMat[[i]]$matrix[,-allNa]
+      }
+    }
+    
     setTxtProgressBar(pb,i)
   }
   close(pb)
