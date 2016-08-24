@@ -2,8 +2,8 @@
 #' @param X a 1-column matrix or numeric dataset
 #' @return ar coefficient estimate of AR1
 AR1 = function(X){
-  ar=cor(X[-1],X[-length(X)],use="pairwise")
-  return(ar)
+  fit = arima(x = X, order = c(1, 0, 0))
+  return(fit$coef[[1]])
 }
 
 #' @export
