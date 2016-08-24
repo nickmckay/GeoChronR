@@ -37,4 +37,5 @@ Imports:
 	proto,
 	reshape2,
 	rjson,
+	mass,
 	neotoma       
