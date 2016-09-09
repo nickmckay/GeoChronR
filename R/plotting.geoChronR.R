@@ -302,6 +302,73 @@ plot_trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
   return(trendlines)
 }
 
+#' @export
+plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot()){
+  # evaluate preliminary quantities
+  rng <- range(cor.df$r)
+  bw = (rng[2]-rng[1])/bins
+  
+  cs = colSums(cor.df)
+  sig_frac = cs["sig_fdr"][[1]]/dim(cor.df)[1]*100
+  sig_lbl = paste0("Fraction: ", sig_frac, "%")
+  # Now the plotting begins
+  lbf = c("All correlations","p < 0.05 + FDR")
+  h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
+    geom_histogram(data=cor.df,aes(x=r,y=..count..,fill = factor(sig_fdr)), position = 'identity', colour = "white", binwidth = bw) +
+    scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
+  ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
+  xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
+  # add vertical lines at the quantiles specified in corStats. 
+  h = h + geom_vline(data = q, aes(xintercept = values), color="red", size = 1,
+                     linetype=c("dotted","dashed","solid","dashed","dotted"), show.legend = FALSE) +
+    ylim(c(ylims[1],ylims[2]*1.1)) # expand vertical range
+  ymax = ggplot_build(h)$panel$ranges[[1]]$y.range[2]
+  # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
+  h = h + geom_text(data = q, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
+    annotate("text",x = 0.8*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4") # add fraction of significant correlations
+  # customize legend
+  h = h + theme(legend.position = c(0.8, 0.8),
+                legend.title = element_text(size=10, face="bold"),
+                legend.text = element_text(size=8),
+                legend.key = element_rect(fill = "transparent",
+                                          colour = "transparent"),
+                legend.background = element_rect(fill=alpha('white', 0.3)))
+
+  return(h)
+}
+
+plot_pvals.ens = function(cor.df,alpha = 0.05){
+  m=dim(cor.df)[1] # number of hypotheses being tested
+  rk = seq(m)
+  fdr_thresh = rk/m*alpha
+  lvl_thresh = rep(alpha,m)
+  pvals = sort(cor.df$pRaw)
+  pvalsA = sort(cor.df$pSerial)
+  # Implement this strategy: https://stackoverflow.com/questions/38962700/ggplot-legend-order-mismatch
+  df <- data.frame(pvals, pvalsA, FDR = fdr_thresh, level = lvl_thresh, x = rk)
+  mm <- reshape2::melt(df,id.var="x")
+  lbl <- c("p-value, IID","p-value, Serial","FDR", bquote(alpha==.(alpha)))
+  pvalPlot <- ggplot(data = mm, aes(x,value,colour=variable,linetype=variable)) + geom_line()
+  pvalPlot <- pvalPlot + scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                           labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                           limits = c(1e-20,1))
+  pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
+  pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
+                                values=c("Chocolate1",'Chartreuse4',"black","black"),
+                                labels=lbl)
+  pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
+                    legend.title = element_text(size=10, face="bold"),
+                    legend.text = element_text(size=8),
+                    legend.key = element_rect(fill = "transparent",
+                                              colour = "transparent"),
+                    legend.background = element_rect(fill=alpha('white', 0.5)))
+  # fix labels  
+  pvalPlot <- pvalPlot +ylab("p-value") + xlab("rank") 
+  
+  return(pvalPlot)
+}
+
+#  THIS SHOULD BE DEPRECATED - kept for backwards compatibility
 
 #' @export
 plot_hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){

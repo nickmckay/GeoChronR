@@ -51,7 +51,7 @@ matrix.corr.and.pvalue = function(M1,M2){
   p=matrix(NA,nrow = ncol(M1)*ncol(M2))
   pAdj=p;
   r=p
-  nens=nrow(p)
+  nens=nrow(p) # number of ensemble members
   pb <- txtProgressBar(min=1,max=nens,style=3)
   print(paste("Calculating",nens,"correlations"))
   for(i in 1:ncol(M1)){
@@ -64,7 +64,16 @@ matrix.corr.and.pvalue = function(M1,M2){
     setTxtProgressBar(pb, j+ncol(M1)*(i-1))
     }
   }
-  out = data.frame("r"=r,"p"=p,"pAdj"=pAdj)
+  # apply false discovery rate procedure to ADJUSTED p-values
+  fdrOut = fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean') 
+  sig_fdr = matrix(0,nens)
+  sig_fdr[fdrOut] = 1 
+ 
+    # Rmks:
+    # 1) probably qlevel should be an optional parameter 
+    # 2) could silence the FDR screen output
+  # export to data frame
+  out = data.frame("r"=r,"pSerial"=pAdj,"pRaw"=p,"sig_fdr"=sig_fdr)
   close(pb)
   return(out)
 }
@@ -77,13 +86,13 @@ regress=function (X,Y){
   g=which(!apply(is.na(X),1,any) & !is.na(Y))
   X=X[g,]
   Y=Y[g]
-  b=solve(t(X)%*%X)%*%(t(X)%*%Y)
+  b=solve(t(X)%*%X)%*%(t(X)%*%Y)  # this is straight up OLS. Why not use lm? 
   return(b)
 }
 
 
 #' @export
-regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
+regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(2.5,25,50,75,97.5),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){
     otx=timeX
@@ -212,7 +221,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     ms = sort(m)
     bs = sort(b)
     N=length(ms)
-    regStats = data.frame(percentiles,"m" = ms[round(percentiles*N)],"b" = bs[round(percentiles*N)])
+    regStats = data.frame(percentiles,"m" = ms[round(percentiles*N/100)],"b" = bs[round(percentiles*N/100)])
     row.names(regStats)=format(regStats$percentiles,digits = 2)
   }
   reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat)
@@ -304,16 +313,13 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
 
 
 #' @export
-cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(pnorm(-2:2)),plot_hist=TRUE,minObs=10){
+cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),plot_hist=TRUE,minObs=10){
   
   #check to see if time and values are "column lists"
   if(is.list(time1)){time1=time1$values}
   if(is.list(time2)){time2=time2$values}
   if(is.list(values1)){values1=values1$values}
   if(is.list(values2)){values2=values2$values}
-  
-  
-  
   
   #make them all matrices
   time1 = as.matrix(time1)
@@ -330,7 +336,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     }else{
       #look for common overlap
       binStart=floor(max(c(min(time1,na.rm=TRUE),min(time2,na.rm=TRUE))))
-      binStop=ceil(min(c(max(time1,na.rm=TRUE),max(time2,na.rm=TRUE))))
+      binStop=ceiling(min(c(max(time1,na.rm=TRUE),max(time2,na.rm=TRUE))))
       print(paste("binning from",binStart,"to",binStop,"..."))
       binvec=seq(binStart,binStop,by=binstep)
     }
@@ -362,18 +368,16 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
   cor.df = matrix.corr.and.pvalue(bin1,bin2)
-  
-  
+
   #and the significance
   #pairwise observations
   
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
-    cormatS = sort(cor.df$r)
-    N=length(cormatS)
-    corStats = data.frame(percentiles,"values" = cormatS[round(percentiles*N)])
-    row.names(corStats)=format(corStats$percentiles,digits = 2)
+    pctl = quantile(cor.df$r,probs = percentiles/100)
+    corStats = data.frame(percentiles,"values" = pctl)
+    #row.names(corStats)=format(corStats$percentiles,digits = 2) # it appears that the rows are already well formatted
     cor.ens.data=list(cor.df = cor.df,corStats = corStats)
     
   }else{
@@ -383,12 +387,8 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   
   if(plot_hist){
     library(ggplot2)
-    cor.ens.data$plot_r = plot_hist.ens(cor.df$r,ensStats = corStats)
-    cor.ens.data$plot_p = plot_hist.ens(cor.df$p) + xlab("p-value")
-    perc = data.frame("values"=0.05)
-    row.names(perc)= "α = 0.05"
-    cor.ens.data$plot_p=plot_hist.ens(cor.df$pAdj,fill="red",alp=.5,add.to.plot = cor.ens.data$plot_p,ensStats = perc)
-    #need to add legend...
+    cor.ens.data$plot_r = plot_corr.ens(cor.df,corStats)
+    cor.ens.data$plot_p = plot_pvals.ens(cor.df)
   }
   return(cor.ens.data)
   
