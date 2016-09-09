@@ -276,7 +276,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   ageEns$depth = MT[[depthi]]$values
   ageEns$depth$units = MT[[depthi]]$units
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable=ageEns
+  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable=list(ageEns=ageEns)
   
   #Probability distribution table
   for (i in seq(from=1, to=length(run$calAges), by =1)){
@@ -289,7 +289,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     distTable$density = run$calAges[[i]]$densities
     distTable$grid = run$calAges[[i]]$ageGrid
     # write it out
-    L$chronData[[which.chron]]$chronModel[[modelNum]]$distributionTable[[i]]=distTable
+    L$chronData[[which.chron]]$chronModel[[modelNum]]$distributionTable[[i]]=list(distTable=distTable)
   }
   
   # Summary Table
@@ -297,7 +297,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   sumTable$LabID = LabID
   sumTable$depth = depth
   sumTable$meanCalibratedAge = rowMeans(t(run$theta))
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=sumTable
+  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=list(sumTable=sumTable)
   
   return(L)
   
