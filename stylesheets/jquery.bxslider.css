@@ -19,10 +19,11 @@
 	margin: 0 auto 60px;
 	padding: 0;
 	*zoom: 1;
+	max-width: 65%;
 }
 
 .bx-wrapper img {
-	max-width: 100%;
+	max-width: 65%;
 	display: block;
 }
 
@@ -30,9 +31,9 @@
 ===================================*/
 
 .bx-wrapper .bx-viewport {
-	-moz-box-shadow: 0 0 5px #ccc;
+/*	-moz-box-shadow: 0 0 5px #ccc;
 	-webkit-box-shadow: 0 0 5px #ccc;
-	box-shadow: 0 0 5px #ccc;
+	box-shadow: 0 0 5px #ccc;*/
 	border:  5px solid #fff;
 	left: -5px;
 	background: #fff;
@@ -49,7 +50,8 @@
 .bx-wrapper .bx-controls-auto {
 	position: absolute;
 	bottom: -30px;
-	width: 100%;
+	width: 65%;
+	max-width: 65%;
 }
 
 /* LOADER */
@@ -58,11 +60,13 @@
 	min-height: 50px;
 	background: url(images/bx_loader.gif) center center no-repeat #fff;
 	height: 100%;
-	width: 100%;
+	width: 65%;
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 2000;
+	max-width: 65%;
+
 }
 
 /* PAGER */
@@ -192,7 +196,7 @@
 	left: 0;
 	background: #666\9;
 	background: rgba(80, 80, 80, 0.75);
-	width: 100%;
+	width: 65%;
 }
 
 .bx-wrapper .bx-caption span {
