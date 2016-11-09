@@ -1,4 +1,6 @@
 #' @export
+#' @description estimates AR1 using the arima() function
+#' @author Julien Emile-Geay
 #' @param X a 1-column matrix or numeric dataset
 #' @return ar coefficient estimate of AR1
 AR1 = function(X){
@@ -7,9 +9,11 @@ AR1 = function(X){
 }
 
 #' @export
+#' @description Bretherton et al., 1999 estimate of effective sample size.
+#' @author Nick McKay
 #' @param X a 1-column matrix or numeric dataset
 #' @param Y a 1-column matrix or numeric dataset of the same length as X
-#' @return effectiveN estimate of the effective sample size
+#' @return estimate of the effective sample size
 effectiveN = function(X,Y){
   #from Bretherton 1999
   arX = AR1(X)
@@ -25,9 +29,11 @@ effectiveN = function(X,Y){
 }
 
 #' @export
+#' @description Calculate Pearson p-values accounting for effective sample size
+#' @author Nick McKay
 #' @param r correlation coefficient
 #' @param n sample size
-#' @return p p-value
+#' @return p-value based on two-tailed t-test
 pvalPearson.serial.corrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
@@ -39,6 +45,8 @@ pvalPearson.serial.corrected = function(r,n){
   
 }
 #' @export
+#' @description Calculates correlations and associated p-values for two ensemmble matrices (or vectors) 
+#' @author Nick McKay
 #' @param M1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param M2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
@@ -79,19 +87,38 @@ matrix.corr.and.pvalue = function(M1,M2){
 }
 
 #' @export
+#' @description Simple regression function. Faster than lm()
+#' @author Nick McKay
 #' @param X a matrix of predictor data
 #' @param Y a vector of predictand data
-#' @return B model coeffiecients
+#' @return model coefficients
 regress=function (X,Y){
   g=which(!apply(is.na(X),1,any) & !is.na(Y))
   X=X[g,]
   Y=Y[g]
-  b=solve(t(X)%*%X)%*%(t(X)%*%Y)  # this is straight up OLS. Why not use lm? 
+  b=solve(t(X)%*%X)%*%(t(X)%*%Y)  # this is straight up OLS. Why not use lm? - Answer: this is a bit faster computationally. NM.
   return(b)
 }
 
 
 #' @export
+#' @description This is the primary function for ensemble regression. It will take ensemble values in time and/or values in the predictor (X), and regress them on ensemble values in time and/or values in Y (the predictand). The function will then apply the ensemble linear model to the full length of X to create a modeled Y. Will also optionally create plots. 
+#' @param timeX matrix of age/time ensembles, or single column
+#' @param valuesX matrix of values ensembles, or single column
+#' @param timeY matrix of age/time ensembles, or single column
+#' @param valuesY matrix of values ensembles, or single column
+#' @param binvec vector of bin edges for binning step
+#' @param binstep spacing of bins, used to build bin step
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param max.ens maximum number of ensemble members to regress
+#' @param percentiles quantiles to calculate for regression parameters
+#' @param plot_reg create plots? True or False
+#' @param plot_alpha transparency
+#' @param recon.binvec bin vector to use for the modeled regression.
+#' @param minObs minimum number of points required to calculate regression
+#' @return list of ensemble ouput, including ensemble results and plots
+#' @author Nick McKay
+
 regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(2.5,25,50,75,97.5),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){
@@ -313,6 +340,21 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
 
 
 #' @export
+#' @description Primary function for calculating correlation ensembles
+#' @author Nick McKay
+#' @param time1 matrix of age/time ensembles, or single column
+#' @param values1 matrix of values ensembles, or single column
+#' @param time2 matrix of age/time ensembles, or single column
+#' @param values2 matrix of values ensembles, or single column
+#' @param binvec vector of bin edges for binning step
+#' @param binstep spacing of bins, used to build bin step
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param max.ens maximum number of ensemble members to correlate
+#' @param percentiles quantiles to calculate for regression parameters
+#' @param plot_hist create histograms? True or False
+#' @param minObs minimum number of points required to calculate regression
+#' @return list of ensemble ouput, including ensemble results and plots
+#' 
 cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),plot_hist=TRUE,minObs=10){
   
   #check to see if time and values are "column lists"
@@ -396,8 +438,17 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
 
 
 #' @export
+#' @description takes ensembles in time and/or values and creates a matrix of data for future analysis
+#' @param time single column vector of time
+#' @param values single column vector of values to bin
+#' @param binvec vector of bin edges for binning step
+#' @param binstep spacing of bins, used to build bin step
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param max.ens maximum number of ensemble members to regress
+#' @return list that includes matrix of binned data and binned time
+
 bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
-  #takes ensembles in time and/or values and creates a matrix of data for future analysis
+  
   time = as.matrix(time)
   values = as.matrix(values)
   
@@ -446,7 +497,15 @@ bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
   return(binned)
   
 }
+
 #' @export
+#' @description function that puts data into appropriate bins, based on the time and the binning vector the bin vector describes the edges of the bins
+#' @param time vector of time
+#' @param values vector of values to bin
+#' @param binvec vector of bin edges for binning step
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @author Nick McKay
+#' @return time
 bin = function(time,values,binvec,binfun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
   #the bin vector describes the edges of the bins
