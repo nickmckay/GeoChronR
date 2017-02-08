@@ -78,10 +78,14 @@ Neotoma2LiPD = function(site){
         L$pub = append(L$pub,newPub)
       }
     }
+    
+    
     #Dataset name
     firstAuthor = strsplit(L$pub[[1]]$author,",")[[1]][1]
-    L.dataSetName = paste(L$geo$siteName,firstAuthor,L$pub[[1]]$pubYear,sep = ".")
-    L.dataSetName=gsub(" ","",L.dataSetName)
+    L$dataSetName = paste(L$geo$siteName,firstAuthor,L$pub[[1]]$pubYear,sep = ".")
+    L$dataSetName=gsub(" ","",L$dataSetName)
+    
+
     
     
     #paleodata...

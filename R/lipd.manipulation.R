@@ -292,6 +292,7 @@ extract.timeseries = function(D){
   TS=list()
   t=1
   for(f in 1:length(D)){
+    print(f)
     L = D[[f]]
     dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000,which.chron = 1,which.model = 1,strictSearch = TRUE),silent = TRUE)
     if(!grepl(pattern = "error",class(dum)))
@@ -300,6 +301,7 @@ extract.timeseries = function(D){
       P=L$paleoData[[p]]
       for(pm in 1:length(P$paleoMeasurementTable)){
         PM = P$paleoMeasurementTable[[pm]]
+        print(names(PM))
         dontinclude = c("age","year","depth","ageEnsemble")
         tograb = which(!(names(PM) %in% dontinclude) & sapply(PM,is.list))
         for(tg in tograb){
