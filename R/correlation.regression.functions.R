@@ -417,7 +417,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
-    pctl = quantile(cor.df$r,probs = percentiles/100)
+    pctl = quantile(cor.df$r,probs = percentiles)
     corStats = data.frame(percentiles,"values" = pctl)
     #row.names(corStats)=format(corStats$percentiles,digits = 2) # it appears that the rows are already well formatted
     cor.ens.data=list(cor.df = cor.df,corStats = corStats)

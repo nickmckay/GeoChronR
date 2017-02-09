@@ -316,17 +316,25 @@ plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats)
   h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
     geom_histogram(data=cor.df,aes(x=r,y=..count..,fill = factor(sig_fdr)), position = 'identity', colour = "white", binwidth = bw) +
     scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
-  ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
-  xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
+  
+  
+  #determine initial
+  if(compareVersion(as.character(packageVersion("ggplot2")),"2") >=0){ #deal with ggplot versions
+    ylims = ggplot_build(h)$layout$panel_scales$y[[1]]$get_limits()
+    xlims = ggplot_build(h)$layout$panel_scales$x[[1]]$get_limits()
+  }else{
+    ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
+    xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
+  }
   # add vertical lines at the quantiles specified in corStats. 
-  h = h + geom_vline(data = q, aes(xintercept = values), color="red", size = 1,
+  h = h + geom_vline(data = corStats, aes(xintercept = values), color="red", size = 1,
                      linetype=c("dotted","dashed","solid","dashed","dotted"), show.legend = FALSE) +
     ylim(c(ylims[1],ylims[2]*1.1)) # expand vertical range
-  ymax = ggplot_build(h)$panel$ranges[[1]]$y.range[2]
+  ymax = max(ylims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
-  h = h + geom_text(data = q, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
+  h = h + geom_text(data = corStats, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
     annotate("text",x = 0.8*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4") # add fraction of significant correlations
-  # customize legend
+  #customize legend
   h = h + theme(legend.position = c(0.8, 0.8),
                 legend.title = element_text(size=10, face="bold"),
                 legend.text = element_text(size=8),

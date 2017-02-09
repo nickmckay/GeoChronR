@@ -271,12 +271,12 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   
   # Ensemble table since it's easy to access in Bchron
   ageEns = list()
-  ageEns$values = t(run$thetaPredict)
-  ageEns$units = 'calendar year BP'
-  ageEns$depth = MT[[depthi]]$values
+  ageEns$ageEnsemble$values = t(run$thetaPredict)
+  ageEns$ageEnsemble$units = 'yr BP'
+  ageEns$depth$values = depth_predict
   ageEns$depth$units = MT[[depthi]]$units
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable=list(ageEnsemble=ageEns)
+  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable=ageEns
   
   #Probability distribution table
   for (i in seq(from=1, to=length(run$calAges), by =1)){
@@ -286,18 +286,28 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     distTable$calibrationCurve = calCurves
     distTable$age14C = run$calAges[[i]]$ages
     distTable$sd14C = run$calAges[[i]]$ageSds
-    distTable$density = run$calAges[[i]]$densities
-    distTable$grid = run$calAges[[i]]$ageGrid
+    distTable$density$values = run$calAges[[i]]$densities
+    distTable$density$units = NA
+    distTable$density$description = "probability density that for calibrated ages at specific ages"
+    distTable$age$values = run$calAges[[i]]$ageGrid
+    distTable$age$units = "yr BP"
+    
+    
     # write it out
-    L$chronData[[which.chron]]$chronModel[[modelNum]]$distributionTable[[i]]=list(distributionTable=distTable)
+    L$chronData[[which.chron]]$chronModel[[modelNum]]$distributionTable[[i]]=distTable
   }
   
   # Summary Table
   sumTable = list()
-  sumTable$LabID = LabID
-  sumTable$depth = depth
-  sumTable$meanCalibratedAge = rowMeans(t(run$theta))
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=list(summaryTable=sumTable)
+  sumTable$LabID$values = LabID
+  sumTable$LabID$units = NA
+  sumTable$depth$values = depth
+  sumTable$depth$units = "cm"
+  
+  sumTable$meanCalibratedAge$values = rowMeans(t(run$theta))
+  sumTable$meanCalibratedAge$units = "yr BP"
+  
+  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=sumTable
   
   return(L)
   
