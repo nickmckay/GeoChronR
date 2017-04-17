@@ -12,6 +12,25 @@ plot_spectra.ens = function (spec.ens){
 }
 #' @export
 bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
+  if(nrow(x)!=nrow(y)){
+    stop("x and y must have the same number of rows")
+  }
+  
+  #make sure that then number of columns are multiples of each other
+  if(length(x)>length(y)){
+    if(length(x)%%length(y) != 0){
+      x = x[,sample.int(ncol(x),size=floor(ncol(x)/ncol(y)) * ncol(y),replace = FALSE)]
+    }
+  }
+  #again for y
+  if(length(y)>length(x)){
+    if(length(y)%%length(x) != 0){
+      y = y[,sample.int(ncol(y),size=floor(ncol(y)/ncol(x)) * ncol(x),replace = FALSE)]
+    }
+  }
+  
+  
+  
   df = data.frame(x=c(x),y=c(y))
   
   if(is.na(x.bin)){
