@@ -62,16 +62,17 @@ matrix.corr.and.pvalue = function(M1,M2){
   nens=nrow(p) # number of ensemble members
   pb <- txtProgressBar(min=1,max=nens,style=3)
   print(paste("Calculating",nens,"correlations"))
+  
   for(i in 1:ncol(M1)){
     for(j in 1:ncol(M2)){
-      r[j+ncol(M1)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
+      r[j+ncol(M2)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
       effN = effectiveN(M1[,i],M2[,j])
-      pAdj[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],effN)
-      p[j+ncol(M1)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M1)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
-    
-    setTxtProgressBar(pb, j+ncol(M1)*(i-1))
+      pAdj[j+ncol(M2)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M2)*(i-1)],effN)
+      p[j+ncol(M2)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M2)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
+    setTxtProgressBar(pb, j+ncol(M2)*(i-1))
     }
   }
+
   # apply false discovery rate procedure to ADJUSTED p-values
   fdrOut = fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean') 
   sig_fdr = matrix(0,nens)
@@ -257,7 +258,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     #scatter plot
     regPlot = plot_scatter.ens(binX,binY,alp=plot_alpha)
     #add trendlines
-    regPlot = plot_trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot_alpha/10,add.to.plot = regPlot$plot)
+    regPlot = plot_trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot_alpha,add.to.plot = regPlot$plot)
     reg.ens.data$scatterplot = regPlot
     if(exists("ovx")){
       pl=ovx
@@ -296,11 +297,11 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")+ggtitle("Calibration interval predictand")
     if(exists("oty")){
       pl=oty
-      reg.ens.data$YPlot = reg.ens.data$XPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
+      reg.ens.data$YPlot = reg.ens.data$YPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
     }
     if(exists("ovy")){
       pl=ovy
-      reg.ens.data$YPlot = reg.ens.data$XPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
+      reg.ens.data$YPlot = reg.ens.data$YPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
     }
     
     

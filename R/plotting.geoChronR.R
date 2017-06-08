@@ -329,7 +329,7 @@ plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats)
   
   cs = colSums(cor.df)
   sig_frac = cs["sig_fdr"][[1]]/dim(cor.df)[1]*100
-  sig_lbl = paste0("Fraction: ", sig_frac, "%")
+  sig_lbl = paste0("Fraction significant: ", sig_frac, "%")
   # Now the plotting begins
   lbf = c("All correlations","p < 0.05 + FDR")
   h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
@@ -345,16 +345,24 @@ plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats)
     ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
     xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
   }
+  
+  #how many lines?
+  lineType= rep("dashed",times = nrow(corStats))
+  lineType[corStats$percentiles==.5]="solid"
+  lineType[corStats$percentiles==.975 | corStats$percentiles==.025]="dotted"
+  
+  
+  
   # add vertical lines at the quantiles specified in corStats. 
   h = h + geom_vline(data = corStats, aes(xintercept = values), color="red", size = 1,
-                     linetype=c("dotted","dashed","solid","dashed","dotted"), show.legend = FALSE) +
+                     linetype=lineType, show.legend = FALSE) +
     ylim(c(ylims[1],ylims[2]*1.1)) # expand vertical range
   ymax = max(ylims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
   h = h + geom_text(data = corStats, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = 0.8*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4") # add fraction of significant correlations
+    annotate("text",x = 0.7*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4")+theme_bw() # add fraction of significant correlations
   #customize legend
-  h = h + theme(legend.position = c(0.8, 0.8),
+  h = h + theme(legend.position = c(0.2, 0.8),
                 legend.title = element_text(size=10, face="bold"),
                 legend.text = element_text(size=8),
                 legend.key = element_rect(fill = "transparent",
@@ -382,7 +390,7 @@ plot_pvals.ens = function(cor.df,alpha = 0.05){
   pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
   pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
                                 values=c("Chocolate1",'Chartreuse4',"black","black"),
-                                labels=lbl)
+                                labels=lbl)+theme_bw()
   pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
                     legend.title = element_text(size=10, face="bold"),
                     legend.text = element_text(size=8),
