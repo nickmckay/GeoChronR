@@ -60,7 +60,7 @@ matrix.corr.and.pvalue = function(M1,M2){
   pAdj=p;
   r=p
   nens=nrow(p) # number of ensemble members
-  pb <- txtProgressBar(min=1,max=nens,style=3)
+  pb <- txtProgressBar(min=0,max=nens,style=3)
   print(paste("Calculating",nens,"correlations"))
   
   for(i in 1:ncol(M1)){
