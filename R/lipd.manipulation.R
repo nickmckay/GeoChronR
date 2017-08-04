@@ -165,7 +165,7 @@ select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA
   }
   
   #initialize measurement table number
-  mti=which(grepl(names(P[[which.data]]),pattern = "MeasurementTable"))
+  mti=which(grepl(names(P[[which.data]]),pattern = "measurementTable"))
   MT = P[[which.data]][[mti]]
   if(is.na(which.mt)){
     if(length(MT)==1){

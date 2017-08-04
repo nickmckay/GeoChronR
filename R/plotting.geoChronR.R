@@ -83,7 +83,7 @@ summary_plot = function(L){
   paleoPlot = paleoPlot + labs(title = paste("PaleoData:",variable$variableName))
   
   #do chron.
-  if(!is.null(L$chronData[[1]]$chronMeasurementTable)){
+  if(!is.null(L$chronData[[1]]$measurementTable)){
     #looking for age model data.
     
     print("looking for ages...")

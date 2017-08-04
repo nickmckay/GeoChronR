@@ -37,12 +37,12 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     calCurves = possible_curve[as.integer(readline(prompt = "Enter the number of the calibration curve you'd like to use: "))]
   }
   
-  #check for chronmeasurementTables
-  if(length(C$chronMeasurementTable)!=1){
+  #check for measurementTables
+  if(length(C$measurementTable)!=1){
     stop("Bchron doesn't know how to handle more (or less) than 1 chron measurement table. You should teach it!")
   }
   
-  MT=C$chronMeasurementTable[[1]]
+  MT=C$measurementTable[[1]]
   
   #go through required fields for BChron
   
@@ -193,7 +193,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     }else{
       which.paleo=as.integer(readline(prompt = "Which paleoData do you want to run Bacon for? "))}
     P = L$paleoData[[which.paleo]]
-    PT=P$paleoMeasurementTable[[1]]
+    PT=P$measurementTable[[1]]
     if(is.null(P)){
       stop("No paleo data measurement table available, please choose another option")}
     print("Looking for depth")

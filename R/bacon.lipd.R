@@ -160,11 +160,11 @@ write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   C=L$chronData[[which.chron]]
   
   #check for measurementTables
-  if(length(C$chronMeasurementTable)!=1){
+  if(length(C$measurementTable)!=1){
     stop("bacon doesn't know how to handle more (or less) than 1 measurement table. You should teach it!")
   }
   
-  MT=C$chronMeasurementTable[[1]]
+  MT=C$measurementTable[[1]]
   
   
   #go through required fields for bacon
@@ -518,7 +518,7 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   origNames = c("depth","min","max","median","wmean")
   newNames = c("depth","ageRangeLow","ageRangeHigh","age","age")
   
-  depthUnits = L$chronData[[which.chron]]$chronMeasurementTable[[1]]$depth$units
+  depthUnits = L$chronData[[which.chron]]$measurementTable[[1]]$depth$units
   if(is.null(depthUnits)){
     depthUnits="cm"
   }

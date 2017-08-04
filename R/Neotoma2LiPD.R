@@ -181,7 +181,7 @@ Neotoma2LiPD = function(site){
         }
         
         
-        chronData[[ch]]$chronMeasurementTable[[1]] = cmt
+        chronData[[ch]]$measurementTable[[1]] = cmt
         
         chronData[[ch]]$chronModel[[1]]$method = chron$meta$age.model
         
@@ -199,7 +199,7 @@ Neotoma2LiPD = function(site){
       #     }
     }
     
-    L$paleoData[[n]]$paleoMeasurementTable[[1]]=pmt
+    L$paleoData[[n]]$measurementTable[[1]]=pmt
   }
   return(L)
 }

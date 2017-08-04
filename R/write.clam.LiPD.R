@@ -58,11 +58,11 @@ write.clam.lipd <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwr
   C=L$chronData[[which.chron]]
   
   #check for measurementTables
-  if(length(C$chronMeasurementTable)!=1){
+  if(length(C$measurementTable)!=1){
     stop("clam doesn't know how to handle more (or less) than 1 measurement table. You should teach it!")
   }
   
-  MT=C$chronMeasurementTable[[1]]
+  MT=C$measurementTable[[1]]
   
   
   #go through required fields for clam

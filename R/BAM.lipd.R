@@ -12,11 +12,11 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   #initialize measurement table number
   if(is.na(which.pmt)){
-    if(length(L$paleoData[[which.paleo]]$paleoMeasurementTable)==1){
+    if(length(L$paleoData[[which.paleo]]$measurementTable)==1){
       #only one pmt
       which.pmt=1
     }else{
-      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$paleoMeasurementTable), "measurement tables"))
+      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$measurementTable), "measurement tables"))
       which.pmt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
     }
   }
@@ -176,12 +176,12 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   L$chronData[[which.chron]]$chronModel[which.model]=list(CM)
   
   #place into paleoData appropriately.
-  #assign into paleoMeasurementTable
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$values = ensOut
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronModel = which.model
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
+  #assign into measurementTable
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensOut
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronModel = which.model
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
   
   return(L)
   
