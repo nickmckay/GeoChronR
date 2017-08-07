@@ -10,8 +10,140 @@ plot_spectra.ens = function (spec.ens){
   specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
   return(specPlot)
 }
+
+
+
+quantile2d = function(x,y,nbins=100,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y)))){
+  #interpolates then finds
+  if(nrow(x)!=nrow(y)){
+    stop("x and y must have the same number of rows")
+  }
+  
+  
+  #interpolate option...
+  sx = sort(c(x))
+  if(all(is.na(x.bin))){
+  x.bin <- approx(1:length(sx),sx,seq(1,length(sx),length.out = nbins))$y #adjust it along y
+  }
+  y.int = matrix(NA,ncol = nens,nrow= length(x.bin))
+  
+  for(int in 1:nens){
+    y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin )$y
+  }
+  
+  x = x.bin
+  y = y.int
+  
+  #now calculate quantiles for 
+  quants = matrix(NA,ncol = length(probs),nrow = length(x))
+  
+  for(i in 1:length(x)){
+    quants[i,] = quantile(y[i,],probs = probs,na.rm  = T)
+  }
+  
+  return(list(quants = quants,x.bin = x.bin))
+  
+  
+  
+}
+
+
+
 #' @export
-bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
+bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T){
+  if(nrow(x)!=nrow(y)){
+    stop("x and y must have the same number of rows")
+  }
+  
+  
+  if(interpolate){
+    #interpolate option...
+    sx = sort(c(x))
+    x.bin <- approx(1:length(sx),sx,seq(1,length(sx),length.out = nbins))$y #adjust it along y
+    
+    nens = max(c(ncol(x),ncol(y)))
+    y.int = matrix(NA,ncol = nens,nrow= length(x.bin))
+    for(int in 1:nens){
+      y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin )$y
+    }
+    
+    x = x.bin
+    y = y.int
+  }
+  
+  
+  
+  
+  #make sure that then number of columns are multiples of each other
+  if(length(x)>length(y)){
+    if(length(x)%%length(y) != 0){
+      x = x[,sample.int(ncol(x),size=floor(ncol(x)/ncol(y)) * ncol(y),replace = FALSE)]
+    }
+  }
+  #again for y
+  if(length(y)>length(x)){
+    if(length(y)%%length(x) != 0){
+      y = y[,sample.int(ncol(y),size=floor(ncol(y)/ncol(x)) * ncol(x),replace = FALSE)]
+    }
+  }
+  
+  df = data.frame(x=c(x),y=c(y))
+  
+  if(all(is.na(x.bin))){
+    if(ncol(x)==1){
+      x.bin = sort(unique(x))
+    }else{
+    #range.x=abs(diff(range(df[,1],na.rm=TRUE)))
+    #x.bin <- seq((min(df[,1],na.rm=TRUE)-range.x/2), (max(df[,1],na.rm=TRUE)+range.x/2), length=nbins)
+    x.bin <- unique(approx(1:length(sort(df$x)),sort(df$x),seq(1,length(sort(df$x)),length.out = nbins))$y) #adjust it along y
+    #x.bin  = unique(qbins(df$x,nbins))
+    #x.bin = unique(quantile(unique(df$x),probs = seq(0,1,length.out = nbins)))
+    }
+  }
+  if(all(is.na(y.bin))){
+    if(ncol(y)==1){
+      y.bin = sort(unique(y))
+    }else{
+    #range.y=abs(diff(range(df[,2],na.rm=TRUE)))
+    #y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
+    y.bin <- unique(approx(1:length(sort(df$y)),sort(df$y),seq(1,length(sort(df$y)),length.out = nbins))$y) #adjust it along y
+    #y.bin  = unique(qbins(df$y,nbins))
+    #y.bin  = unique(quantile(unique(df$y),probs = seq(0,1,length.out = nbins)))
+    }
+  }
+  
+
+  fiX = as.numeric(findInterval(df[,1], x.bin))
+  fiY = as.numeric(findInterval(df[,2], y.bin))
+  ufX = sort(unique(fiX))
+  ufY=sort(unique(fiY))
+  freq <-  as.data.frame(table(fiX,fiY,deparse.level = 2))
+  
+  freq[,1] <- as.numeric(ufX[freq[,1]])
+  freq[,2] <- as.numeric(ufY[freq[,2]])
+  
+  freq2D <- matrix(data=0,nrow=length(y.bin),ncol=length(x.bin))
+  freq2D[cbind(freq[,2], freq[,1])] <- freq[,3]
+  
+  #beef up sampling with interpolation? for plotting...
+  # if(!is.na(filterFrac)){
+  # sumX = apply(freq2D,MARGIN = 1,FUN = sum)
+  # sumY =  apply(freq2D,MARGIN = 2,FUN = sum)
+  # freq2D = freq2D[sumX > (length(x.bin)*filterFrac) ,sumY > (length(y.bin)*filterFrac)]
+  # y.bin = y.bin[sumY > (length(y.bin)*filterFrac)]
+  # x.bin = x.bin[sumX > (length(x.bin)*filterFrac)]
+  # 
+  # }
+  
+  
+  density = (freq2D/sum(freq2D))
+  
+  out = list("density" = density,"x.bin"= x.bin,"y.bin"=y.bin)
+  
+  return(out)
+}
+
+kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
@@ -33,32 +165,9 @@ bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   
   df = data.frame(x=c(x),y=c(y))
   
-  if(is.na(x.bin)){
-    range.x=abs(diff(range(df[,1],na.rm=TRUE)))
-    #x.bin <- seq((min(df[,1],na.rm=TRUE)-range.x/2), (max(df[,1],na.rm=TRUE)+range.x/2), length=nbins)
-    x.bin <- approx(1:length(sort(df$x)),sort(df$x),seq(1,length(sort(df$x)),length.out = nbins))$y #adjust it along y
-  }
-  if(is.na(y.bin)){
-    range.y=abs(diff(range(df[,2],na.rm=TRUE)))
-    #y.bin <- seq((min(df[,2],na.rm=TRUE)-range.y/2), (max(df[,2],na.rm=TRUE)+range.y/2), length=nbins)
-    y.bin <- approx(1:length(sort(df$y)),sort(df$y),seq(1,length(sort(df$y)),length.out = nbins))$y #adjust it along y
-    
-  }
+  kde = MASS::kde2d(df$x,df$y,h=1,  n =nbins)
   
-  fiX = as.numeric(findInterval(df[,1], x.bin))
-  fiY = as.numeric(findInterval(df[,2], y.bin))
-  ufX = sort(unique(fiX))
-  ufY=sort(unique(fiY))
-  freq <-  as.data.frame(table(fiX,fiY,deparse.level = 2))
-  
-  freq[,1] <- as.numeric(ufX[freq[,1]])
-  freq[,2] <- as.numeric(ufY[freq[,2]])
-  
-  freq2D <- matrix(data=0,nrow=length(y.bin),ncol=length(x.bin))
-  freq2D[cbind(freq[,2], freq[,1])] <- freq[,3]
-  
-  density = (freq2D/sum(freq2D))/(abs(mean(diff(x.bin)))*abs(mean(diff(y.bin))))
-  out = list("density" = density,"x.bin"= x.bin,"y.bin"=y.bin)
+  out = list("density" = kde$z,"x.bin"= kde$x,"y.bin"=kde$y)
   
   return(out)
 }
@@ -172,10 +281,10 @@ plot_timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   
 }
 #' @export
-plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA,nbins=1000,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
+plot_timeseries.ribbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
-  if(is.list(X)){X=X$values}
-  if(is.list(Y)){Y=Y$values}
+  if(is.list(X)){X=as.data.frame(X$values)}
+  if(is.list(Y)){Y=as.data.frame(Y$values)}
   
   
   
@@ -187,7 +296,7 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
   if(ncol(X)==1 & ncol(Y)==1){
     #then just plot a line
     df = data.frame(x=X,y=Y)
-    bandPlot=ggplot(data=df)+geom_line(aes(x=X,y=Y),colour=lineColor)+theme_bw()
+    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=lineColor)+geoChronR.plotTheme()
     
   }else{
     
@@ -196,20 +305,32 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
     }
     #  good =which(!is.)
     
+
+  # binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
     
-    binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+#    binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
     
     #find cum sum probabilities  
-    colSums = apply(binned$density,2,sum)
-    sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
-    bmcs = apply(binned$density/sumMat,2,cumsum)
+
     
-    good.cols = which(!apply(is.na(bmcs),2,all))
+    # #nbox = prod(dim(binned$density))
+    # colSums = apply(binned$density,2,sum)
+    # # colCount = colSums*nbox
+    # # good.cols = which(colCount>nrow(binned$density))
+    # 
+    # sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
+    # 
+    # bmcs = apply(binned$density/sumMat,2,cumsum)
+    # 
+    # good.cols = which(!apply(is.na(bmcs),2,all) & scale(colSums)>-3)
     
-    probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
-    for(p in 1:length(probs)){
-      probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p])$y)
-    }
+    # probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs)
+    probMat = probMatList$quants
+    
+    # for(p in 1:length(probs)){
+    #   probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p],method = "constant")$y)
+    # }
     
     probMat=as.data.frame(probMat)
     lineLabels=as.character(probs)
@@ -229,9 +350,9 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
     #make pairs of bands moving in 
     #if probs is odd, the center one is just a line
     if(ncol(probMat)%%2==1){
-      center = data.frame(x=binned$x.bin[good.cols],y=probMat[,ncol(probMat)/2+1])
+      center = data.frame(x=probMatList$x.bin,y=probMat[,median(1:length(probs))])
       
-      bandMat =  probMat[,-(ncol(probMat)/2+1)]
+      bandMat =  probMat[,-median(1:length(probs))]
     }else{
       center =NA
       bandMat =  probMat
@@ -245,9 +366,9 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=pnorm(-2:2),x.bin=NA,y.bin=NA
     library(ggplot2)
     for(b in 1:(ncol(bandMat)/2)){
       if(b==1){
-        bandPlot = add.to.plot+theme_bw()
+        bandPlot = add.to.plot+geoChronR.plotTheme()
       }
-      bands=data.frame(x=binned$x.bin[good.cols],ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
+      bands=data.frame(x=probMatList$x.bin,ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
       bandPlot = bandPlot+
         geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
     }
@@ -368,7 +489,7 @@ plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats)
                 legend.key = element_rect(fill = "transparent",
                                           colour = "transparent"),
                 legend.background = element_rect(fill=alpha('white', 0.3)))
-
+  
   return(h)
 }
 
@@ -385,18 +506,18 @@ plot_pvals.ens = function(cor.df,alpha = 0.05){
   lbl <- c("p-value, IID","p-value, Serial","FDR", bquote(alpha==.(alpha)))
   pvalPlot <- ggplot(data = mm, aes(x,value,colour=variable,linetype=variable)) + geom_line()
   pvalPlot <- pvalPlot + scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
-                           labels = scales::trans_format("log10", scales::math_format(10^.x)),
-                           limits = c(1e-20,1))
+                                       labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                                       limits = c(1e-20,1))
   pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
   pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
-                                values=c("Chocolate1",'Chartreuse4',"black","black"),
-                                labels=lbl)+theme_bw()
+                                            values=c("Chocolate1",'Chartreuse4',"black","black"),
+                                            labels=lbl)+theme_bw()
   pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
-                    legend.title = element_text(size=10, face="bold"),
-                    legend.text = element_text(size=8),
-                    legend.key = element_rect(fill = "transparent",
-                                              colour = "transparent"),
-                    legend.background = element_rect(fill=alpha('white', 0.5)))
+                                legend.title = element_text(size=10, face="bold"),
+                                legend.text = element_text(size=8),
+                                legend.key = element_rect(fill = "transparent",
+                                                          colour = "transparent"),
+                                legend.background = element_rect(fill=alpha('white', 0.5)))
   # fix labels  
   pvalPlot <- pvalPlot +ylab("p-value") + xlab("rank") 
   
@@ -541,3 +662,86 @@ plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.
   return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot_sample.depth))
   
 }
+
+plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",obj.num = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,dist.plot = NA,distType = "violin",thick = 0.1){
+  
+  #pull out distribution object
+  dist = L[[paste0(mode,"Data")]][[obj.num]]$model[[model.num]]$distributionTable
+  
+  #check it to make sure it's a distribution table
+  if(!is.list(dist)){
+    stop("This doesn't seem to be a valid distribution table with these settings")
+  }
+  
+  #if not specified, plot all distributions
+  if(is.na(dist.plot)){
+    dist.plot = 1:length(dist)
+  }
+  
+  #pull out all the yaxis data to get range and scale
+  ally = sapply(dist[dist.plot],"[[",y.var)
+  
+  # get range and scale
+  plot.range =range(ally,na.rm = T)
+  
+  #guess at the scaler...
+  this.dist = dist[[dist.plot[[1]]]]
+  pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T)
+  scaler = scaleFrac*abs(diff(plot.range))/max(pd)
+  
+  
+  #loop through individual ages...
+  for(y in dist.plot){
+    this.dist = dist[[y]]
+    pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T) * scaler
+    this.df = data.frame(x= this.dist[[dist.var]]$values,ymin = this.dist[[y.var]] - pd,ymax = this.dist[[y.var]] + pd )
+    if(distType == "up"){this.df$ymin =  this.dist[[y.var]]}
+    if(distType == "down"){this.df$ymax =  this.dist[[y.var]]}
+    add.to.plot = add.to.plot + geom_ribbon(data = this.df, aes(x = x,ymin = ymin,ymax = ymax),colour = color,fill = color, alpha = alp,size = thick)
+  }
+  add.to.plot = add.to.plot + geoChronR.plotTheme()
+  return(add.to.plot)
+}
+
+geoChronR.plotTheme = ggplot2::theme_bw
+
+
+meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
+  #create large dataframe from dist object
+  dist.df = NULL
+  nDist = length(dist.plot)
+  for(i in dist.plot){
+    this.df = list()
+    this.dist = dist[[i]]
+    #lists first
+    ll = which(sapply(this.dist,is.list))
+    for(l in ll){
+      this.name = names(this.dist)[l] 
+      this.df[[this.name]] = this.dist[[l]]$values
+    }
+    #convert to df
+    this.df = as.data.frame(this.df)
+    
+    ln = which(!sapply(this.dist,is.list))
+    for(l in ln){
+      this.name = names(this.dist)[l] 
+      this.df[this.name] = this.dist[[l]]
+    }
+    
+    if(is.null(dist.df)){
+      dist.df = this.df
+    }else{
+      dist.df = rbind(dist.df,this.df)
+    }
+    dist.df = rbind(dist.df,rep(NA,ncol(this.df)))
+  }
+  return(dist.df)
+}
+
+
+
+
+
+
+
+
