@@ -177,7 +177,18 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 
 #' @export
 #show a map, timeseries, and age model diagram..
-summaryPlot = function(L){
+plotSummary = function(L){
+  #is this a LiPD file?
+  if(is.list(L)){
+    if(is.null(L$dataSetName)){
+      stop("This is either not a single LiPD object, or it has no dataSetName. plotSummary requires a single LiPD object as input")
+    }
+  }else{
+    stop("plotSummary requires a single LiPD object as input")
+  }
+  
+  
+  
   library(grid)
   library(gridExtra)
   map = mapLipd(L,extend.range = 5)
@@ -557,11 +568,11 @@ plotHistEns = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStat
 }
 
 #' @export
-plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
+plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975)){
   library(ggmap)
   library(ggplot2)
   library(gridExtra)
-  #map.type can be "google" or "polar"
+  #map.type can be "google" or "line"
   
   #get data out of the TS
   lat = sapply(TS,"[[","geo_latitude")
@@ -573,20 +584,24 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color=
   arch.shape=c()
   for(i in 1:length(archive)){
     if(shape.by.archive){
-      if (grepl(tolower(archive[i]),"lake")){arch.shape[i]="lake"}
-      else if (grepl(tolower(archive[i]),"marine sediments")){arch.shape[i]="marine"}
-      else if (grepl(tolower(archive[i]),"speleothem")){arch.shape[i]="speleothem"}
-      #else if (grepl(tolower(archive[i]),"peat")){arch.shape[i]=18}
+      if (grepl(x=tolower(archive[i]),"lake")){arch.shape[i]="lake"}
+      else if (grepl(x=tolower(archive[i]),"marine")){arch.shape[i]="marine"}
+      else if (grepl(x=tolower(archive[i]),"speleothem")){arch.shape[i]="speleothem"}
+      else if (grepl(x=archive[i],"ice",ignore.case = T)){arch.shape[i]="glacier ice"}
       else {arch.shape[i]="unknown"}
     }else{arch.shape[i]=21} #make them all circles if not shape.by.archive
   }
   
   arch.shape=factor(arch.shape)
-  archiveShapes=c(21,22,24)
+  archiveShapes=c(21,22,24,23)
+  if(!any(grepl(pattern="ice",arch.shape))){archiveShapes = archiveShapes[-4] }
   if(!any(grepl(pattern="speleothem",arch.shape))){archiveShapes = archiveShapes[-3] }
   if(!any(grepl(pattern="marine",arch.shape))){archiveShapes = archiveShapes[-2] }
   if(!any(grepl(pattern="lake",arch.shape))){archiveShapes = archiveShapes[-1] }
   
+  if(length(archiveShapes) == 0){
+    archiveShapes=c(21)
+  }
   #end shape by archive
   
   
@@ -657,9 +672,9 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color=
   tt=1:length(alllist)
   alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
   
-  summaryPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
+  fullPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
   
-  return(list(lines = plotlist, maps= maplist,summary =summaryPlot,sampleDepth = plot_sample.depth))
+  return(list(lines = plotlist, maps= maplist,summary =fullPlot,sampleDepth = plot_sample.depth))
   
 }
 

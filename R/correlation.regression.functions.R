@@ -415,7 +415,7 @@ binTs = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE)
   for(i in 1:length(timeList)){
     binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
     if(na.col.rm){
-      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all))
+      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | apply(is.nan(binMat[[i]]$matrix),2,all) | apply(binMat[[i]]$matrix=="nan",2,all))
       if(length(allNa)>0){
         binMat[[i]]$matrix = binMat[[i]]$matrix[,-allNa]
       }

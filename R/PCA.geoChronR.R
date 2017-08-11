@@ -31,11 +31,14 @@ for(n in 1:nEns){#for each ensemble member
   dataDensity[,n]=apply(!is.na(PCAMAT),1,sum)/nD
   
   if(any(!is.na(weights))){
-    normmat=scale(PCAMAT)
-    wmat=scale(normmat,scale=1/weights)
+    normmat=scale(PCAMAT,na.rm=T)
+    wmat=scale(normmat,scale=1/weights,na.rm=T)
     PCAMAT=wmat
   }
   
+  #remove any rows that are all NAs
+  goodRows = which(!apply(is.na(PCAMAT),1,all))
+  PCAMAT = PCAMAT[goodRows,]
   #remove means, and scale if correlation matrix
   if(PCAtype=="corr"){
     pca.out=pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=nPCs)
@@ -44,11 +47,11 @@ for(n in 1:nEns){#for each ensemble member
   }
   
   loads[,,n]=loadings(pca.out)
-  PCs[,,n]=scores(pca.out)
+  PCs[goodRows,,n]=scores(pca.out)
   
   
   #reorient PCs such that the mean loadings are positive
-  meanloadings <- colMeans(loads[,,n])
+  meanloadings <- colMeans(loads[,,n],na.rm = T)
   for (npc in 1:NCOL(PCs)){
     if(meanloadings[npc] < 0){
       loads[,npc,n]=-1*loads[,npc,n]

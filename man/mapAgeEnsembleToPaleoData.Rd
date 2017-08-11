@@ -6,7 +6,7 @@
 \usage{
 mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
   which.chron = NA, which.model = NA, max.ensemble.members = NA,
-  strictSearch = FALSE)
+  strictSearch = FALSE, which.ens = NA)
 }
 \arguments{
 \item{L}{a lipd object}

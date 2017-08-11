@@ -16,6 +16,7 @@ flipCoords = function(L){
 #' @return L a lipd object
 #' @export
 mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE,which.ens = NA){
+  print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
     stop("There's no chronData in this file")
@@ -66,12 +67,37 @@ mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=N
   }
   
 
+    #make sure the ensemble is there, with data
+  copyAE  = FALSE
   
-  #make sure the ensemble is there, with data
   print("Looking for age ensemble....")
-  ensDepth = selectData(L,tableType = "ensemble",varName = "depth",where = "chronData")$values
-  ens = selectData(L,tableType = "ensemble",varName = "age",altNames = c("ageEnsemble","year"),where = "chronData",which.ens = which.ens)$values
+  ensDepth = selectData(L,tableType = "ensemble",varName = "depth",where = "chronData",strictSearch = strictSearch)$values
+  ensAll = selectData(L,tableType = "ensemble",varName = "ageEnsemble",altNames = c("age","year"),where = "chronData",which.ens = which.ens,strictSearch = strictSearch)
+  ens = ensAll$values
+  if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
+    #check for the same size
+    #get year, age or depth from paleodata
+    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    if(is.null(pdya)){
+      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    }
+    if(is.null(pdya)){
+      pdya = selectData(L,which.data = which.paleo,varName = "depth",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    }
+    if(is.null(pdya)){
+      stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
+    }
+    
+    #check for length of that variable
+    if(length(pdya)  == nrow(ens)){
+      copyAE  = TRUE
+    }else{
+      stop("Couldnt find depth in the ensembleTable, and the paleoData measurementTable has a different number of rows thant the ensemble.")    
+    }
+  }
   
+  
+  if(!copyAE){
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
   depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens)$values
@@ -87,13 +113,17 @@ mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=N
   #interpolate
   aei=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth,na.rm=TRUE)$y)
 
+  }else{
+    aei = ens
+  }
+  
   #guess
 if(is.na(which.ens)){which.ens=1}
   
   
   #assign into measurementTable
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = aei
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = L$chronData[[which.chron]]$model[[which.model]]$ensembleTable[[which.ens]]$ageEnsemble$units
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = ensAll$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$frommodel = which.model
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
@@ -126,7 +156,7 @@ getOs <- function(){
 }
 
 #' @export
-selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "measurement", which.mt=NA,always.choose=FALSE,altNames=NA,model.num = 1,which.ens=1,which.sum = 1){
+selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "measurement", which.mt=NA,always.choose=FALSE,altNames=NA,model.num = 1,which.ens=1,which.sum = 1,strictSearch = FALSE){
   #paleo or chron
   P = L[[where]]
   
@@ -183,7 +213,7 @@ selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "
   #this is the table of interest  
   MTD=MT[[which.mt]]
   
-  ind = getVariableIndex(MTD,varName = varName,always.choose = always.choose,altNames = altNames)
+  ind = getVariableIndex(MTD,varName = varName,always.choose = always.choose,altNames = altNames,strictSearch = strictSearch)
   
   varList = MTD[[ind]]
   
@@ -273,7 +303,8 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
     }
     else if(length(idi)==1){
       print("Found it! Moving on...")
-      
+    }else{
+      idi=0
     }
   }
   

@@ -1,7 +1,7 @@
 #' @export
 runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000,model = NA){
   
-    #initialize which.paleo
+  #initialize which.paleo
   if(is.na(which.paleo)){
     if(length(L$paleoData)==1){
       which.paleo=1
@@ -112,29 +112,29 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   
   if(is.na(model)){
     
-  #specify model type
-  if(is.null( CM$methods$parameters$modelType)){
-    print("Which type of model do you want to use for BAM?")
-    print("1 - Poisson (default)")
-    print("2 - Bernoulli")
-    mi = as.integer(readline(prompt = "Pick a number: "))
-    if(mi!=2){
-      CM$methods$parameters$modelType="poisson"
-    }else{
-      CM$methods$parameters$modelType="bernoulli"
+    #specify model type
+    if(is.null( CM$methods$parameters$modelType)){
+      print("Which type of model do you want to use for BAM?")
+      print("1 - Poisson (default)")
+      print("2 - Bernoulli")
+      mi = as.integer(readline(prompt = "Pick a number: "))
+      if(mi!=2){
+        CM$methods$parameters$modelType="poisson"
+      }else{
+        CM$methods$parameters$modelType="bernoulli"
+      }
     }
-  }
-  
-  #specify undercounting rate
-  if(is.null( CM$methods$parameters$undercountingProbability)){
-    print("What's the probability of undercounting")
-    CM$methods$parameters$undercountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
-  }
-  #specify overcounting rate
-  if(is.null( CM$methods$parameters$overcountingProbability)){
-    print("What's the probability of overcounting")
-    CM$methods$parameters$overcountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
-  }
+    
+    #specify undercounting rate
+    if(is.null( CM$methods$parameters$undercountingProbability)){
+      print("What's the probability of undercounting")
+      CM$methods$parameters$undercountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
+    }
+    #specify overcounting rate
+    if(is.null( CM$methods$parameters$overcountingProbability)){
+      print("What's the probability of overcounting")
+      CM$methods$parameters$overcountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
+    }
   }
   
   #ensemble members
@@ -150,9 +150,9 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   CM$methods$parameters$resize = 0
   
   if(is.na(model)){
-  #create model
-  model <- list(name= CM$methods$parameters$modelType,param=c(CM$methods$parameters$undercountingProbability,CM$methods$parameters$overcountingProbability)
-                ,ns=CM$methods$parameters$nEns,resize=CM$methods$parameters$resize)	
+    #create model
+    model <- list(name= CM$methods$parameters$modelType,param=c(CM$methods$parameters$undercountingProbability,CM$methods$parameters$overcountingProbability)
+                  ,ns=CM$methods$parameters$nEns,resize=CM$methods$parameters$resize)	
   }
   
   yearDataToRun = as.matrix(yearData$values)
@@ -167,25 +167,27 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   #check for existing ensembles
   nenstables = length(CM$ensembleTable)
   if(nenstables==0){#create 1
-  #store output appropriately in model
-  ens.number = 1
+    #store output appropriately in model
+    ens.number = 1
   }else if(is.na(ens.number)){
     print(paste("You already have", nenstables, "ensemble table(s) in this model"))
     ens.number=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
   }
   
   if(nenstables==0){#create
-  CM$ensembleTable = list()
+    CM$ensembleTable = vector(mode = "list",length = 1)
   }
   
   
   
-    
+  
   ensOut =  bamOut$ageEns
   if(flipped){
     #then flip it back
     ensOut  = as.matrix(ensOut[nrow(ensOut):1,])
   }
+  
+  
   CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
   CM$ensembleTable[[ens.number]]$ageEnsemble$units = yearData$units
   CM$ensembleTable[[ens.number]]$ageEnsemble$variableName = "ageEnsemble"
@@ -251,186 +253,186 @@ bamCorrect <- function(X, t, model=NULL){
   else
     if (dim(X)[1] < dim(X)[2] && !is.finite(dim(X)[3]))
       X <- t(X)
-  
-  # reverse time if not from old to new
-  if (mean(diff(t),na.rm = T)>0) {
-    isflipped <- 1
-    t <- rev(t)
-    if (is.finite(dim(X)[3])){
-      for (ii in 1:dim(X)[3])
-        X[,,ii] <- apply(X[,,ii],2,rev)
-    }
-    else
-      X <- apply(X,2,rev)
-  } else {
-    isflipped <- 0
-  }
-  
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-  # set default values
-  if (is.null(model)) 
-    model <- list(name='poisson',param=array(0.05,c(n,p,2)),ns=1000,resize=0)	
-   
-  # "ns" %in% names(model)
-  
-  if (is.null(model[["ns"]]))
-    model$ns <- 1000
-  
-  if (is.null(model[["name"]]))
-    model$name <- 'poisson'
-  
-  if (is.null(model[["param"]]))
-    model$param <- array(0.05,c(n,p,2))
-  
-  if (is.null(model[["resize"]]))
-    model$resize <- 0
-  
-  if (is.null(dim(model$param)[3])){
-    model$param<-as.matrix(model$param)
-    if (dim(model$param)[1] < dim(model$param)[2])
-      model$param = t(model$param)
     
-    p1 <- dim(model$param)[1]
-    p2 <- dim(model$param)[2]
-    
-    if (p1==1)                           # case where a single argument was entered
-      model$param <- array(model$param, dim=c(n,p,2))
-    else {
-      if (p1==2){                         # case where 2 values were given
-        param1 <- matrix(model$param[1],n,p);
-        param2 <- matrix(model$param[2],n,p);     
-        model$param <- array(c(param1,param2), c(n,p,2))
+    # reverse time if not from old to new
+    if (mean(diff(t),na.rm = T)>0) {
+      isflipped <- 1
+      t <- rev(t)
+      if (is.finite(dim(X)[3])){
+        for (ii in 1:dim(X)[3])
+          X[,,ii] <- apply(X[,,ii],2,rev)
       }
+      else
+        X <- apply(X,2,rev)
+    } else {
+      isflipped <- 0
+    }
+    
+    n <- dim(X)[1]
+    p <- dim(X)[2]
+    # set default values
+    if (is.null(model)) 
+      model <- list(name='poisson',param=array(0.05,c(n,p,2)),ns=1000,resize=0)	
+    
+    # "ns" %in% names(model)
+    
+    if (is.null(model[["ns"]]))
+      model$ns <- 1000
+    
+    if (is.null(model[["name"]]))
+      model$name <- 'poisson'
+    
+    if (is.null(model[["param"]]))
+      model$param <- array(0.05,c(n,p,2))
+    
+    if (is.null(model[["resize"]]))
+      model$resize <- 0
+    
+    if (is.null(dim(model$param)[3])){
+      model$param<-as.matrix(model$param)
+      if (dim(model$param)[1] < dim(model$param)[2])
+        model$param = t(model$param)
+      
+      p1 <- dim(model$param)[1]
+      p2 <- dim(model$param)[2]
+      
+      if (p1==1)                           # case where a single argument was entered
+        model$param <- array(model$param, dim=c(n,p,2))
       else {
-        if (p1==p && p2==2) {             # case where 2 vectors were given
-          param1 <- matrix(t(model$param[,1]),n,p);
-          param2 <- matrix(t(model$param[,2]),n,p);
-          model$param <- array(c(param1,param2), c(n,p,2))      
+        if (p1==2){                         # case where 2 values were given
+          param1 <- matrix(model$param[1],n,p);
+          param2 <- matrix(model$param[2],n,p);     
+          model$param <- array(c(param1,param2), c(n,p,2))
+        }
+        else {
+          if (p1==p && p2==2) {             # case where 2 vectors were given
+            param1 <- matrix(t(model$param[,1]),n,p);
+            param2 <- matrix(t(model$param[,2]),n,p);
+            model$param <- array(c(param1,param2), c(n,p,2))      
+          }
         }
       }
     }
-  }
-  # Generate an ensemble of time perturbation models
-  if (is.null(model[["tm"]])){
-    ns <- model$ns
-    tmc <- array(1,dim=c(n,p,ns))
-    X <- array(X,c(n,p,ns));
-    
-    if (grepl("poisson",model$name)){     
-      for(ii in 1:p){
-        for(jj in 2:n){
-          num_event_mis <-rpois(1,model$param[jj,ii,1]*ns)
-          num_event_dbl <-rpois(1,model$param[jj,ii,2]*ns)
-          
-          jumps <- sample(1:ns, num_event_mis, replace = FALSE, prob = NULL) #place events uniformly on {1,...,ns}
-          model$tm[jj,ii,jumps] = model$tm[jj,ii,jumps] + 1                 #remove 1 at jump locations
-          jumps <- sample(1:ns, num_event_dbl, replace = FALSE, prob = NULL)
-          model$tm[jj,ii,jumps] = model$tm[jj,ii,jumps] - 1
-          
+    # Generate an ensemble of time perturbation models
+    if (is.null(model[["tm"]])){
+      ns <- model$ns
+      tmc <- array(1,dim=c(n,p,ns))
+      X <- array(X,c(n,p,ns));
+      
+      if (grepl("poisson",model$name)){     
+        for(ii in 1:p){
+          for(jj in 2:n){
+            num_event_mis <-rpois(1,model$param[jj,ii,1]*ns)
+            num_event_dbl <-rpois(1,model$param[jj,ii,2]*ns)
+            
+            jumps <- sample(1:ns, num_event_mis, replace = FALSE, prob = NULL) #place events uniformly on {1,...,ns}
+            model$tm[jj,ii,jumps] = model$tm[jj,ii,jumps] + 1                 #remove 1 at jump locations
+            jumps <- sample(1:ns, num_event_dbl, replace = FALSE, prob = NULL)
+            model$tm[jj,ii,jumps] = model$tm[jj,ii,jumps] - 1
+            
+          }
         }
       }
-    }
-    else{
-      if (grepl("bernoulli",model$name)){
-        
+      else{
+        if (grepl("bernoulli",model$name)){
+          
           for (ii in 1:p){
             for (jj in 2:n){
-            model$tm[jj,ii,] = model$tm[jj,ii,] + rbinom(ns,1,model$param[jj,ii,1])
-            model$tm[jj,ii,] = model$tm[jj,ii,] - rbinom(ns,1,model$param[jj,ii,2])
+              model$tm[jj,ii,] = model$tm[jj,ii,] + rbinom(ns,1,model$param[jj,ii,1])
+              model$tm[jj,ii,] = model$tm[jj,ii,] - rbinom(ns,1,model$param[jj,ii,2])
+            }
           }
         }
+        else print("Unknown age model ; acceptable inputs are ''poisson'' and ''bernoulli'' ")
       }
-      else print("Unknown age model ; acceptable inputs are ''poisson'' and ''bernoulli'' ")
     }
-  }
-  else {
-    tmc <- model$tm;
-    ns <- dim(model$tm)[3];
-    if (isflipped ==1)
-      for (nn in 1:ns)
-        tmc[,,nn] <- apply(tmc[,,nn],2,rev)    
-  }
-  # generate age perturbed data Xp
-  # expand length of Xp and tXp if resizing is required
-  if (model$resize == 1){
-    t_ext <- ceiling(2*max(model$param)*n)
-    tn <- n + t_ext
-    X <- abind(X, array(NaN,c(t_ext,p,ns)),along=1)  
-    dt <- t[2]-t[1]
-    time_ext <- seq(tail(t,1)+dt,tail(t,1)+t_ext*dt,by=dt)
-    tc <- c(t,time_ext)
-  }
-  else{
-    tn <- n
-    tc <- t
-  }
-  
-  Xc <- array(NaN,dim = c(tn,p,ns))
-  Tmax <- 0
-  Tmin <- n
-  for (nn in 1:ns) {
+    else {
+      tmc <- model$tm;
+      ns <- dim(model$tm)[3];
+      if (isflipped ==1)
+        for (nn in 1:ns)
+          tmc[,,nn] <- apply(tmc[,,nn],2,rev)    
+    }
+    # generate age perturbed data Xp
+    # expand length of Xp and tXp if resizing is required
+    if (model$resize == 1){
+      t_ext <- ceiling(2*max(model$param)*n)
+      tn <- n + t_ext
+      X <- abind(X, array(NaN,c(t_ext,p,ns)),along=1)  
+      dt <- t[2]-t[1]
+      time_ext <- seq(tail(t,1)+dt,tail(t,1)+t_ext*dt,by=dt)
+      tc <- c(t,time_ext)
+    }
+    else{
+      tn <- n
+      tc <- t
+    }
     
-    for (ii in 1:p) {
-      xcount <- 1
-      Xcount <- 1
-      tt <- 1
-      while (tt < n+1) {
-        
-        if (tmc[tt,ii,nn] == 0){     # remove band
-          Xcount <- min(Xcount+1,tn)
-          Xc[xcount,ii,nn] <- X[min(tn,Xcount),ii,nn]
-          tt <- tt+1
-        }
-        else{
-          if (tmc[tt,ii,nn] == 2){   # insert Nan
-            Xc[xcount,ii,nn] <- NaN
-            xcount <- min(tn,xcount+1)
-            Xc[xcount,ii,nn] <- X[Xcount,ii,nn]
+    Xc <- array(NaN,dim = c(tn,p,ns))
+    Tmax <- 0
+    Tmin <- n
+    for (nn in 1:ns) {
+      
+      for (ii in 1:p) {
+        xcount <- 1
+        Xcount <- 1
+        tt <- 1
+        while (tt < n+1) {
+          
+          if (tmc[tt,ii,nn] == 0){     # remove band
+            Xcount <- min(Xcount+1,tn)
+            Xc[xcount,ii,nn] <- X[min(tn,Xcount),ii,nn]
+            tt <- tt+1
           }
           else{
-            Xc[xcount,ii,nn] <- X[Xcount,ii,nn]
+            if (tmc[tt,ii,nn] == 2){   # insert Nan
+              Xc[xcount,ii,nn] <- NaN
+              xcount <- min(tn,xcount+1)
+              Xc[xcount,ii,nn] <- X[Xcount,ii,nn]
+            }
+            else{
+              Xc[xcount,ii,nn] <- X[Xcount,ii,nn]
+            }
           }
+          xcount <- min(tn,xcount+1)
+          Xcount <- min(tn,Xcount+1)
+          tt <- tt+1
         }
-        xcount <- min(tn,xcount+1)
-        Xcount <- min(tn,Xcount+1)
-        tt <- tt+1
+        kall <- which(!is.nan(Xc[,ii,nn]), arr.ind=T)
+        k <- tail(kall,1)
+        if (k > Tmax) Tmax <- k
+        if (k < Tmin) Tmin <- k
       }
-      kall <- which(!is.nan(Xc[,ii,nn]), arr.ind=T)
-      k <- tail(kall,1)
-      if (k > Tmax) Tmax <- k
-      if (k < Tmin) Tmin <- k
     }
-  }
-  
-  if (model$resize == -1){
-    Xc <- Xc[1:Tmin,,]
-    tc <- tc[1:Tmin]
-  }
-  # expand output size to longest (non-nan) sequence
-  if (model$resize == 1){
-    Xc <- Xc[1:Tmax,,];
-    tc <- tc[1:Tmax];
-  }
     
-  if (dim(X)[2]==1) {
-    Xc  <- array(Xc,c(n,model$ns))
-    tmc <- array(tmc,c(n,model$ns))
-  }
-  
-  if (isflipped == 1){
-    if (dim(X)[2]==1)
-      Xc = apply(Xc,2,rev)
-    else
-      for (nn in 1:ns) {
-        Xc[,,nn] = apply(Xc[,,nn],2,rev)
-        tmc[,,nn] = apply(tmc[,,nn],2,rev)
-      }
+    if (model$resize == -1){
+      Xc <- Xc[1:Tmin,,]
+      tc <- tc[1:Tmin]
+    }
+    # expand output size to longest (non-nan) sequence
+    if (model$resize == 1){
+      Xc <- Xc[1:Tmax,,];
+      tc <- tc[1:Tmax];
+    }
     
-    tc = rev(tc);
-  }
-  res <- list("Xc"=Xc,"tc"=tc,"tmc"=tmc)
-  return(res)
+    if (dim(X)[2]==1) {
+      Xc  <- array(Xc,c(n,model$ns))
+      tmc <- array(tmc,c(n,model$ns))
+    }
+    
+    if (isflipped == 1){
+      if (dim(X)[2]==1)
+        Xc = apply(Xc,2,rev)
+      else
+        for (nn in 1:ns) {
+          Xc[,,nn] = apply(Xc[,,nn],2,rev)
+          tmc[,,nn] = apply(tmc[,,nn],2,rev)
+        }
+      
+      tc = rev(tc);
+    }
+    res <- list("Xc"=Xc,"tc"=tc,"tmc"=tmc)
+    return(res)
 }
 
 #' @export

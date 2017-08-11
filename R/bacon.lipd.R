@@ -435,7 +435,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
     if(length(L$chronData)==1){
       which.chron=1
     }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to run bacon for? "))
+      which.chron=as.integer(readline(prompt = "Which chronData do you want to grab bacon data for? "))
     }
   }
   
@@ -540,33 +540,28 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]=summaryTable
   #
   
-  
-  
-  
   #now grab ensemble data.
-  ageEns = sampleBaconAges(corename=site.name,baconDir = baconDir)
+  ageEns = sampleBaconAges(corename=site.name,baconDir = baconDir,K = K)
   
   ageEns$depth$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
   ageEns$ageEnsemble$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units
   
   L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]] = ageEns
   
-  #grab distribution data
-  for(dd in 1:length(info$calib$probs)){
-    dTable = list()
-    dTable$age = list(values = info$calib$probs[[dd]][,1], units =  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units, variableName = "age")
-    dTable$probabilityDensity = list(values = info$calib$probs[[dd]][,2], variableName = "probabilityDensity")
-    dTable$depth = info$calib$d[dd]
-    dTable$depthUnits = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
-    
-    L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[dd]] = dTable
+  if(exists("info")){
+    #grab distribution data
+    for(dd in 1:length(info$calib$probs)){
+      dTable = list()
+      dTable$age = list(values = info$calib$probs[[dd]][,1], units =  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units, variableName = "age")
+      dTable$probabilityDensity = list(values = info$calib$probs[[dd]][,2], variableName = "probabilityDensity")
+      dTable$depth = info$calib$d[dd]
+      dTable$depthUnits = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
+      
+      L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[dd]] = dTable
+    }
   }
   
-  
-  #TBD - grab probability distribution data
-  #possible in bacon?
-  
-  
+
   return(L)
 }
 

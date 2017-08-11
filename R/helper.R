@@ -24,3 +24,18 @@ if(is.list(X)){
   return(X)
  
 }
+
+#' @export
+clearAll = function(){
+  rm(list = ls())
+}
+
+#' @export
+detachAll = function(){
+pkgs = names(sessionInfo()$otherPkgs)
+pkgs = paste('package:', pkgs, sep = "") 
+lapply(pkgs, detach, character.only = TRUE, unload = TRUE)
+}
+
+
+
