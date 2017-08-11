@@ -1,5 +1,5 @@
 #' @export
-run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA){
+runBacon <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -28,12 +28,12 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   
   #initialize model number
   if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       modelNum=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
-      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$chronModel)+1))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$model)+1))
       
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
@@ -41,10 +41,10 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   
   
   #write bacon file
-  L=write.bacon.lipd(L,which.chron = which.chron,baconDir = baconDir,remove.reverse = remove.reverse,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
+  L=writeBacon(L,which.chron = which.chron,baconDir = baconDir,remove.reverse = remove.reverse,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
   
   #estimate thickness parameter
-  thick = abs(diff(range(L$chronData[[which.chron]]$chronModel[[modelNum]]$inputTable[,4])))/100
+  thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
   
   #run bacon
   setwd(baconDir)
@@ -55,12 +55,12 @@ run.bacon.lipd <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName
   print("taking a short break...")
   Sys.sleep(5)
   #pull bacon data into lipd structure
-  L = load.bacon.output.lipd(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
+  L = loadBaconOutput(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
   return(L)
 }
 
 #' @export
-sample.bacon.ages.lipd <- function(corename,K=NA,baconDir=NA,maxEns=NA){
+sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   #from Simon Goring, modified by Nick McKay
   setwd(baconDir)
   setwd("Cores")
@@ -124,14 +124,14 @@ sample.bacon.ages.lipd <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 }
 
 #' @export
-write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       modelNum=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -390,10 +390,10 @@ write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
   }
   
   setwd(cur.dir)
-  if(modelNum>length(L$chronData[[which.chron]]$chronModel)){
-    L$chronData[[which.chron]]$chronModel[[modelNum]]=list(inputTable = out.table)
+  if(modelNum>length(L$chronData[[which.chron]]$model)){
+    L$chronData[[which.chron]]$model[[modelNum]]=list(inputTable = out.table)
   }else{
-    L$chronData[[which.chron]]$chronModel[[modelNum]]$inputTable = out.table
+    L$chronData[[which.chron]]$model[[modelNum]]$inputTable = out.table
   }
   return(L)
   
@@ -401,7 +401,7 @@ write.bacon.lipd <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,ov
 }
 
 #' @export
-load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
+loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
   #initialize bacon directory
   if(is.na(baconDir)){
     #check global first
@@ -443,12 +443,12 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   
   #initialize model number
   if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       modelNum=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
-      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$chronModel)+1))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$model)+1))
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -457,13 +457,13 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     makeNew = FALSE
   }
   
-  if(length(L$chronData[[which.chron]]$chronModel)<modelNum){
+  if(length(L$chronData[[which.chron]]$model)<modelNum){
     if(makeNew){
-      L$chronData[[which.chron]]$chronModel[[modelNum]]=NA
+      L$chronData[[which.chron]]$model[[modelNum]]=NA
     }else{
       nm=readline(prompt = paste("model",modelNum,"doesn't exist. Create it? y or n "))
       if(grepl(pattern = "y",x = tolower(nm))){
-        L$chronData[[which.chron]]$chronModel[[modelNum]]=NA
+        L$chronData[[which.chron]]$model[[modelNum]]=NA
       }else{
         stop("Stopping, since you didn't want to create a new model")
       }
@@ -496,11 +496,11 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
   
   
   
-  if(is.na(L$chronData[[which.chron]]$chronModel[[modelNum]])){
-    L$chronData[[which.chron]]$chronModel[[modelNum]]=list("methods"=methods)
+  if(is.na(L$chronData[[which.chron]]$model[[modelNum]])){
+    L$chronData[[which.chron]]$model[[modelNum]]=list("methods"=methods)
     
   }else{
-    L$chronData[[which.chron]]$chronModel[[modelNum]]$methods=methods
+    L$chronData[[which.chron]]$model[[modelNum]]$methods=methods
   }
   
   #summary table!
@@ -537,19 +537,30 @@ load.bacon.output.lipd = function(L,site.name=L$dataSetName,which.chron=NA,bacon
     }
   }
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=summaryTable
+  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]=summaryTable
   #
   
   
   
   
   #now grab ensemble data.
-  ageEns = sample.bacon.ages.lipd(corename=site.name,baconDir = baconDir)
+  ageEns = sampleBaconAges(corename=site.name,baconDir = baconDir)
   
-  ageEns$depth$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$depth$units
-  ageEns$ageEnsemble$units = L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable$age$units
+  ageEns$depth$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
+  ageEns$ageEnsemble$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable = ageEns
+  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]] = ageEns
+  
+  #grab distribution data
+  for(dd in 1:length(info$calib$probs)){
+    dTable = list()
+    dTable$age = list(values = info$calib$probs[[dd]][,1], units =  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units, variableName = "age")
+    dTable$probabilityDensity = list(values = info$calib$probs[[dd]][,2], variableName = "probabilityDensity")
+    dTable$depth = info$calib$d[dd]
+    dTable$depthUnits = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
+    
+    L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[dd]] = dTable
+  }
   
   
   #TBD - grab probability distribution data

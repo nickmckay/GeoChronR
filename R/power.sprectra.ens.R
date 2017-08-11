@@ -1,5 +1,5 @@
 #' @export
-create.synthetic = function(time,values,nens=1){
+createSyntheticTimeseries = function(time,values,nens=1){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -48,7 +48,7 @@ create.synthetic = function(time,values,nens=1){
 }
 
 #' @export
-powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
+powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
   library(lomb)#uses this library, for now...
   
   #check to see if time and values are "column lists"
@@ -85,7 +85,7 @@ powerSpectrum.ens = function(time,values,max.ens=NA,ofac=1){
     t = time[,sample.int(ncol(time),size = 1)]
     v = values[,sample.int(ncol(values),size = 1)]
     out = lsp(v,times=t,ofac=ofac,plot = F)
-    syn = create.synthetic(t,v)#create synthetic timeseries
+    syn = createSyntheticTimeseries(t,v)#create synthetic timeseries
     synOut = lsp(syn,times=t,ofac=ofac,plot = F)
     pMatSyn[1:length( synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned

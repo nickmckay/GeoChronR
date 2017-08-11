@@ -1,5 +1,5 @@
 #' @export
-run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000){
+runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000,model = NA){
   
     #initialize which.paleo
   if(is.na(which.paleo)){
@@ -22,7 +22,7 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   }
   
   #Which age/year vector do you want to perturb?
-  yearData = select.data(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = TRUE)
+  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = TRUE)
   
   
   #make sure that the most recent year is first
@@ -71,11 +71,11 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   #initialize model
   if(is.na(which.model)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       which.model=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
       which.model=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -85,13 +85,13 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
     makeNew = FALSE
   }
   
-  if(length(L$chronData[[which.chron]]$chronModel)<which.model){
+  if(length(L$chronData[[which.chron]]$model)<which.model){
     if(makeNew){
-      L$chronData[[which.chron]]$chronModel[[which.model]]=NA
+      L$chronData[[which.chron]]$model[[which.model]]=NA
     }else{
       nm=readline(prompt = paste("model",which.model,"doesn't exist. Create it? y or n "))
       if(grepl(pattern = "y",x = tolower(nm))){
-        L$chronData[[which.chron]]$chronModel[[which.model]]=NA
+        L$chronData[[which.chron]]$model[[which.model]]=NA
       }else{
         stop("Stopping, since you didn't want to create a new model")
       }
@@ -100,7 +100,7 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   
   
   
-  CM=L$chronData[[which.chron]]$chronModel[[which.model]]
+  CM=L$chronData[[which.chron]]$model[[which.model]]
   #get BAM parameters
   if(is.na(CM)){
     CM=list()
@@ -110,6 +110,8 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   }
   CM$methods$algorithm = "BAM"
   
+  if(is.na(model)){
+    
   #specify model type
   if(is.null( CM$methods$parameters$modelType)){
     print("Which type of model do you want to use for BAM?")
@@ -133,6 +135,7 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
     print("What's the probability of overcounting")
     CM$methods$parameters$overcountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
   }
+  }
   
   #ensemble members
   if(is.null( CM$methods$parameters$nEns)){
@@ -146,10 +149,11 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   #this shouldn't change I think
   CM$methods$parameters$resize = 0
   
+  if(is.na(model)){
   #create model
   model <- list(name= CM$methods$parameters$modelType,param=c(CM$methods$parameters$undercountingProbability,CM$methods$parameters$overcountingProbability)
                 ,ns=CM$methods$parameters$nEns,resize=CM$methods$parameters$resize)	
-  
+  }
   
   yearDataToRun = as.matrix(yearData$values)
   if(flipped){
@@ -158,29 +162,46 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
   }
   
   #run BAM
-  bamOut=BAM_simul(yearDataToRun,yearDataToRun,ageEnsOut=TRUE,model = model)
+  bamOut=simulateBam(yearDataToRun,yearDataToRun,ageEnsOut=TRUE,model = model)
   
-  #store output appropriately in chronModel
+  #check for existing ensembles
+  nenstables = length(CM$ensembleTable)
+  if(nenstables==0){#create 1
+  #store output appropriately in model
+  ens.number = 1
+  }else if(is.na(ens.number)){
+    print(paste("You already have", nenstables, "ensemble table(s) in this model"))
+    ens.number=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+  }
+  
+  if(nenstables==0){#create
   CM$ensembleTable = list()
+  }
+  
+  
+  
+    
   ensOut =  bamOut$ageEns
   if(flipped){
     #then flip it back
     ensOut  = as.matrix(ensOut[nrow(ensOut):1,])
   }
-  CM$ensembleTable$ageEnsemble$values = ensOut
-  CM$ensembleTable$ageEnsemble$units = yearData$units
-  CM$ensembleTable$timeCorrectionMatrix$values = bamOut$tmc
-  CM$ensembleTable$timeCorrectionMatrix$units = NA
-  CM$ensembleTable$timeCorrectionMatrix$description = "corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band)"
+  CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
+  CM$ensembleTable[[ens.number]]$ageEnsemble$units = yearData$units
+  CM$ensembleTable[[ens.number]]$ageEnsemble$variableName = "ageEnsemble"
   
-  L$chronData[[which.chron]]$chronModel[which.model]=list(CM)
+  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$values = bamOut$tmc
+  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$units = NA
+  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$description = "corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band)"
+  
+  L$chronData[[which.chron]]$model[which.model]=list(CM)
   
   #place into paleoData appropriately.
   #assign into measurementTable
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensOut
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronModel = which.model
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$frommodel = which.model
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
   
   return(L)
@@ -190,15 +211,15 @@ run.BAM.lipd = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=
 
 
 #' @export
-BAM_correct <- function(X, t, model=NULL){
+bamCorrect <- function(X, t, model=NULL){
   
   # Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
   # The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order. 
   #
-  # res <- BAM_correct(X,t) will generate an ensemble of 1000 age models randomly following
+  # res <- bamCorrect(X,t) will generate an ensemble of 1000 age models randomly following
   # a Poisson process with rate parameter theta=0.05 used to perturb data X
   #
-  # res <- BAM_correct(X,t,model) will correct data X  with the model specified in
+  # res <- bamCorrect(X,t,model) will correct data X  with the model specified in
   # the model structure
   #
   # INPUT
@@ -413,15 +434,15 @@ BAM_correct <- function(X, t, model=NULL){
 }
 
 #' @export
-BAM_simul <- function(X, t, model=NULL,ageEnsOut=FALSE){
+simulateBam <- function(X, t, model=NULL,ageEnsOut=FALSE){
   
   # Generate an ensemble of age perturbed data.See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
   # The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.
   #
-  # res <- BAM_simul(X,t) will generate an ensemble of 1000 age models randomly following
+  # res <- simulateBam(X,t) will generate an ensemble of 1000 age models randomly following
   # a Poisson process with rate parameter theta=0.05 used to perturb data X
   #
-  # res <- BAM_simul(X,t,model) will perturb data X  with the model specified in
+  # res <- simulateBam(X,t,model) will perturb data X  with the model specified in
   # the model structure
   #
   # INPUT

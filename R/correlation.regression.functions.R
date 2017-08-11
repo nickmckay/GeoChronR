@@ -1,9 +1,9 @@
 #' @export
-#' @description estimates AR1 using the arima() function
+#' @description estimates ar1 using the arima() function
 #' @author Julien Emile-Geay
 #' @param X a 1-column matrix or numeric dataset
-#' @return ar coefficient estimate of AR1
-AR1 = function(X){
+#' @return ar coefficient estimate of ar1
+ar1 = function(X){
   fit = arima(x = X, order = c(1, 0, 0))
   return(fit$coef[[1]])
 }
@@ -16,9 +16,9 @@ AR1 = function(X){
 #' @return estimate of the effective sample size
 effectiveN = function(X,Y){
   #from Bretherton 1999
-  arX = AR1(X)
+  arX = ar1(X)
   n = sum(is.finite(X) & is.finite(Y))
-  arY = AR1(Y)
+  arY = ar1(Y)
   
   if(arX < 0 | arY < 0 ){#calculation is meaningless if either number is less than 0
     effN=n
@@ -34,7 +34,7 @@ effectiveN = function(X,Y){
 #' @param r correlation coefficient
 #' @param n sample size
 #' @return p-value based on two-tailed t-test
-pvalPearson.serial.corrected = function(r,n){
+pvalPearsonSerialCorrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
   Tval = r * sqrt((n-2)/(1-r^2))
@@ -51,7 +51,7 @@ pvalPearson.serial.corrected = function(r,n){
 #' @param M2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 
-matrix.corr.and.pvalue = function(M1,M2){
+corMatrix = function(M1,M2){
   M1=as.matrix(M1)
   M2=as.matrix(M2)
   if(nrow(M1)!=nrow(M2)){stop("M1 and M2 must have the same number of rows")}
@@ -67,8 +67,8 @@ matrix.corr.and.pvalue = function(M1,M2){
     for(j in 1:ncol(M2)){
       r[j+ncol(M2)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
       effN = effectiveN(M1[,i],M2[,j])
-      pAdj[j+ncol(M2)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M2)*(i-1)],effN)
-      p[j+ncol(M2)*(i-1)] = pvalPearson.serial.corrected(r[j+ncol(M2)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
+      pAdj[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],effN)
+      p[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
     setTxtProgressBar(pb, j+ncol(M2)*(i-1))
     }
   }
@@ -120,74 +120,32 @@ regress=function (X,Y){
 #' @return list of ensemble ouput, including ensemble results and plots
 #' @author Nick McKay
 
-regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(2.5,25,50,75,97.5),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
-  #check to see if time and values are "column lists"
-  if(is.list(timeX)){
+regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(2.5,25,50,75,97.5),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
+  #time and values must be "column lists"
+  
+  if(!is.list(timeX) | !is.list(timeY) | !is.list(valuesX) | !is.list(valuesY)){
+    stop("TimeX and Y and values X and Y must all be ``variable lists''")
+  }
+  
     otx=timeX
-    timeX=timeX$values}
-  if(is.list(timeY)){
     oty=timeY
-  timeY=timeY$values}
-  if(is.list(valuesX)){
     ovx=valuesX
-    valuesX=valuesX$values}
-  if(is.list(valuesY)){
     ovy=valuesY
-    valuesY=valuesY$values}
-  
-  
-  #make them all matrices
-  timeX = as.matrix(timeX)
-  timeY = as.matrix(timeY)
-  valuesX = as.matrix(valuesX)
-  valuesY = as.matrix(valuesY)
-  
-  if(nrow(timeX) != nrow(valuesX)){stop("timeX and valuesX must have the same number of rows (observations)")}
-  if(nrow(timeY) != nrow(valuesY)){stop("timeY and valuesY must have the same number of rows (observations)")}
-  
-  if(all(is.na(binvec))){
-    if(is.na(binstep)){
-      stop("Either a binvec or binstep must be specified")
-    }else{
-      #look for common overlap
-      binStart=max(c(min(timeX,na.rm=TRUE),min(timeY,na.rm=TRUE)))
-      binStop=min(c(max(timeX,na.rm=TRUE),max(timeY,na.rm=TRUE)))
-      binvec=seq(binStart,binStop,by=binstep)
-    }
-  }
-  
-  #create ensemble bins
-  dum = bin.ens(time = timeX,values = valuesX,binvec = binvec,binfun=binfun,max.ens=max.ens)
-  yearX = dum$time
-  binX = dum$matrix
-  binY = bin.ens(time = timeY,values = valuesY,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
-  
-  #remove columns that have less than minObs datapoints
-  good = which(apply(!is.na(binX),2,sum)>=minObs)
-  if(length(good)==0){
-    stop(paste("none of the columns have",minObs,"or more datapoints"))
-  }
-  binX = as.matrix(binX[,good])
-  
-  
-  good = which(apply(!is.na(binY),2,sum)>=minObs)
-  if(length(good)==0){
-    stop(paste("none of the columns have",minObs,"or more datapoints"))
-  }
-  binY = as.matrix(binY[,good])
 
-  
-  if(is.na(binstep)){#if the binstep isn't specified
-    binstep=abs(mean(diff(binvec,na.rm=TRUE)))
-  }
+    aligned = alignTimeseriesBin(timeX,valuesX,timeY,valuesY,binvec = binvec,binstep = binstep ,binfun=binfun,max.ens=max.ens,minObs=minObs)
+      
+
+  yearX = aligned$yearBins
+  binX = aligned$binX
+  binY = aligned$binY
   
   #check for a reconstruction binvec
   if(all(is.na(recon.binvec))){
-    recon.binvec = seq(min(timeX,na.rm=TRUE),max(timeX,na.rm=TRUE),by=binstep)
+    recon.binvec = seq(min(timeX,na.rm=TRUE),max(timeX,na.rm=TRUE),by=abs(aligned$binstep))
   }
   
   #get full X for the reconstruction
-  fullX = bin.ens(time = timeX,values = valuesX,binvec = recon.binvec,binfun=binfun,max.ens=max.ens)
+  fullX = binEns(time = as.matrix(timeX$values),values = as.matrix(valuesX$values),binvec = recon.binvec,binfun=binfun,max.ens=max.ens)
   
   
   #how many ensemble members?
@@ -238,6 +196,9 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     XC=cbind(as.matrix(fullX$matrix[,rX[i]]),matrix(1,nrow=length(as.matrix(fullX$matrix[,rX[i]]))))
     modeled.Y.mat[,i] = XC%*%B 
     
+    modeled = list(values = modeled.Y.mat,units = ovy$units, variableName = ovy$variableName, variableType= "inferredVariable")
+    
+    
     if(i%%100==0){
       setTxtProgressBar(pb, i)
     }
@@ -252,87 +213,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
     regStats = data.frame(percentiles,"m" = ms[round(percentiles*N/100)],"b" = bs[round(percentiles*N/100)])
     row.names(regStats)=format(regStats$percentiles,digits = 2)
   }
-  reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat)
-  
-  if(plot_reg){
-    #scatter plot
-    regPlot = plot_scatter.ens(binX,binY,alp=plot_alpha)
-    #add trendlines
-    regPlot = plot_trendlines.ens(mb.df = t(rbind(m,b)),xrange = range(binX,na.rm=TRUE), alp = plot_alpha,add.to.plot = regPlot$plot)
-    reg.ens.data$scatterplot = regPlot
-    if(exists("ovx")){
-      pl=ovx
-      reg.ens.data$scatterplot = reg.ens.data$scatterplot+xlab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    if(exists("ovy")){
-      pl=ovy
-      reg.ens.data$scatterplot = reg.ens.data$scatterplot+ylab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    
-    
-    
-    #plot histograms of m and b
-    mStats = regStats[,1:2]
-    names(mStats)[2]="values"
-    reg.ens.data$mHist = plot_hist.ens(m,ensStats = mStats)+xlab("Slope")
-    bStats = regStats[,c(1,3)]
-    names(bStats)[2]="values"
-    reg.ens.data$bHist = plot_hist.ens(b,ensStats = bStats)+xlab("Intercept")
-    
-    
-    binY[is.nan(binY)]=NA
-    binX[is.nan(binX)]=NA
-
-    #plot timeseries of regression and target over interval
-    reg.ens.data$XPlot = plot_timeseries.ribbons(yearX,binX)+ggtitle("Calibration interval predictor")
-    if(exists("otx")){
-      pl=otx
-      reg.ens.data$XPlot = reg.ens.data$XPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    if(exists("ovx")){
-      pl=ovx
-      reg.ens.data$XPlot = reg.ens.data$XPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    
-    reg.ens.data$YPlot = plot_timeseries.ribbons(yearX,binY,colorHigh = "red")+ggtitle("Calibration interval predictand")
-    if(exists("oty")){
-      pl=oty
-      reg.ens.data$YPlot = reg.ens.data$YPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    if(exists("ovy")){
-      pl=ovy
-      reg.ens.data$YPlot = reg.ens.data$YPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    
-    
-    
-    #and plot reconstructions
-    reg.ens.data$modeledYPlot = plot_timeseries.ribbons(X = fullX$time,Y=modeled.Y.mat)+ggtitle("Calibrated record using ensemble regression")
-    if(exists("otx")){
-      pl=otx
-      reg.ens.data$modeledYPlot = reg.ens.data$modeledYPlot+xlab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    if(exists("ovy")){
-      pl=ovy
-      reg.ens.data$modeledYPlot = reg.ens.data$modeledYPlot+ylab(paste0(pl$variableName, " (",pl$units,")"))
-    }
-    
-    
-    library(gridExtra)
-    lay = rbind(c(1,1,3,3,4,4),
-                c(2,2,3,3,5,5),
-                c(6,6,6,6,6,6),
-                c(6,6,6,6,6,6))
-    
-    
-    reg.ens.data$summaryPlot = grid.arrange(grobs = list(reg.ens.data$YPlot,reg.ens.data$XPlot,reg.ens.data$scatterplot,
-                                                         reg.ens.data$mHist,reg.ens.data$bHist,reg.ens.data$modeledYPlot),
-                                            layout_matrix=lay)  
-    
-    
-    
-    
-  }
+  reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat,timeX = otx,valuesX= ovx,timeY=oty,valuesY=ovy,modeled = modeled,yearX = yearX,modeledYear = fullX$time)
   
   
   return(reg.ens.data)
@@ -356,7 +237,7 @@ regression.ens = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,
 #' @param minObs minimum number of points required to calculate regression
 #' @return list of ensemble ouput, including ensemble results and plots
 #' 
-cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),plot_hist=TRUE,minObs=10){
+corEns = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),plot_hist=TRUE,minObs=10){
   
   #check to see if time and values are "column lists"
   if(is.list(time1)){time1=time1$values}
@@ -386,10 +267,10 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   }
   
   #create ensemble bins
-  dum = bin.ens(time = time1,values = values1,binvec = binvec,binfun=binfun,max.ens=max.ens)
+  dum = binEns(time = time1,values = values1,binvec = binvec,binfun=binfun,max.ens=max.ens)
   year = dum$time
   bin1 = dum$matrix
-  bin2 = bin.ens(time = time2,values = values2,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
+  bin2 = binEns(time = time2,values = values2,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
   
   #remove columns that have less than minObs datapoints
   good = which(apply(!is.na(bin1),2,sum)>=minObs)
@@ -410,7 +291,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
-  cor.df = matrix.corr.and.pvalue(bin1,bin2)
+  cor.df = corMatrix(bin1,bin2)
 
   #and the significance
   #pairwise observations
@@ -421,19 +302,19 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
     pctl = quantile(cor.df$r,probs = percentiles)
     corStats = data.frame(percentiles,"values" = pctl)
     #row.names(corStats)=format(corStats$percentiles,digits = 2) # it appears that the rows are already well formatted
-    cor.ens.data=list(cor.df = cor.df,corStats = corStats)
+    corEns.data=list(cor.df = cor.df,corStats = corStats)
     
   }else{
     corStats=NA
-    cor.ens.data=list(cor.df = cor.df)
+    corEns.data=list(cor.df = cor.df)
   }
   
   if(plot_hist){
     library(ggplot2)
-    cor.ens.data$plot_r = plot_corr.ens(cor.df,corStats)
-    cor.ens.data$plot_p = plot_pvals.ens(cor.df)
+    corEns.data$plot_r = plotCorrEns(cor.df,corStats)
+    corEns.data$plot_p = plotPvalsEns(cor.df)
   }
-  return(cor.ens.data)
+  return(corEns.data)
   
 }
 
@@ -448,7 +329,7 @@ cor.ens = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=
 #' @param max.ens maximum number of ensemble members to regress
 #' @return list that includes matrix of binned data and binned time
 
-bin.ens = function(time,values,binvec,binfun=mean,max.ens=NA){
+binEns = function(time,values,binvec,binfun=mean,max.ens=NA){
   
   time = as.matrix(time)
   values = as.matrix(values)
@@ -524,7 +405,7 @@ bin = function(time,values,binvec,binfun = mean){
   
 }
 #' @export
-bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE){
+binTs = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE){
   timeList = lapply(TS,"[[",timeVar)
   valueList = lapply(TS,"[[","paleoData_values")
   
@@ -532,7 +413,7 @@ bin.TS = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE
   pb <- txtProgressBar(min=1,max=length(timeList),style=3)
   
   for(i in 1:length(timeList)){
-    binMat[[i]]=bin.ens(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
+    binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
     if(na.col.rm){
       allNa=which(apply(is.na(binMat[[i]]$matrix),2,all))
       if(length(allNa)>0){

@@ -1,8 +1,8 @@
 #' @export
-map.lipd = function(L,color="red",size=8,shape = 16,zoom=4,map.type="google",extend.range=10){
+mapLipd = function(L,color="red",size=8,shape = 16,zoom=4,map.type="google",extend.range=10){
   library(ggmap)
   dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
-  basemap = base.map(dfp$lon,dfp$lat,extend.range=extend.range,map.type = map.type)
+  basemap = baseMap(dfp$lon,dfp$lat,extend.range=extend.range,map.type = map.type)
   map = basemap + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,size=size,shape = shape) 
   if(!is.null( L$geo$siteName)){
     dfp$sitename = L$geo$siteName
@@ -10,12 +10,14 @@ map.lipd = function(L,color="red",size=8,shape = 16,zoom=4,map.type="google",ext
   }
   return(map)
 }
+
+
 #' @export
-map.lipds = function(D,shape= 21,size=8,fill = sapply(D,"[[","archiveType") ,map.type="google",f=.3,restrict.map.range=TRUE,boundcirc=FALSE,global=FALSE){
+mapLipds = function(D,shape= 21,size=8,fill = sapply(D,"[[","archiveType") ,map.type="google",f=.3,restrict.map.range=TRUE,boundcirc=FALSE,global=FALSE){
   library(ggmap)
   dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),fill,shape)
   dfp = dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
-  basemap = base.map(dfp$lon,dfp$lat,map.type = map.type,f=f,restrict.map.range = restrict.map.range,boundcirc = boundcirc,global=global)
+  basemap = baseMap(dfp$lon,dfp$lat,map.type = map.type,f=f,restrict.map.range = restrict.map.range,boundcirc = boundcirc,global=global)
   map = basemap  + geom_point(data=dfp,aes(x=lon,y=lat,fill = fill),shape = shape,size=7)
   return(map)
 }
@@ -23,7 +25,7 @@ map.lipds = function(D,shape= 21,size=8,fill = sapply(D,"[[","archiveType") ,map
 
 #make a base map, with some options. 
 #' @export
-base.map = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
+baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
   library("ggplot2")
   library("ggmap")
   library("mapproj")
@@ -112,7 +114,7 @@ return(baseMap )
 
 
 #' @export
-assign.high.low.colors = function(colors){
+assignColors = function(colors){
   
   if(length(colors==1)){
     #make point map

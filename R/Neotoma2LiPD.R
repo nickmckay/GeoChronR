@@ -1,6 +1,6 @@
 #'@export
 #'
-estimate.uncertainty.from.range = function(MT,range1="age.young",range2="age.old"){
+estimateUncertaintyFromRange = function(MT,range1="age.young",range2="age.old"){
   val1=MT[[range1]]$values
   val2=MT[[range2]]$values
   library(matrixStats)
@@ -13,7 +13,7 @@ estimate.uncertainty.from.range = function(MT,range1="age.young",range2="age.old
 }
 
 #'@export
-Neotoma2LiPD = function(site){
+neotoma2Lipd = function(site){
   #input information is the site object from the R Neotoma package (use get_site)
   #output is an R LiPD object
   
@@ -183,7 +183,7 @@ Neotoma2LiPD = function(site){
         
         chronData[[ch]]$measurementTable[[1]] = cmt
         
-        chronData[[ch]]$chronModel[[1]]$method = chron$meta$age.model
+        chronData[[ch]]$model[[1]]$method = chron$meta$age.model
         
       }
       if(n==1){

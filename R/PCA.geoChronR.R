@@ -1,5 +1,5 @@
 #' @export
-PCA.ens <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
+pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
  
   #the option type controls whether the analysis is done on a correlation (default) or covariance matrix ("cov")
 #the function uses the pcaMethods library to do the heavy lifting

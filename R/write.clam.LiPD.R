@@ -1,6 +1,6 @@
 #' @export
 
-run.clam.lipd=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+runClam=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   #initialize clam directory
   if(is.na(clamDir)){
     #check global first
@@ -22,14 +22,14 @@ run.clam.lipd=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=
 }
 
 #' @export
-write.clam.lipd <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+writeClam <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       modelNum=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }

@@ -1,8 +1,11 @@
 #' @export
-plot_spectra.ens = function (spec.ens){
+geoChronRPlotTheme = ggplot2::theme_bw
+
+#' @export
+plotSpectraEns = function (spec.ens){
   
-  specPlot = plot_timeseries.ribbons(spec.ens$freqs,spec.ens$power)
-  specPlot = plot_timeseries.ribbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+  specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power)
+  specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
   #to do label significant peaks
   
   #add pvalues?
@@ -12,8 +15,8 @@ plot_spectra.ens = function (spec.ens){
 }
 
 
-
-quantile2d = function(x,y,nbins=100,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y)))){
+#' @export
+quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y)))){
   #interpolates then finds
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
@@ -50,7 +53,7 @@ quantile2d = function(x,y,nbins=100,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.
 
 
 #' @export
-bin_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T){
+bin2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T){
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
@@ -174,21 +177,21 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 
 #' @export
 #show a map, timeseries, and age model diagram..
-summary_plot = function(L){
+summaryPlot = function(L){
   library(grid)
   library(gridExtra)
-  map = map.lipd(L,extend.range = 5)
+  map = mapLipd(L,extend.range = 5)
   
   #plot paleoData
   
   print("What should we plot on the X-axis?")
   print("We'll look for age or year...")
-  age=select.data(L,varName = "age",always.choose = FALSE,altNames="year")
+  age=selectData(L,varName = "age",always.choose = FALSE,altNames="year")
   
   print("What should we plot on the Y-axis?")
-  variable=select.data(L)
+  variable=selectData(L)
   
-  paleoPlot = plot_line(age,variable)
+  paleoPlot = plotLine(age,variable)
   paleoPlot = paleoPlot + labs(title = paste("PaleoData:",variable$variableName))
   
   #do chron.
@@ -196,15 +199,15 @@ summary_plot = function(L){
     #looking for age model data.
     
     print("looking for ages...")
-    age2=select.data(L,varName = "age14C",always.choose = FALSE,altNames="year",where = "chronData")
+    age2=selectData(L,varName = "age14C",always.choose = FALSE,altNames="year",where = "chronData")
     
     #     print("looking for age uncertainty")
-    #     ageUnc = select.data(L,varName = "age14CUncertainty",always.choose = FALSE,altNames=c("uncertainty","error","age"),where = "chronData")
+    #     ageUnc = selectData(L,varName = "age14CUncertainty",always.choose = FALSE,altNames=c("uncertainty","error","age"),where = "chronData")
     
     print("looking for depths....")
-    depth=select.data(L,varName = "depth",always.choose = FALSE,where = "chronData")
+    depth=selectData(L,varName = "depth",always.choose = FALSE,where = "chronData")
     c.df = data.frame(x=age2$values,y=depth$values)
-    chronPlot = plot_line(age2,depth)
+    chronPlot = plotLine(age2,depth)
     chronPlot = chronPlot+
       geom_point(data=c.df,aes(x=x,y=y),colour="black",size=7)+
       scale_y_reverse()+
@@ -230,7 +233,7 @@ summary_plot = function(L){
 }
 
 #' @export
-plot_line = function(X,Y,color="black",add.to.plot=ggplot()){
+plotLine = function(X,Y,color="black",add.to.plot=ggplot()){
   
   #X and Y and are lipd variables, including values, units, names, etc...
   df = data.frame(x = X$values, y = Y$values)
@@ -248,7 +251,7 @@ plot_line = function(X,Y,color="black",add.to.plot=ggplot()){
 
 
 #' @export
-plot_timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
+plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -281,13 +284,10 @@ plot_timeseries.lines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.
   
 }
 #' @export
-plot_timeseries.ribbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
+plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=as.data.frame(X$values)}
   if(is.list(Y)){Y=as.data.frame(Y$values)}
-  
-  
-  
   
   X=as.matrix(X)
   Y=as.matrix(Y)
@@ -296,42 +296,38 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bi
   if(ncol(X)==1 & ncol(Y)==1){
     #then just plot a line
     df = data.frame(x=X,y=Y)
-    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=lineColor)+geoChronR.plotTheme()
+    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=lineColor)+geoChronRPlotTheme()
     
   }else{
     
     if(nrow(X)!=nrow(Y)){
       stop("X and Y must have the same number of observations")
     }
-    #  good =which(!is.)
-    
 
-  # binned = bin_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
-    
-#    binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
-    
-    #find cum sum probabilities  
+    ###DEPRECATED - old method.
+    # binned = bin2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+    # binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+    # find cum sum probabilities  
 
     
     # #nbox = prod(dim(binned$density))
     # colSums = apply(binned$density,2,sum)
-    # # colCount = colSums*nbox
-    # # good.cols = which(colCount>nrow(binned$density))
-    # 
+    # colCount = colSums*nbox
+    # good.cols = which(colCount>nrow(binned$density))
     # sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
-    # 
     # bmcs = apply(binned$density/sumMat,2,cumsum)
-    # 
     # good.cols = which(!apply(is.na(bmcs),2,all) & scale(colSums)>-3)
     
     # probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
-    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs)
-    probMat = probMatList$quants
     
     # for(p in 1:length(probs)){
     #   probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p],method = "constant")$y)
     # }
+    ###END DEPRECATED - old method.
     
+    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs)
+    probMat = probMatList$quants
+
     probMat=as.data.frame(probMat)
     lineLabels=as.character(probs)
     
@@ -366,7 +362,7 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bi
     library(ggplot2)
     for(b in 1:(ncol(bandMat)/2)){
       if(b==1){
-        bandPlot = add.to.plot+geoChronR.plotTheme()
+        bandPlot = add.to.plot+geoChronRPlotTheme()
       }
       bands=data.frame(x=probMatList$x.bin,ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
       bandPlot = bandPlot+
@@ -390,7 +386,7 @@ plot_timeseries.ribbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bi
   
 }
 #' @export
-plot_scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
+plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000){
   X=as.matrix(X)
   Y=as.matrix(Y)
   
@@ -412,10 +408,14 @@ plot_scatter.ens = function(X,Y,alp=.2,maxPlotN=1000){
     geom_point(aes(x = x,y=y),alpha=alp)+
     theme_bw()
   
-  return(list("plot" = scatterplot,"pX"=pX,"pY"=pY))
+  return(scatterplot)
 }
+
+
+
+
 #' @export
-plot_trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
+plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
   #mb.df = dataframe of slopes (column 1) and intercepts (column 2)
   #xrange = range of x values (min and max)
   #pXY = index of which observations to use
@@ -443,7 +443,7 @@ plot_trendlines.ens = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "
 }
 
 #' @export
-plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot()){
+plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot()){
   # evaluate preliminary quantities
   rng <- range(cor.df$r)
   bw = (rng[2]-rng[1])/bins
@@ -493,7 +493,7 @@ plot_corr.ens = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats)
   return(h)
 }
 
-plot_pvals.ens = function(cor.df,alpha = 0.05){
+plotPvalsEns = function(cor.df,alpha = 0.05){
   m=dim(cor.df)[1] # number of hypotheses being tested
   rk = seq(m)
   fdr_thresh = rk/m*alpha
@@ -527,7 +527,7 @@ plot_pvals.ens = function(cor.df,alpha = 0.05){
 #  THIS SHOULD BE DEPRECATED - kept for backwards compatibility
 
 #' @export
-plot_hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
+plotHistEns = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
   ensData = data.frame("r"=c(ensData))
   library(ggplot2)
@@ -557,7 +557,7 @@ plot_hist.ens = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensSt
 }
 
 #' @export
-plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
+plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.6,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=pnorm(-2:2)){
   library(ggmap)
   library(ggplot2)
   library(gridExtra)
@@ -602,7 +602,7 @@ plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.
   medianLoadings = apply(ens.PC.out$loadings,MARGIN = c(1,2),median,na.rm=TRUE)
   
   #get a base map
-  map = base.map(lon,lat,map.type = map.type,f=f,projection = projection,restrict.map.range = restrict.map.range)
+  map = baseMap(lon,lat,map.type = map.type,f=f,projection = projection,restrict.map.range = restrict.map.range)
   
   for (i in 1:length(which.PCs)){
     #figure out dotsize
@@ -622,7 +622,7 @@ plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.
     
     
     #infer colors
-    scaleColors = assign.high.low.colors(color)
+    scaleColors = assignColors(color)
     
     
     maplist[[i]] = map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd) +
@@ -641,7 +641,7 @@ plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.
       theme_bw()+
       scale_x_reverse()
     
-    plotlist[[i]] = plot_timeseries.ribbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
+    plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
     medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
     sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
     varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"±",as.character(signif(sdVarExp*100,1)))
@@ -663,10 +663,39 @@ plot_ensemble.PCA <- function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.
   
 }
 
-plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",obj.num = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,dist.plot = NA,distType = "violin",thick = 0.1){
+#' @export
+plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",which.data = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,dist.plot = NA,distType = "violin",thick = 0.1,truncateDist = NA){
+  
+  
+  P = L[[paste0(mode,"Data")]]
+  if(is.na(which.data)){
+    if(length(P)==1){
+      which.data=1
+    }else{
+      print(names(P))
+      which.data=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? Select a number "))
+    }
+  }
+  
+  #initialize model number
+  MT = P[[which.data]]$model
+  if(is.null(MT)){
+    stop(paste0("There are no models in ",mode,"Data[[",as.character(which.data),"]]. This makes it difficult to plot distributions from the model"))
+  }
+  
+  if(is.na(model.num)){
+    if(length(MT)==1){
+      #only one pmt
+      which.mt=1
+    }else{
+      print(paste0(where,"Data[[", as.character(which.paleo), "]] has ", length(MT), " models"))
+      which.mt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
+    }
+  }
+  
   
   #pull out distribution object
-  dist = L[[paste0(mode,"Data")]][[obj.num]]$model[[model.num]]$distributionTable
+  dist = MT[[model.num]]$distributionTable
   
   #check it to make sure it's a distribution table
   if(!is.list(dist)){
@@ -686,6 +715,13 @@ plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chr
   
   #guess at the scaler...
   this.dist = dist[[dist.plot[[1]]]]
+  if(!is.na(truncateDist)){
+    tgood = which(this.dist$probabilityDensity$values > truncateDist)
+    this.dist$probabilityDensity$values = this.dist$probabilityDensity$values[tgood]
+    this.dist$age$values = this.dist$age$values[tgood]
+  }
+  
+  
   pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T)
   scaler = scaleFrac*abs(diff(plot.range))/max(pd)
   
@@ -693,19 +729,94 @@ plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chr
   #loop through individual ages...
   for(y in dist.plot){
     this.dist = dist[[y]]
+    if(!is.na(truncateDist)){
+      tgood = which(this.dist$probabilityDensity$values > truncateDist)
+      this.dist$probabilityDensity$values = this.dist$probabilityDensity$values[tgood]
+      this.dist$age$values = this.dist$age$values[tgood]
+    }
     pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T) * scaler
     this.df = data.frame(x= this.dist[[dist.var]]$values,ymin = this.dist[[y.var]] - pd,ymax = this.dist[[y.var]] + pd )
     if(distType == "up"){this.df$ymin =  this.dist[[y.var]]}
     if(distType == "down"){this.df$ymax =  this.dist[[y.var]]}
     add.to.plot = add.to.plot + geom_ribbon(data = this.df, aes(x = x,ymin = ymin,ymax = ymax),colour = color,fill = color, alpha = alp,size = thick)
   }
-  add.to.plot = add.to.plot + geoChronR.plotTheme()
+  add.to.plot = add.to.plot + geoChronRPlotTheme()
   return(add.to.plot)
 }
 
-geoChronR.plotTheme = ggplot2::theme_bw
+#' @export
+plotChron = function(L,chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA){
+  
+  C = L$chronData
+  if(is.na(chron.number)){
+    if(length(C)==1){
+      chron.number = 1
+    }else{
+      print(paste0("There are ", as.character(length(C)), " chronData objects. Which do you want to plot?"))
+      chron.number=as.integer(readline(prompt = "Which chronData do you want to plot? Enter an integer "))
+    }
+  }
+  
+  if(is.na(model.num)){
+    if(length(C[[chron.number]]$model)==1){
+      model.num = 1
+    }else{
+      print(paste0("There are ", as.character(length(C[[chron.number]]$model)), " chron models. Which do you want to plot?"))
+      model.num=as.integer(readline(prompt = "Which model do you want to plot? Enter an integer "))
+    }
+  }
+  
+  #get the data from the chron ensemble table
+  depth = selectData(L,varName = "depth",where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
+  ageEnsemble = selectData(L,varName = "age",where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
+  
+  #quick fix to ensemble list bug
+  ageEnsemble$values = as.matrix(as.data.frame(ageEnsemble$values))
+  
+  #Ribbons first
+  chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
+  
+  #distributions second...
+  if(is.list(C[[chron.number]]$model[[model.num]]$distributionTable)){#if it exists. Add it.
+    chronPlot = plotModelDistributions(L,which.data = chron.number,model.num = model.num,add.to.plot = chronPlot,alp=distAlp,color = distColor,distType = distType,thick = distThick,scaleFrac = distScale,truncateDist = truncateDist)
+  }
+  
+  #A few traces last...
+  chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = ensLineColor,add.to.plot = chronPlot,maxPlotN = nEnsLines)
+ 
+  
+  #Tidy up...
+  chronPlot = chronPlot + scale_y_reverse(name = axisLabel(ageEnsemble)) + xlab(axisLabel(depth)) + ggtitle(paste0(L$dataSetName))
+  
+  return(chronPlot)
+   
+}
+
+#' @export
+axisLabel = function(varList){
+  #create a string label from a column variable list...
+  if(!is.list(varList)){#if it's not a list just return the name of the variable
+    return(deparse(substitute(varList)))
+  }
+  
+  vn = varList$variableName
+  un = varList$units
+  
+  if(is.null(vn)){
+    vn = deparse(substitute(varList))
+  }
+  
+  if(is.null(un)){
+    un = "NA"
+  }
+    return(paste0(vn," (",un,")"))
+  
+}
 
 
+
+
+#' @export
 meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
   #create large dataframe from dist object
   dist.df = NULL
@@ -738,7 +849,60 @@ meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
   return(dist.df)
 }
 
+#'@export
+plotRegressEns = function(regEnsList,alp=0.2){
+  regPlot = list()
+  #scatter plot
+  scatterplot = plotScatterEns(regEnsList$binX,regEnsList$binY,alp=alp)
+  #add trendlines
+  scatterplot = plotTrendLinesEns(mb.df = t(rbind(regEnsList$m,regEnsList$b)),xrange = range(regEnsList$binX,na.rm=TRUE), alp = alp,add.to.plot = scatterplot)
+  
+  
+  scatterplot = scatterplot + xlab(axisLabel(regEnsList$valuesX)) + ylab(axisLabel(regEnsList$valuesY))
+  
+  #assign scatter plot to out list
+  regPlot$scatterplot = scatterplot
+  
+  
+  
+  #plot histograms of m and b
+  mStats = regEnsList$regStats[,1:2]
+  names(mStats)[2]="values"
+  regPlot$mHist = plotHistEns(regEnsList$m,ensStats = mStats)+xlab("Slope")
+  bStats = regEnsList$regStats[,c(1,3)]
+  names(bStats)[2]="values"
+  regPlot$bHist = plotHistEns(regEnsList$b,ensStats = bStats)+xlab("Intercept")
+  
+  binY = regEnsList$binY
+  binX = regEnsList$binX
+  
+  binY[is.nan(binY)]=NA
+  binX[is.nan(binX)]=NA
+  
+  #plot timeseries of regression and target over interval
+  regPlot$XPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binX)+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
+  regPlot$YPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binY,colorHigh = "red")+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
+  
 
+
+  #and plot reconstructions
+  regPlot$modeledYPlot = plotTimeseriesEnsRibbons(X = regEnsList$modeledYear,Y=regEnsList$modeled)+ggtitle("Calibrated record using ensemble regression")
+  
+  
+  
+  library(gridExtra)
+  lay = rbind(c(1,1,3,3,4,4),
+              c(2,2,3,3,5,5),
+              c(6,6,6,6,6,6),
+              c(6,6,6,6,6,6))
+  
+  
+  regPlot$summaryPlot = gridExtra::grid.arrange(grobs = list(regPlot$YPlot,regPlot$XPlot,regPlot$scatterplot,
+                                                       regPlot$mHist,regPlot$bHist,regPlot$modeledYPlot),
+                                          layout_matrix=lay)  
+  
+return(regPlot)
+  }
 
 
 

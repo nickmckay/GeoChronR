@@ -1,20 +1,5 @@
-
-
-
 #'@export
-pull.data.from.TS = function(TS,var2get){
-  
-#query the TS get only the data you want
-civar = lapply(TS,"[[",var2get)
-newvar=c()
-newvar[sapply(civar,is.null)]=NA
-newvar[!sapply(civar,is.null)]=sapply(TS[!sapply(civar,is.null)],"[[",var2get)
-
-return(newvar)
-}
-
-#'@export
-flip.coords.lipd = function(L){
+flipCoords = function(L){
   olat = L$geo$latitude
   olon = L$geo$longitude
   L$geo$longitude=olat
@@ -30,8 +15,8 @@ flip.coords.lipd = function(L){
 #'
 #' @return L a lipd object
 #' @export
-ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE){
-  #check on the chronModel first
+mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE,which.ens = NA){
+  #check on the model first
   if(is.null(L$chronData)){
     stop("There's no chronData in this file")
   }
@@ -46,15 +31,15 @@ ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA
   }
   
   #initialize model number
-  if(length(L$chronData[[which.chron]]$chronModel)==0){
+  if(length(L$chronData[[which.chron]]$model)==0){
     stop("No model in this chronData")
   }
   if(is.na(which.model)){
-    if(length(L$chronData[[which.chron]]$chronModel)==1){
+    if(length(L$chronData[[which.chron]]$model)==1){
       #only one model
       which.model=1
     }else{
-      print(paste("ChronData", which.chron, "has", length(L$chronData[[which.chron]]$chronModel), "models"))
+      print(paste("ChronData", which.chron, "has", length(L$chronData[[which.chron]]$model), "models"))
       which.model=as.integer(readline(prompt = "Which chron model do you want to get the ensemble from? Enter an integer "))
     }
   }
@@ -71,55 +56,47 @@ ageEnsemble.to.paleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA
   
   #initialize measurement table number
   if(is.na(which.pmt)){
-    if(length(L$paleoData[[which.paleo]]$paleoMeasurementTable)==1){
+    if(length(L$paleoData[[which.paleo]]$measurementTable)==1){
       #only one pmt
       which.pmt=1
     }else{
-      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$paleoMeasurementTable), "measurement tables"))
+      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$measurementTable), "measurement tables"))
       which.pmt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
     }
   }
   
+
+  
   #make sure the ensemble is there, with data
   print("Looking for age ensemble....")
-  if(strictSearch){
-    aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable,varName = "ageEnsemble",always.choose = FALSE,strictSearch = strictSearch)
-  }else{
-aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable,varName = "ageEnsemble",altNames = c("age","year"))
-}
-    if(is.na(aei)){
-    stop("There doesn't seem to be in values in the ensemble table for this model (there may not be an ensembleTable, or even a model)")
-  }
-  #grab the ensemble
-  ens=L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable[[aei]]$values
-  ensDepth = L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$depth$values
-  
+  ensDepth = selectData(L,tableType = "ensemble",varName = "depth",where = "chronData")$values
+  ens = selectData(L,tableType = "ensemble",varName = "age",altNames = c("ageEnsemble","year"),where = "chronData",which.ens = which.ens)$values
   
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
-  di = getVariableIndex(L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]],"depth",altNames = "position",always.choose = FALSE,strictSearch = strictSearch)
-
-  #depthTarget
-  depth = L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]][[di]]$values
+  depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens)$values
   
-  #interpolate
-  library(Hmisc)
-  aei=apply(X=ens,MARGIN = 2,FUN = function(y) approxExtrap(ensDepth,y,xout=depth,na.rm=TRUE)$y)
-  
+  #restrict ensemble members
   if(!is.na(max.ensemble.members)){
-    if(ncol(aei)>max.ensemble.members){
+    if(ncol(ens)>max.ensemble.members){
       #randomly select the appropriate number of ensemble members
-      aei = aei[,sample.int(ncol(aei),size = max.ensemble.members)]
+      ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
     }
   }
+
+  #interpolate
+  aei=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth,na.rm=TRUE)$y)
+
+  #guess
+if(is.na(which.ens)){which.ens=1}
   
   
-  #assign into paleoMeasurementTable
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$values = aei
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$units = L$chronData[[which.chron]]$chronModel[[which.model]]$ensembleTable$ageEnsemble$units
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$fromChronModel = which.model
-  L$paleoData[[which.paleo]]$paleoMeasurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
+  #assign into measurementTable
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = aei
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = L$chronData[[which.chron]]$model[[which.model]]$ensembleTable[[which.ens]]$ageEnsemble$units
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$frommodel = which.model
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
   
   
   return(L)
@@ -128,7 +105,7 @@ aei=getVariableIndex(L$chronData[[which.chron]]$chronModel[[which.model]]$ensemb
 }
   
 #' @export
-get_os <- function(){
+getOs <- function(){
   sysinf <- Sys.info()
   if (!is.null(sysinf)){
     os <- sysinf['sysname']
@@ -149,7 +126,7 @@ get_os <- function(){
 }
 
 #' @export
-select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA,always.choose=TRUE,altNames=NA){
+selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "measurement", which.mt=NA,always.choose=FALSE,altNames=NA,model.num = 1,which.ens=1,which.sum = 1){
   #paleo or chron
   P = L[[where]]
   
@@ -160,20 +137,45 @@ select.data = function(L,varName=NA,where="paleoData",which.data=NA, which.mt=NA
       which.data=1
     }else{
       print(names(P))
-      which.data=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? Select a number "))
+      which.data=as.integer(readline(prompt = "Which do you want? Select a number "))
     }
   }
   
-  #initialize measurement table number
-  mti=which(grepl(names(P[[which.data]]),pattern = "measurementTable"))
-  MT = P[[which.data]][[mti]]
+  if(is.na(tableType)){
+    tableType=readline(prompt = "Do you want a variable from a measurementTable (m), model summaryTable (s), or model ensembleTable (e)?")
+  }
+  
+  if(tolower(substr(tableType,1,1))=="m"){
+    MT = P[[which.data]]$measurementTable
+  }else{#check on which model
+    if(is.na(model.num)){
+      if(length(P[[which.data]]$model)==1){
+        model.num=1
+      }else{
+        print(paste0("There are ",length(P[[which.data]]$model)," models. Which do you want?"))
+        model.num=as.integer(readline(prompt = "Which model do you want? Select a number "))
+      }
+    }
+  }
+  
+  
+  
+  if(tolower(substr(tableType,1,1))=="e"){MT = P[[which.data]]$model[[model.num]]$ensembleTable}
+  if(tolower(substr(tableType,1,1))=="s"){MT = P[[which.data]]$model[[model.num]]$summaryTable}
+  
+  
+  
+  #initialize table number
   if(is.na(which.mt)){
+    if(length(MT)==0){
+      stop(paste0("this object in ",where,"[[",as.character(which.data),"]] has ", as.character(length(MT)), " tables"))
+    }
     if(length(MT)==1){
       #only one pmt
       which.mt=1
     }else{
-      print(paste(where, which.paleo, "has", length(MT), "measurement tables"))
-      which.mt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
+      print(paste0("this object in ",where,"[[",as.character(which.data),"]] has ", as.character(length(MT)), " tables"))
+      which.mt=as.integer(readline(prompt = "Which table do you want? Enter an integer "))
     }
   }
   
@@ -286,59 +288,67 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
   
 }
 
-#' @export
-extract.timeseries = function(D){
-  #preliminary/hacky version. better to come
-  TS=list()
-  t=1
-  for(f in 1:length(D)){
-    print(f)
-    L = D[[f]]
-    dum = try(ageEnsemble.to.paleoData(L,max.ensemble.members = 1000,which.chron = 1,which.model = 1,strictSearch = TRUE),silent = TRUE)
-    if(!grepl(pattern = "error",class(dum)))
-    {L=dum}
-    for(p in 1:length(L$paleoData)){
-      P=L$paleoData[[p]]
-      for(pm in 1:length(P$paleoMeasurementTable)){
-        PM = P$paleoMeasurementTable[[pm]]
-        print(names(PM))
-        dontinclude = c("age","year","depth","ageEnsemble")
-        tograb = which(!(names(PM) %in% dontinclude) & sapply(PM,is.list))
-        for(tg in tograb){
-          TS[[t]]=NA
-          TS[[t]]$dataSetName = L$dataSetName
-          TS[[t]]$archiveType=L$archiveType
-          TS[[t]]$geo_latitude=L$geo$latitude
-          TS[[t]]$geo_AHT.Region = L$geo$AHT.Region
-          TS[[t]]$geo_latitude=L$geo$latitude
-          TS[[t]]$geo_siteName=L$geo$siteName
-          TS[[t]]$geo_longitude=L$geo$longitude
-          TS[[t]]$paleoData_values=PM[[tg]]$values
-          TS[[t]]$paleoData_variableName=PM[[tg]]$variableName
-          TS[[t]]$paleoData_units=PM[[tg]]$units
-          if(!is.null(PM[[tg]]$climateInterpretation)){
-            TS[[t]]$climateInterpretation_variable=PM[[tg]]$climateInterpretation$variable
-            TS[[t]]$climateInterpretation_seasonality=PM[[tg]]$climateInterpretation$seasonality
-            TS[[t]]$climateInterpretation_interpDirection=PM[[tg]]$climateInterpretation$interpDirection
-          }
-          
-          diffgrab = which((names(PM) %in% dontinclude) & sapply(PM,is.list))
-          if(length(diffgrab)==0){
-            stop(paste(P$dataSetName,"doesn't have any of",paste(dontinclude,collapse = ", ")))
-          }
-          for(dg in 1:length(diffgrab)){
-            TS[[t]][[names(diffgrab)[dg]]]=PM[[diffgrab[dg]]]$values
-            TS[[t]][[paste0(names(diffgrab)[dg],"Units")]]=PM[[diffgrab[dg]]]$units
-          }
-          t=t+1
-        }
-      }
+alignTimeseriesBin = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,minObs=10){
+  #check to see if time and values are "column lists"
+  if(is.list(timeX)){
+    otx=timeX
+    timeX=timeX$values}
+  if(is.list(timeY)){
+    oty=timeY
+    timeY=timeY$values}
+  if(is.list(valuesX)){
+    ovx=valuesX
+    valuesX=valuesX$values}
+  if(is.list(valuesY)){
+    ovy=valuesY
+    valuesY=valuesY$values}
+  
+  
+  #make them all matrices
+  timeX = as.matrix(timeX)
+  timeY = as.matrix(timeY)
+  valuesX = as.matrix(valuesX)
+  valuesY = as.matrix(valuesY)
+  
+  if(nrow(timeX) != nrow(valuesX)){stop("timeX and valuesX must have the same number of rows (observations)")}
+  if(nrow(timeY) != nrow(valuesY)){stop("timeY and valuesY must have the same number of rows (observations)")}
+  
+  if(all(is.na(binvec))){
+    if(is.na(binstep)){
+      stop("Either a binvec or binstep must be specified")
+    }else{
+      #look for common overlap
+      binStart=max(c(min(timeX,na.rm=TRUE),min(timeY,na.rm=TRUE)))
+      binStop=min(c(max(timeX,na.rm=TRUE),max(timeY,na.rm=TRUE)))
+      binvec=seq(binStart,binStop,by=binstep)
     }
   }
-  return(TS)
+  
+  #create ensemble bins
+  dum = binEns(time = timeX,values = valuesX,binvec = binvec,binfun=binfun,max.ens=max.ens)
+  yearX = dum$time
+  binX = dum$matrix
+  binY = binEns(time = timeY,values = valuesY,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
+  
+  #remove columns that have less than minObs datapoints
+  good = which(apply(!is.na(binX),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  binX = as.matrix(binX[,good])
+  
+  
+  good = which(apply(!is.na(binY),2,sum)>=minObs)
+  if(length(good)==0){
+    stop(paste("none of the columns have",minObs,"or more datapoints"))
+  }
+  binY = as.matrix(binY[,good])
+  
+  
+  if(is.na(binstep)){#if the binstep isn't specified
+    binstep=abs(mean(diff(binvec,na.rm=TRUE)))
+  }
+
+return(list(binX = binX, binY=binY,binstep=binstep,yearBins = yearX))
 }
-
-
-
-
   

@@ -40,7 +40,7 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
 #
 #   adjustment.method: method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)
 #
-#   adjustment.args: arguments to adjustment.method; see prop.alt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()
+#   adjustment.args: arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()
 #
 # Value:
 #
@@ -64,7 +64,7 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
       adjustment.args <- list(edf.lower=0.8,num.steps=20)  # default arguments for "mean" method of Ventura et al. (2004)
       cat(paste('Adjusting cutoff using mean method, with edf.lower=0.8 and num.steps=20\n',sep=""))
     }
-    a <- prop.alt(pvals,adjustment.method,adjustment.args)
+    a <- propAlt(pvals,adjustment.method,adjustment.args)
   }
   if(a==1){    # all hypotheses are estimated to be alternatives
     return(1:n)
@@ -101,11 +101,11 @@ fdr.master <- function(pvals,qlevel=0.05,method="original"){
       stop(paste("No method of type: ",method,sep=""))
     }
   }
-  return(fdr.basic(pvals,qlevel))
+  return(fdrBasic(pvals,qlevel))
 }
 
 
-fdr.basic <- function(pvals,qlevel=0.05){
+fdrBasic <- function(pvals,qlevel=0.05){
 #
 # Description:
 #
@@ -164,7 +164,7 @@ storey <- function(edf.quantile,pvals){
 }
 
 
-prop.alt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lower=0.8,num.steps=20)){
+propAlt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lower=0.8,num.steps=20)){
 #
 # Description:
 #
@@ -187,7 +187,7 @@ prop.alt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.low
 #
 # Examples:
 #
-#   a <- prop.alt(pvals,adjustment.method="mean")
+#   a <- propAlt(pvals,adjustment.method="mean")
 #
   n <- length(pvals)
   if(adjustment.method=="two-stage"){

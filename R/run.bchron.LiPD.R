@@ -1,5 +1,5 @@
 #'@export
-run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
+runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
   cur.dir = getwd()
   
   #initialize which.chron
@@ -16,11 +16,11 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   
   #initialize model number
   if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$chronModel[[1]])){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
       modelNum=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$chronModel), "chron model(s) in chronData" ,which.chron))
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
       modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
@@ -266,7 +266,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   
   #write it out
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]=list(methods=methods)
+  L$chronData[[which.chron]]$model[[modelNum]]=list(methods=methods)
   
   
   # Ensemble table since it's easy to access in Bchron
@@ -276,7 +276,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   ageEns$depth$values = depth_predict
   ageEns$depth$units = MT[[depthi]]$units
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$ensembleTable=ageEns
+  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable=ageEns
   
   #Probability distribution table
   for (i in seq(from=1, to=length(run$calAges), by =1)){
@@ -294,7 +294,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
     
     
     # write it out
-    L$chronData[[which.chron]]$chronModel[[modelNum]]$distributionTable[[i]]=distTable
+    L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[i]]=distTable
   }
   
   # Summary Table
@@ -307,7 +307,7 @@ run.bchron.lipd <-  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=N
   sumTable$meanCalibratedAge$values = rowMeans(t(run$theta))
   sumTable$meanCalibratedAge$units = "yr BP"
   
-  L$chronData[[which.chron]]$chronModel[[modelNum]]$summaryTable=sumTable
+  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable=sumTable
   
   return(L)
   
