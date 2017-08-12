@@ -8,11 +8,10 @@ flipCoords = function(L){
 }
 
 
-#'  Create an ageEnsemble variable in a paleoMeasurement Table
+#'  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
 #'
 #' @param L a lipd object
 #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
-#'
 #' @return L a lipd object
 #' @export
 mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE,which.ens = NA){
