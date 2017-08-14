@@ -1,5 +1,43 @@
 #' @export
-runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=NA,nens = 1000,model = NA){
+#' @family BAM
+#' @author Nick McKay
+#' @author Maud Comboul (BAM)
+#' @title Generate a Banded Age Model (BAM) and add it into a LiPD object
+#' @description This is a high-level function that uses BAM to simulate age uncertainty in layer counted records, and stores this as an age-ensemble in a paleoData measurementTable, and in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. BAM produces reasonable results for non-layer counted data, and can generate ensembles for unevenly spaced data, and thus is useful for generating ensembles for tie-point chronologies that are missing the necessary data to calculate ensembles properly. See Comboul et al. (2015) doi:10.5194/cp-10-825-2014 for details.
+#' @param L a single LiPD object
+#' @param which.paleo the number of the paleoData object that you'll be working in
+#' @param which.pmt the number of the measurementTable you'll be working in
+#' @param which.model the number of the chronData model where you want to store the model information
+#' @param makeNew Forces the creation of a new model (TRUE or FALSE{default})
+#' @param nens The number of members in the ensemble
+#' @param model a list that describes the model to use in BAM
+#' \itemize{
+#' \item model$ns: number of samples 
+#' \item model$name: 'poisson' or 'bernoulli' 
+#' \item model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
+#' \itemize{
+#'      \item if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
+#'      \item if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
+#'      \itemize{
+#'                  \item a1 = prob(missing layer) - undercounted
+#'                  \item a2 = prob(layer counted multiple times) - overcounted
+#'                  }
+#'      \item if model$param: 2xp matrix, then different miscounting prob. are defined for each time series.
+#'      }
+#' \item model$resize: do not resize: 0 (default), resize to shortest sample: -1, resize to longest sample: 1
+#' \item model$tm: if a time model is provided, the code returns the corresponding perturbed data
+#' }
+#' @return L The single LiPD object that was entered, with ageEnsemble and chronData model added.
+#' @examples 
+#' Run in interactive mode:
+#' L = runBam(L)
+#' 
+#' Run in noninteractive mode, describing everything:
+#' L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
+#' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nEns))
+
+
+runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=FALSE,nens = 1000,model = NA){
   
   #initialize which.paleo
   if(is.na(which.paleo)){
@@ -81,9 +119,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   }
   
   
-  if(is.na(makeNew)){
-    makeNew = FALSE
-  }
+
   
   if(length(L$chronData[[which.chron]]$model)<which.model){
     if(makeNew){
@@ -213,40 +249,48 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
 
 
 #' @export
+#' @family BAM
+#' @author Maud Comboul
+#' @title Corrects a Banded Age Model (BAM)
+#' @description Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
+#' The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order. 
+#' @examples
+#' res <- bamCorrect(X,t) 
+#' #will generate an ensemble of 1000 age models randomly following
+#' #a Poisson process with rate parameter theta=0.05 used to perturb data X
+#
+#' res <- bamCorrect(X,t,model) 
+#' #will correct data X  with the model specified in
+#' #the model structure
+#
+#' @param X data (vector or matrix n*p)
+#' @param t chronology for data X (n*1)
+#' @param model a list that describes the model to use in BAM
+#' \itemize{
+#' \item model$ns: number of samples 
+#' \item model$name: 'poisson' or 'bernoulli' 
+#' \item model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
+#' \itemize{
+#'      \item if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
+#'      \item if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
+#'      \itemize{
+#'                  \item a1 = prob(missing layer) - undercounted
+#'                  \item a2 = prob(layer counted multiple times) - overcounted
+#'                  }
+#'      \item if model$param: 2xp matrix, then different miscounting prob. are defined for each time series.
+#'      }
+#' \item model$resize: do not resize: 0 (default), resize to shortest sample: -1, resize to longest sample: 1
+#' \item model$tm: if a time model is provided, the code returns the corresponding perturbed data
+#' }
+#' @return res a list with
+#' \itemize{
+#' \item res$Xc: realizations of age-perturbed data matrix of size tn*p*ns (could be 2 or 3d)
+#' \item res$tc: new chronology tn*1
+#' \item res$tmc: corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band) (2 or 3d)
+#' where tn is the chronology length = n (default), shortest sample or longest sample depending on the chosen resizing option.
+#' }
 bamCorrect <- function(X, t, model=NULL){
-  
-  # Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
-  # The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order. 
-  #
-  # res <- bamCorrect(X,t) will generate an ensemble of 1000 age models randomly following
-  # a Poisson process with rate parameter theta=0.05 used to perturb data X
-  #
-  # res <- bamCorrect(X,t,model) will correct data X  with the model specified in
-  # the model structure
-  #
-  # INPUT
-  # X: data (vector or matrix n*p)
-  # t: chronology for data X (n*1)
-  # model$ns: number of samples
-  # model$name: 'poisson' or 'bernoulli'
-  # model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
-  #      if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
-  #      if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
-  #                       a1 = prob(missing layer)
-  #                       a2 = prob(layer counted multiple times)
-  #      if model$param: 2xp matrix, then different miscounting prob. are defined for each time series. 
-  # model$resize: do not resize: 0 (default), resize to shortest sample: -1, resize to longest sample: 1
-  # model$tm: if a time model is provided, the code returns the corresponding corrected data
-  
-  # OUTPUT
-  # res$Xc: realizations of age-perturbed data matrix of size tn*p*ns (could be 2 or 3d)
-  # res$tc: new chronology tn*1
-  # res$tmc: corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band) (2 or 3d)
-  # where tn is the chronology length = n (default), shortest sample or longest sample
-  # depending on the chosen resizing option.
-  
-  
-  # transpose X if time is not the first dimension
+
   X <- as.array(X)
   if (dim(X)[1] < dim(X)[2] && is.finite(dim(X)[3])) 
     X <- aperm(X,c(2,1,3)) 
@@ -436,39 +480,48 @@ bamCorrect <- function(X, t, model=NULL){
 }
 
 #' @export
+#' @family BAM
+#' @author Maud Comboul
+#' @title Simulate a Banded Age Model (BAM)
+#' @description Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
+#' The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order. 
+#' @examples
+#'res <- simulateBam(X,t) 
+#' #will generate an ensemble of 1000 age models randomly following
+#' #a Poisson process with rate parameter theta=0.05 used to perturb data X
+#'
+#' res <- simulateBam(X,t,model) 
+#' #will perturb data X  with the model specified in
+#' #the model structure
+#' @param X data (vector or matrix n*p)
+#' @param t chronology for data X (n*1)
+#' @param model a list that describes the model to use in BAM
+#' \itemize{
+#' \item model$ns: number of samples 
+#' \item model$name: 'poisson' or 'bernoulli' 
+#' \item model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
+#' \itemize{
+#'      \item if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
+#'      \item if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
+#'      \itemize{
+#'                  \item a1 = prob(missing layer) - undercounted
+#'                  \item a2 = prob(layer counted multiple times) - overcounted
+#'                  }
+#'      \item if model$param: 2xp matrix, then different miscounting prob. are defined for each time series.
+#'      }
+#' \item model$resize: do not resize: 0 (default), resize to shortest sample: -1, resize to longest sample: 1
+#' \item model$tm: if a time model is provided, the code returns the corresponding perturbed data
+#' }
+#' @param ageEnsOut TRUE or FALSE - return the ageEnsemble
+#' @return res a list with
+#' \itemize{
+#' \item res$Xc: realizations of age-perturbed data matrix of size tn*p*ns (could be 2 or 3d)
+#' \item res$tc: new chronology tn*1
+#' \item res$tmc: corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band) (2 or 3d)
+#' where tn is the chronology length = n (default), shortest sample or longest sample depending on the chosen resizing option.
+#' \item res$ageEnsemble (optional): Returnd the full age ensemble if desired. 
+#' }
 simulateBam <- function(X, t, model=NULL,ageEnsOut=FALSE){
-  
-  # Generate an ensemble of age perturbed data.See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
-  # The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.
-  #
-  # res <- simulateBam(X,t) will generate an ensemble of 1000 age models randomly following
-  # a Poisson process with rate parameter theta=0.05 used to perturb data X
-  #
-  # res <- simulateBam(X,t,model) will perturb data X  with the model specified in
-  # the model structure
-  #
-  # INPUT
-  # X: data (vector or matrix n*p)
-  # t: chronology for data X (n*1)
-  # model$ns: number of samples
-  # model$name: 'poisson' or 'bernoulli'
-  # model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
-  #      if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
-  #      if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
-  #                       a1 = prob(missing layer)
-  #                       a2 = prob(layer counted multiple times)
-  #      if model$param: 2xp matrix, then different miscounting prob. are defined for each time series.
-  # model$resize: do not resize: 0 (default), resize to shortest sample: -1, resize to longest sample: 1
-  # model$tm: if a time model is provided, the code returns the corresponding perturbed data
-  
-  # OUTPUT
-  # res$Xp: realizations of age-perturbed data matrix of size tn*p*ns (could be 2 or 3d)
-  # res$tp: new chronology tn*1
-  # res$tmc: corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band) (2 or 3d)
-  # where tn is the chronology length = n (default), shortest sample or longest sample
-  # depending on the chosen resizing option.
-  
-  
   # transpose X if time is not the first dimension
   X <- as.array(X)
   

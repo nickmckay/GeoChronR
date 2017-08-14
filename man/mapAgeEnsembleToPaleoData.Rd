@@ -2,7 +2,7 @@
 % Please edit documentation in R/lipd.manipulation.R
 \name{mapAgeEnsembleToPaleoData}
 \alias{mapAgeEnsembleToPaleoData}
-\title{Create an ageEnsemble variable in a paleoMeasurement Table}
+\title{Map an ageEnsemble variable from a chron model to a paleoMeasurement Table}
 \usage{
 mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
   which.chron = NA, which.model = NA, max.ensemble.members = NA,
@@ -17,5 +17,5 @@ mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
 L a lipd object
 }
 \description{
-Create an ageEnsemble variable in a paleoMeasurement Table
+Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
 }

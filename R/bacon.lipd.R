@@ -1,5 +1,19 @@
 #' @export
-runBacon <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA){
+#' @author Nick McKay
+#' @author Maarten Blaauw (Bacon)
+#' @family Bacon
+#' @title Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object
+#' @description This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
+#' @inheritParams writeBacon
+#' @param maxEns the maximum number of ensembles to load in (default = 1000)
+#' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
+#' @examples 
+#' Run in interactive mode:
+#' L = runBacon(L)
+#' 
+#' Run in noninteractive mode, describing everything:
+#' L = runBacon(L,which.paleo = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -41,7 +55,7 @@ runBacon <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName,model
   
   
   #write bacon file
-  L=writeBacon(L,which.chron = which.chron,baconDir = baconDir,remove.reverse = remove.reverse,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
+  L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
   
   #estimate thickness parameter
   thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
@@ -55,11 +69,25 @@ runBacon <-  function(L,which.chron=NA,baconDir=NA,site.name=L$dataSetName,model
   print("taking a short break...")
   Sys.sleep(5)
   #pull bacon data into lipd structure
-  L = loadBaconOutput(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum)
+  L = loadBaconOutput(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum,maxEns = maxEns)
   return(L)
 }
 
 #' @export
+#' @title Sample ensemble ages from Bacon
+#' @description Pulls ensemble members from Bacon output. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
+#' @import plyr
+#' @family Bacon
+#' @author Simon Goring
+#' @author Nick McKay
+#' @param corename the name used for the bacon model (and directories)
+#' @param K the number of intervals over which the model is run, this is appended onto all the Bacon files after the underscore. If NA, will attempt to deduce from the directory.
+#' @param baconDir the directory where Bacon is installed on this computer. Willimport if bossible. 
+#' @param maxEns the maximum number of ensemble members to import
+#' @return An ensemble table in the LiPD structure
+#' @examples 
+#' ensTable = sampleBaconAges("MSB2K",maxEns = 1000)
+#' 
 sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   #from Simon Goring, modified by Nick McKay
   setwd(baconDir)
@@ -98,16 +126,15 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   depths=seq(start.depth,end.depth,by=Dc)
   
   
-  library(plyr)
   #out_file <- out.file[,1:(ncol(out.file)-2)]
   
   
   
-  BACages=kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
+  kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
   
   if(is.na(maxEns)){maxEns=nrow(BACages)}
   
-  ages.out <- laply(1:min(nrow(BACages),maxEns), function(x){approx(x=depths, 
+  ages.out <- plyr::laply(1:min(nrow(BACages),maxEns), function(x){approx(x=depths, 
                                                                     y = BACages[x,], 
                                                                     xout=depths)$y})
   
@@ -124,8 +151,40 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 }
 
 #' @export
-writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+#' @author Nick McKay
+#' @title Create the input file for a Bacon model from a LiPD object
+#' @description This generates the csv file that is used for input to Bacon. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
+#' @family Bacon
+#' @param L a single LiPD object
+#' @param which.chron the number of the chronData object that you'll be working in
+#' @param which.mt the number of the measurementTable you'll be working in
+#' @param baconDir the directory where Bacon is installed on this computer.
+#' @param remove.rejected don't write out dates that are marked as rejected
+#' @param overwrite overwrite files and directories
+#' @param cc An integer, or vector of integers corresponding to age that describes the calibration curve. You can specify here (see below) or if it's NA the code will guess based on archiveType
+#' \itemize{
+#' \item cc=1 IntCal13
+#' \item cc=2 MarineCal 
+#' \item cc=3 SHCal13
+#' }
+#' @param site.name the name used for the bacon model (and directories)
+#' @param modelNum which chronModel do you want to use?
+#' @return L the input LiPD file with methods added to the chronModel.
+#' @examples 
+#' writeBacon(L)
+#' #Run in interactive mode
+#' 
+#' writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
+writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
+  #initialize which.chron
+  if(is.na(which.chron)){
+    if(length(L$chronData)==1){
+      which.chron=1
+    }else{
+      which.chron=as.integer(readline(prompt = "Which chronData do you want to run bacon for? "))
+    }
+  }
   if(is.na(modelNum)){
     if(is.null(L$chronData[[which.chron]]$model[[1]])){
       #no models, this is first
@@ -160,11 +219,16 @@ writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrit
   C=L$chronData[[which.chron]]
   
   #check for measurementTables
-  if(length(C$measurementTable)!=1){
-    stop("bacon doesn't know how to handle more (or less) than 1 measurement table. You should teach it!")
+  if(is.na(which.mt)){
+    if(length(C$measurementTable)==1){
+      which.mt = 1  
+    }else{
+      print(paste("There are", length(L$chronData[[which.chron]]$measurementTable), "measurement tables in chronData " ,which.chron))
+      which.mt=as.integer(readline(prompt = "Which do you want to use here? (Enter an integer)"))
+    }
   }
   
-  MT=C$measurementTable[[1]]
+  MT=C$measurementTable[[which.mt]]
   
   
   #go through required fields for bacon
@@ -354,7 +418,7 @@ writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrit
   
   which.rejected <- which(!is.na(rejected))
   
-  if(remove.reverse & length(which.rejected)>1){
+  if(remove.rejected & length(which.rejected)>1){
     out.table <- out.table[-which.rejected,]
   }
   
@@ -392,8 +456,6 @@ writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrit
   setwd(cur.dir)
   if(modelNum>length(L$chronData[[which.chron]]$model)){
     L$chronData[[which.chron]]$model[[modelNum]]=list(inputTable = out.table)
-  }else{
-    L$chronData[[which.chron]]$model[[modelNum]]$inputTable = out.table
   }
   return(L)
   
@@ -401,7 +463,21 @@ writeBacon <-  function(L,which.chron=1,baconDir=NA,remove.reverse=TRUE,overwrit
 }
 
 #' @export
-loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA){
+#' @author Nick McKay
+#' @title Load the ensemble, summary and distribution data from a Bacon simulation
+#' @description Loads the ensemble, summary and distribution data from a Bacon simulation and stores them in the LiPD structure. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
+#' @family Bacon
+#' @param L a single LiPD object
+#' @param which.chron the number of the chronData object that you'll be working in
+#' @param baconDir the directory where Bacon is installed on this computer.
+#' @param site.name the name used for the bacon model (and directories)
+#' @param modelNum which chronModel do you want to use?
+#' @param makeNew do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.
+#' @return L the input LiPD file with methods and data added to the chronModel.
+#' @examples 
+#' loadBaconOutput(L)
+#' #Run in interactive mode
+loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA,maxEns = 1000){
   #initialize bacon directory
   if(is.na(baconDir)){
     #check global first
@@ -541,7 +617,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   #
   
   #now grab ensemble data.
-  ageEns = sampleBaconAges(corename=site.name,baconDir = baconDir,K = K)
+  ageEns = sampleBaconAges(corename=site.name,baconDir = baconDir,K = K,maxEns = maxEns)
   
   ageEns$depth$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$depth$units
   ageEns$ageEnsemble$units = L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]$age$units
