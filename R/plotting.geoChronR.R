@@ -504,7 +504,8 @@ plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),a
   return(h)
 }
 
-plotPvalsEns = function(cor.df,alpha = 0.05){
+#' @export
+plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
   m=dim(cor.df)[1] # number of hypotheses being tested
   rk = seq(m)
   fdr_thresh = rk/m*alpha
@@ -535,33 +536,26 @@ plotPvalsEns = function(cor.df,alpha = 0.05){
   return(pvalPlot)
 }
 
-#  THIS SHOULD BE DEPRECATED - kept for backwards compatibility
-
 #' @export
-plotHistEns = function(ensData,ensStats=NA,bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
+plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
-  ensData = data.frame("r"=c(ensData))
+ plotData = data.frame("r"=c(ensData))
   library(ggplot2)
   
   
   
   histPlot = add.to.plot+
-    geom_histogram(data=ensData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
+    geom_histogram(data=plotData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
     theme_bw()+
     ylab("Probability density")
-  if(!all(is.na(ensStats))){
+  if(!all(is.na(quantiles))){
     #make labels better
-    goodName= c("-2σ","-1σ","Median","1σ","2σ")
-    realProb= c(pnorm(-2:2))
-    for(i in 1:length(lineLabels)){
-      p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
-      if(length(p)==1){
-        lineLabels[i]=goodName[p]
-      }
-    }
-    ensStats$ll=lineLabels
-    histPlot = histPlot + geom_vline(data=ensStats,aes(xintercept = values),colour="red") +
-      geom_label(data = ensStats, aes(x = values, y=0,label=ll))
+
+    quants = quantile(ensData,quantiles)
+    quantdf = data.frame(ll = names(quants),quants = quants)
+    histPlot = histPlot + geom_vline(data=quantdf,aes(xintercept = quants),colour="red") +
+      geom_label(data = quantdf, aes(x = quants, y=0,label=ll))+
+      xlab(axisLabel(ensData))
     
   }
   return(histPlot)

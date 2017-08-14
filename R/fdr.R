@@ -16,40 +16,30 @@
 #
 # Purpose:   implement False Discovery Rate (FDR) functions for multiple testing, following the Ventura et al. reference below
 # Usage:     source('fdr.r');  fdr(my.pvals)
-# References:
-#             Ventura, V., C.J. Paciorek, and J.S. Risbey.  2004.  Controlling the proportion of falsely-rejected hypotheses when conducting multiple tests with climatological data.  Journal of Climate, in press.  Also Carnegie Mellon University, Department of Statistics technical report 775 (www.stat.cmu.edu/tr/tr775/tr775.html).
-#             Benjamini, Y, and Y. Hochberg. 1995. Controlling the false discovery rate: a practical and powerful approach to multiple testing.  JRSSB 57:289-300.
-#             Benjamini, Y. and D. Yekutieli.  2001.  The control of the false discovery rate in multiple testing under dependency. Annals of Statistics 29:1165-1188.
-#             Benjamini, Y., A. Krieger, and D. Yekutieli.  2001.  Two staged linear step up FDR controlling procedure.  Technical Report, Department of Statistics and Operations Research, Tel Aviv University.  URL: http://www.math.tau.ac.il/~ybenja/Papers.html
-#             Storey, J. 2002.  A direct approach to false discovery rates.  JRSSB 64: 479--498.
+
 #
+#' @export
+#' @author Chris Paciorek
+#' @title False Discovery Testing of p-values from multiple testing
+#' @family FDR
+#' @description iThis is the main function designed for general usage for determining significance based on the FDR approach, following the Ventura et al. reference below.
+#' @param pvals a vector of pvals on which to conduct the multiple testing
+#' @param qlevel the proportion of false positives desired
+#' @param method method for performing the testing.  'original' follows Benjamini & Hochberg (1995); 'general' is much more conservative, requiring no assumptions on the p-values (see Benjamini & Yekutieli (2001)).  We recommend using 'original', and if desired, using 'adjustment.method="mean" ' to increase power
+#' @param adjustment.method method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)
+#' @param adjustment.args arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()
+#' @references # References:
+#'  Ventura, V., C.J. Paciorek, and J.S. Risbey.  2004.  Controlling the proportion of falsely-rejected hypotheses when conducting multiple tests with climatological data.  Journal of Climate, in press.  Also Carnegie Mellon University, Department of Statistics technical report 775 (\url{www.stat.cmu.edu/tr/tr775/tr775.html}).
+#'  Benjamini, Y, and Y. Hochberg. 1995. Controlling the false discovery rate: a practical and powerful approach to multiple testing.  JRSSB 57:289-300.
+#'  Benjamini, Y. and D. Yekutieli.  2001.  The control of the false discovery rate in multiple testing under dependency. Annals of Statistics 29:1165-1188.
+#'  Benjamini, Y., A. Krieger, and D. Yekutieli.  2001.  Two staged linear step up FDR controlling procedure.  Technical Report, Department of Statistics and Operations Research, Tel Aviv University.  URL: \url{http://www.math.tau.ac.il/~ybenja/Papers.html}
+#'   Storey, J. 2002.  A direct approach to false discovery rates.  JRSSB 64: 479--498.
+#'   @return NULL if no significant tests, or a vector of the indices of the significant tests
+#'   @examples
+#'  signif <- fdr(pvals,method="original",adjustment.method="mean")
 
 fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjustment.args=NULL){
-#
-# Description:
-#
-#    This is the main function designed for general usage for determining significance based on the FDR approach.
-#
-# Arguments:
-#
-#   pvals (required):  a vector of pvals on which to conduct the multiple testing
-#
-#   qlevel: the proportion of false positives desired
-#
-#   method: method for performing the testing.  'original' follows Benjamini & Hochberg (1995); 'general' is much more conservative, requiring no assumptions on the p-values (see Benjamini & Yekutieli (2001)).  We recommend using 'original', and if desired, using 'adjustment.method="mean" ' to increase power.
-#
-#   adjustment.method: method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)
-#
-#   adjustment.args: arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()
-#
-# Value:
-#
-#   NULL if no significant tests, or a vector of the indices of the significant tests
-#
-# Examples:
-#
-#   signif <- fdr(pvals,method="original",adjustment.method="mean")
-#
+
   n <- length(pvals)
 
   a <- 0   # initialize proportion of alternative hypotheses
@@ -75,24 +65,18 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
   return(fdr.master(pvals,qlevel,method))
 }
 
+#' @export
+#' @author Chris Paciorek
+#' @title FDR Master
+#' @description This is an internal function that performs various versions of the FDR procedure, but without the modification described in section 4 of our J of Climate paper.
+#' @family FDR
+#' @param pvals (required):  a vector of pvals on which to conduct the multiple testing
+#' @param qlevel the proportion of false positives desired
+#' @param method one of 'original', the original method of Benjamini & Hochberg (1995), or 'general', the method of Benjamini & Yekutieli (2001), which requires no assumptions about the p-values, but which is much more conservative.  We recommend 'original' for climatological data, and suspect it works well generally for spatial data.
+#' @return  NULL if no significant tests, or a vector of the indices of the significant tests
+
 fdr.master <- function(pvals,qlevel=0.05,method="original"){
-#
-# Description:
-#
-#    This is an internal function that performs various versions of the FDR procedure, but without the modification described in section 4 of our J of Climate paper.
-#
-# Arguments:
-#
-#   pvals (required):  a vector of pvals on which to conduct the multiple testing
-#
-#   qlevel: the proportion of false positives desired
-#
-#   method: one of 'original', the original method of Benjamini & Hochberg (1995), or 'general', the method of Benjamini & Yekutieli (2001), which requires no assumptions about the p-values, but which is much more conservative.  We recommend 'original' for climatological data, and suspect it works well generally for spatial data.
-#
-# Value:
-#
-#   NULL if no significant tests, or a vector of the indices of the significant tests
-#
+
   n <- length(pvals)
   if(method=="general"){
     qlevel <- qlevel/sum(1/(1:n))  # This requires fewer assumptions but is much more conservative
@@ -104,23 +88,17 @@ fdr.master <- function(pvals,qlevel=0.05,method="original"){
   return(fdrBasic(pvals,qlevel))
 }
 
+#' @export
+#' @author Chris Paciorek
+#' @title FDR Basic
+#' @description This is an internal function that performs the basic FDR of Benjamini & Hochberg (1995).
+#' @family FDR
+#' @param pvals (required):  a vector of pvals on which to conduct the multiple testing
+#' @param qlevel the proportion of false positives desired
+#' @return  NULL if no significant tests, or a vector of the indices of the significant tests
 
 fdrBasic <- function(pvals,qlevel=0.05){
-#
-# Description:
-#
-#    This is an internal function that performs the basic FDR of Benjamini & Hochberg (1995).
-#
-# Arguments:
-#
-#   pvals (required):  a vector of pvals on which to conduct the multiple testing
-#
-#   qlevel: the proportion of false positives desired
-#
-# Value:
-#
-#   NULL if no significant tests, or a vector of the indices of the significant tests
-#
+
   n <- length(pvals)
   sorted.pvals <- sort(pvals)
   sort.index <- order(pvals)
@@ -134,24 +112,16 @@ fdrBasic <- function(pvals,qlevel=0.05){
   }
 }
 
-
+#' @export
+#' @author Chris Paciorek
+#' @title Storey estimator
+#' @description   This is an internal function that calculates the basic Storey (2002) estimator of a, the proportion of alternative hypotheses.
+#' @family FDR
+#' @param edf.quantile (required):  the quantile of the empirical distribution function at which to estimate a
+#' @param pvals (required):  a vector of pvals on which to conduct the multiple testing
+#' @return  estimate of a, the number of alternative hypotheses
 storey <- function(edf.quantile,pvals){
-#
-# Description:
-#
-#    This is an internal function that calculates the basic Storey (2002) estimator of a, the proportion of alternative hypotheses.
-#
-# Arguments:
-#
-#   edf.quantile (required):  the quantile of the empirical distribution function at which to estimate a
-# 
-#   pvals (required):  a vector of pvals on which to estimate a
-#
-# Value:
-#
-#   estimate of a, the number of alternative hypotheses
-#
-#
+
   if(edf.quantile >=1 | edf.quantile <=0){
     stop('edf.quantile should be between 0 and 1')
   }
@@ -163,32 +133,20 @@ storey <- function(edf.quantile,pvals){
   }
 }
 
-
+#' @export
+#' @author Chris Paciorek
+#' @title Proportion of alternate hypotheses
+#' @description  This is an internal function that calculates an estimate of a, the proportion of alternative hypotheses, using one of several methods.
+#' @family FDR
+#' @param pvals a vector of pvals on which to conduct the multiple testing
+#' @param qlevel the proportion of false positives desired
+#' @param adjustment.method method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)
+#' @param adjustment.args arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()
+#' @return  estimate of a, the number of alternative hypotheses
+#' @examples 
+#' a <- propAlt(pvals,adjustment.method="mean")
 propAlt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lower=0.8,num.steps=20)){
-#
-# Description:
-#
-#    This is an internal function that calculates an estimate of a, the proportion of alternative hypotheses, using one of several methods.
-#
-# Arguments:
-#
-#   pvals (required):  a vector of pvals from which to estimate a
-#
-#   adjustment.method: method for  estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator suggested in Ventura et al. (2004); "storey", the method of Storey (2002); or "two-stage", the iterative approach of Benjamini et al. (2001)
-#
-#   adjustment.args: arguments to adjustment.method;
-#      for "mean", specify edf.lower, the smallest quantile at which to estimate a, and num.steps, the number of quantiles to use - the approach uses the average of the Storey (2002) estimator for the num.steps quantiles starting at edf.lower and finishing just less than 1
-#      for "storey", specify edf.quantile, the quantile at which to calculate the estimator
-#      for "two-stage", the method uses a standard FDR approach to estimate which p-values are significant; this number is the estimate of a; therefore the method requires specification of qlevel, the proportion of false positives and fdr.method ('original' or 'general'), the FDR method to be used.  We do not recommend 'general' as this is very conservative and will underestimate a.
-#  
-# Value:
-#
-#   estimate of a, the number of alternative hypotheses
-#
-# Examples:
-#
-#   a <- propAlt(pvals,adjustment.method="mean")
-#
+
   n <- length(pvals)
   if(adjustment.method=="two-stage"){
     if(is.null(adjustment.args$qlevel) | is.null(adjustment.args$fdr.method)){

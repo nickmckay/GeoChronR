@@ -8,8 +8,8 @@ flipCoords = function(L){
 }
 
 
-#'  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
-#'
+#' @title  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
+#' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 #' @param L a lipd object
 #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #' @return L a lipd object

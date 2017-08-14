@@ -93,6 +93,7 @@ corMatrix = function(M1,M2){
 }
 
 #' @export
+#' @title Simple ordinary least squeares regression
 #' @description Simple regression function. Faster than lm()
 #' @author Nick McKay
 #' @param X a matrix of predictor data
