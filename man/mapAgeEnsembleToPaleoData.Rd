@@ -17,5 +17,5 @@ mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
 L a lipd object
 }
 \description{
-Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
+Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 }

@@ -121,6 +121,7 @@ if(is.na(which.ens)){which.ens=1}
   
   
   #assign into measurementTable
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$variableName = ensAll$variableName
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = aei
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = ensAll$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron

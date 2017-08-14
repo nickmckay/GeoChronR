@@ -8,6 +8,14 @@ runBchron(L, which.chron = NA, site.name = L$dataSetName, modelNum = NA,
   calCurves = NA)
 }
 \arguments{
+\item{L}{a single LiPD object}
+
+\item{which.chron}{the number of the chronData object that you'll be working in}
+
+\item{site.name}{the name of the site}
+
+\item{modelNum}{which chronModel do you want to use?}
+
 \item{calCurves}{The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.}
 }
 \value{

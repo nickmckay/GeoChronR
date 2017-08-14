@@ -297,6 +297,8 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
 #' @export
 plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
+  oX = X
+  oY = Y
   if(is.list(X)){X=as.data.frame(X$values)}
   if(is.list(Y)){Y=as.data.frame(Y$values)}
   
@@ -386,6 +388,9 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
     }
     
   }
+  
+  #add labels
+  bandPlot = bandPlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
   
   return(bandPlot)
   
@@ -859,7 +864,7 @@ meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
 }
 
 #'@export
-plotRegressEns = function(regEnsList,alp=0.2){
+plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
   regPlot = list()
   #scatter plot
   scatterplot = plotScatterEns(regEnsList$binX,regEnsList$binY,alp=alp)
@@ -877,10 +882,10 @@ plotRegressEns = function(regEnsList,alp=0.2){
   #plot histograms of m and b
   mStats = regEnsList$regStats[,1:2]
   names(mStats)[2]="values"
-  regPlot$mHist = plotHistEns(regEnsList$m,ensStats = mStats)+xlab("Slope")
+  regPlot$mHist = plotHistEns(regEnsList$m,quantiles = quantiles)+xlab("Slope")
   bStats = regEnsList$regStats[,c(1,3)]
   names(bStats)[2]="values"
-  regPlot$bHist = plotHistEns(regEnsList$b,ensStats = bStats)+xlab("Intercept")
+  regPlot$bHist = plotHistEns(regEnsList$b,quantiles = quantiles)+xlab("Intercept")
   
   binY = regEnsList$binY
   binX = regEnsList$binX
@@ -889,13 +894,21 @@ plotRegressEns = function(regEnsList,alp=0.2){
   binX[is.nan(binX)]=NA
   
   #plot timeseries of regression and target over interval
-  regPlot$XPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binX)+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
-  regPlot$YPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binY,colorHigh = "red")+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
+  regPlot$XPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binX,nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
+  regPlot$YPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binY,colorHigh = "red",nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
   
 
 
   #and plot reconstructions
-  regPlot$modeledYPlot = plotTimeseriesEnsRibbons(X = regEnsList$modeledYear,Y=regEnsList$modeled)+ggtitle("Calibrated record using ensemble regression")
+  if(!is.list(regEnsList$modeledYear)){
+    modYear = list()
+    modYear$values = regEnsList$modeledYear
+    modYear$units = regEnsList$timeX$units
+    modYear$variableName = regEnsList$timeX$variableName
+  }else{
+    modYear = regEnsList$modeledYear
+  }
+  regPlot$modeledYPlot = plotTimeseriesEnsRibbons(X = modYear,Y=regEnsList$modeled)+ggtitle("Calibrated record using ensemble regression")
   
   
   
