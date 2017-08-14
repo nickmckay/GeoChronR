@@ -27,7 +27,7 @@ if(is.list(X)){
 
 #' @export
 clearAll = function(){
-  rm(list = ls(),envir = .GlobalEnv)
+  rm(list = ls(envir = .GlobalEnv),envir = .GlobalEnv)
 }
 
 #' @export
@@ -43,8 +43,7 @@ lapply(pkgs, detach, character.only = TRUE, unload = TRUE)
 #'
 
 setupGeoChronR = function(){
-  devtools::install_github("dkahle/ggmap")
-  devtools::install_github("hadley/ggplot2")
+  install.packages("ggmap", type = "source")
   source("https://bioconductor.org/biocLite.R")
   biocLite("pcaMethods")
 }
