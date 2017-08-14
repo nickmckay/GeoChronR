@@ -1,4 +1,5 @@
 #' @export
+#' @title Estimate Auto-Regressive coefficient at 1-timesetep
 #' @description estimates ar1 using the arima() function
 #' @author Julien Emile-Geay
 #' @param X a 1-column matrix or numeric dataset
@@ -9,6 +10,7 @@ ar1 = function(X){
 }
 
 #' @export
+#' @title Estimate effective sample size accounting for autocorrelation
 #' @description Bretherton et al., 1999 estimate of effective sample size.
 #' @author Nick McKay
 #' @param X a 1-column matrix or numeric dataset
@@ -29,6 +31,7 @@ effectiveN = function(X,Y){
 }
 
 #' @export
+#' @title Calculate correlation p-value given sample size. 
 #' @description Calculate Pearson p-values accounting for effective sample size
 #' @author Nick McKay
 #' @param r correlation coefficient
@@ -45,8 +48,10 @@ pvalPearsonSerialCorrected = function(r,n){
   
 }
 #' @export
-#' @description Calculates correlations and associated p-values for two ensemmble matrices (or vectors) 
+#' @title Matrix correlation
+#' @description Calculates correlations and associated p-values for two ensemble matrices (or vectors) 
 #' @author Nick McKay
+#' @author Julien Emile-Geay
 #' @param M1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param M2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
@@ -103,6 +108,7 @@ regress=function (X,Y){
 
 
 #' @export
+#' @title Ensemble regression
 #' @description This is the primary function for ensemble regression. It will take ensemble values in time and/or values in the predictor (X), and regress them on ensemble values in time and/or values in Y (the predictand). The function will then apply the ensemble linear model to the full length of X to create a modeled Y. Will also optionally create plots. 
 #' @param timeX matrix of age/time ensembles, or single column
 #' @param valuesX matrix of values ensembles, or single column
@@ -113,18 +119,15 @@ regress=function (X,Y){
 #' @param binfun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to regress
 #' @param percentiles quantiles to calculate for regression parameters
-#' @param plot_reg create plots? True or False
-#' @param plot_alpha transparency
 #' @param recon.binvec bin vector to use for the modeled regression.
 #' @param minObs minimum number of points required to calculate regression
-#' @return list of ensemble ouput, including ensemble results and plots
+#' @return list of ensemble output
 #' @author Nick McKay
 
-regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(2.5,25,50,75,97.5),plot_reg=TRUE,plot_alpha=0.2,recon.binvec=NA,minObs=10){
+regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.50,.75,0.975),recon.binvec=NA,minObs=10){
   #time and values must be "column lists"
-  
   if(!is.list(timeX) | !is.list(timeY) | !is.list(valuesX) | !is.list(valuesY)){
-    stop("TimeX and Y and values X and Y must all be ``variable lists''")
+    stop("TimeX and Y and values X and Y must all be ``variable lists'' (output of selectData)")
   }
   
     otx=timeX
@@ -210,7 +213,7 @@ regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binf
     ms = sort(m)
     bs = sort(b)
     N=length(ms)
-    regStats = data.frame(percentiles,"m" = ms[round(percentiles*N/100)],"b" = bs[round(percentiles*N/100)])
+    regStats = data.frame(percentiles,"m" = ms[round(percentiles*N)],"b" = bs[round(percentiles*N)])
     row.names(regStats)=format(regStats$percentiles,digits = 2)
   }
   reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat,timeX = otx,valuesX= ovx,timeY=oty,valuesY=ovy,modeled = modeled,yearX = yearX,modeledYear = fullX$time)
@@ -222,6 +225,7 @@ regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binf
 
 
 #' @export
+#' @title Ensemble correlation
 #' @description Primary function for calculating correlation ensembles
 #' @author Nick McKay
 #' @param time1 matrix of age/time ensembles, or single column
@@ -233,11 +237,9 @@ regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binf
 #' @param binfun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to correlate
 #' @param percentiles quantiles to calculate for regression parameters
-#' @param plot_hist create histograms? True or False
 #' @param minObs minimum number of points required to calculate regression
-#' @return list of ensemble ouput, including ensemble results and plots
-#' 
-corEns = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),plot_hist=TRUE,minObs=10){
+#' @return list of ensemble output and percentile information
+corEns = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),minObs=10){
   
   #check to see if time and values are "column lists"
   if(is.list(time1)){time1=time1$values}
@@ -309,17 +311,13 @@ corEns = function(time1,values1,time2,values2,binvec = NA,binstep = NA ,binfun=m
     corEns.data=list(cor.df = cor.df)
   }
   
-  if(plot_hist){
-    library(ggplot2)
-    corEns.data$plot_r = plotCorrEns(cor.df,corStats)
-    corEns.data$plot_p = plotPvalsEns(cor.df)
-  }
   return(corEns.data)
   
 }
 
 
 #' @export
+#' @title Bin ensemble data
 #' @description takes ensembles in time and/or values and creates a matrix of data for future analysis
 #' @param time single column vector of time
 #' @param values single column vector of values to bin
@@ -381,13 +379,14 @@ binEns = function(time,values,binvec,binfun=mean,max.ens=NA){
 }
 
 #' @export
+#' @title Bin Data
 #' @description function that puts data into appropriate bins, based on the time and the binning vector the bin vector describes the edges of the bins
 #' @param time vector of time
 #' @param values vector of values to bin
-#' @param binvec vector of bin edges for binning step
+#' @param binvec vector of bin edges for describing where to bin
 #' @param binfun function to use during binning (mean, sd, and sum all work)
 #' @author Nick McKay
-#' @return time
+#' @return A data.frame of (x) binned time, and (y) binned values
 bin = function(time,values,binvec,binfun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
   #the bin vector describes the edges of the bins
@@ -402,10 +401,20 @@ bin = function(time,values,binvec,binfun = mean){
   
   binned = data.frame(x=bin_x,y=bin_y)
   return(binned)
-  
 }
+
+
 #' @export
-binTs = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE){
+#' @title Bin every entry in a Timeseries object
+#' @description Aggregate data from a timeseries object into the same timeline through binning. 
+#' @param TS LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}
+#' @param binvec vector of bin edges for describing where to bin
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param max.ens Maximum number of ensemble members.
+#' @param na.col.rm Remove columns that are all NAs? (TRUE or FALSE)
+#' @author Nick McKay
+#' @return A list of binned years and values.
+binTs = function(TS,timeVar="ageEnsemble",binvec,binfun = mean,max.ens=1000,na.col.rm=TRUE){
   timeList = lapply(TS,"[[",timeVar)
   valueList = lapply(TS,"[[","paleoData_values")
   
@@ -413,7 +422,7 @@ binTs = function(TS,timeVar=c("ageEnsemble"),binvec,max.ens=1000,na.col.rm=TRUE)
   pb <- txtProgressBar(min=1,max=length(timeList),style=3)
   
   for(i in 1:length(timeList)){
-    binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens)
+    binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],binvec = binvec,max.ens = max.ens,binfun = binfun)
     if(na.col.rm){
       allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | apply(is.nan(binMat[[i]]$matrix),2,all) | apply(binMat[[i]]$matrix=="nan",2,all))
       if(length(allNa)>0){
