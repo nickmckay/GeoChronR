@@ -1,4 +1,17 @@
 #'@export
+#'@author Deborah Khider
+#'@author Andrew Parnell
+#'@family Bchron
+#'@title Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object
+#'@description This is a high-level function that uses Bchron to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Haslett and Parnell (2008) doi:10.1111/j.1467-9876.2008.00623.x for details.
+#'@param calCurves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
+#'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
+#'@examples
+#'Run in interactive mode:
+#'L = runBchron(L)
+#'
+#'Run in noninteractive mode:
+#'L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
 runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
   cur.dir = getwd()
   
