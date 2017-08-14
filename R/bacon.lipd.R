@@ -12,7 +12,7 @@
 #' L = runBacon(L)
 #' 
 #' Run in noninteractive mode, describing everything:
-#' L = runBacon(L,which.paleo = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+#' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000){
   cur.dir = getwd()
   #initialize which.chron

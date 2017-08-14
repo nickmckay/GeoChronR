@@ -484,7 +484,7 @@ bamCorrect <- function(X, t, model=NULL){
 #' @author Maud Comboul
 #' @title Simulate a Banded Age Model (BAM)
 #' @description Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
-#' The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order. 
+#' The time series in X are automatically flipped to range from most recent to oldest measurements when the input t is given in increasing order. 
 #' @examples
 #'res <- simulateBam(X,t) 
 #' #will generate an ensemble of 1000 age models randomly following
