@@ -130,7 +130,7 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   
   
   
-  kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
+  BACages = kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
   
   if(is.na(maxEns)){maxEns=nrow(BACages)}
   

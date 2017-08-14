@@ -27,7 +27,7 @@ if(is.list(X)){
 
 #' @export
 clearAll = function(){
-  rm(list = ls())
+  rm(list = ls(),envir = .GlobalEnv)
 }
 
 #' @export
@@ -37,5 +37,15 @@ pkgs = paste('package:', pkgs, sep = "")
 lapply(pkgs, detach, character.only = TRUE, unload = TRUE)
 }
 
+#' @export
+#' @title Setup GeoChronR
+#' 
+#'
 
+setupGeoChronR = function(){
+  devtools::install_github("dkahle/ggmap")
+  devtools::install_github("hadley/ggplot2")
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("pcaMethods")
+}
 

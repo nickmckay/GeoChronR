@@ -1,4 +1,8 @@
 #' @export
+#' @title Perform principle components analysis (PCA) across an ensemble
+#' @description Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
+#' @param bin.list A list of binned data, the output of binTs()
+#' @param method methods
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
  
   #the option type controls whether the analysis is done on a correlation (default) or covariance matrix ("cov")

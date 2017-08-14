@@ -1,4 +1,5 @@
 #' @export
+#' 
 geoChronRPlotTheme = ggplot2::theme_bw
 
 #' @export
