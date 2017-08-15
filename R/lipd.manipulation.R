@@ -1,4 +1,9 @@
-#'@export
+#' @export
+#' @family LiPD manipulation
+#' @title Flip Coordinates
+#' @description Swap latitude and longitude in a LiPD object
+#' @param L a LiPD object
+#' @returns a LiPD object
 flipCoords = function(L){
   olat = L$geo$latitude
   olon = L$geo$longitude
@@ -9,12 +14,19 @@ flipCoords = function(L){
 
 
 #' @title  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
+#' @family LiPD manipulation
 #' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 #' @param L a lipd object
 #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
+#' @param which.pmt an integer that corresponds to which paleo measurementTable you want to add the ensemble to?
+#' @param which.chron  an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from
+#' @param which.model an integer that corresponds to which chron model you want to get the ensemble from?
+#' @param which.ens an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?
+#' @param max.ensemble.members Maximum number of ensemble members to map
+#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
 #' @return L a lipd object
 #' @export
-mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,max.ensemble.members=NA,strictSearch=FALSE,which.ens = NA){
+mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE){
   print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
@@ -134,6 +146,9 @@ if(is.na(which.ens)){which.ens=1}
   
 }
   
+#' @title  What OS is this?
+#' @description Returns the OS
+#' @return A string ("osx","linux",or "windows")
 #' @export
 getOs <- function(){
   sysinf <- Sys.info()
@@ -152,9 +167,24 @@ getOs <- function(){
     }
   }
   return(tolower(os))
-  
 }
 
+#' @title  Select a LiPD "variable list"
+#' @family LiPD manipulation
+#' @description Selects and extracts a LiPD "variable list"
+#' @param L a lipd object
+#' @param varName string name of the variable to extract
+#' @param where "paleoData" or "chronData"
+#' @param which.data an integer that corresponds to which paleo or chron Data object (L$<where>Data[[?]]) has the variable you want?
+#' @param which.mt an integer that corresponds to which paleo measurementTable has the variable you want?
+#' @param tableType What type of table do you want to select data from? ("measurement", "summary" or "ensemble")
+#' @param always.choose Force selection of the variable from a list
+#' @param altNames A vector of strings for alternative names to search for
+#' @param model.num an integer that corresponds to which model that has the variable you want
+#' @param which.ens an integer that corresponds to which ensembleTable you want to get the variable from?
+#' @param which.sum an integer that corresponds to which summaryTable you want to get the variable from?
+#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+#' @return A LiPD "variable list" object
 #' @export
 selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "measurement", which.mt=NA,always.choose=FALSE,altNames=NA,model.num = 1,which.ens=1,which.sum = 1,strictSearch = FALSE){
   #paleo or chron
@@ -223,13 +253,20 @@ selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "
   
 }
 
+#' @title Get the index of variable list
+#' @family LiPD manipulation
+#' @description Gets the index for a LiPD "variable list"
+#' @param table a LiPD measurement, ensemble or summary Table
+#' @param varName string name of the variable to extract
+#' @param altNames A vector of strings for alternative names to search for
+#' @param ignore A vector of strings of variableNames to ignore
+#' @param always.choose Force selection of the variable from a list
+#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+#' @return An integer index
 #' @export
 getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.choose=FALSE,strictSearch=FALSE){
   #restrict to lists  
   #find variables within the table, and their index
-  
-  
-  
   allNames = names(table)
   listI=which(!sapply(table,class)=="list")
   
@@ -319,6 +356,26 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
   
 }
 
+#' @export
+#' @title Align and bin two timeseries into comparable bins
+#' @description Use this to put two timeseries on different timesteps onto equivalent bins
+#' @param timeX matrix of age/time ensembles, or single column
+#' @param valuesX matrix of values ensembles, or single column
+#' @param timeY matrix of age/time ensembles, or single column
+#' @param valuesY matrix of values ensembles, or single column
+#' @param binvec vector of bin edges for binning step
+#' @param binstep spacing of bins, used to build bin step
+#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param max.ens maximum number of ensemble members to regress
+#' @param minObs minimum number of points required to calculate regression
+#' @return list of binned data output:
+#' \itemize{
+#' \item binX: binned values from X
+#' \item binY: binned values from Y
+#' \item binstep: interval of the binning
+#' \item yearBins: bins along time
+#' }
+#' @author Nick McKay
 alignTimeseriesBin = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,minObs=10){
   #check to see if time and values are "column lists"
   if(is.list(timeX)){

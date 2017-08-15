@@ -24,9 +24,13 @@ A ggplot object
 Plots or adds a line to aplot
 }
 \seealso{
-Other plot: \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotCorrEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotPvalsEnsFdr}},
+Other plot: \code{\link{axisLabel}},
+  \code{\link{geoChronRPlotTheme}},
+  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
+  \code{\link{plotHistEns}},
+  \code{\link{plotModelDistributions}},
+  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},

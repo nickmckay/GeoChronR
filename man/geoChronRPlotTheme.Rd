@@ -10,9 +10,12 @@ geoChronRPlotTheme(base_size = 11, base_family = "")
 Use this to define a theme across geoChronR
 }
 \seealso{
-Other plot: \code{\link{plotCorrEns}},
+Other plot: \code{\link{axisLabel}},
+  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
   \code{\link{plotHistEns}}, \code{\link{plotLine}},
-  \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotModelDistributions}},
+  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},

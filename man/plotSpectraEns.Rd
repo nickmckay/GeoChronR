@@ -16,11 +16,18 @@ ggplot object of spectrum plot
 Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus confidence levels
 }
 \seealso{
-Other plot: \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotCorrEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}}, \code{\link{plotPvalsEnsFdr}},
+Other plot: \code{\link{axisLabel}},
+  \code{\link{geoChronRPlotTheme}},
+  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{plotModelDistributions}},
+  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTrendLinesEns}}
+
+Other spectra: \code{\link{createSyntheticTimeseries}},
+  \code{\link{powerSpectrumEns}}
 }

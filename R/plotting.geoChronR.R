@@ -697,12 +697,31 @@ plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lin
 }
 
 #' @export
-plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,data.file=NA,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975)){
-  library(ggmap)
-  library(ggplot2)
-  library(gridExtra)
-  #map.type can be "google" or "line"
-  
+#' @family plot
+#' @family pca
+#' @author Nick McKay
+#' @title Map ensemble pca loadings and plot PC timeseries
+#' @description Map ensemble pca loadings and plot PC timeseries
+#' @import ggplot2
+#' @import ggmap
+#' @import gridExtra
+#' @import mapproj
+#' @param ens.PC.out results of pcaEns()
+#' @param TS Timeseries object \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series} used in the pcaEns() analysis
+#' @param map.type "google" or "line"
+#' @param f zoom buffer for plotting
+#' @param which.PCs vector of PCs to plot. Choose two. c(1,2) is default.
+#' @param color color scale option. See assignColors()
+#' @param dotsize How big are the dots on the map
+#' @param restrict.map.range TRUE or FALSE. Trim the size of the map to the points, for "line" map type
+#' @param shape.by.archive TRUE or FALSE. Use archiveType to assign shapes.
+#' @param projection Map project. All options on: ?mapproject
+#' @param lineLabels Labels for the quantiles lines
+#' @param boundcirc For polar projects, draw a boundary circle? TRUE or FALSE
+#' @param probs quantiles to calculate and plot in the PC timeseries
+#' @return A gridExtra ggplot object
+#' @examples 
+plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975)){
   #get data out of the TS
   lat = sapply(TS,"[[","geo_latitude")
   lon = sapply(TS,"[[","geo_longitude")
@@ -808,6 +827,27 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
 }
 
 #' @export
+#' @family plot
+#' @family chron
+#' @author Nick McKay
+#' @title Plot probability distributions
+#' @description Plot or add probability distributions from a paleo or chron model to a plot. 
+#' @import ggplot2
+#' @param L A LiPD object
+#' @param dist.var Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default. 
+#' @param y.var Name of the y-axis variable. "depth" by default. 
+#' @param mode chron or paleo 
+#' @param which.data number of the chron or paleo Data object
+#' @param model.num number of the model object
+#' @param color distribution color (following ggplot rules)
+#' @param dist.plot vector of distribution tables to plot
+#' @param distType "violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down
+#' @param thick thickness of the line around the distribution
+#' @param truncateDist truncate probability density values below this number. NA (default) means no truncation
+#' @param scaleFrac controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
+#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
 plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",which.data = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,dist.plot = NA,distType = "violin",thick = 0.1,truncateDist = NA){
   
   
@@ -889,6 +929,35 @@ plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chr
 }
 
 #' @export
+#' @family plot
+#' @family chron
+#' @author Nick McKay
+#' @title Plot chronologies
+#' @description Plot creates an age model plot with all the bells and whistles, including a spread of ensemble members, probability distributions, and a few example ensemble members. 
+#' @import ggplot2
+#' @param L A LiPD object
+#' @param dist.var Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default. 
+#' @param y.var Name of the y-axis variable. "depth" by default. 
+#' @param probs quantiles to calculate and plot
+#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+#' @param x.bin vector of bin edges over which to bin.
+#' @param y.bin vector of bin edges over which to bin.
+#' @param bandColorLow Band color of the outer most band.
+#' @param bandColorHigh Band color of the inner most band.
+#' @param bandAlpha Transparency of the band plot
+#' @param lineColor Line color (following ggplot rules)
+#' @param lineWidth Width of the line
+#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+#' @param nEnsLines Number of ensemble members to plot
+#' @param ensLineColor color of the ensemble lines
+#' @param ensLineAlp transparency of the lines
+#' @param distColor distribution color (following ggplot rules)
+#' @param distType "violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down
+#' @param distThick thickness of the line around the distribution
+#' @param truncateDist truncate probability density values below this number. NA (default) means no truncation
+#' @param distScale controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
+#' @return A ggplot object
+#' @examples 
 plotChron = function(L,chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA){
   
   C = L$chronData
@@ -937,6 +1006,13 @@ plotChron = function(L,chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.
 }
 
 #' @export
+#' @family plot
+#' @author Nick McKay
+#' @title Label axes
+#' @description Create an axis label string from a LiPD column vector 
+#' @import ggplot2
+#' @param varList LiPD "variable list"
+#' @return axis label as a string
 axisLabel = function(varList){
   #create a string label from a column variable list...
   if(!is.list(varList)){#if it's not a list just return the name of the variable
@@ -957,9 +1033,12 @@ axisLabel = function(varList){
   
 }
 
-
-
-
+#' @author Nick McKay
+#' @title Melt distribution
+#' @description Takes a LiPD model distribution and melt it into a single data.frame
+#' @param this.dist LiPD "distributionTable" object
+#' @param dist.plot vector of distribution tables to plot
+#' @return data.frame of melted distribution objects.
 #' @export
 meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
   #create large dataframe from dist object
@@ -993,7 +1072,27 @@ meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
   return(dist.df)
 }
 
-#'@export
+#' @export
+#' @family plot
+#' @family regress
+#' @author Nick McKay
+#' @title Plot ensemble regression results
+#' @description Creates a suite of plots to characterize the results of an ensemble regression.
+#' @import ggplot2
+#' @param regEnsList output of regressEns()
+#' @param alp Transparency of the scatter plot.
+#' @param quantiles quantiles to calculate and plot
+#' @return A list of ggplot objects
+#' \itemize{
+#' \item YPlot - ribbon plot of the prectictand timeseries over the interval of overlap
+#' \item XPlot - ribbon plot of the predictor timeseries over the interval of overlap
+#' \item scatterplot - ensemble scatter plot of the predictor and predictand timeseries over the interval of overlap
+#' \item mHist - distribution of ensemble regression slopes
+#' \item bHist - distribution of ensemble regression intercepts
+#' \item modeledYPlot - ribbon plot of values modeled by the ensemble regression, incorporating age uncertainty in both the regression and the predictor timeseries
+#' \item summaryPlot - grid.arrange object of all the regression plots
+#' }
+#' @examples 
 plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
   regPlot = list()
   #scatter plot

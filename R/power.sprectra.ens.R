@@ -1,4 +1,12 @@
 #' @export
+#' @family spectra
+#' @family pca
+#' @title Create a synthetic timeseries that emulates the characteristics of a variable
+#' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
+#' @param time LiPD "variable list" or vector of year/age values
+#' @param values LiPD "variable list" or vector of values
+#' @param nens Number of ensemble members to simulate
+#' @return a vector or matrix of synthetic values
 createSyntheticTimeseries = function(time,values,nens=1){
   
   #check to see if time and values are "column lists"
@@ -39,18 +47,26 @@ createSyntheticTimeseries = function(time,values,nens=1){
     withTrend=rdata+trend
     withTrend[vnai]=NA
     synValues[,jj]=withTrend
-    
   }
-  
-  
-  
   return(synValues)
 }
 
 #' @export
+#' @family spectra
+#' @title Calculate ensemble power spectra
+#' @description Calculate ensemble power spectra using lomb-scargle
+#' @param time LiPD "variable list" or vector of year/age values
+#' @param values LiPD "variable list" or vector of values
+#' @param max.ens Maximum number of ensemble members to analyze
+#' @param ofac oversampling factor for lomb::lsp
+#' @return a list of ensemble spectra results
+#' \itemize{
+#' \item freqs: vector of frequencies
+#' \item power: vector of spectral powers
+#' \item powerSyn: matrix of synthetic spectral power results
+#' }
+#' @import lomb
 powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
-  library(lomb)#uses this library, for now...
-  
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}

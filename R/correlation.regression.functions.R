@@ -124,6 +124,7 @@ regress=function (X,Y){
 #' @param minObs minimum number of points required to calculate regression
 #' @return list of ensemble output
 #' @author Nick McKay
+#' @family regress
 
 regressEns = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,percentiles=c(.025,.25,.50,.75,0.975),recon.binvec=NA,minObs=10){
   #time and values must be "column lists"

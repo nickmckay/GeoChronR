@@ -24,15 +24,20 @@ A ggplot object
 Plot an ensemble timeseries as a scatter plot. Useful in showing the general impact of uncertainty on a bivariate relationship.
 }
 \seealso{
-Other plot: \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotCorrEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}}, \code{\link{plotPvalsEnsFdr}},
+Other plot: \code{\link{axisLabel}},
+  \code{\link{geoChronRPlotTheme}},
+  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{plotModelDistributions}},
+  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotRegressEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTrendLinesEns}}
 
-Other regress: \code{\link{plotTrendLinesEns}}
+Other regress: \code{\link{plotRegressEns}},
+  \code{\link{plotTrendLinesEns}}, \code{\link{regressEns}}
 }
 \author{
 Nick McKay

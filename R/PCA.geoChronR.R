@@ -1,8 +1,14 @@
 #' @export
+#' @family pca
 #' @title Perform principle components analysis (PCA) across an ensemble
 #' @description Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
 #' @param bin.list A list of binned data, the output of binTs()
-#' @param method methods
+#' @param method What method to use for PCA? pcaMethods::listPcaMethods() for options. "ppca" is default. Other options may not work in GeoChronR.
+#' @param weights Vector of weights to apply to timeseries in the bin.list
+#' @param PCAtype Correlation ("corr" - default) or Covariance ("cov"), matrix
+#' @param nPCs number of PCs/EOFs to calculate
+#' @param nens how many ensemble members?
+
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
  
   #the option type controls whether the analysis is done on a correlation (default) or covariance matrix ("cov")

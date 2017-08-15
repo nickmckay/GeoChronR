@@ -5,17 +5,34 @@
 \title{Map an ageEnsemble variable from a chron model to a paleoMeasurement Table}
 \usage{
 mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
-  which.chron = NA, which.model = NA, max.ensemble.members = NA,
-  strictSearch = FALSE, which.ens = NA)
+  which.chron = NA, which.model = NA, which.ens = NA,
+  max.ensemble.members = NA, strictSearch = FALSE)
 }
 \arguments{
 \item{L}{a lipd object}
 
 \item{which.paleo}{an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify}
+
+\item{which.pmt}{an integer that corresponds to which paleo measurementTable you want to add the ensemble to?}
+
+\item{which.chron}{an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
+
+\item{which.model}{an integer that corresponds to which chron model you want to get the ensemble from?}
+
+\item{which.ens}{an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?}
+
+\item{max.ensemble.members}{Maximum number of ensemble members to map}
+
+\item{strictSearch}{Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }
 \value{
 L a lipd object
 }
 \description{
 Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
+}
+\seealso{
+Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
+  \code{\link{flipCoords}}, \code{\link{getVariableIndex}},
+  \code{\link{selectData}}
 }

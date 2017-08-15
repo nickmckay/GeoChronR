@@ -10,8 +10,20 @@ pcaEns(bin.list, method = "ppca", weights = NA, PCAtype = "corr",
 \arguments{
 \item{bin.list}{A list of binned data, the output of binTs()}
 
-\item{method}{methods}
+\item{method}{What method to use for PCA? pcaMethods::listPcaMethods() for options. "ppca" is default. Other options may not work in GeoChronR.}
+
+\item{weights}{Vector of weights to apply to timeseries in the bin.list}
+
+\item{PCAtype}{Correlation ("corr" - default) or Covariance ("cov"), matrix}
+
+\item{nPCs}{number of PCs/EOFs to calculate}
+
+\item{nens}{how many ensemble members?}
 }
 \description{
 Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
+}
+\seealso{
+Other pca: \code{\link{createSyntheticTimeseries}},
+  \code{\link{plotPcaEns}}
 }

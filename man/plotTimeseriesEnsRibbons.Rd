@@ -41,9 +41,13 @@ A ggplot object
 Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
 }
 \seealso{
-Other plot: \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotCorrEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}}, \code{\link{plotPvalsEnsFdr}},
+Other plot: \code{\link{axisLabel}},
+  \code{\link{geoChronRPlotTheme}},
+  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{plotModelDistributions}},
+  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},

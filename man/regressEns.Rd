@@ -37,6 +37,11 @@ list of ensemble output
 \description{
 This is the primary function for ensemble regression. It will take ensemble values in time and/or values in the predictor (X), and regress them on ensemble values in time and/or values in Y (the predictand). The function will then apply the ensemble linear model to the full length of X to create a modeled Y. Will also optionally create plots.
 }
+\seealso{
+Other regress: \code{\link{plotRegressEns}},
+  \code{\link{plotScatterEns}},
+  \code{\link{plotTrendLinesEns}}
+}
 \author{
 Nick McKay
 }
