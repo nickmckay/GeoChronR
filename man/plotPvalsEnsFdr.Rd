@@ -9,7 +9,7 @@ plotPvalsEnsFdr(cor.df, alpha = 0.05)
 \arguments{
 \item{cor.df}{A data.frame correlation r and p-values. Output from corEns()}
 
-\item{alpha}{Line transparency}
+\item{alpha}{probability threshold}
 }
 \value{
 A ggplot object

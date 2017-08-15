@@ -60,7 +60,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   }
   
   #Which age/year vector do you want to perturb?
-  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = TRUE)
+  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = FALSE)
   
   
   #make sure that the most recent year is first

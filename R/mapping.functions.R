@@ -1,9 +1,9 @@
 #' @export
+#' @import ggplot2
 #' @family mapping
 #' @title Map a LiPD object
 #' @author Nick McKay
 #' @description Create a google or line map of the location of the LiPD object
-#' @import ggmap
 #' @param L Single LiPD object
 #' @param color Color of the location marker
 #' @param size Size of the location marker
@@ -23,11 +23,11 @@ mapLipd = function(L,color="red",size=8,shape = 16,map.type="google",extend.rang
 }
 
 #' @export
+#' @import ggplot2
 #' @family mapping
 #' @title Map a list of LiPD objects
 #' @author Nick McKay
 #' @description Create a google or line map of the location of a list of LiPD objects
-#' @import ggmap
 #' @param D A list of LiPD objects
 #' @param color Color of the location marker
 #' @param size Size of the location marker
@@ -54,6 +54,8 @@ mapLipds = function(D,shape= 21,size=8,color = sapply(D,"[[","archiveType") ,map
 #' @author Nick McKay
 #' @description Create a google or line map of the location of a list of LiPD objects
 #' @import ggmap
+#' @import ggplot2
+#' @import mapproj
 #' @param lat latitude(s) range to map
 #' @param lon longitude(s) range to map
 #' @param map.type "google" or "line" 
@@ -65,10 +67,6 @@ mapLipds = function(D,shape= 21,size=8,color = sapply(D,"[[","archiveType") ,map
 #' @param extend.range increase the span of the map by this much (lat/long degrees)
 #' @return ggmap base map 
 baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
-  library("ggplot2")
-  library("ggmap")
-  library("mapproj")
-  
   if(length(lat)==1 & length(lon)==1){
     lon = lon + c(-extend.range,extend.range)
     lat = lat + c(-extend.range,extend.range)
@@ -153,10 +151,9 @@ baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projec
 
 #' @family mapping
 #' @export
-#' @title Make a base map
+#' @title Assign colors for map color scale
 #' @author Nick McKay
-#' @description Create a google or line map of the location of a list of LiPD objects
-#' @import ggmap
+#' @description Quick look up for color scale pairs for mapping
 #' @param colors string to define color scale. Options are "temp", "precip" and "drought"
 #' @return a pair of high/low colors
 assignColors = function(colors="temp"){

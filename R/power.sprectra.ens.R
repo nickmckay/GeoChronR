@@ -103,7 +103,7 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
     out = lsp(v,times=t,ofac=ofac,plot = F)
     syn = createSyntheticTimeseries(t,v)#create synthetic timeseries
     synOut = lsp(syn,times=t,ofac=ofac,plot = F)
-    pMatSyn[1:length( synOut$power),i] =  synOut$power
+    pMatSyn[1:length(synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned
     pMat[,i]=out$power
     if(i%%round(nens/50)==0){

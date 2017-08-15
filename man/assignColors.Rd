@@ -2,7 +2,7 @@
 % Please edit documentation in R/mapping.functions.R
 \name{assignColors}
 \alias{assignColors}
-\title{Make a base map}
+\title{Assign colors for map color scale}
 \usage{
 assignColors(colors = "temp")
 }
@@ -13,7 +13,7 @@ assignColors(colors = "temp")
 a pair of high/low colors
 }
 \description{
-Create a google or line map of the location of a list of LiPD objects
+Quick look up for color scale pairs for mapping
 }
 \seealso{
 Other mapping: \code{\link{baseMap}},

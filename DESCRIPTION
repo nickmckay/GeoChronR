@@ -21,6 +21,7 @@ Imports:
 	gridExtra,
 	Hmisc,
 	ggplot2,
+	ggmap,
 	Formula,
 	survival,
 	lattice,
