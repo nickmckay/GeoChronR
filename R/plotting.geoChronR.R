@@ -1,22 +1,40 @@
 #' @export
-#' 
+#' @family plot
+#' @title Define a plot theme for GeoChronR
+#' @description Use this to define a theme across geoChronR
 geoChronRPlotTheme = ggplot2::theme_bw
 
 #' @export
+#' @title Plot ensemble spectra output
+#' @description Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus confidence levels
+#' @family plot
+#' @family spectra
+#' @param spec.ens Output from powerSpectrumEns()
+#' @return ggplot object of spectrum plot
 plotSpectraEns = function (spec.ens){
-  
   specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power)
   specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
-  #to do label significant peaks
-  
-  #add pvalues?
+  #{to do} label significant peaks
   
   specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
   return(specPlot)
 }
 
-
 #' @export
+#' @title Find quantiles across an ensemble
+#' @family gridding
+#' @description Determine quantiles across ensembles of x and/or y, as a function of x, using interpolation
+#' @param x n by m matrix where n is the number of observations and m is >= 1
+#' @param y n by j matrix where n is the number of observations and j is >= 1 
+#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+#' @param x.bin vector of bin edges over which to bin.
+#' @param probs quantiles to calculate
+#' @param nens number of ensemble members to derive quantiles for
+#' @return list of quantiles and x.bin
+#' @author Nick McKay
+#' @examples
+#' 
+#' 
 quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y)))){
   #interpolates then finds
   if(nrow(x)!=nrow(y)){
@@ -44,21 +62,28 @@ quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.
   for(i in 1:length(x)){
     quants[i,] = quantile(y[i,],probs = probs,na.rm  = T)
   }
-  
   return(list(quants = quants,x.bin = x.bin))
-  
-  
-  
 }
 
 
-
+# 
 #' @export
-bin2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T){
+#' @title Two dimensional binning
+#' @family gridding
+#' @description Calculate the density of samples along a 2-dimensional grid
+#' @param x n by m matrix where n is the number of observations and m is >= 1
+#' @param y n by j matrix where n is the number of observations and j is >= 1 
+#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+#' @param x.bin vector of bin edges over which to bin.
+#' @param y.bin vector of bin edges over which to bin.
+#' @param filterFrac Used to beef up sampling for poorly sampled intervals. Interpolates intervals with less than filterFrac coverage.
+#' @param interpolate use interpolation? T/F
+#' @return A list with a matrix of density, x.bin and y.bin
+#' 
+bin2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = TRUE){
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
-  
   
   if(interpolate){
     #interpolate option...
@@ -130,14 +155,14 @@ bin2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T
   freq2D[cbind(freq[,2], freq[,1])] <- freq[,3]
   
   #beef up sampling with interpolation? for plotting...
-  # if(!is.na(filterFrac)){
-  # sumX = apply(freq2D,MARGIN = 1,FUN = sum)
-  # sumY =  apply(freq2D,MARGIN = 2,FUN = sum)
-  # freq2D = freq2D[sumX > (length(x.bin)*filterFrac) ,sumY > (length(y.bin)*filterFrac)]
-  # y.bin = y.bin[sumY > (length(y.bin)*filterFrac)]
-  # x.bin = x.bin[sumX > (length(x.bin)*filterFrac)]
-  # 
-  # }
+  if(!is.na(filterFrac)){
+  sumX = apply(freq2D,MARGIN = 1,FUN = sum)
+  sumY =  apply(freq2D,MARGIN = 2,FUN = sum)
+  freq2D = freq2D[sumX > (length(x.bin)*filterFrac) ,sumY > (length(y.bin)*filterFrac)]
+  y.bin = y.bin[sumY > (length(y.bin)*filterFrac)]
+  x.bin = x.bin[sumX > (length(x.bin)*filterFrac)]
+
+  }
   
   
   density = (freq2D/sum(freq2D))
@@ -147,6 +172,16 @@ bin2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA,filterFrac = NA,interpolate = T
   return(out)
 }
 
+#' @export
+#' @family gridding
+#' @title Two dimensional kernel density estimation
+#' @description Use a kernel density estimator to model the density of samples along a 2-dimensional grid
+#' @param x n by m matrix where n is the number of observations and m is >= 1
+#' @param y n by j matrix where n is the number of observations and j is >= 1 
+#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+#' @param x.bin vector of bin edges over which to bin.
+#' @param y.bin vector of bin edges over which to bin.
+#' @return A list with a matrix of density, x.bin and y.bin
 kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
@@ -165,19 +200,25 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
     }
   }
   
-  
-  
   df = data.frame(x=c(x),y=c(y))
-  
   kde = MASS::kde2d(df$x,df$y,h=1,  n =nbins)
-  
   out = list("density" = kde$z,"x.bin"= kde$x,"y.bin"=kde$y)
-  
   return(out)
 }
 
 #' @export
-#show a map, timeseries, and age model diagram..
+#' @family plot
+#' @author Nick McKay
+#' @title Plot a summary figure
+#' @description shows a map, timeseries, and age model diagram, and basic simple metadata
+#' @import ggplot2
+#' @import grid
+#' @import gridExtra
+#' @param L A LiPD Object
+#' @return A gridArrange of ggplot grobs
+#' @examples 
+#' myPlot = summaryPlot(L)
+#' 
 plotSummary = function(L){
   #is this a LiPD file?
   if(is.list(L)){
@@ -188,10 +229,6 @@ plotSummary = function(L){
     stop("plotSummary requires a single LiPD object as input")
   }
   
-  
-  
-  library(grid)
-  library(gridExtra)
   map = mapLipd(L,extend.range = 5)
   
   #plot paleoData
@@ -244,25 +281,49 @@ plotSummary = function(L){
   
 }
 
+#' @family plot
 #' @export
-plotLine = function(X,Y,color="black",add.to.plot=ggplot()){
+#' @author Nick McKay
+#' @title Plot or add a line to plot
+#' @description Plots or adds a line to aplot
+#' @import ggplot2
+#' @param X A LiPD variable list to plot, including values, units, names, and more
+#' @param Y A LiPD variable list to plot, including values, units, names, and more
+#' @param color Line color (following ggplot rules)
+#' @param alp Line transparency
+#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
+plotLine = function(X,Y,color="black",alp = 1, add.to.plot=ggplot()){
   
-  #X and Y and are lipd variables, including values, units, names, etc...
+  #X and Y and are LiPD variable list, including values, units, names, etc...
   df = data.frame(x = X$values, y = Y$values)
-  plot = add.to.plot+ geom_line(data=df,aes(x=x,y=y),colour =color)+
-    ylab(paste0(Y$variableName," (",Y$units,")"))+
-    xlab(paste0(X$variableName," (",X$units,")"))+
-    theme_bw()
+  plot = add.to.plot+ geom_line(data=df,aes(x=x,y=y),colour =color, alpha = alp)+
+    ylab(axisLabel(Y))+
+    xlab(axisLabel(X))+
+    geoChronRPlotTheme()
+  
   if(tolower(X$variableName)=="age"){
     plot = plot+scale_x_reverse()
   }
   return(plot)
-  
-  
 }
 
 
 #' @export
+#' @family plot
+#' @author Nick McKay
+#' @title Plot an ensemble timeseries as a set of lines
+#' @description Plot an ensemble timeseries as a set of lines. Useful for displaying a handful of ensemble members to characterize individual paths. 
+#' @import ggplot2
+#' @param X A LiPD variable list to plot, including values, units, names, and more
+#' @param Y A LiPD variable list to plot, including values, units, names, and more
+#' @param color Line color (following ggplot rules)
+#' @param maxPlotN Whats the maximum number of lines to plot?
+#' @param alp Line transparency
+#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
 plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
@@ -290,12 +351,31 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
   library(ggplot2)
   linePlot = add.to.plot+
     geom_path(data=dfXY,aes(x=x,y=y),colour = color,alpha=alp)+
-    theme_bw()
+    geoChronRPlotTheme()
   
   return(linePlot)
   
 }
 #' @export
+#' @family plot
+#' @author Nick McKay
+#' @title Plot an ensemble timeseries as ribbons of probabilities
+#' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members. 
+#' @import ggplot2
+#' @param X A LiPD variable list to plot, including values, units, names, and more
+#' @param Y A LiPD variable list to plot, including values, units, names, and more
+#' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
+#' @param colorLow Band color of the outer most band.
+#' @param colorHigh Band color of the inner most band.
+#' @param lineColor Line color (following ggplot rules)
+#' @param lineWidth Width of the line
+#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+#' @param x.bin vector of bin edges over which to bin.
+#' @param y.bin vector of bin edges over which to bin.
+#' @param alp Line transparency
+#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
 plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
   #check to see if time and values are "column lists"
   oX = X
@@ -403,7 +483,20 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
   
 }
 #' @export
-plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000){
+#' @family plot
+#' @family regress
+#' @author Nick McKay
+#' @title Plot an ensemble of data as a scatterplot
+#' @description Plot an ensemble timeseries as a scatter plot. Useful in showing the general impact of uncertainty on a bivariate relationship.
+#' @import ggplot2
+#' @param X A LiPD variable list to plot, including values, units, names, and more
+#' @param Y A LiPD variable list to plot, including values, units, names, and more
+#' @param alp Line transparency
+#' @param maxPlotN Whats the maximum number of lines to plot?
+#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
+plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000,add.to.plot = ggplot()){
   X=as.matrix(X)
   Y=as.matrix(Y)
   
@@ -420,24 +513,26 @@ plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000){
   Yplot = c(Y[,pY])
   dfXY = data.frame("x"=Xplot,"y"=Yplot)
   
-  library(ggplot2)
-  scatterplot = ggplot(data=dfXY)+
-    geom_point(aes(x = x,y=y),alpha=alp)+
-    theme_bw()
-  
+  scatterplot = add.to.plot+
+    geom_point(data = dfXY,aes(x = x,y=y),alpha=alp)+
+  geoChronRPlotTheme()  
   return(scatterplot)
 }
 
-
-
-
 #' @export
+#' @family plot
+#' @family regress
+#' @author Nick McKay
+#' @title Plot an ensemble of trendlines
+#' @description Plot an ensemble of trendlines based on slope and intercept. 
+#' @param mb.df A data.frame of slopes (column 1) and intercepts (column 2)
+#' @param alp Line transparency
+#' @param pXY index of which observations to use
+#' @param xrange range of x values (min and max)
+#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
 plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
-  #mb.df = dataframe of slopes (column 1) and intercepts (column 2)
-  #xrange = range of x values (min and max)
-  #pXY = index of which observations to use
-  #create a path for the fit lines
-  #add.to.plot if you want to add this to an existing plot, put that object here.
   xvec = c(xrange,NA)
   yall = c()
   xall = c()
@@ -449,10 +544,9 @@ plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "re
   }
   dfi = data.frame(x=xall,y=yall)
   
-  library(ggplot2)
   trendlines = add.to.plot+
     geom_path(data=dfi,aes(x=x,y=y),colour = color,alpha=alp)+
-    theme_bw()+
+    geoChronRPlotTheme()+
     xlim(xrange)
   
   
@@ -460,6 +554,19 @@ plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "re
 }
 
 #' @export
+#' @family plot
+#' @author Julien Emile-Geay
+#' @author Nick McKay
+#' @title Plot the results of an ensemble correlation
+#' @description Plots the output of an ensemble correlation analysis.
+#' @import ggplot2
+#' @param cor.df A data.frame correlation r and p-values. Output from corEns()
+#' @param corStats A data.frame of correlation quantiles. Output from corEns()
+#' @param bins Number of bins in the histogram
+#' @param lineLabels Labels for the quantiles lines
+#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#' @return A ggplot object
+#' @examples 
 plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot()){
   # evaluate preliminary quantities
   rng <- range(cor.df$r)
@@ -498,7 +605,7 @@ plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),a
   ymax = max(ylims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
   h = h + geom_text(data = corStats, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = 0.7*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4")+theme_bw() # add fraction of significant correlations
+    annotate("text",x = 0.7*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
   #customize legend
   h = h + theme(legend.position = c(0.2, 0.8),
                 legend.title = element_text(size=10, face="bold"),
@@ -511,6 +618,15 @@ plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),a
 }
 
 #' @export
+#' @family plot
+#' @author Julien Emile-Geay
+#' @title Plot the the p-values of an ensemble correlation analysis in a rank-pvalue plot
+#' @description Plots the output of an ensemble correlation analysis as a rank-pvalue plot
+#' @import ggplot2
+#' @param cor.df A data.frame correlation r and p-values. Output from corEns()
+#' @param alpha Line transparency 
+#' @return A ggplot object
+#' @examples 
 plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
   m=dim(cor.df)[1] # number of hypotheses being tested
   rk = seq(m)
@@ -529,7 +645,7 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
   pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
   pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
                                             values=c("Chocolate1",'Chartreuse4',"black","black"),
-                                            labels=lbl)+theme_bw()
+                                            labels=lbl)+geoChronRPlotTheme()
   pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
                                 legend.title = element_text(size=10, face="bold"),
                                 legend.text = element_text(size=8),
@@ -543,6 +659,19 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
 }
 
 #' @export
+#' @family plot
+#' @author Nick McKay
+#' @title Plot an ensemble dataset as a histogram
+#' @description Plots ensemble data as a histogram
+#' @import ggplot2
+#' @param ensData A data.frame of values to plot as a histogram
+#' @param probs quantiles to calculate and plot
+#' @param bins Number of bins in the histogram
+#' @param lineLabels Labels for the quantiles lines
+#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
+#' @param fill fill color of the histogram, following ggplot rules
+#' @return A ggplot object
+#' @examples 
 plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
  plotData = data.frame("r"=c(ensData))
@@ -552,7 +681,7 @@ plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lin
   
   histPlot = add.to.plot+
     geom_histogram(data=plotData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
-    theme_bw()+
+    geoChronRPlotTheme()+
     ylab("Probability density")
   if(!all(is.na(quantiles))){
     #make labels better
@@ -653,7 +782,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     plot_sample.depth = ggplot(data=bddf)+geom_bar(aes(x=age,y=sampleDepth),fill="gray20",stat="identity")+
       ylab("fractional mean sample depth")+
       xlab("age (yr BP)")+
-      theme_bw()+
+      geoChronRPlotTheme()+
       scale_x_reverse()
     
     plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 

@@ -11,7 +11,6 @@ installGeoChronR= function(){devtools::install_github("nickmckay/geochRonR")}
 #' @description Converts a LiPD variable list, or vector from BP to AD/BC/CE/BCE. Also deals with the lack of a year 0.
 #' @param X A LiPD variable list or a vector of years BP 
 #' @return X A LiPD variable list or a vector of Calendar years AD 
-
 convertBP2AD = function(X){
 if(is.list(X)){
   if(tolower(X$units)=="ad" | tolower(X$units)=="ce"){
@@ -28,10 +27,8 @@ if(is.list(X)){
   return(X)
 }
 
-
-
 #' @title Clear all variables and functions from global environment
-#' @desciption Removes all variables and functions from global environment. Use at your own risk.
+#' @description Removes all variables and functions from global environment. Use at your own risk.
 #' @export
 clearAll = function(){
   rm(list = ls(envir = .GlobalEnv),envir = .GlobalEnv)
