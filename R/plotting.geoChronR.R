@@ -624,7 +624,7 @@ plotCorrEns = function(cor.df,corStats,bins=40,lineLabels = rownames(corStats),a
 #' @description Plots the output of an ensemble correlation analysis as a rank-pvalue plot
 #' @import ggplot2
 #' @param cor.df A data.frame correlation r and p-values. Output from corEns()
-#' @param alpha Line transparency 
+#' @param alpha probability threshold
 #' @return A ggplot object
 #' @examples 
 plotPvalsEnsFdr = function(cor.df,alpha = 0.05){

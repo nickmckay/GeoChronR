@@ -223,6 +223,14 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
     ensOut  = as.matrix(ensOut[nrow(ensOut):1,])
   }
   
+  #assign the appropriate name and units
+  if(calYear){
+    ensName = "yearEnsemble"
+    ensUnits = "AD"
+  }else{
+    ensName = "ageEnsemble"
+  }
+  
   
   CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
   CM$ensembleTable[[ens.number]]$ageEnsemble$units = yearData$units
@@ -236,6 +244,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   
   #place into paleoData appropriately.
   #assign into measurementTable
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensName
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensOut
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
