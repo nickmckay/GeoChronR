@@ -41,7 +41,7 @@ mapLipd = function(L,color="red",size=8,shape = 16,map.type="google",extend.rang
 #' @param projection Map project. All options on: ?mapproject
 #' @return ggmap object
 mapLipds = function(D,shape= 21,size=8,color = sapply(D,"[[","archiveType") ,map.type="google",f=.3,restrict.map.range=TRUE,boundcirc=FALSE,global=FALSE,projection = "mercator"){
-  dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),fill,shape)
+  dfp = data.frame(lon = sapply(D,function(x) x$geo$longitude),lat = sapply(D,function(x) x$geo$latitude),color,shape)
   dfp = dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
   basemap = baseMap(dfp$lon,dfp$lat,map.type = map.type,f=f,restrict.map.range = restrict.map.range,boundcirc = boundcirc,global=global,projection = projection )
   map = basemap  + geom_point(data=dfp,aes(x=lon,y=lat,fill = color),shape = shape,size=7)
