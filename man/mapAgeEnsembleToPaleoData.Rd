@@ -4,12 +4,16 @@
 \alias{mapAgeEnsembleToPaleoData}
 \title{Map an ageEnsemble variable from a chron model to a paleoMeasurement Table}
 \usage{
-mapAgeEnsembleToPaleoData(L, which.paleo = NA, which.pmt = NA,
-  which.chron = NA, which.model = NA, which.ens = NA,
-  max.ensemble.members = NA, strictSearch = FALSE)
+mapAgeEnsembleToPaleoData(L, age.var = "age", depth.var = "depth",
+  which.paleo = NA, which.pmt = NA, which.chron = NA, which.model = NA,
+  which.ens = NA, max.ensemble.members = NA, strictSearch = FALSE)
 }
 \arguments{
 \item{L}{a lipd object}
+
+\item{age.var}{name of the age ensemble variable to search for}
+
+\item{depth.var}{name of the depth variable to search for}
 
 \item{which.paleo}{an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify}
 

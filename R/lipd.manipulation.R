@@ -17,6 +17,8 @@ flipCoords = function(L){
 #' @family LiPD manipulation
 #' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 #' @param L a lipd object
+#' @param age.var name of the age ensemble variable to search for
+#' @param depth.var name of the depth variable to search for
 #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #' @param which.pmt an integer that corresponds to which paleo measurementTable you want to add the ensemble to?
 #' @param which.chron  an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from
@@ -26,7 +28,7 @@ flipCoords = function(L){
 #' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
 #' @return L a lipd object
 #' @export
-mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE){
+mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE){
   print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
@@ -82,8 +84,8 @@ mapAgeEnsembleToPaleoData = function(L,which.paleo=NA,which.pmt=NA,which.chron=N
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
-  ensDepth = selectData(L,tableType = "ensemble",varName = "depth",where = "chronData",strictSearch = strictSearch)$values
-  ensAll = selectData(L,tableType = "ensemble",varName = "ageEnsemble",altNames = c("age","year"),where = "chronData",which.ens = which.ens,strictSearch = strictSearch)
+  ensDepth = selectData(L,tableType = "ensemble",varName = depth.var,where = "chronData",strictSearch = strictSearch)$values
+  ensAll = selectData(L,tableType = "ensemble",varName = age.var,altNames = c("age","ensemble","year"),where = "chronData",which.ens = which.ens,strictSearch = strictSearch)
   ens = ensAll$values
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
