@@ -56,6 +56,7 @@ mapLipds = function(D,shape= 21,size=8,color = sapply(D,"[[","archiveType") ,map
 #' @import ggmap
 #' @import ggplot2
 #' @import mapproj
+#' @import maps
 #' @param lat latitude(s) range to map
 #' @param lon longitude(s) range to map
 #' @param map.type "google" or "line" 
