@@ -86,6 +86,9 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   print("Looking for age ensemble....")
   ensDepth = selectData(L,tableType = "ensemble",varName = depth.var,where = "chronData",strictSearch = strictSearch)$values
   ensAll = selectData(L,tableType = "ensemble",varName = age.var,altNames = c("age","ensemble","year"),where = "chronData",which.ens = which.ens,strictSearch = strictSearch)
+  if(is.null(ensAll$values)){
+    stop("Error: did not find the age ensemble.")
+  }
   ens = ensAll$values
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
@@ -95,7 +98,10 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
       pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = "depth",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    }
+    if(is.null(pdya)){
+      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
     }
     if(is.null(pdya)){
       stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
