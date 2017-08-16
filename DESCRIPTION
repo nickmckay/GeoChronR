@@ -40,3 +40,6 @@ Imports:
 	MASS,
 	neotoma,
 	pbapply       
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
