@@ -11,7 +11,6 @@
 estimateUncertaintyFromRange = function(MT,range1="age.young",range2="age.old"){
   val1=MT[[range1]]$values
   val2=MT[[range2]]$values
-  library(matrixStats)
   diffVals=abs(rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
   uncVal = diffVals/2
   MT$unc.estimate$values = uncVal

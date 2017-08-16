@@ -348,7 +348,6 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
   dfXY = data.frame("x"=Xplot,"y"=Yplot)
   
   
-  library(ggplot2)
   linePlot = add.to.plot+
     geom_path(data=dfXY,aes(x=x,y=y),colour = color,alpha=alp)+
     geoChronRPlotTheme()
@@ -360,7 +359,7 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
 #' @family plot
 #' @author Nick McKay
 #' @title Plot an ensemble timeseries as ribbons of probabilities
-#' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members. 
+#' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
 #' @import ggplot2
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
@@ -453,7 +452,6 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
     lineColor="black"
     
     
-    library(ggplot2)
     for(b in 1:(ncol(bandMat)/2)){
       if(b==1){
         bandPlot = add.to.plot+geoChronRPlotTheme()
@@ -675,8 +673,7 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
 plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
  plotData = data.frame("r"=c(ensData))
-  library(ggplot2)
-  
+
   
   
   histPlot = add.to.plot+
@@ -1079,6 +1076,7 @@ meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
 #' @title Plot ensemble regression results
 #' @description Creates a suite of plots to characterize the results of an ensemble regression.
 #' @import ggplot2
+#' @import gridExtra
 #' @param regEnsList output of regressEns()
 #' @param alp Transparency of the scatter plot.
 #' @param quantiles quantiles to calculate and plot
@@ -1141,7 +1139,6 @@ plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
   
   
   
-  library(gridExtra)
   lay = rbind(c(1,1,3,3,4,4),
               c(2,2,3,3,5,5),
               c(6,6,6,6,6,6),

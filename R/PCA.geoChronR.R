@@ -8,13 +8,13 @@
 #' @param PCAtype Correlation ("corr" - default) or Covariance ("cov"), matrix
 #' @param nPCs number of PCs/EOFs to calculate
 #' @param nens how many ensemble members?
+#' @import matrixStats
+#' @import pcaMethods
 
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
  
   #the option type controls whether the analysis is done on a correlation (default) or covariance matrix ("cov")
 #the function uses the pcaMethods library to do the heavy lifting
-library("matrixStats")
-library("pcaMethods")
   time = bin.list[[1]]$time
 
 nD = length(bin.list) #how many sites?
