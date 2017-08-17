@@ -77,6 +77,8 @@ corMatrix = function(M1,M2){
     setTxtProgressBar(pb, j+ncol(M2)*(i-1))
     }
   }
+  
+  pAdj[is.nan(pAdj)]=1#This is for instances whenn NEff <=2. I guess this is a reasonable solution?
 
   # apply false discovery rate procedure to ADJUSTED p-values
   fdrOut = fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean') 
