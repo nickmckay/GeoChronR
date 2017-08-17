@@ -29,7 +29,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
       which.chron=as.integer(readline(prompt = "Which chronData do you want to run Bchron for? "))
     }
   }
-
+  
   
   #initialize model number
   if(is.na(modelNum)){
@@ -166,8 +166,11 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   idi = getVariableIndex(MT,"labID")
   if (is.na(idi)){
     print("No LabID provided in the chron measurement table")
+   print("Making some lab ids up...")
+   LabID = paste0("fakeLabID",seq_along(depth))
   }else{
-    LabID <- MT[[idi]]$values}
+    LabID <- MT[[idi]]$values
+  }
   
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")
