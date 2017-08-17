@@ -1,56 +1,62 @@
 #' @export
 #' @family spectra
 #' @family pca
+#' @family correlations
 #' @title Create a synthetic timeseries that emulates the characteristics of a variable
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values
-#' @param values LiPD "variable list" or vector of values
+#' @param vals LiPD "variable list" or vector of values
 #' @param nens Number of ensemble members to simulate
-#' @return a vector or matrix of synthetic values
-createSyntheticTimeseries = function(time,values,nens=1){
+#' @return a vector or matrix of AR(1) surrogates for series X
+ar1Surrogates = function(time,vals,detrend_bool=FALSE,nens=1){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
-  if(is.list(values)){values=values$values}
+  if(is.list(vals)){vals=vals$values}
   
   #make them all matrices
   time = as.matrix(time)
-  values = as.matrix(values)
+  vals = as.matrix(vals)
   
   #find the NAs...
   tnai = which(is.na(time))
-  vnai = which(is.na(values))
+  vnai = which(is.na(vals))
   
-  
-  
-  #measure long term trend
-  trend=predict(lm(values~time))
-  #remove the trend
-  notrend=values-trend
+  # if detrend option is passed, use detrended vvalues; otherwise, unchanged.
+  if(detrend_bool){
+    #fit a linear trend
+    trend=predict(lm(vals~time))
+    #remove the linear trend
+    vals_used=vals-trend
+  } else {vals_used=vals}
+    
   #get necessary metadata
-  m=mean(notrend,na.rm=TRUE)
-  s=sd(notrend,na.rm=TRUE)
+  m=mean(vals_used,na.rm=TRUE)
+  s=sd(vals_used,na.rm=TRUE)
   
-  fit = arima(x = notrend, order = c(1, 0, 0))
-  #a=acf(notrend,na.action=na.pass,plot=FALSE)
+  fit = arima(x = vals_used, order = c(1, 0, 0))
+  #a=acf(vals_used,na.action=na.pass,plot=FALSE)
   #ar=max(0,as.numeric(unlist(a[1])[1]))
   
-  synValues = matrix(NA,nrow=nrow(time),ncol=nens)
+  vals_syn = matrix(NA,nrow=nrow(time),ncol=nens)
   #go through ensemble members
   for(jj in 1:nens){
     #generate a random series with ar=ar
-    rdata=arima.sim(model=fit$model,n=length(notrend))
+    ar1=arima.sim(model=fit$model,n=length(vals_used))
     #remove any trend
-    rtrend=predict(lm(rdata~time))
-    rdata=rdata-rtrend
+    #rtrend=predict(lm(ar1~time))
+    #ar1=ar1-rtrend
+    
     #scale the same as data
-    rdata=scale(rdata)*s+m
-    #add the data trend in
-    withTrend=rdata+trend
-    withTrend[vnai]=NA
-    synValues[,jj]=withTrend
+    ar1=scale(ar1)*s+m
+    ar1[vnai]=NA # put NA values in same place as original
+    vals_syn[,jj]=ar1
   }
-  return(synValues)
+  # if trend was taken out, add it back in to each ensemble member
+  if(detrend_bool){
+    vals_syn = vals_syn + replicate(nens,trend)
+  }
+  return(vals_syn)
 }
 
 #' @export
@@ -68,7 +74,7 @@ createSyntheticTimeseries = function(time,values,nens=1){
 #' \item powerSyn: matrix of synthetic spectral power results
 #' }
 #' @import lomb
-powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
+powerSpectrumEns = function(time,values,spc_mthd = 'Lomb-Scargle',max.ens=NA,ofac=1){
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -103,8 +109,8 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
     t = time[,sample.int(ncol(time),size = 1)]
     v = values[,sample.int(ncol(values),size = 1)]
     out = lsp(v,times=t,ofac=ofac,plot = F)
-    syn = createSyntheticTimeseries(t,v)#create synthetic timeseries
-    synOut = lsp(syn,times=t,ofac=ofac,plot = F)
+    syn = ar1Surrogates(t,v)#create synthetic timeseries  #JEG: this should be done outside the loop
+    synOut = lsp(syn,times=t,ofac=ofac,plot = F) 
     pMatSyn[1:length(synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned
     pMat[,i]=out$power
