@@ -130,7 +130,11 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   }
 
   #interpolate
-  aei=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth,na.rm=TRUE)$y)
+  na.depth.i = which(!is.na(depth))
+  aei = matrix(nrow = length(depth),ncol = ncol(ens))
+  aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
+  aei[na.depth.i,] = aeig
+
 
   }else{
     aei = ens
