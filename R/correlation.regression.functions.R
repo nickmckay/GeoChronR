@@ -10,6 +10,45 @@ ar1 = function(X){
 }
 
 #' @export
+#' @title Correlations and their significance according to AR(1) benchmarks
+#' @description Fits AR(1) model to two series X & Y 
+#' @author Julien Emile-Geay
+#' @param X a 1-column vector
+#' @param Y a 1-column vector of the same 
+#' @param alpha level of the test (probability of a type I error)
+#' @param nsim number of simulations
+#' @return output
+corrIsopersist = function(X,Y,alpha=0.05,nsim=100){
+  nx = length(X)
+  ny = length(Y)
+  rhoXY = cor(X,Y)
+  # set warning if nx != ny  
+  
+  tdum = 1:nx  # dummy time axis
+  # generate AR(1) surrogates
+  ar1X = ar1Surrogates(tdum,X,detrend_bool=TRUE,method='redfit',nens=nsim)  
+  ar1Y = ar1Surrogates(tdum,Y,detrend_bool=TRUE,method='redfit',nens=nsim)
+  #  compute correlations
+  cor.mat1 = cor(X,ar1Y,use="pairwise.complete.obs") # X vs Y-like noise
+  cor.mat2 = cor(Y,ar1X,use="pairwise.complete.obs") # Y vs X-like noise
+  cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
+  rho = cor.mat[1,]  # take absolute value
+  #  compute sampling distribution 
+  rho_dens <- stats::density(rho,from=-1,to=1) # estimate density
+  rho_cdf  <- spatstat::CDF.density(rho_dens) # turn into CDF
+  #rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
+  # estimate test p-value
+  pval = 1-rho_cdf(abs(rhoXY))
+  # prepare output list
+  isopersist.out$p-value = pval
+  isopersist.out$rho = rhoXY
+  
+  return(isopersist.out)
+}
+
+
+
+#' @export
 #' @title Estimate effective sample size accounting for autocorrelation
 #' @description Bretherton et al., 1999 estimate of effective sample size.
 #' @author Nick McKay
