@@ -70,6 +70,7 @@ gaussianize <- function (X,jitter=FALSE){
   if(!is.matrix(X)){
     X=as.matrix(X)
   }
+  
   p=NCOL(X)
   n=NROW(X) 
   
@@ -78,15 +79,15 @@ gaussianize <- function (X,jitter=FALSE){
     X=array(rnorm(p*n,mean=0,sd=sd(as.vector(X))/1e6),c(n,p))+X
   }
   
-  
-  Xn    = matrix(0,n,p);
+  Xn    = matrix(0,n,p)
   for (j in 1:p){
+    Z = X[,j]; nz = !is.na(Z); N = sum(nz,na.rm=TRUE); # guard against NaNs
     # Sort the data in ascending order and retain permutation indices
-    R=rank(X[,j])
+    R = rank(Z)
     # The cumulative distribution function
-    CDF = R/n - 1/(2*n);
+    CDF = R/N - 1/(2*N)
     # Apply the inverse Rosenblatt transformation
-    Xn[,j] = qnorm(CDF)  # Xn is now normally distributed
+    Xn[nz,j] = qnorm(CDF)  # Xn is now normally distributed
   }
   
   return(Xn)

@@ -68,7 +68,7 @@ createSyntheticTimeseries = function(time,values,nens=1){
 #' \item powerSyn: matrix of synthetic spectral power results
 #' }
 #' @import lomb
-powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
+powerSpectrumEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -76,6 +76,10 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1){
   #make them all matrices
   time = as.matrix(time)
   values = as.matrix(values)
+  
+  if(gaussianize==TRUE){
+    vals_used = gaussianize(values)  # Error: object 'gaussianize' not found
+  }else{vals_used=values}
   
   
   if(nrow(time) != nrow(values)){stop("time and values must have the same number of rows (observations)")}
