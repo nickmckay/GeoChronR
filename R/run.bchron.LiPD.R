@@ -10,6 +10,7 @@
 #'@param modelNum which chronModel do you want to use?
 #'@param calCurves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
 #'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
+#'@import Bchron
 #'@examples
 #'Run in interactive mode:
 #'L = runBchron(L)
@@ -29,8 +30,6 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
     }
   }
   
-  # load the Bchron package
-  library(Bchron)
   
   #initialize model number
   if(is.na(modelNum)){
@@ -167,8 +166,11 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   idi = getVariableIndex(MT,"labID")
   if (is.na(idi)){
     print("No LabID provided in the chron measurement table")
+   print("Making some lab ids up...")
+   LabID = paste0("fakeLabID",seq_along(depth))
   }else{
-    LabID <- MT[[idi]]$values}
+    LabID <- MT[[idi]]$values
+  }
   
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")

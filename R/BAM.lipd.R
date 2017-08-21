@@ -8,6 +8,7 @@
 #' @param which.paleo the number of the paleoData object that you'll be working in
 #' @param which.pmt the number of the measurementTable you'll be working in
 #' @param which.model the number of the chronData model where you want to store the model information
+#' @param ens.number the number of the ensembleTable you want to put the output into
 #' @param makeNew Forces the creation of a new model (TRUE or FALSE{default})
 #' @param nens The number of members in the ensemble
 #' @param model a list that describes the model to use in BAM
@@ -34,10 +35,10 @@
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
-#' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nEns))
+#' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
 
 
-runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,makeNew=FALSE,nens = 1000,model = NA){
+runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens.number = NA,makeNew=FALSE,nens = 1000,model = NA){
   
   #initialize which.paleo
   if(is.na(which.paleo)){
@@ -60,7 +61,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   }
   
   #Which age/year vector do you want to perturb?
-  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = TRUE)
+  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = FALSE)
   
   
   #make sure that the most recent year is first
@@ -223,6 +224,14 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
     ensOut  = as.matrix(ensOut[nrow(ensOut):1,])
   }
   
+  #assign the appropriate name and units
+  if(calYear){
+    ensName = "yearEnsemble"
+    ensUnits = "AD"
+  }else{
+    ensName = "ageEnsemble"
+  }
+  
   
   CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
   CM$ensembleTable[[ens.number]]$ageEnsemble$units = yearData$units
@@ -236,6 +245,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,mak
   
   #place into paleoData appropriately.
   #assign into measurementTable
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensName
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensOut
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron

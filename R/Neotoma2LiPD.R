@@ -1,9 +1,16 @@
-#'@export
+#' @export
+#' @family LiPD manipulation
+#' @title Estimate uncertainty estimates from high/low range
+#' @description Estimate uncertainty (plus/minus values) from a range of values
+#' @param MT LiPD "measurementTable" 
+#' @param range1 name of one of the range variables
+#' @param range2 name of the other range variable
+#' @return MT: a LiPD measurementTable with a new unc.estimate variable
+#' @import matrixStats
 #'
 estimateUncertaintyFromRange = function(MT,range1="age.young",range2="age.old"){
   val1=MT[[range1]]$values
   val2=MT[[range2]]$values
-  library(matrixStats)
   diffVals=abs(rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
   uncVal = diffVals/2
   MT$unc.estimate$values = uncVal
@@ -12,19 +19,18 @@ estimateUncertaintyFromRange = function(MT,range1="age.young",range2="age.old"){
   return(MT)
 }
 
-#'@export
+#' @export
+#' @title Create a LiPD object from Neotoma
+#' @description Uses the Neotoma API to create a LiPD file?
+#' @details 
+#' Super alpha version 0.00001. Expect updates!
+#' get site fist
+#' site = get_site("Potato Lake")
+#' @param site  the site object from the R Neotoma package, output of  neotoma::get_site()
+#' @return A LiPD object
+#' @import neotoma
 neotoma2Lipd = function(site){
-  #input information is the site object from the R Neotoma package (use get_site)
-  #output is an R LiPD object
-  
-  #Super alpha version 0.00001. Expect updates!
-  
-  
-  library(neotoma)
-  
-  #get site fist
-  #site = get_site("Potato Lake")
-  
+
   ## wrap this around the search , such that multiple datasets fo to multiple paleoData and chronData tables
   allPubs = c()
   acceptedDatasetTypes = c("plant macrofossil","pollen","loss-on-ignition","charcoal","diatom")

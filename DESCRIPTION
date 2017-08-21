@@ -21,6 +21,7 @@ Imports:
 	gridExtra,
 	Hmisc,
 	ggplot2,
+	ggmap,
 	Formula,
 	survival,
 	lattice,
@@ -39,3 +40,6 @@ Imports:
 	MASS,
 	neotoma,
 	pbapply       
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

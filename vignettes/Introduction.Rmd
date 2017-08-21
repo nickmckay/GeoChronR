@@ -1,0 +1,114 @@
+---
+title: "Introduction to geoChronR"
+author: "Nick McKay"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to geoChronR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+### Welcome to geoChronR!
+
+##Workflow 
+
+Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
+
+```{r}
+library(lipdR)
+library(geoChronR)
+```
+
+
+In this case, we're going to load in a marine sediment core called ODP1098B:
+
+```{r}
+M = readLipd("ODP1098B13.lpd")
+```
+
+At this point - you might use `M = runBacon(M)` or `M = runBchron(M)`. In this case, a BChron model has already been stored in the LiPD file. We can plot the chron model and data like this:
+
+```{r}
+plotChron(M,model.num = 1)
+```
+
+`plotChron()` is a wrapper for multiple plotting functions, and has a lot of options, which probably require tinkering to produce a nice plot. See all the options by running `?plotChron`
+
+## Mapping the age ensemble to the paleoData measurements
+
+The ensemble chronology in a chronModel may or may not have values corresponding to the paleoclimatic or paleoenvironmental measurements in paleoData. To map the model ensemble values to a measurement table in paleoData, use
+
+```{r}
+M = mapAgeEnsembleToPaleoData(M)
+```
+
+Now this LiPD object is ready for further analysis. 
+
+## Loading in additional data for comparison
+Let's compare it to a nearby ice core.
+
+```{r}
+I = readLipd("Dome_C_Antarctica.lpd")
+```
+
+This is an ice core, so the chronology is not based on radiometric tie points. Let's pretend it's layer counted (this one actually isn't) and use BAM (Banded Age Model). Here we specify all the parameters so it runs in non-interactive mode. 
+```{r}
+I = runBam(I,which.paleo = 1, which.pmt = 1,which.chron = 1,which.model = 1,ens.number = 1, makeNew = T,nens = 1000,model = list(name = "poisson",param = 0.05, resize = 0, ns = 1000))
+```
+
+We can now take a look into the bowels of that LiPD object and see that it has an ageEnsemble. Because BAM runs off of the data in the paleo measurementTable, it puts the ageEnsemble straight into the paleoData, and we don't need to run `mapAgeEnsembleToPaleoData()'.
+
+```{r}
+I$paleoData[[1]]$measurementTable[[1]]$ageEnsemble$values[1:50,1]
+
+```
+
+Yep - that's the first 50 entries of the first age ensemble.
+
+
+
+
+
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))

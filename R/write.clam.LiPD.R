@@ -1,5 +1,5 @@
-#' @export
-
+#' @title Run a clam model
+#' @description Not functional yet
 runClam=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   #initialize clam directory
   if(is.na(clamDir)){
@@ -21,7 +21,8 @@ runClam=function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,c
   
 }
 
-#' @export
+#' @title write files for running a clam model
+#' @description Not functional yet
 writeClam <-function(L,which.chron=1,clamDir=NA,remove.reverse=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
   cur.dir = getwd()
   if(is.na(modelNum)){

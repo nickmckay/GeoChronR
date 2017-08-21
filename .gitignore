@@ -3,5 +3,5 @@
 .RData
 
 R/.Rhistory
-
-R/.Rhistory
+.DS_Store
+inst/doc

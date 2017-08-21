@@ -45,7 +45,7 @@ Run in interactive mode:
 L = runBacon(L)
 
 Run in noninteractive mode, describing everything:
-L = runBacon(L,which.paleo = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 }
 \seealso{
 Other Bacon: \code{\link{loadBaconOutput}},

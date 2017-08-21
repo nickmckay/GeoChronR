@@ -5,7 +5,8 @@
 \title{Generate a Banded Age Model (BAM) and add it into a LiPD object}
 \usage{
 runBam(L, which.paleo = NA, which.pmt = NA, which.chron = 1,
-  which.model = NA, makeNew = FALSE, nens = 1000, model = NA)
+  which.model = NA, ens.number = NA, makeNew = FALSE, nens = 1000,
+  model = NA)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -15,6 +16,8 @@ runBam(L, which.paleo = NA, which.pmt = NA, which.chron = 1,
 \item{which.pmt}{the number of the measurementTable you'll be working in}
 
 \item{which.model}{the number of the chronData model where you want to store the model information}
+
+\item{ens.number}{the number of the ensembleTable you want to put the output into}
 
 \item{makeNew}{Forces the creation of a new model (TRUE or FALSE{default})}
 
@@ -50,7 +53,7 @@ L = runBam(L)
 
 Run in noninteractive mode, describing everything:
 L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
-nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nEns))
+nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
 }
 \seealso{
 Other BAM: \code{\link{bamCorrect}},
