@@ -296,7 +296,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   ageEns$depth$values = depth_predict
   ageEns$depth$units = MT[[depthi]]$units
   
-  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable=ageEns
+  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]]=ageEns
   
   #Probability distribution table
   for (i in seq(from=1, to=length(run$calAges), by =1)){
@@ -327,7 +327,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   sumTable$meanCalibratedAge$values = rowMeans(t(run$theta))
   sumTable$meanCalibratedAge$units = "yr BP"
   
-  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable=sumTable
+  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]=sumTable
   
   return(L)
   
