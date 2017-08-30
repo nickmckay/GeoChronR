@@ -63,6 +63,7 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   #run bacon
   setwd(baconDir)
   if(is.null(baconFile)){baconFile = "Bacon.R"}
+  
   source(baconFile)
   Bacon(core=site.name,thick=thick)
   

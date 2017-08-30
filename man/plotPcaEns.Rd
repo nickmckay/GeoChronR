@@ -56,7 +56,8 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTrendLinesEns}}
 
-Other pca: \code{\link{createSyntheticTimeseries}},
+Other pca: \code{\link{ar1Surrogates}},
+  \code{\link{createSyntheticTimeseries}},
   \code{\link{pcaEns}}
 }
 \author{

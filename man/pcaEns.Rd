@@ -24,6 +24,7 @@ pcaEns(bin.list, method = "ppca", weights = NA, PCAtype = "corr",
 Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
 }
 \seealso{
-Other pca: \code{\link{createSyntheticTimeseries}},
+Other pca: \code{\link{ar1Surrogates}},
+  \code{\link{createSyntheticTimeseries}},
   \code{\link{plotPcaEns}}
 }

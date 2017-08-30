@@ -28,6 +28,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTrendLinesEns}}
 
-Other spectra: \code{\link{createSyntheticTimeseries}},
+Other spectra: \code{\link{ar1Surrogates}},
+  \code{\link{createSyntheticTimeseries}},
   \code{\link{powerSpectrumEns}}
 }

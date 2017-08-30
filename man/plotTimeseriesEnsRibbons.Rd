@@ -7,7 +7,7 @@
 plotTimeseriesEnsRibbons(X, Y, alp = 1, probs = c(0.025, 0.25, 0.5, 0.75,
   0.975), x.bin = NA, y.bin = NA, nbins = 200, colorLow = "white",
   colorHigh = "grey70", lineColor = "Black", lineWidth = 1,
-  add.to.plot = ggplot())
+  add.to.plot = ggplot(), export.quantiles = FALSE)
 }
 \arguments{
 \item{X}{A LiPD variable list to plot, including values, units, names, and more}
@@ -33,9 +33,11 @@ plotTimeseriesEnsRibbons(X, Y, alp = 1, probs = c(0.025, 0.25, 0.5, 0.75,
 \item{lineWidth}{Width of the line}
 
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
+
+\item{export.quantiles}{If TRUE, teturn the plotted quantiles rather than the plot}
 }
 \value{
-A ggplot object
+A ggplot object OR list of plotted quantiles, depending on export.quantiles
 }
 \description{
 Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.

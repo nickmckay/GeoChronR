@@ -373,9 +373,10 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
 #' @param y.bin vector of bin edges over which to bin.
 #' @param alp Line transparency
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
-#' @return A ggplot object
+#' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
+#' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 #' @examples 
-plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot()){
+plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot(),export.quantiles = FALSE){
   #check to see if time and values are "column lists"
   oX = X
   oY = Y
@@ -471,8 +472,11 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
   #add labels
   bandPlot = bandPlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
   
-  return(bandPlot)
-  
+  if(export.quantiles){#return the quantiles instead of the plot
+    return(probMatList)
+  }else{
+    return(bandPlot)
+  }
   
   
   
