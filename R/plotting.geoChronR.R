@@ -397,12 +397,12 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
     if(nrow(X)!=nrow(Y)){
       stop("X and Y must have the same number of observations")
     }
-
+    
     ###DEPRECATED - old method.
     # binned = bin2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
     # binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
     # find cum sum probabilities  
-
+    
     
     # #nbox = prod(dim(binned$density))
     # colSums = apply(binned$density,2,sum)
@@ -420,8 +420,12 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
     ###END DEPRECATED - old method.
     
     probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs)
+    if(export.quantiles){
+      return(probMatList)
+    }
+    
     probMat = probMatList$quants
-
+    
     probMat=as.data.frame(probMat)
     lineLabels=as.character(probs)
     
@@ -472,18 +476,15 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
   #add labels
   bandPlot = bandPlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
   
-  if(export.quantiles){#return the quantiles instead of the plot
-    return(probMatList)
-  }else{
-    return(bandPlot)
-  }
-  
-  
-  
-  
-  
+  return(bandPlot)
   
 }
+
+
+
+
+
+
 #' @export
 #' @family plot
 #' @family regress
