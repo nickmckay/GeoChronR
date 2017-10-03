@@ -33,14 +33,15 @@ createSyntheticTimeseries = function(time,values,nens=1){
   a=acf(notrend,na.action=na.pass,plot=FALSE)
   ar=max(0,as.numeric(unlist(a[1])[1]))
   
-  fit=arima.sim(model=list("ar"=ar),n=length(notrend)) #More conservative
+  #
   #fit = arima(x = notrend, order = c(1, 0, 0)) AR1 only
 
   synValues = matrix(NA,nrow=nrow(time),ncol=nens)
   #go through ensemble members
   for(jj in 1:nens){
     #generate a random series with ar=ar
-    rdata=arima.sim(model=fit$model,n=length(notrend))
+    rdata = arima.sim(model=list("ar"=ar),n=length(notrend)) #More conservative
+    #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
     #remove any trend
     rtrend=predict(lm(rdata~time))
     rdata=rdata-rtrend
