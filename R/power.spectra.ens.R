@@ -7,15 +7,20 @@
 #' @param values LiPD "variable list" or vector of values
 #' @param nens Number of ensemble members to simulate
 #' @return a vector or matrix of synthetic values
-createSyntheticTimeseries = function(time,values,nens=1){
+createSyntheticTimeseries = function(time,values,nens=1,index.to.model = NA){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
   
+  if(is.na(index.to.model)){
+    index.to.model = seq_along(time)
+  }
+  orig.time = time
+  
   #make them all matrices
-  time = as.matrix(time)
-  values = as.matrix(values)
+  time = as.matrix(time(index.to.model))
+  values = as.matrix(values(index.to.model))
   
   #find the NAs...
   tnai = which(is.na(time))
@@ -40,7 +45,7 @@ createSyntheticTimeseries = function(time,values,nens=1){
   #go through ensemble members
   for(jj in 1:nens){
     #generate a random series with ar=ar
-    rdata = arima.sim(model=list("ar"=ar),n=length(notrend)) #More conservative
+    rdata = arima.sim(model=list("ar"=ar),n=length(orig.time)) #More conservative
     #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
     #remove any trend
     rtrend=predict(lm(rdata~time))
