@@ -19,8 +19,8 @@ createSyntheticTimeseries = function(time,values,nens=1,index.to.model = NA){
   orig.time = time
   
   #make them all matrices
-  time = as.matrix(time(index.to.model))
-  values = as.matrix(values(index.to.model))
+  time = as.matrix(time[index.to.model])
+  values = as.matrix(values[index.to.model])
   
   #find the NAs...
   tnai = which(is.na(time))
