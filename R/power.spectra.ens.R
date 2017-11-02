@@ -7,13 +7,13 @@
 #' @param values LiPD "variable list" or vector of values
 #' @param nens Number of ensemble members to simulate
 #' @return a vector or matrix of synthetic values
-createSyntheticTimeseries = function(time,values,nens=1,index.to.model = NA){
+createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.model = NA){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
   
-  if(is.na(index.to.model)){
+  if(any(is.na(index.to.model))){
     index.to.model = seq_along(time)
   }
   orig.time = time
@@ -30,6 +30,8 @@ createSyntheticTimeseries = function(time,values,nens=1,index.to.model = NA){
   
   #measure long term trend
   trend=predict(lm(values~time))
+  trendmodel = lm(values~time)
+  longtrend = orig.time*trendmodel$coefficients[2]+trendmodel$coefficients[1]
   #remove the trend
   notrend=values-trend
   #get necessary metadata
@@ -41,21 +43,28 @@ createSyntheticTimeseries = function(time,values,nens=1,index.to.model = NA){
   #
   #fit = arima(x = notrend, order = c(1, 0, 0)) AR1 only
 
-  synValues = matrix(NA,nrow=nrow(time),ncol=nens)
+  synValues = matrix(NA,nrow=length(orig.time),ncol=nens)
   #go through ensemble members
   for(jj in 1:nens){
     #generate a random series with ar=ar
     rdata = arima.sim(model=list("ar"=ar),n=length(orig.time)) #More conservative
     #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
+    if(sameTrend){
     #remove any trend
-    rtrend=predict(lm(rdata~time))
+    rtrend=predict(lm(rdata~orig.time))
     rdata=rdata-rtrend
     #scale the same as data
     rdata=scale(rdata)*s+m
     #add the data trend in
-    withTrend=rdata+trend
+   
+    
+    withTrend=rdata+longtrend
     withTrend[vnai]=NA
     synValues[,jj]=withTrend
+    }else{
+      synValues[,jj] = rdata
+    }
+    
   }
   return(synValues)
 }
