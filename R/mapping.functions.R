@@ -139,8 +139,13 @@ baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projec
     baseMap  = baseMap  +   
       theme(panel.background = element_rect(fill="white"), axis.ticks = element_blank(), axis.text.y = element_blank(),axis.text.x = element_blank(),
             axis.title.x = element_blank(), axis.title.y = element_blank(),
-            panel.border = element_blank())+
-      coord_map(projection)
+            panel.border = element_blank())
+    
+    if(global){
+      baseMap = baseMap+ coord_map(projection,xlim = c(-180,180))
+    }else{
+      baseMap = baseMap+ coord_map(projection)
+    }
   }else{
     stop(paste("Dont recognize map.type =",map.type))
   }
