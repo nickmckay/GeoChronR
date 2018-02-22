@@ -230,12 +230,13 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
     ensUnits = "AD"
   }else{
     ensName = "ageEnsemble"
+    ensUnits = "BP"
   }
   
   
   CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
-  CM$ensembleTable[[ens.number]]$ageEnsemble$units = yearData$units
-  CM$ensembleTable[[ens.number]]$ageEnsemble$variableName = "ageEnsemble"
+  CM$ensembleTable[[ens.number]]$ageEnsemble$units = ensUnits
+  CM$ensembleTable[[ens.number]]$ageEnsemble$variableName = ensName
   
   # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$values = bamOut$tmc
   # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$units = NA
