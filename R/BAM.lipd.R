@@ -234,9 +234,9 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   }
   
   
-  CM$ensembleTable[[ens.number]]$ageEnsemble$values = ensOut
-  CM$ensembleTable[[ens.number]]$ageEnsemble$units = ensUnits
-  CM$ensembleTable[[ens.number]]$ageEnsemble$variableName = ensName
+  CM$ensembleTable[[ens.number]][[ensName]]$values = ensOut
+  CM$ensembleTable[[ens.number]][[ensName]]$units = ensUnits
+  CM$ensembleTable[[ens.number]][[ensName]]$variableName = ensName
   
   # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$values = bamOut$tmc
   # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$units = NA
@@ -246,12 +246,12 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   
   #place into paleoData appropriately.
   #assign into measurementTable
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensName
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = ensOut
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = yearData$units
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$frommodel = which.model
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$values = ensName
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$values = ensOut
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$units = yearData$units
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$fromChronData = which.chron
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$frommodel = which.model
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
   
   return(L)
   
