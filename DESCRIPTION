@@ -39,7 +39,8 @@ Imports:
 	rjson,
 	MASS,
 	neotoma,
-	pbapply       
+	pbapply,
+	dplR       
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
