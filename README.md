@@ -58,11 +58,12 @@ Below is an example of what this package can do. Import your LiPD dataset to get
 
 [Github - lipdR](https://github.com/chrismheiser/lipdR) 
 
+[Github - LiPD Utilities](https://github.com/nickmckay/LiPD-utilities)
+
 [Linked Earth Wiki](http://wiki.linked.earth/Main_Page)
 
 [LiPD.net](http://www.lipd.net)
 
-[LiPD Utilities](https://github.com/nickmckay/LiPD-utilities)
 
 ## Contact
 
