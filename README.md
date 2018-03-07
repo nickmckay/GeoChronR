@@ -14,7 +14,7 @@ LiPD file analysis and manipulation in R
 
 ## What is it?
 
-Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. Please refer to the [GeoChronR Proposal](img/geochronr_paper.pdf) for more information.
+Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. 
 
 ## Requirements
 
@@ -50,13 +50,9 @@ library("geoChronR")
 
 ##
 
-## Example
-
-Below is an example of what this package can do. Import your LiPD dataset to get started! ![](img/graph_sample-min.png)
-
 ## Additional Resources 
 
-[Github - lipdR](https://github.com/chrismheiser/lipdR) 
+[Github - lipdR](https://github.com/nickmckay/LiPD-utilities/tree/master/R) 
 
 [Github - LiPD Utilities](https://github.com/nickmckay/LiPD-utilities)
 
