@@ -83,16 +83,14 @@ gaussianize <- function (X,jitter=FALSE){
     X=array(rnorm(p*n,mean=0,sd=sd(as.vector(X))/1e6),c(n,p))+X
   }
   
-  Xn    = matrix(data = NA,nrow = n,ncol = p)
+  Xn    = matrix(data = 0,nrow = n,ncol = p)
   for (j in 1:p){
-    #Z = X[,j]; nz = !is.na(Z); N = sum(nz,na.rm=TRUE); # guard against NaNs #NPM  - this is causing errors, is it necessary?
     # Sort the data in ascending order and retain permutation indices
-    R = rank(Z)
+    R = rank(X[,j])
     # The cumulative distribution function
     CDF = R/N - 1/(2*N)
     # Apply the inverse Rosenblatt transformation
-    print(qnorm(CDF))
-    Xn[nz,j] = qnorm(CDF[nz])  # Xn is now normally distributed
+    Xn[,j] = qnorm(CDF)  # Xn is now normally distributed
   }
   
   return(Xn)

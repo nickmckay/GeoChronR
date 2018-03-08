@@ -33,7 +33,7 @@ Install the  BiocLite package:
 ```
  ## try http:// if https:// URLs are not supported
       source("https://bioconductor.org/biocLite.R")
-      biocLite()
+      biocLite(“pcaMethods”)
 ```
 
 Install package in R Studio:
