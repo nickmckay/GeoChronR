@@ -48,7 +48,12 @@ Load the package into the environment:
 library("geoChronR")
 ```
 
-##
+## How to Cite this Code
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60812.svg)](http://doi.org/10.5281/zenodo.60812)
+
+Use this link to visit the Zenodo website. It provides citation information in many popular formats.
+
 
 ## Additional Resources 
 
