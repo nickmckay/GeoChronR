@@ -1,6 +1,6 @@
 # [GeoChronR](https://nickmckay.github.io/LiPD-utilities/)
 
-[![Github All Releases](https://img.shields.io/github/downloads/nickmckay/GeoChronR/total.svg?maxAge=2592000)](https://github.com/nickmckay/GeoChronR)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60734.svg)](http://dx.doi.org/10.5281/zenodo.60734)
 [![R](https://img.shields.io/badge/R-3.3.1-blue.svg)]()
 [![R Studio](https://img.shields.io/badge/RStudio-0.99.903-yellow.svg)]()
 [![license](https://img.shields.io/badge/license-GPL-brightgreen.svg)]()
