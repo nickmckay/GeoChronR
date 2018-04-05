@@ -132,6 +132,9 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   
   
   BACages = kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
+  BACages = cbind(out.file[,1],BACages[,-ncol(BACages)])
+  
+  
   
   if(is.na(maxEns)){maxEns=nrow(BACages)}
   
@@ -377,9 +380,8 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   cc[which.calage] <- 0
   
   
-  out.table <- matrix(NA,nrow=nrows,ncol=9)
-  if(!is.null(id)) {
-    out.table[,1] <- id[1:nrows]}
+  out.table <- as.data.frame(matrix(NA,nrow=nrows,ncol=9))
+  if(!is.null(id)){out.table[,1] <- id[1:nrows]}
   
   if(!is.null(age)) {
     
@@ -408,12 +410,15 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   if(!is.null(tb) ) {
     out.table[,9] <-tb}
   
+
   #replace NAs appropriately
   out.table[is.na(out.table[,3]),3] <- 1
   out.table[is.na(out.table[,6]),6] <- 0
   out.table[is.na(out.table[,7]),7] <- 0
   out.table[is.na(out.table[,8]),8] <- 0
   out.table[is.na(out.table[,9]),9] <- 0
+  
+  out.table <- na.omit(out.table)
   
   colnames(out.table) <- c("id","age","error","depth","cc","dR","dSTD","ta","tb")
   
