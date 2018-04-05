@@ -1,6 +1,6 @@
 # [GeoChronR](https://nickmckay.github.io/LiPD-utilities/)
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60812.svg)](http://dx.doi.org/10.5281/zenodo.60812)
+[![DOI](http://doi.org/10.5281/zenodo.60812)](http://dx.doi.org/10.5281/zenodo.60812)
 [![R](https://img.shields.io/badge/R-3.3.1-blue.svg)]()
 [![R Studio](https://img.shields.io/badge/RStudio-0.99.903-yellow.svg)]()
 [![license](https://img.shields.io/badge/license-GPL-brightgreen.svg)]()
