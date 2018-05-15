@@ -981,6 +981,11 @@ plotChron = function(L,chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.
     }
   }
   
+  #check for ensemble table. For now this is required to plot.
+  if(!any(grepl("ensembleTable",names(L$chronData[[chron.number]])))){
+    stop("No ensemble table found. At this time, plotChron() only works with chronData objects with ensemble tables.")
+  }
+  
   #get the data from the chron ensemble table
   depth = selectData(L,varName = "depth",where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
   ageEnsemble = selectData(L,varName = "age",where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
