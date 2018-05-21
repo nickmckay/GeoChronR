@@ -13,7 +13,7 @@
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000){
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = 5,baconAccMean = 20){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -55,7 +55,7 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   
   
   #write bacon file
-  L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum)
+  L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine, labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
   
   #estimate thickness parameter
   thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
@@ -65,7 +65,7 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   if(is.null(baconFile)){baconFile = "Bacon.R"}
   
   source(baconFile)
-  Bacon(core=site.name,thick=thick)
+  Bacon(core=site.name,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest)
   
   print("taking a short break...")
   Sys.sleep(5)
@@ -179,7 +179,10 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 #' #Run in interactive mode
 #' 
 #' writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
-writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA){
+writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,labIDVar="labID",
+age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age", 
+ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",
+reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -239,40 +242,40 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   
   #labID
   print("Looking for laboratory ID...")
-  idi = getVariableIndex(MT,"labID",altNames = "id")
+  idi = getVariableIndex(MT,labIDVar,altNames = "id")
   
   #14C age
   print("Looking for radiocarbon ages...")
-  c14i = getVariableIndex(MT,"age14C",altNames = "age")
+  c14i = getVariableIndex(MT,age14CVar,altNames = "age")
   
   #14C age uncertainty
-  print("Looking for radiocrabon age uncertainty...")
-  c14unci = getVariableIndex(MT,"age14Cuncertainty",altNames = c("age","uncertainty"))
+  print("Looking for radiocarbon age uncertainty...")
+  c14unci = getVariableIndex(MT,age14CuncertaintyVar,altNames = c("age","uncertainty"))
   
   #age (calibrated)
   print("Looking for calibrated ages...")
-  agei = getVariableIndex(MT,"age",altNames = "age")
+  agei = getVariableIndex(MT,ageVar,altNames = "age")
   
   #age uncertainty (calibrated)
   print("Looking for calibrated age uncertainty...")
-  ageunci = getVariableIndex(MT,"ageUncertainty",altNames = c("age","uncertainty"))
+  ageunci = getVariableIndex(MT,ageUncertaintyVar,altNames = c("age","uncertainty"))
   
   #depth
   print("Looking for depth...")
-  depthi = getVariableIndex(MT,"depth")
+  depthi = getVariableIndex(MT,depthVar)
   
   #reservoir age
   print("Looking for radiocarbon reservoir age offsets (deltaR)...")
   print("can also use radiocarbon reservoir ages if need be...")
-  resi = getVariableIndex(MT,"reservoirAge14C",altNames = "reservoir")
+  resi = getVariableIndex(MT,reservoirAge14CVar,altNames = "reservoir")
   
   #reservoir uncertainty
   print("Looking for radiocarbon reservoir age uncertainties...")
-  resUnci = getVariableIndex(MT,"reservoirAge14CUncertainty",altNames = c("reservoir","unc"))
+  resUnci = getVariableIndex(MT,reservoirAge14CUncertaintyVar,altNames = c("reservoir","unc"))
   
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")
-  rejeci = getVariableIndex(MT,"rejectedAges",altNames = c("reject","ignore"))
+  rejeci = getVariableIndex(MT,rejectedAgesVar,altNames = c("reject","ignore"))
   
   
   #merge variables as needed
@@ -359,7 +362,9 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
         cc <- rep(1,len=nrows)
       }
     }else{
+      if(is.null(useMarine)){
       useMarine = readline(prompt = "Do you want to use the Marine13 curve?")
+      }
       if(grepl(useMarine,pattern = "y")){
         cc <- rep(2,len=nrows)
         

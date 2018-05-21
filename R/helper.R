@@ -3,7 +3,7 @@ installLipd = function(){devtools::install_github("nickmckay/lipd-utilities",sub
 
 #' @export
 
-installGeoChronR= function(){devtools::install_github("nickmckay/geochRonR")}
+installGeoChronR= function(){devtools::install_github("nickmckay/geoChronR")}
 
 
 #' @export

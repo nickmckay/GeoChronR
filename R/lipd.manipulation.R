@@ -84,8 +84,8 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
-  ensDepth = selectData(L,tableType = "ensemble",varName = depth.var,where = "chronData",strictSearch = strictSearch)$values
-  ensAll = selectData(L,tableType = "ensemble",varName = age.var,altNames = c("age","ensemble","year"),where = "chronData",which.ens = which.ens,strictSearch = strictSearch)
+  ensDepth = selectData(L,tableType = "ensemble",varName = depth.var,where = "chronData",which.data = which.chron,strictSearch = strictSearch,model.num = which.model)$values
+  ensAll = selectData(L,tableType = "ensemble",varName = age.var,altNames = c("age","ensemble","year"),where = "chronData",model.num = which.model,which.ens = which.ens,which.data = which.chron,strictSearch = strictSearch)
   if(is.null(ensAll$values)){
     stop("Error: did not find the age ensemble.")
   }
@@ -277,6 +277,12 @@ selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "
 #' @return An integer index
 #' @export
 getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.choose=FALSE,strictSearch=FALSE){
+  
+  #check to see if varName is null, and return 0 if so
+  if(is.null(varName)){
+  return(NA)
+  }
+  
   #restrict to lists  
   #find variables within the table, and their index
   allNames = names(table)
