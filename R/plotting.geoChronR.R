@@ -982,12 +982,12 @@ plotChron = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA
   }
   
   #check for ensemble table. For now this is required to plot.
-  if(!any(grepl("ensembleTable",names(L$chronData[[chron.number]])))){
+  if(!any(grepl("ensembleTable",names(L$chronData[[chron.number]]$model[[model.num]])))){
     stop("No ensemble table found. At this time, plotChron() only works with chronData objects with ensemble tables.")
   }
   
   #get the data from the chron ensemble table
-  depth = selectData(L,varName = depth,where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
+  depth = selectData(L,varName = depthVar,where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
   ageEnsemble = selectData(L,varName = ageVar,where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
   
   #quick fix to ensemble list bug
