@@ -29,7 +29,6 @@ Imports:
 	BBmisc,
 	jsonlite,
 	RJSONIO,
-	Kmisc,
 	scales,
 	RgoogleMaps,
 	geosphere,
