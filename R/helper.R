@@ -18,11 +18,33 @@ if(is.list(X)){
     return(X)
   }
   X$units = "AD"
-  X$values=1950-X$values
-  X$values[X$values <= 0]=X$values[X$values <= 0]-1#remember, there's no year 0
+    X$values=1950-X$values
+  X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
 }else{
   X=1950-X
-  X[X <= 0]=X[X <= 0]-1#remember, there's no year 0
+  X[which(X <= 0)]=X[which(X <= 0)]-1#remember, there's no year 0
+  }
+  return(X)
+}
+
+
+#' @export
+#' @title Convert years Calendar year (AD/BC or CE) to BP (1950)
+#' @description Converts a LiPD variable list, or vector from AD/BC/CE/BCE to BP (1950). Also deals with the lack of a year 0.
+#' @param X A LiPD variable list or a vector of years AD/BC/CE/BCE
+#' @return X A LiPD variable list or a vector of BP
+convertAD2BP = function(X){
+  if(is.list(X)){
+    if(tolower(X$units)=="bp"){
+      print("already in BP, aborting...")
+      return(X)
+    }
+    X$units = "BP"
+    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
+    X$values=1950-X$values
+  }else{
+    X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0
+    X=1950-X
   }
   return(X)
 }
