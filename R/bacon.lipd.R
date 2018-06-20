@@ -15,6 +15,12 @@ getBaconDir <- function(baconDir = NA){
       baconDir=baconDir
     }else{
       baconDir=get("baconDir",envir = .GlobalEnv)
+      if(is.na(baconDir)){
+        cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
+        baconFile=file.choose()
+        baconDir<<-dirname(dirname(baconFile))
+        baconDir=baconDir
+      }
     }
   }
   return(baconDir)
@@ -247,39 +253,103 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   #labID
   print("Looking for laboratory ID...")
   idi = getVariableIndex(MT,labIDVar,altNames = "id")
+  if(is.na(idi)){
+    labIDVar <- NULL
+  }else{
+    labIDVar <- MT[[idi]]$variableName
+  }
+  
   
   #14C age
   print("Looking for radiocarbon ages...")
   c14i = getVariableIndex(MT,age14CVar,altNames = "age")
+  if(is.na(c14i)){
+    age14CVar <- NULL
+  }else{
+    age14CVar <- MT[[c14i]]$variableName
+  }
+  
   
   #14C age uncertainty
   print("Looking for radiocarbon age uncertainty...")
   c14unci = getVariableIndex(MT,age14CuncertaintyVar,altNames = c("age","uncertainty"))
+  if(is.na(c14unci)){
+    age14CuncertaintyVar <- NULL
+  }else{
+    age14CuncertaintyVar <- MT[[c14unci]]$variableName
+  }
   
   #age (calibrated)
   print("Looking for calibrated ages...")
   agei = getVariableIndex(MT,ageVar,altNames = "age")
+  if(is.na(agei)){
+    ageVar <- NULL
+  }else{
+    ageVar <- MT[[agei]]$variableName
+  }
   
   #age uncertainty (calibrated)
   print("Looking for calibrated age uncertainty...")
   ageunci = getVariableIndex(MT,ageUncertaintyVar,altNames = c("age","uncertainty"))
+  if(is.na(ageunci)){
+    ageUncertaintyVar <- NULL
+  }else{
+    ageUncertaintyVar <- MT[[ageunci]]$variableName
+  }
   
   #depth
   print("Looking for depth...")
   depthi = getVariableIndex(MT,depthVar)
+  if(is.na(depthi)){
+    depthVar <- NULL
+  }else{
+    depthVar <- MT[[depthi]]$variableName
+  }
   
   #reservoir age
   print("Looking for radiocarbon reservoir age offsets (deltaR)...")
   print("can also use radiocarbon reservoir ages if need be...")
   resi = getVariableIndex(MT,reservoirAge14CVar,altNames = "reservoir")
+  if(is.na(resi)){
+    reservoirAge14CVar <- NULL
+  }else{
+    reservoirAge14CVar <- MT[[resi]]$variableName
+  }
   
   #reservoir uncertainty
   print("Looking for radiocarbon reservoir age uncertainties...")
   resUnci = getVariableIndex(MT,reservoirAge14CUncertaintyVar,altNames = c("reservoir","unc"))
+  if(is.na(resUnci)){
+    reservoirAge14CUncertaintyVar <- NULL
+  }else{
+    reservoirAge14CUncertaintyVar <- MT[[resUnci]]$variableName
+  }
   
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")
   rejeci = getVariableIndex(MT,rejectedAgesVar,altNames = c("reject","ignore"))
+  if(is.na(rejeci)){
+    rejectedAgesVar <- NULL
+  }else{
+    rejectedAgesVar <- MT[[rejeci]]$variableName
+  }
+  
+  stringifyVariables <- function(varName){
+    if(is.null(varName)){
+      so <- paste0(deparse(substitute(varName))," = NULL")
+    }else{
+      so <- paste0(deparse(substitute(varName))," = '", varName, "'")
+    }
+    return(so)
+}
+  
+  #print results...
+  print("Variable choices for reuse...")
+  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", 
+               stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  print(varUsedStr)
+  assign("bacon_varUsedStr",value = varUsedStr,envir = .GlobalEnv)
+
   
   
   #merge variables as needed
@@ -346,7 +416,7 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   
   id <- MT[[idi]]$values
   if(is.null(idi)){
-    idi <- rep(NA,len=length(depth))
+    id <- rep(NA,len=length(depth))
   }
   
   
@@ -421,6 +491,7 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   
   
   #replace NAs appropriately
+  out.table[is.na(out.table[,1]),1] <- "unknown"
   out.table[is.na(out.table[,3]),3] <- 1
   out.table[is.na(out.table[,6]),6] <- 0
   out.table[is.na(out.table[,7]),7] <- 0

@@ -283,16 +283,17 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
   return(NA)
   }
   
+  varName <- tolower(varName)
   #restrict to lists  
   #find variables within the table, and their index
-  allNames = names(table)
+  allNames = tolower(names(table))
   listI=which(!sapply(table,class)=="list")
   
   if(!is.na(ignore)){
     if(is.numeric(ignore)){
       ti=ignore
     }else{
-      ti=which(allNames %in% ignore)
+      ti=which(allNames %in% tolower(ignore))
     }
     #also ignore anything that's not a list
     
