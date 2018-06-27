@@ -43,7 +43,7 @@ getBaconDir <- function(baconDir = NA){
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = 5,baconAccMean = 20){
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = NA,baconAccMean = 20){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -78,8 +78,12 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine, labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
   
   #estimate thickness parameter
+  if(is.na(baconThick)){
   thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
-  
+  }else{
+    thick = baconThick
+  }
+
   #run bacon
   setwd(baconDir)
   #if(is.null(baconFile)){baconFile = "Bacon.R"}
@@ -515,7 +519,7 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   setwd(baconDir)
   et <- dir()
   write=FALSE
-  if(any(grepl(site.name,et))){
+  if(any(site.name == et)){
     writedir=FALSE
     if(overwrite){
       write=TRUE
