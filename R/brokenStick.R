@@ -126,5 +126,5 @@ iterativeBrokenStick <- function(age,values,useKinit=20,maxCP=6,confidence.level
     }
   }
   
-return(list(cp=cp,cp.se=cp.se,cp.y = cp.y))
+return(list(cp=cp,cp.se=cp.se,cp.y = cp.y,slope.change = slope.change))
 }
