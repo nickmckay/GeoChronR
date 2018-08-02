@@ -1,7 +1,37 @@
 #' @export
 #' @author Nick McKay
+#' @title Get the name of bacon core directory
+#' @description This is a mostly internal function that returns the core directory. Interactive if given a NA
+#' @param baconDir if you already have it, it just returns this, (default=NA)
+#' @return baconDir the bacon core directory
+getBaconDir <- function(baconDir = NA){
+  #initialize bacon directory
+  if(is.na(baconDir)){
+    #check global first
+    if(!exists("baconDir",where = .GlobalEnv)){
+      cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
+      baconFile=file.choose()
+      baconDir<<-dirname(dirname(baconFile))
+      baconDir=baconDir
+    }else{
+      baconDir=get("baconDir",envir = .GlobalEnv)
+      if(is.na(baconDir)){
+        cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
+        baconFile=file.choose()
+        baconDir<<-dirname(dirname(baconFile))
+        baconDir=baconDir
+      }
+    }
+  }
+  return(baconDir)
+}
+
+
+#' @export
+#' @author Nick McKay
 #' @author Maarten Blaauw (Bacon)
 #' @family Bacon
+#' @import rbacon
 #' @title Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object
 #' @description This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
 #' @inheritParams writeBacon
@@ -13,7 +43,7 @@
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = 5,baconAccMean = 20){
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = NA,baconAccMean = 20){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -24,21 +54,11 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
     }
   }
   
-  #initialize bacon directory
-  if(is.na(baconDir)){
-    #check global first
-    if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your bacon.R file","\n")
-      baconFile=file.choose()
-      baconDir<<-dirname(baconFile)
-      baconDir=baconDir
-    }else{
-      baconFile = "bacon.R"
-    }
-    baconDir=get("baconDir",envir = .GlobalEnv)
-  }else{
-    baconFile = "bacon.R"
-  }
+  
+  #get bacon directory
+  baconDir <- getBaconDir(baconDir)
+  
+  
   
   #initialize model number
   if(is.na(modelNum)){
@@ -58,14 +78,18 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine, labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
   
   #estimate thickness parameter
+  if(is.na(baconThick)){
   thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
-  
+  }else{
+    thick = baconThick
+  }
+
   #run bacon
   setwd(baconDir)
-  if(is.null(baconFile)){baconFile = "Bacon.R"}
+  #if(is.null(baconFile)){baconFile = "Bacon.R"}
   
-  source(baconFile)
-  Bacon(core=site.name,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest)
+  #source(baconFile)
+  rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest)
   
   print("taking a short break...")
   Sys.sleep(5)
@@ -91,8 +115,12 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
 #' 
 sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   #from Simon Goring, modified by Nick McKay
+  
+  #get bacon directory
+  baconDir <- getBaconDir(baconDir)
+  
+  
   setwd(baconDir)
-  setwd("Cores")
   setwd(corename)
   
   
@@ -139,8 +167,8 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   if(is.na(maxEns)){maxEns=nrow(BACages)}
   
   ages.out <- plyr::laply(1:min(nrow(BACages),maxEns), function(x){approx(x=depths, 
-                                                                    y = BACages[x,], 
-                                                                    xout=depths)$y})
+                                                                          y = BACages[x,], 
+                                                                          xout=depths)$y})
   
   ensembleTable=list()
   ensembleTable$depth$values = depths
@@ -180,9 +208,9 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 #' 
 #' writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
 writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,labIDVar="labID",
-age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age", 
-ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",
-reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
+                        age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age", 
+                        ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",
+                        reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -202,23 +230,9 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
     }
   }
   
-  #initialize bacon directory
-  if(is.na(baconDir)){
-    #check global first
-    if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your bacon.R file","\n")
-      baconFile=file.choose()
-      baconDir<<-dirname(baconFile)
-      baconDir=baconDir
-    }else{
-      baconFile = "bacon.R"
-    }
-    baconDir=get("baconDir",envir = .GlobalEnv)
-  }else{
-    baconFile = "bacon.R"
-  }
   
-  
+  #get bacon directory
+  baconDir <- getBaconDir(baconDir)
   
   #pull out chronology
   
@@ -243,39 +257,103 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   #labID
   print("Looking for laboratory ID...")
   idi = getVariableIndex(MT,labIDVar,altNames = "id")
+  if(is.na(idi)){
+    labIDVar <- NULL
+  }else{
+    labIDVar <- MT[[idi]]$variableName
+  }
+  
   
   #14C age
   print("Looking for radiocarbon ages...")
   c14i = getVariableIndex(MT,age14CVar,altNames = "age")
+  if(is.na(c14i)){
+    age14CVar <- NULL
+  }else{
+    age14CVar <- MT[[c14i]]$variableName
+  }
+  
   
   #14C age uncertainty
   print("Looking for radiocarbon age uncertainty...")
   c14unci = getVariableIndex(MT,age14CuncertaintyVar,altNames = c("age","uncertainty"))
+  if(is.na(c14unci)){
+    age14CuncertaintyVar <- NULL
+  }else{
+    age14CuncertaintyVar <- MT[[c14unci]]$variableName
+  }
   
   #age (calibrated)
   print("Looking for calibrated ages...")
   agei = getVariableIndex(MT,ageVar,altNames = "age")
+  if(is.na(agei)){
+    ageVar <- NULL
+  }else{
+    ageVar <- MT[[agei]]$variableName
+  }
   
   #age uncertainty (calibrated)
   print("Looking for calibrated age uncertainty...")
   ageunci = getVariableIndex(MT,ageUncertaintyVar,altNames = c("age","uncertainty"))
+  if(is.na(ageunci)){
+    ageUncertaintyVar <- NULL
+  }else{
+    ageUncertaintyVar <- MT[[ageunci]]$variableName
+  }
   
   #depth
   print("Looking for depth...")
   depthi = getVariableIndex(MT,depthVar)
+  if(is.na(depthi)){
+    depthVar <- NULL
+  }else{
+    depthVar <- MT[[depthi]]$variableName
+  }
   
   #reservoir age
   print("Looking for radiocarbon reservoir age offsets (deltaR)...")
   print("can also use radiocarbon reservoir ages if need be...")
   resi = getVariableIndex(MT,reservoirAge14CVar,altNames = "reservoir")
+  if(is.na(resi)){
+    reservoirAge14CVar <- NULL
+  }else{
+    reservoirAge14CVar <- MT[[resi]]$variableName
+  }
   
   #reservoir uncertainty
   print("Looking for radiocarbon reservoir age uncertainties...")
   resUnci = getVariableIndex(MT,reservoirAge14CUncertaintyVar,altNames = c("reservoir","unc"))
+  if(is.na(resUnci)){
+    reservoirAge14CUncertaintyVar <- NULL
+  }else{
+    reservoirAge14CUncertaintyVar <- MT[[resUnci]]$variableName
+  }
   
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")
   rejeci = getVariableIndex(MT,rejectedAgesVar,altNames = c("reject","ignore"))
+  if(is.na(rejeci)){
+    rejectedAgesVar <- NULL
+  }else{
+    rejectedAgesVar <- MT[[rejeci]]$variableName
+  }
+  
+  stringifyVariables <- function(varName){
+    if(is.null(varName)){
+      so <- paste0(deparse(substitute(varName))," = NULL")
+    }else{
+      so <- paste0(deparse(substitute(varName))," = '", varName, "'")
+    }
+    return(so)
+}
+  
+  #print results...
+  print("Variable choices for reuse...")
+  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", 
+               stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  print(varUsedStr)
+  assign("bacon_varUsedStr",value = varUsedStr,envir = .GlobalEnv)
+
   
   
   #merge variables as needed
@@ -342,7 +420,7 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   
   id <- MT[[idi]]$values
   if(is.null(idi)){
-    idi <- rep(NA,len=length(depth))
+    id <- rep(NA,len=length(depth))
   }
   
   
@@ -363,7 +441,7 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
       }
     }else{
       if(is.null(useMarine)){
-      useMarine = readline(prompt = "Do you want to use the Marine13 curve?")
+        useMarine = readline(prompt = "Do you want to use the Marine13 curve?")
       }
       if(grepl(useMarine,pattern = "y")){
         cc <- rep(2,len=nrows)
@@ -415,8 +493,9 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   if(!is.null(tb) ) {
     out.table[,9] <-tb}
   
-
+  
   #replace NAs appropriately
+  out.table[is.na(out.table[,1]),1] <- "unknown"
   out.table[is.na(out.table[,3]),3] <- 1
   out.table[is.na(out.table[,6]),6] <- 0
   out.table[is.na(out.table[,7]),7] <- 0
@@ -438,10 +517,9 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   
   #check for core directory
   setwd(baconDir)
-  setwd("Cores")
   et <- dir()
   write=FALSE
-  if(any(grepl(site.name,et))){
+  if(any(site.name == et)){
     writedir=FALSE
     if(overwrite){
       write=TRUE
@@ -453,12 +531,12 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
   
   if(writedir){
     setwd(baconDir)
-    setwd("Cores")
+    
     dir.create(site.name)
   }
   if(write){
     setwd(baconDir)
-    setwd("Cores")
+    
     setwd(site.name)
     write.csv(out.table,paste0(site.name,".csv"),row.names=FALSE)
     
@@ -489,26 +567,15 @@ reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
 #' loadBaconOutput(L)
 #' #Run in interactive mode
 loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA,maxEns = 1000){
-  #initialize bacon directory
-  if(is.na(baconDir)){
-    #check global first
-    if(!exists("baconDir",where = .GlobalEnv)){
-      cat("please select your bacon.R file","\n")
-      baconFile=file.choose()
-      baconDir<<-dirname(baconFile)
-      baconDir=baconDir
-    }else{
-      baconFile = "bacon.R"
-    }
-    baconDir=get("baconDir",envir = .GlobalEnv)
-  }else{
-    baconFile = "bacon.R"
-  }
+  
+  #get bacon directory
+  baconDir <- getBaconDir(baconDir)
+  
   
   cur.dir = getwd()
   #see if there's an appropriate folder.
   setwd(baconDir)
-  setwd("Cores")
+  
   
   if(!any(grepl(site.name,dir()))){
     print(paste0("can't find a directory called",site.name))
@@ -562,7 +629,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   
   #grab methods first
   setwd(baconDir)
-  setwd("Cores")
+  
   setwd(site.name)
   sf=dir(pattern="*settings.txt")
   if(length(sf)!=1){
@@ -579,7 +646,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   }
   methods = list("parameters"=parameters)
   methods$algorithm = "bacon"
-  methods$version = 2.2
+  methods$version = 2.3
   
   
   
@@ -602,7 +669,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   summTable = read.table(st,header = TRUE)
   
   #assign names in.
-  origNames = c("depth","min","max","median","wmean")
+  origNames = c("depth","min","max","median","mean")
   newNames = c("depth","ageRangeLow","ageRangeHigh","age","age")
   
   depthUnits = L$chronData[[which.chron]]$measurementTable[[1]]$depth$units
@@ -648,7 +715,7 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
     }
   }
   
-
+  
   return(L)
 }
 
