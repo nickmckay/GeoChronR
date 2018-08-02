@@ -1,73 +1,3 @@
-#' @export
-#' @family spectra
-#' @family pca
-#' @title Create a synthetic timeseries that emulates the characteristics of a variable
-#' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
-#' @param time LiPD "variable list" or vector of year/age values
-#' @param values LiPD "variable list" or vector of values
-#' @param nens Number of ensemble members to simulate
-#' @return a vector or matrix of synthetic values
-createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.model = NA){
-  
-  #check to see if time and values are "column lists"
-  if(is.list(time)){time=time$values}
-  if(is.list(values)){values=values$values}
-  
-  if(any(is.na(index.to.model))){
-    index.to.model = seq_along(time)
-  }
-  orig.time = time
-  
-  #make them all matrices
-  time = as.matrix(time[index.to.model])
-  values = as.matrix(values[index.to.model])
-  
-  #find the NAs...
-  tnai = which(is.na(time))
-  vnai = which(is.na(values))
-  
-  
-  
-  #measure long term trend
-  trend=predict(lm(values~time))
-  trendmodel = lm(values~time)
-  longtrend = orig.time*trendmodel$coefficients[2]+trendmodel$coefficients[1]
-  #remove the trend
-  notrend=values-trend
-  #get necessary metadata
-  m=mean(notrend,na.rm=TRUE)
-  s=sd(notrend,na.rm=TRUE)
-  a=acf(notrend,na.action=na.pass,plot=FALSE)
-  ar=max(0,as.numeric(unlist(a[1])[1]))
-  
-  #
-  #fit = arima(x = notrend, order = c(1, 0, 0)) AR1 only
-
-  synValues = matrix(NA,nrow=length(orig.time),ncol=nens)
-  #go through ensemble members
-  for(jj in 1:nens){
-    #generate a random series with ar=ar
-    rdata = arima.sim(model=list("ar"=ar),n=length(orig.time)) #More conservative
-    #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
-    if(sameTrend){
-    #remove any trend
-    rtrend=predict(lm(rdata~orig.time))
-    rdata=rdata-rtrend
-    #scale the same as data
-    rdata=scale(rdata)*s+m
-    #add the data trend in
-   
-    
-    withTrend=rdata+longtrend
-    withTrend[vnai]=NA
-    synValues[,jj]=withTrend
-    }else{
-      synValues[,jj] = rdata
-    }
-    
-  }
-  return(synValues)
-}
 
 #' @export
 #' @import dplR
@@ -78,7 +8,7 @@ createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param vals LiPD "variable list" or vector of values
-#' @param detrend_bool boolean variable, indicating whether one should remove trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries
+#' @param detrend_bool boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries
 #' @param method Method used for estimation. Possible values are "even" or "redfit"
 #' @param nens Number of ensemble members to simulate
 #' @return a vector or matrix of AR(1) surrogates for series X
@@ -107,7 +37,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   m=mean(vals_used,na.rm=TRUE)
   s=sd(vals_used,na.rm=TRUE)
   if (method=='redfit') {
-    redf.dat <- redfit(vals_used, time, nsim = 21) # 21 is minimum numer you can get away with
+    redf.dat <- redfit(vals_used, time, nsim = 21) # 21 is minimum number you can get away with
     g = redf.dat$rho
   } else {
     fit = arima(x = vals_used, order = c(1, 0, 0)) # assumes evenly-spaced data
@@ -131,6 +61,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   return(vals_syn)
 }
 
+
 #' @export
 #' @family spectra
 #' @title Calculate ensemble power spectra
@@ -146,7 +77,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' \item powerSyn: matrix of synthetic spectral power results
 #' }
 #' @import lomb
-powerSpectrumEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
+computeSpectraEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -156,7 +87,7 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
   values = as.matrix(values)
   
   if(gaussianize==TRUE){
-    vals_used = gaussianize(values)  # Error: object 'gaussianize' not found
+    vals_used = gaussianize(values)  
   }else{vals_used=values}
   
   
@@ -172,7 +103,8 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
     }
   }
   
-  #how big?
+  
+  #how big?  # method dependent
   noutrow = length(lsp(values[,1],times=time[,1],ofac=ofac,plot = F)$power)
   
   #preallocate
@@ -183,10 +115,10 @@ powerSpectrumEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
   pb = txtProgressBar(min=1,max = nens,style = 3)
   for(i in 1:nens){
     t = time[,sample.int(ncol(time),size = 1)]  # random sampling 
-    v = values[,sample.int(ncol(values),size = 1)]
+    v = values[,sample.int(ncol(values),size = 1)]  # should this use same indices as above?
     out = lsp(v,times=t,ofac=ofac,plot = F)
     syn = ar1Surrogates(t,v)#create synthetic timeseries  
-    synOut = lsp(syn,times=t,ofac=ofac,plot = F) 
+    synOut = lsp(syn,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
     pMatSyn[1:length(synOut$power),i] =  synOut$power
     fMat[,i]=out$scanned
     pMat[,i]=out$power
