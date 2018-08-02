@@ -18,7 +18,9 @@
 #'Run in noninteractive mode:
 #'L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
 
-runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA){
+runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA,reject = NA,interpolate = NA,iter = NA,extractDate = NA,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",paleoDepthVar = "depth"){
+  
+  
   cur.dir = getwd()
   
   #initialize which.chron
@@ -55,18 +57,27 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   }
   
   #check for measurementTables
-  if(length(C$measurementTable)!=1){
-    stop("Bchron doesn't know how to handle more (or less) than 1 chron measurement table. You should teach it!")
+  #initialize table number
+  if(is.na(which.table)){
+    if(length(C$measurementTable)==1){
+      #no models, this is first
+      which.table=1
+    }else if(length(C$measurementTable)>=1){
+      which.table=as.integer(readline(prompt = "Which chron measurementTable do you want to use?"))
+    }else{
+      stop("Bchron requires at least one measurementTable")
+    }
   }
   
-  MT=C$measurementTable[[1]]
+  
+  MT=C$measurementTable[[which.table]]
   
   #go through required fields for BChron
   
   #14C age
   print("Looking for radiocarbon ages...")
   print("If using the normal calibration option, point to the U/Th ages")
-  c14i = getVariableIndex(MT,"age14C")
+  c14i = getVariableIndex(MT,age14CVar)
   if (is.na(c14i)){
     stop("Bchron requires ages.")
   }else{
@@ -77,14 +88,30 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   }
   
   #14C age uncertainty
-  print("Looking for radiocrabon age uncertainty...")
+  print("Looking for radiocarbon age uncertainty...")
   print("If using the normal calibration option, point to the U/Th ages uncertainty")
-  c14unci = getVariableIndex(MT,"age14Cuncertainty",altNames = c("age","uncertainty"))
+  c14unci = getVariableIndex(MT,age14CuncertaintyVar,altNames = c("age","uncertainty"))
+  
+  #check if they want to estimate from a range
   if (is.na(c14unci)){
-    print("No radiocarbon age uncertainty given in the chron measurement table, please enter an estimate")
-    age14Cuncertainty = as.numeric(readline(prompt = "Enter the radiocarbon age uncertainty in years: "))
+    print("There is still no uncertainty entered. Would you like to estimate uncertainty from a high/low range?")
+    est = readline(prompt = "There is still no uncertainty entered. Would you like to estimate uncertainty from a high/low range? (y/n) ")
+    if(est == "y"){
+      hi.in <- getVariableIndex(MT,"age14CuncertaintyHigh",altNames = c("hi"))
+      hi <- MT[[hi.in]]$values
+      lo.in <- getVariableIndex(MT,"age14CuncertaintyLow",altNames = c("lo"))
+      lo <- MT[[lo.in]]$values
+      age14Cuncertainty <- estimateUncertaintyFromRange(MT,hi.in,lo.in)$unc.estimate$values
+    }else{
+      print("No radiocarbon age uncertainty given in the chron measurement table, please enter an estimate")
+      age14Cuncertainty = as.numeric(readline(prompt = "Enter the radiocarbon age uncertainty in years: "))
+    }
   }else{
-    age14Cuncertainty <- MT[[c14unci]]$values}
+    age14Cuncertainty <- MT[[c14unci]]$values
+  }
+  
+  
+  
   # Make sure the uncertainties are reported in years as well
   if (mean(age14Cuncertainty, na.rm = TRUE)<5){
     age14Cuncertainty = 1000*age14Cuncertainty
@@ -92,7 +119,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   
   #age (calibrated)
   print("Looking for calibrated ages...")
-  agei = getVariableIndex(MT,"age",altNames = "age")
+  agei = getVariableIndex(MT,ageVar,altNames = "age")
   if (is.na(agei)){
     print("No calibrated age given in the chron measurement table")
   }else{
@@ -100,7 +127,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   
   #age uncertainty (calibrated)
   print("Looking for calibrated age uncertainty...")
-  ageunci = getVariableIndex(MT,"ageUncertainty",altNames = c("age","uncertainty"))
+  ageunci = getVariableIndex(MT,ageUncertaintyVar,altNames = c("age","uncertainty"))
   if (is.na(ageunci)){
     print("No calibrated age uncertainty given in the chron measurement table")
   }else{
@@ -108,12 +135,19 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   
   #depth
   print("Looking for depth...")
-  depthi = getVariableIndex(MT,"depth")
+  depthi = getVariableIndex(MT,depthVar)
   if(is.na(depthi)){
     stop("Depth is required for Bchron")
   }else{
     depth=MT[[depthi]]$values
   }
+  
+  #check for duplicate depths
+  while(length(depth)>length(unique(depth))){
+    i.d <- duplicated(depth)
+    depth[i.d] <- depth[i.d]+rnorm(n = length(i.d),sd = 0.1)
+  }
+  
   
   #reservoir age
   # only for marine13
@@ -122,7 +156,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
     if(which.resi == "s"){                      
       print("Looking for radiocarbon reservoir age offsets (deltaR)...")
       print("can also use radiocarbon reservoir ages if need be...")
-      resi = getVariableIndex(MT,"reservoirAge14C",altNames = "reservoir")
+      resi = getVariableIndex(MT,reservoirAge14CVar,altNames = "reservoir")
       reservoir <-MT[[resi]]$values
       if(is.na(resi)){
         print("The chron measurement table does not contain information about a reservoir age. Please enter your own")
@@ -149,7 +183,7 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
     which.resUnci = readline(prompt = "Would you like to use the study's reservoir age uncertainty (s) or use your own (o)? ")
     if(which.resUnci == "s"){                      
       print("Looking for radiocarbon reservoir age uncertainties...")
-      resUnci = getVariableIndex(MT,"reservoirAge14CUncertainty",altNames = c("reservoir","unc"))
+      resUnci = getVariableIndex(MT,reservoirAge14CUncertaintyVar,altNames = c("reservoir","unc"))
       reservoirUnc <- MT[[resUnci]]$values
       if(is.na(resUnci)){
         print("The chron measurement table does not contain information about reservoir age uncertainty. Please enter your own")
@@ -160,27 +194,19 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
     }else{stop("Only enter 's' or 'o'")}
   }
   
-  # Lab ID (not required by Bchron but needed for LiPD output)
-  #labID
-  print("Looking for laboratory ID...")
-  idi = getVariableIndex(MT,"labID")
-  if (is.na(idi)){
-    print("No LabID provided in the chron measurement table")
-   print("Making some lab ids up...")
-   LabID = paste0("fakeLabID",seq_along(depth))
-  }else{
-    LabID <- MT[[idi]]$values
-  }
-  
   #rejected ages
   print("Looking for column of reject ages, or ages not included in age model")
-  rejeci = getVariableIndex(MT,"rejectedAges",altNames = c("reject","ignore"))
+  rejeci = getVariableIndex(MT,rejectedAgesVar,altNames = c("reject","ignore"))
   if (is.na(rejeci)){
     print("No ages were rejected in the original study")
     print(age14C)
     print("Warning: Bchron will return an error message if the ages are outside of the calibration curve.")
-    reject.anyway  = readline(prompt = "Would you like to reject any ages (y/n)? ")
-    if (reject.anyway == 'y'){
+    if(is.na(reject)){
+    reject.anyway  = as.logical(readline(prompt = "Would you like to reject any ages (T/F)? "))
+    }else{
+      reject.anyway <- reject
+    }
+    if (reject.anyway){
       rejindex <- c()
       which.rejindex = as.integer(readline(prompt = "Enter the index of the first date you want to ignore: "))
       rejindex <- c(rejindex,which.rejindex)
@@ -197,33 +223,34 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
       if (length(reservoirUnc)>1){
         reservoir = reservoirUnc[-rejindex]
       }
-    } else if (reject.anyway != 'y' && reject.anyway != 'n'){
-      stop('Please enter "y" or "n"')}
+    } 
   }
-  
   # ask user if they would rather use the depth from the paleo table
-  
-  which.depth = readline(prompt = "Would you like to interpolate the age model at the depth horizons for the paleoproxy data? (y/n): " )
-  
-  if (which.depth == 'n'){
+  if(is.na(interpolate)){
+  which.depth = readline(prompt = "Would you like to interpolate the age model at the depth horizons for the paleoproxy data? (T/F): " )
+  }else{
+    which.depth = as.logical(interpolate)
+  }
+  if (!which.depth){
     depth_predict = depth
-  }else if (which.depth == 'y'){
+  }else if (which.depth){
     if(length(L$paleoData)==1){
       which.paleo=1
-    }else{
+    }else if(is.na(which.paleo)){
       which.paleo=as.integer(readline(prompt = "Which paleoData do you want to run Bacon for? "))}
     P = L$paleoData[[which.paleo]]
     PT=P$measurementTable[[1]]
     if(is.null(P)){
       stop("No paleo data measurement table available, please choose another option")}
     print("Looking for depth")
-    depthip = getVariableIndex(PT,"depth")
+    depthip = getVariableIndex(PT,paleoDepthVar)
     depth_predict <- PT[[depthip]]$values
     if (is.na(depthip)){
       stop("No depth in the measurement table available, please choose another option")}
-  }else{stop("Please enter only 'y' or 'n'")}
+  }else{stop("Please enter only 'T' or 'F'")}
   
   # Ask the user for the number of iterations
+  if(is.na(iter)){
   print("How many iterations would you like to perform?")
   iter = as.integer(readline(prompt = "Enter the number of iterations: "))
   if (iter<10000){
@@ -237,11 +264,13 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
       stop("Enter 'y' or 'n'")
     }
   }
-  
+  }
   # Ask the user for the year the core has been extracted
+  if(is.na(extractDate)){
   extractDate = as.numeric(readline(prompt = "When was this sample taken in years BP? Enter 0 if unknown: "))
+  }
   # check that people actually used years BP as asked
-  if (extractDate>1900){extractDate=1950-extractDate}
+  #if (extractDate>1900){extractDate=1950-extractDate}
   
   # Set up everything for the Bchron run
   # if marine13 is selected, make the necessary adjustmenet
@@ -269,11 +298,9 @@ runBchron =  function(L,which.chron=NA,site.name=L$dataSetName,modelNum=NA, calC
   
   # Perfom the run (finally)
   if (extractDate !=0){
-    run = Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth,
-                      predictPositions = depth_predict, iterations = iter, extractDate = extractDate)
+    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter, extractDate = extractDate)
   } else {
-    run = Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth,
-                      predictPositions = depth_predict, iterations = iter)
+    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter)
   }
   
   # Write back into a LiPD file

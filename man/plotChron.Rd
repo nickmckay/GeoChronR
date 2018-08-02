@@ -4,11 +4,12 @@
 \alias{plotChron}
 \title{Plot chronologies}
 \usage{
-plotChron(L, chron.number = NA, model.num = NA, probs = c(0.025, 0.25,
-  0.5, 0.75, 0.975), x.bin = NA, y.bin = NA, nbins = 100,
-  bandColorLow = "white", bandColorHigh = "grey70", bandAlp = 1,
-  lineColor = "Black", lineWidth = 1, add.to.plot = ggplot2::ggplot(),
-  nEnsLines = 5, ensLineColor = "red", ensLineAlp = 0.7, distAlp = 0.3,
+plotChron(L, ageVar = "ageEnsemble", depthVar = "depth",
+  chron.number = NA, model.num = NA, probs = c(0.025, 0.25, 0.5, 0.75,
+  0.975), x.bin = NA, y.bin = NA, nbins = 100, bandColorLow = "white",
+  bandColorHigh = "grey70", bandAlp = 1, lineColor = "Black",
+  lineWidth = 1, add.to.plot = ggplot2::ggplot(), nEnsLines = 5,
+  ensLineColor = "red", ensLineAlp = 0.7, distAlp = 0.3,
   distType = "violin", distColor = "purple", distThick = 0.1,
   distScale = 0.02, truncateDist = NA)
 }

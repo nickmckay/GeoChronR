@@ -6,7 +6,14 @@
 \usage{
 runBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
   site.name = L$dataSetName, modelNum = NA, remove.rejected = TRUE,
-  overwrite = TRUE, cc = NA, maxEns = 1000)
+  overwrite = TRUE, cc = NA, maxEns = 1000, useMarine = NULL,
+  labIDVar = "labID", age14CVar = "age14C",
+  age14CuncertaintyVar = "age14CUnc", ageVar = "age",
+  ageUncertaintyVar = "ageUnc", depthVar = "depth",
+  reservoirAge14CVar = "reservoirAge",
+  reservoirAge14CUncertaintyVar = "reservoirAge14C",
+  rejectedAgesVar = "rejected", BaconAsk = TRUE, BaconSuggest = TRUE,
+  baconThick = 5, baconAccMean = 20)
 }
 \arguments{
 \item{L}{a single LiPD object}

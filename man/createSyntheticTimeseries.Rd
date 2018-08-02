@@ -4,7 +4,8 @@
 \alias{createSyntheticTimeseries}
 \title{Create a synthetic timeseries that emulates the characteristics of a variable}
 \usage{
-createSyntheticTimeseries(time, values, nens = 1)
+createSyntheticTimeseries(time, values, nens = 1, sameTrend = TRUE,
+  index.to.model = NA)
 }
 \arguments{
 \item{time}{LiPD "variable list" or vector of year/age values}

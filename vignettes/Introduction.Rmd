@@ -1,5 +1,5 @@
 ---
-title: "Introduction to geoChronR"
+title: "Introduction to geoChronR -- Correlations"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
