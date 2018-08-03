@@ -93,15 +93,15 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
     #get year, age or depth from paleodata
-    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
       stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
@@ -119,7 +119,7 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   if(!copyAE){
   #get the depth from the paleo measurement table
   print("getting depth from the paleodata table...")
-  depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens)$values
+  depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
   
   #restrict ensemble members
   if(!is.na(max.ensemble.members)){

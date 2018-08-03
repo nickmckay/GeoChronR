@@ -324,7 +324,7 @@ plotLine = function(X,Y,color="black",alp = 1, add.to.plot=ggplot()){
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
 #' @examples 
-plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to.plot=ggplot()){
+plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue",maxPlotN=100){
   #check to see if time and values are "column lists"
   if(is.list(X)){X=X$values}
   if(is.list(Y)){Y=Y$values}
@@ -376,7 +376,7 @@ plotTimeseriesEnsLines = function(X,Y,alp=.2,color = "blue",maxPlotN=1000,add.to
 #' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 #' @examples 
-plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,add.to.plot=ggplot(),export.quantiles = FALSE){
+plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,export.quantiles = FALSE){
   #check to see if time and values are "column lists"
   oX = X
   oY = Y
