@@ -26,15 +26,32 @@ R devtools package - v1.12.0+
 
 ##
 
-## Installation
+## Pre - Installation
+
+Install the devtools package: 
+```
+ install.packages("devtools")
+```
+
+The two packages below do not install automatically through geoChronR, so you need to install them manually.
 
 Install the  BiocLite package:
 
 ```
- ## try http:// if https:// URLs are not supported
+      ## try http:// if https:// URLs are not supported
+ 
       source("https://bioconductor.org/biocLite.R")
       biocLite(“pcaMethods”)
 ```
+
+Install the rBacon package:
+
+```
+  install.packages("rbacon")
+ 
+```
+
+## Installation
 
 Install package in R Studio:
 
