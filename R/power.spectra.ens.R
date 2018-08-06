@@ -40,8 +40,7 @@ createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.
   a=acf(notrend,na.action=na.pass,plot=FALSE)
   ar=max(0,as.numeric(unlist(a[1])[1]))
   
-  #
-  #fit = arima(x = notrend, order = c(1, 0, 0)) AR1 only
+  fit = arima(x = notrend, order = c(1, 0, 0)) #AR1 only
 
   synValues = matrix(NA,nrow=length(orig.time),ncol=nens)
   #go through ensemble members
