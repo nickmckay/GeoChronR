@@ -9,45 +9,57 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   ---
   
-  ### Welcome to geoChronR!
+# Welcome to geoChronR!
   
-  ##Workflow 
+  This is the first of 4 vignettes that showcase the functionality of GeoChronR to solve real problems with geochronologic data. Here is a table of contents of the other guides included here:
   
-  Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
+  1. [Introduction to GeoChronR & age-uncertain Correlation](Introduction.html)
+  2. [Age-uncertain regression and calibration in time](regression.html)
+  3. [Age-uncertain spectral analysis](spectral.html)
+  4. [Age-uncertain PCA analysis](pca.html)
+  
+  
+#Introduction and age-uncertain correlation
+  
+
+Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
   
 ```{r}
 library(lipdR)
 library(geoChronR)
 library(magrittr)
+library(ggplot2)
 ```
+##Loading in your data
 
-In this case, we're going to load in the Wang YEAR Hulu Cave dataset
+In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. To load a LiPD file from your computer, use `L <- readLipd()` to interactively select a file (or a directory), or enter the path to file or the directory that you want: `L <- readLipd("~/Downloads/my.lpd")`
 
-```{r}
-hulu <- readLipd(system.file("extdata", "Hulucave.Wang.2345.lpd", package = "geoChronR"))
+```{r, message=FALSE}
+hulu <- readLipd(system.file("extdata", "Hulucave.Wang.2001.lpd", package = "geoChronR"))
 ```
 
 Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don't have that for this record. For this example we're going to use the original U/Th dates to create a new a model using BChron.
 
-
+##Creating an age model, and its ensembles
 We're going to specify many of the parameters here for simplicity, but you can run this with just:
 
 `hulu <- runBchron(L)`
 
 and it will prompt you for the details.
 
-```{r}
-hulu <- runBchron(L,calCurves = "normal",iter = 10000,which.table = 2,interpolate = T,age14CVar = "age",age14CuncertaintyVar = "ageUncertaintyHigh",labIDVar = NULL,reject = F,ageVar = NULL,ageUncertaintyVar = NULL,rejectedAgesVar = NULL,extractDate = 10000)
+```{r, cache=TRUE, message=FALSE,warning=FALSE}
+hulu <- runBchron(hulu,calCurves = "normal", iter = 10000,which.table = 2,interpolate = T,age14CVar = "age",age14CuncertaintyVar = "ageUncertaintyHigh",labIDVar = NULL,reject = F,ageVar = NULL,ageUncertaintyVar = NULL,rejectedAgesVar = NULL,extractDate = 10000)
 ```
 
+##Plotting the chronology
 OK, let's take a look at the model. 
-```{r}
-plotChron(hulu)
+```{r,warning=FALSE}
+plotChron(hulu,truncateDist = 1e-4)
 ```
 
 `plotChron()` is a wrapper for multiple plotting functions, and has a lot of options, which probably require tinkering to produce a nice plot. See all the options by running `?plotChron`
 
-## Mapping the age ensemble to the paleoData measurements
+##Mapping the age ensemble to the paleoData measurements
 
 The ensemble chronology in a chronModel may or may not have values corresponding to the paleoclimatic or paleoenvironmental measurements in paleoData. To map the model ensemble values to a measurement table in paleoData, use
 
@@ -55,6 +67,8 @@ The ensemble chronology in a chronModel may or may not have values corresponding
 hulu = mapAgeEnsembleToPaleoData(hulu,age.var = "ageEnsemble",which.pmt = 2)
 ```
 
+
+##Selecting the variables of interest
 Let's take a look at the this timeseries.
 
 First we're going to pull out the age ensemble and d18O data for future reference. The `selectData()` function makes this easy.
@@ -65,13 +79,17 @@ hulu.d18O<- selectData(hulu,varName = "d18O",which.mt = 2)
 ```
 
 
-#This might be a good time to take a peak at the data, lets plot the ensemble of lines for these
+##Creating a timeseries plot as a suite of lines
+
+This might be a good time to take a peak at the data, lets plot the ensemble of lines for these
 
 Here we will just plot 50 the data with 50 of its ensemble members.   
 ```{r}
 hulu.ts.plot = plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.01,maxPlotN = 50,color = "blue")
 hulu.ts.plot
 ```
+
+##Creating a timeseries plot with a ribbon confidence intervals
 
 We can also plot this as a ribbon plot of quantiles
 
@@ -80,6 +98,8 @@ hulu.ts.plot = plotTimeseriesEnsRibbons(X = hulu.ae,Y = hulu.d18O,nbins = 1000)+
 hulu.ts.plot
 ```
 
+##Combining the two kinds of timeseries plots
+
 Or a combination of the two with the "add.to.plot option"
 
 ```{r}
@@ -87,19 +107,26 @@ hulu.ts.plot <- plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.1,maxPl
 hulu.ts.plot
 ```
 
-## Let's compare these data to the GISP2 ice core.
-Let's compare it to a nearby ice core.
+##Load in another dataset
+Let's compare these data to the GISP2 ice core.
 
-```{r}
+```{r, message=FALSE}
 gisp2 <- readLipd(system.file("extdata", "GISP2.Ally.2000.lpd", package = "geoChronR"))
 ```
 
+
+##Use BAM (Banded Age Model) to create an age ensemble
 This is an ice core, so the chronology is not based on radiometric tie points. Let's use BAM (Banded Age Model) to estimate a 2% counting uncertainty on this. Here we specify all the parameters so it runs in non-interactive mode. 
+
 ```{r}
 gisp2 = runBam(gisp2,which.paleo = 1, which.pmt = 1,which.chron = 1,which.model = 1,ens.number = 1, makeNew = T,nens = 1000,model = list(name = "poisson",param = 0.02, resize = 0, ns = 1000))
 ```
 
-We can now take a look into the bowels of that LiPD object and see that it has an ageEnsemble. Because BAM runs off of the data in the paleo measurementTable, it puts the ageEnsemble straight into the paleoData, and we don't need to run `mapAgeEnsembleToPaleoData()'.
+Because BAM runs off of the data in the paleo measurementTable, it puts the ageEnsemble straight into the paleoData, and we don't need to run `mapAgeEnsembleToPaleoData()'.
+
+You can also always use `selectData(gisp2)` in interactive mode, and it will list all of the variables. 
+
+##Select the relevant variables
 
 ```{r}
 gisp2.d18O <- selectData(gisp2,varName = "temp")
@@ -111,6 +138,8 @@ gisp2.ens$values[1:10,1:5]
 ```
 
 Yep - that's the first 10 entries of the first five age ensembles.
+
+##Convert the ages from years AD to BP
 
 Hey, it looks like those might be in calendar years instead of years BP. Let's check the units
 
@@ -124,73 +153,45 @@ gisp2.ens <- convertAD2BP(gisp2.ens)
 ```
 
 
+##Plot the timeseries
+Let's make another ribbon and lines plot, this time useing the magrittr pipe to streamline the process
+
 ```{r}
 gisp2.ts.plot <- plotTimeseriesEnsRibbons(X = gisp2.ens,Y = gisp2.d18O,nbins = 500) %>% 
   plotTimeseriesEnsLines(X = gisp2.ens,Y = gisp2.d18O,maxPlotN = 5,color = "red",alp = .1)+
   ggtitle("GISP2 temperature")
 
-
-
 print(gisp2.ts.plot)
 
 ```
 
-Let's compare the overlapping sections of these records, from about 
+
+##Compare the two timeseries
+Let's compare the overlapping sections of these records, from about 36 to 50 kyr.
 
 ```{r}
 library(gridExtra)
-library(ggplot2)
 overlap <- c(36000,50000)
-gisp2.ts.plot+xlim(overlap)
 grid.arrange(grobs = list(gisp2.ts.plot+xlim(overlap),hulu.ts.plot+xlim(overlap)),nrow = 2)
+```
+Interesting. There's a hint of a negative correlation during this time interval. Let's calculate an ensemble correlation and see if shows up.
 
+##Calculate the ensemble correlations
 
-corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 1000,max.ens = 100)
-plotCorrEns(corout$cor.df,corStats = corout$corStats)
-
+Here we specify the ensembles and data of each timeseries, and the width of the bins for correlation. More options are available in ?corEns
+```{r, cache=TRUE}
+corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 300,max.ens = 100)
 ```
 
+##Plot the ensemble correlation
+And now we summarize the results with plotCorEns(), illustrating significance after correcting for autocorrelation.
+```{r}
+plotCorEns(corout,legendPosition = c(0.1, 0.8),significanceOption = "autocorr")
 
-
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-output: 
-rmarkdown::html_vignette:
-css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
 ```
+And here we see that, indeed, given the age constraints and data used here, there two timeseries are unlikely correlated. 
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+##End
+That wraps up ensemble correlation. Ready to move on to regression? [The next vignette is here](regression.html).
 
-output:
-rmarkdown::html_vignette:
-fig_caption: yes
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))

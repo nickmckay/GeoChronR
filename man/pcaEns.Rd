@@ -26,5 +26,5 @@ Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anch
 \seealso{
 Other pca: \code{\link{ar1Surrogates}},
   \code{\link{createSyntheticTimeseries}},
-  \code{\link{plotPcaEns}}
+  \code{\link{getLegend}}, \code{\link{plotPcaEns}}
 }

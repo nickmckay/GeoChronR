@@ -1,0 +1,126 @@
+---
+title: "Introduction to geoChronR -- Correlations"
+author: "Nick McKay"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to geoChronR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  ---
+  
+  
+```{r}
+library(lipdR)
+library(geoChronR)
+```
+  
+load in all of the files in the "Arctic2kLipds" folder
+
+```{r}
+FD <- readLipd(system.file("extdata", "arc2k", package = "geoChronR")) 
+#FD <- readLipd() 
+```
+
+##Make a map
+```{r}
+mapLipds(FD)
+```
+yeah, the google maps don't work well at the poles. Try a line map.
+```{r, warning=FALSE}
+mapLipds(FD,map.type = "line",projection = "stereo",f = 0.1)
+
+```
+
+More map projections are available too. A list is available here:
+`?mapproject`
+
+##Grab the age ensembles for each record. 
+We need to "map"" the age ensembles to paleo for all of these datasets. In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth varaible because they're layer counted.
+```{r}
+
+#FD2 = sapply(FD[-c(3,5,12,14,20,26)],mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
+FD2 = sapply(FD,mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
+
+     
+```
+
+Now extract all the "timeseries" into at "TS object" that will facilitate working with multiple records.
+```{r}
+TS = extractTs(FD2)
+```
+
+and filter the TS object to only include variables that have been interepreted as temperature:
+```{r,warning=FALSE}
+TS.filtered = filterTs(TS,"interpretation1_variable == T")
+```
+
+Now bin all the data in the TS to the same interval, 10 year interval
+```{r,cache=TRUE}
+binned.TS = binTs(TS.filtered,binvec = seq(1,2000,by=5),timeVar = "ageEnsemble")
+```
+
+
+and calculate the MCEOF
+```{r}
+pcout = pcaEns(binned.TS)
+```
+
+OK! Let's plot the results. 
+
+```{r}
+plotPCA = plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.1,legendPosition = c(0.5,.6))
+```
+
+Nice! A summary plot that combines the major features is produced, but all of the components, are included in the "plotPCA" list that was exported. 
+
+Here's the first map
+```{r}
+plotPCA$maps[[1]]
+```
+
+The second timeseries
+```{r}
+plotPCA$lines[[2]]
+```
+
+A 
+
+```{r}
+plotPCA$sampleDepth
+```
+
+
+
+this time - grab only those that are d18O, and use a covariance matrix
+let's look at all the names in the TS
+```{r}
+varNames <- pullTsVariable(TS, "variableName")
+```
+Oops - looks like we didn't use quite the correct name. Next time use: 
+
+```{r}
+varNames <- pullTsVariable(TS, "paleoData_variableName")
+```
+
+and take a look at the unique variableNames in the TS
+
+```{r}
+unique(varNames)
+```
+
+OK. Let's filter the timeseries again, this time pulling all the d18O data.
+
+```{r}
+d18OTS = filterTs(TS,"paleoData_variableName == d18O")
+```
+And repeat the steps from above 
+
+```{r}
+binned.TS2 = binTs(d18OTS,binvec = seq(1,2000,by=10),na.col.rm = T)
+pcout2 = pcaEns(binned.TS2,PCAtype = "cov")
+plotPCA2 = plotPcaEns(pcout2,TS = d18OTS,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.1,legendPosition = c(0.6,-0.15))
+```
+
+
+

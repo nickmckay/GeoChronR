@@ -101,7 +101,6 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
 #' @export
 #' @title Sample ensemble ages from Bacon
 #' @description Pulls ensemble members from Bacon output. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
-#' @import plyr
 #' @family Bacon
 #' @author Simon Goring
 #' @author Nick McKay

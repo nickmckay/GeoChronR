@@ -31,8 +31,9 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotScatterEns}},

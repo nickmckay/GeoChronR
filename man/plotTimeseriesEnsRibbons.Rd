@@ -4,12 +4,14 @@
 \alias{plotTimeseriesEnsRibbons}
 \title{Plot an ensemble timeseries as ribbons of probabilities}
 \usage{
-plotTimeseriesEnsRibbons(X, Y, alp = 1, probs = c(0.025, 0.25, 0.5, 0.75,
-  0.975), x.bin = NA, y.bin = NA, nbins = 200, colorLow = "white",
-  colorHigh = "grey70", lineColor = "Black", lineWidth = 1,
-  add.to.plot = ggplot(), export.quantiles = FALSE)
+plotTimeseriesEnsRibbons(add.to.plot = ggplot(), X, Y, alp = 1,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975), x.bin = NA, y.bin = NA,
+  nbins = 200, colorLow = "white", colorHigh = "grey70",
+  lineColor = "Black", lineWidth = 1, export.quantiles = FALSE)
 }
 \arguments{
+\item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
+
 \item{X}{A LiPD variable list to plot, including values, units, names, and more}
 
 \item{Y}{A LiPD variable list to plot, including values, units, names, and more}
@@ -32,8 +34,6 @@ plotTimeseriesEnsRibbons(X, Y, alp = 1, probs = c(0.025, 0.25, 0.5, 0.75,
 
 \item{lineWidth}{Width of the line}
 
-\item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
-
 \item{export.quantiles}{If TRUE, teturn the plotted quantiles rather than the plot}
 }
 \value{
@@ -45,8 +45,9 @@ Plot an ensemble timeseries as a set of bands of probability. Useful for display
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

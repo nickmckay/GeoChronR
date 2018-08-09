@@ -38,5 +38,6 @@ Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by
 \seealso{
 Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{flipCoords}}, \code{\link{getVariableIndex}},
-  \code{\link{selectData}}
+  \code{\link{pullTsVariable}},
+  \code{\link{pushTsVariable}}, \code{\link{selectData}}
 }

@@ -7,7 +7,8 @@
 plotPcaEns(ens.PC.out, TS, map.type = "line", which.PCs = c(1, 2),
   f = 0.2, color = "temp", dotsize = 5, restrict.map.range = TRUE,
   shape.by.archive = TRUE, projection = "mollweide", boundcirc = TRUE,
-  probs = c(0.025, 0.25, 0.5, 0.75, 0.975))
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975), repeatMapLegend = FALSE,
+  legendPosition = c(0.8, 0.2))
 }
 \arguments{
 \item{ens.PC.out}{results of pcaEns()}
@@ -34,6 +35,10 @@ plotPcaEns(ens.PC.out, TS, map.type = "line", which.PCs = c(1, 2),
 
 \item{probs}{quantiles to calculate and plot in the PC timeseries}
 
+\item{repeatMapLegend}{replot the legend for each map after the first?}
+
+\item{legendPosition}{Where to put the map legend?}
+
 \item{lineLabels}{Labels for the quantiles lines}
 }
 \value{
@@ -45,8 +50,9 @@ Map ensemble pca loadings and plot PC timeseries
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -58,7 +64,7 @@ Other plot: \code{\link{axisLabel}},
 
 Other pca: \code{\link{ar1Surrogates}},
   \code{\link{createSyntheticTimeseries}},
-  \code{\link{pcaEns}}
+  \code{\link{getLegend}}, \code{\link{pcaEns}}
 }
 \author{
 Nick McKay

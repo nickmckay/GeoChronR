@@ -1,3 +1,85 @@
+
+#' @export
+#' @family LiPD manipulation
+#' @title pull variable out of TS object
+#' @description pulls all instances of a single variable out of a TS
+#' @param TS a LiPD Timeseries object
+#' @param variable the name of variable in a TS object
+#' @returns a vector of the values, with NA representing instances without this variable.
+pullTsVariable = function(TS,variable){
+  allNames <- unique(unlist(sapply(TS,names)))
+  
+  #test for exact match
+  which.var <- which(variable == allNames)
+  if(length(which.var) == 0){#try a fuzzier search
+    which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
+    if(length(which.var) == 1){#
+      warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
+      }else if(length(which.var) == 0){
+        stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
+      }else{
+        stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+      }
+    variable <- allNames[which.var]  
+  }
+
+  #pull out the variable
+  var <- sapply(TS,"[[",variable)
+  
+
+  if(is.list(var)){#if it's a list, try to unpack it.
+    if(length(unlist(var)) < length(var)){#there are some NULS
+      newVar <- matrix(NA,nrow = length(var))
+      isNull <- sapply(var, is.null)
+      newVar[which(!isNull)] <- unlist(var)
+      var <- newVar
+      }
+  }
+  
+  return(var)
+  
+}
+#' @export
+#' @family LiPD manipulation
+#' @title push variable into of TS object
+#' @description pulls all instances of a single variable out of a TS
+#' @param TS a LiPD Timeseries object
+#' @param variable the name of variable in a TS object
+#' @param vec a vector of data to be added to the TS object
+#' @param createNew allow the function to create a new variable in the TS?
+#' @returns a vector of the values, with NA representing instances without this variable.
+pushTsVariable = function(TS,variable,vec,createNew = FALSE){
+  allNames <- unique(unlist(sapply(TS,names)))
+  
+  if(length(TS) != length(vec)){
+    stop("the lengths of TS and vec must match!")
+  }
+  
+  if(!createNew){
+  #test for exact match
+  which.var <- which(variable == allNames)
+  
+  if(length(which.var) == 0){#try a fuzzier search
+    which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
+    if(length(which.var) == 1){#
+      warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
+    }else if(length(which.var) == 0){
+      stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
+    }else{
+      stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+    }
+    variable <- allNames[which.var]  
+  }
+  }
+  #loop over the variable (Is there a better solution for this? I couldn't find one.)
+  for(i in 1:length(TS)){
+    TS[[i]][[variable]] <- vec[i]
+  }
+
+  return(TS)
+  
+}
+
 #' @export
 #' @family LiPD manipulation
 #' @title Flip Coordinates
@@ -137,7 +219,15 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
 
 
   }else{
-    aei = ens
+    #check to see if the ensemble needs to be flipped
+    #correlate pdya with ens[,1]
+    
+    test.cor <- cor(pdya,ens[,1])
+    if(test.cor < 0){
+      aei <- apply(ens,2,rev)
+    }else{
+      aei = ens
+    }
   }
   
   #guess
@@ -364,8 +454,9 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
     }
   }
   
-  
-  if(idi==0){
+  if(is.na(idi)){
+    index=NA
+  }else if(idi==0){
     index=NA
   }else{
     index=which(allNames==cnames[idi])

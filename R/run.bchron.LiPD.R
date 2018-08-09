@@ -143,12 +143,12 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
     depth=MT[[depthi]]$values
   }
   
-  #check for duplicate depths
-  while(length(depth)>length(unique(depth))){
-    i.d <- duplicated(depth)
-    depth[i.d] <- depth[i.d]+rnorm(n = length(i.d),sd = 0.1)
-  }
-  
+  # #check for duplicate depths
+  # while(length(depth)>length(unique(depth))){
+  #   i.d <- duplicated(depth)
+  #   depth[i.d] <- depth[i.d]+rnorm(n = length(i.d),sd = 0.1)
+  # }
+  # 
   
   #reservoir age
   # only for marine13
@@ -253,6 +253,7 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
   if(is.na(iter)){
   print("How many iterations would you like to perform?")
   iter = as.integer(readline(prompt = "Enter the number of iterations: "))
+  }
   if (iter<10000){
     iter =10000
   }else if (iter>1000000){
@@ -263,7 +264,6 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
     }else if (are_you_sure != 'n' && are_you_sure != 'y'){
       stop("Enter 'y' or 'n'")
     }
-  }
   }
   # Ask the user for the year the core has been extracted
   if(is.na(extractDate)){
@@ -297,9 +297,9 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
   
   # Perfom the run (finally)
   if (extractDate !=0){
-    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter, extractDate = extractDate)
+    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter, extractDate = extractDate,positionThicknesses = c(rep(1,length(depth))),jitterPositions = TRUE )
   } else {
-    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter)
+    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter,positionThicknesses = rep(1,length(depth)),jitterPositions = TRUE)
   }
   
   # Write back into a LiPD file
@@ -332,12 +332,13 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
     distTable$calibrationCurve = calCurves
     distTable$age14C = run$calAges[[i]]$ages
     distTable$sd14C = run$calAges[[i]]$ageSds
-    distTable$density$values = run$calAges[[i]]$densities
-    distTable$density$units = NA
-    distTable$density$description = "probability density that for calibrated ages at specific ages"
+    distTable$probabilityDensity$variableName = "probabilityDensity"
+    distTable$probabilityDensity$values = run$calAges[[i]]$densities
+    distTable$probabilityDensity$units = NA
+    distTable$probabilityDensity$description = "probability density that for calibrated ages at specific ages"
     distTable$age$values = run$calAges[[i]]$ageGrid
     distTable$age$units = "yr BP"
-    
+    distTable$age$variableName <- "age"
     
     # write it out
     L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[i]]=distTable

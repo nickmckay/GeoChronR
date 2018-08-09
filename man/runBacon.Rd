@@ -13,7 +13,7 @@ runBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
   rejectedAgesVar = "rejected", BaconAsk = TRUE, BaconSuggest = TRUE,
-  baconThick = 5, baconAccMean = 20)
+  baconThick = NA, baconAccMean = 20)
 }
 \arguments{
 \item{L}{a single LiPD object}

@@ -30,5 +30,6 @@ Gets the index for a LiPD "variable list"
 Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{flipCoords}},
   \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{selectData}}
+  \code{\link{pullTsVariable}},
+  \code{\link{pushTsVariable}}, \code{\link{selectData}}
 }

@@ -26,8 +26,8 @@ Plots or adds a line to aplot
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}},
+  \code{\link{getLegend}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

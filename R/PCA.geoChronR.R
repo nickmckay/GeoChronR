@@ -41,8 +41,8 @@ for(n in 1:nEns){#for each ensemble member
   dataDensity[,n]=apply(!is.na(PCAMAT),1,sum)/nD
   
   if(any(!is.na(weights))){
-    normmat=scale(PCAMAT,na.rm=T)
-    wmat=scale(normmat,scale=1/weights,na.rm=T)
+    normmat=scale(PCAMAT)
+    wmat=scale(normmat,scale=1/weights)
     PCAMAT=wmat
   }
   

@@ -23,5 +23,6 @@ Estimate uncertainty (plus/minus values) from a range of values
 Other LiPD manipulation: \code{\link{flipCoords}},
   \code{\link{getVariableIndex}},
   \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{selectData}}
+  \code{\link{pullTsVariable}},
+  \code{\link{pushTsVariable}}, \code{\link{selectData}}
 }

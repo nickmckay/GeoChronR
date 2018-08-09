@@ -16,5 +16,6 @@ Swap latitude and longitude in a LiPD object
 Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{getVariableIndex}},
   \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{selectData}}
+  \code{\link{pullTsVariable}},
+  \code{\link{pushTsVariable}}, \code{\link{selectData}}
 }

@@ -45,9 +45,10 @@ Plot or add probability distributions from a paleo or chron model to a plot.
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
+  \code{\link{getLegend}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}}, \code{\link{plotPcaEns}},
+  \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},

@@ -30,5 +30,6 @@ Other spectra: \code{\link{createSyntheticTimeseries}},
   \code{\link{powerSpectrumEns}}
 
 Other pca: \code{\link{createSyntheticTimeseries}},
-  \code{\link{pcaEns}}, \code{\link{plotPcaEns}}
+  \code{\link{getLegend}}, \code{\link{pcaEns}},
+  \code{\link{plotPcaEns}}
 }

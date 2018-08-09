@@ -43,5 +43,7 @@ Selects and extracts a LiPD "variable list"
 \seealso{
 Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{flipCoords}}, \code{\link{getVariableIndex}},
-  \code{\link{mapAgeEnsembleToPaleoData}}
+  \code{\link{mapAgeEnsembleToPaleoData}},
+  \code{\link{pullTsVariable}},
+  \code{\link{pushTsVariable}}
 }

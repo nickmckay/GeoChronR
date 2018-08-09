@@ -26,5 +26,6 @@ Other spectra: \code{\link{ar1Surrogates}},
   \code{\link{powerSpectrumEns}}
 
 Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{pcaEns}}, \code{\link{plotPcaEns}}
+  \code{\link{getLegend}}, \code{\link{pcaEns}},
+  \code{\link{plotPcaEns}}
 }
