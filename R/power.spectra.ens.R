@@ -77,7 +77,15 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' \item powerSyn: matrix of synthetic spectral power results
 #' }
 #' @import lomb
-computeSpectraEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
+computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gaussianize=FALSE){
+  
+  # process options
+  
+  if (method=='lomb-scargle'){ofac <- 1} 
+  else if (method=='mtm'){padfac <- 2}   
+  else if (method=='nuspectral'){sigma <- 0.02, wgtrad=0.2}    
+  else  #unknown method error  
+  
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -86,13 +94,9 @@ computeSpectraEns = function(time,values,max.ens=NA,ofac=1,gaussianize=FALSE){
   time = as.matrix(time)
   values = as.matrix(values)
   
-  if(gaussianize==TRUE){
-    vals_used = gaussianize(values)  
-  }else{vals_used=values}
-  
+  if(gaussianize==TRUE){vals_used = gaussianize(values)}else{vals_used=values}
   
   if(nrow(time) != nrow(values)){stop("time and values must have the same number of rows (observations)")}
-  
   
   #how many ensemble members?
   nensPoss = ncol(time)*ncol(values)
