@@ -796,11 +796,11 @@ getLegend<-function(a.gplot){
 #' @param lineLabels Labels for the quantiles lines
 #' @param boundcirc For polar projects, draw a boundary circle? TRUE or FALSE
 #' @param probs quantiles to calculate and plot in the PC timeseries
-#' @param repeatMapLegend replot the legend for each map after the first?
+#' @param which.leg which map legend to include in the summary plot?
 #' @param legendPosition Where to put the map legend?
 #' @return A gridExtra ggplot object
 #' @examples 
-plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975),repeatMapLegend = FALSE,legendPosition = c(0.8,0.2)){
+plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975),which.leg = 1,legendPosition = c(0.5,0.5)){
   #get data out of the TS
   lat = sapply(TS,"[[","geo_latitude")
   lon = sapply(TS,"[[","geo_longitude")
@@ -839,7 +839,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   
   plotlist=list()
   maplist=list()
-  
+  leglist <- list()
   
   
   #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
@@ -878,7 +878,6 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     maplist[[i]] = map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+theme(legend.box = "horizontal",legend.position=legendPosition)
     
     
-    if(i == 1){
     testMap <- map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+
       theme(legend.box = "horizontal",legend.position=legendPosition) + 
       scale_shape_manual(name = "Archive Type",values = archiveShapes) +
@@ -886,8 +885,8 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
       scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colourbar")
     
     
-    gleg <- getLegend(testMap)
-    }
+    leglist[[i]] <- getLegend(testMap)
+    
     
     
     #if(i>1 & !repeatMapLegend){#Don't repeat all the legend components
@@ -905,21 +904,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     
     
     
-    #plot sample depth
-    
-    bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity,age = ens.PC.out$age)
-    
-    plot_sample.depth = ggplot(data=bddf)+geom_area(aes(x=age,y=sampleDepth),fill="gray20")+
-    ylab("fractional mean sample depth")+
-    geoChronRPlotTheme()
-    
-      if(grepl(pattern = "AD",ageUnits) | grepl(pattern = "CE",ageUnits) ){
-        plot_sample.depth  <- plot_sample.depth  + labs(x="Year (AD)")
-      }else{
-        plot_sample.depth  <- plot_sample.depth  +
-          scale_x_reverse("Age (yr BP)")
-      }
-    
+
     
 
     plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
@@ -938,19 +923,36 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     }
   }
     
-    df2=data.frame(age=ens.PC.out$age,sampleDensity = ens.PC.out$meanDataDensity)
-    backDensity = ggplot()+geom_bar(data=df2,aes(x=age,y=sampleDensity),stat = 'identity')
+  #plot sample depth
+  
+  bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity*100,age = ens.PC.out$age)
+  
+  plot_sample.depth = ggplot(data=bddf)+geom_area(aes(x=age,y=sampleDepth),fill="gray20")+
+    ylab("Data coverage (%)")+
+    geoChronRPlotTheme()
+  
+  if(grepl(pattern = "AD",ageUnits) | grepl(pattern = "CE",ageUnits) ){
+    plot_sample.depth  <- plot_sample.depth  + labs(x="Year (AD)")
+  }else{
+    plot_sample.depth  <- plot_sample.depth  +
+      scale_x_reverse("Age (yr BP)")
+  }
+  
+  
     alllist = append(maplist,plotlist)
-    tt=1:length(alllist)
-    alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
+    # tt=1:length(alllist)
+    # alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
     #append on the legend
-    alllist[[max(tt)+1]] <- gleg
+    alllist[[length(alllist)+1]] <- leglist[[which.leg]]
     #append data density
-    alllist[[max(tt)+2]] <- plot_sample.depth
+    alllist[[length(alllist)+1]] <- plot_sample.depth
     
-    fullPlot = grid.arrange(grobs=alllist,ncol=2,widths=c(1.5,1.5))
     
-    return(list(lines = plotlist, maps= maplist,summary =fullPlot,sampleDepth = plot_sample.depth))
+    fullPlot = grid.arrange(grobs=alllist,nrow=length(maplist)+1,widths=c(1.5,1.5))
+    
+    
+    
+    return(list(lines = plotlist, maps= maplist,summary =fullPlot,sampleDepth = plot_sample.depth,legends = leglist))
     
   }
   
