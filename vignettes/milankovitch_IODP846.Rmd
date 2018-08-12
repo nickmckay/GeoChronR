@@ -25,7 +25,7 @@ probstack <- read.table("/Users/julieneg/Documents/Science/Research/GeoChronR/sp
 
 Let's plot it
 ```{r}
-df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O)
+df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O, upper=iodp846$upper.95, lower=iodp846$lower.95)
 ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, central estimate") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 Clearly there is a long-term trend here, paired with the transition from "41k world" to "100k world" somewhere around 0.8 Ma [Paillard, 2001]. 
@@ -34,14 +34,11 @@ To keep things simple and lower computational costs, let's focus on the last 1 M
 ```{r}
 dfs = dplyr::filter(df,t<=1000)
 dt = diff(dfs$t)
-ggplot() + 
-  geom_histogram(aes(x=dt,y = ..density..), alpha = 0.7, fill = "#333333") + 
-  geom_density(aes(x=dt),fill = "#ff4d4d", alpha = 0.5) + xlim(c(0,10)) +
-  theme(panel.background = element_rect(fill = '#ffffff')) + 
-  ggtitle("Distribution of time intervals")
+ggplot() + xlim(c(0,10)) + 
+  geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 
-We see that over the past Ma, the time increments dt in this core cluster around 2 ka, but they are indeed even. For now, let us assume that the time axis, ueven though it is, is well-known (no uncertainty). 
+We see that over the past Ma, the time increments dt in this core are sharply peaked around 2.5 ka, but they range from 0 to about 7.5. For now, let us assume that the time axis, uneven though it is, is well-known (no uncertainty). 
 
 ## Time-certain spectral analysis 
 There are two ways to proceed: 1) use methods that explictly deal with unevenly-spaced data, or 2) interpolate to a regular grid and apply standard methods. 
@@ -50,7 +47,7 @@ For 1, we could use the *Lomb-Scargle periodogram* or the lesser-known *nuspectr
 ### Lomb-Scargle periodogram
 This is a very standard method implemented in many packages. For a review, see VanderPlas, J. T. (2018), Understanding the lomb–scargle periodogram, The Astrophysical Journal Supplement Series, 236(1), 16, doi:10.3847/1538-4365/aab766.
 
-There are several ways to implement LS. In GeoChronR, this is done via the *lomb* package:
+There are several ways to implement LS. GeoChronR does this via the [lomb](https://www.rdocumentation.org/packages/lomb) package:
 
 ```{r}
 library(lomb)
@@ -79,52 +76,95 @@ show(p.ls)
 Where it is clearly seen that the data appear to contain periodic signals at the Milankotich frequencies (and others). 
 
 ### Multi-taper Method
-The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], though the method currently only handles evenly-spaced data. Small potatoes! The data are not that far from evenly-spaced, so let's interpolate and see what we get. Conveniently, both the interpolation routine and mtm are available within the *astrochron* package:
+The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], though the method currently only handles evenly-spaced data. Small potatoes! The data are not that far from evenly-spaced, so let's interpolate and see what we get. Conveniently, both the interpolation routine and mtm are available within the [astrochron](https://www.rdocumentation.org/packages/astrochron) package:
 
 ```{r}
 library(astrochron)
 dfe = linterp(dfs,dt=2.5)
-spec.mtm <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=1, verbose = F)
-sig_freq <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=2, verbose = F)
+spec.mtm <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=1, verbose = F, detrend=T)
+sig.freq <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=2, verbose = F, detrend=T)
 
 # plot this 
 p.mtm <- ggplot() + geom_line(aes(x=spec.mtm$Frequency,y=spec.mtm$Power)) + xlab("Frequency (1/kyr)") + ylab("Normalized Power") + scale_x_log10() +scale_y_log10() + ggtitle("IODP 846 d18O, Multi-taper method")
-p.mtm <- plotSpectraAnnotate(p.mtm,periods = 1/sig_freq)
+p.mtm <- plotSpectraAnnotate(p.mtm,periods = 1/sig.freq)
 show(p.mtm)
 ```
 
-TODO: add some play with the time-bandwidth product. 
+We notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals strong power law behavior (linear decrease in these log units) from periods of 5 to 100 ky. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis. The plain vanilla *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2` will export the frequencies identified as "significant" by this procedure. In this case, it identifies 41 and 19 ky (as it should), 90 ky (close enough to 100ky given the resolution), but surprisingly favors 55ky over the known 23ky precessional peak. Here it's helpful to take a step back and contemplate our null hypothesis. If we assume that the continuum of climate variability [Huybers & Curry, 2006] is well described by a power-law, maybe that is a better null. Never fear! astrochron has an app for that:
+
+```{r}
+spec.mtmPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=1, verbose = F, flow=0.005, fhigh=0.1)
+sig.freqPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=2, verbose = F, flow=0.005, fhigh=0.1)
+
+# plot this 
+p.mtmPL <- ggplot() + geom_line(aes(x=spec.mtmPL$Frequency,y=spec.mtmPL$Power)) + xlab("Frequency (1/kyr)") + ylab("Normalized Power") + scale_x_log10() +scale_y_log10() + ggtitle("IODP 846 d18O, Multi-taper method, power-law null")
+p.mtmPL <- plotSpectraAnnotate(p.mtmPL,periods = 1/sig.freqPL)
+show(p.mtmPL)
+```
+
+This gets rid of the 55 kyr cycle, and now we've got the split precessional peak, consistent with the astronomical forcing [Berger, 1978]. Here we defined `fhigh = 0.1` as the highest frequency at which to see cycles. Tweak it to see what happens when you use a higher one. 
 
 
 ## Time-uncertain spectral analysis 
-Now let's consider age uncertainties --> tuts package
+Now let's consider age uncertainties thanks to the [tuts package](https://www.rdocumentation.org/packages/tuts), which is designed to handle Gaussian uncertainties in the time assigned with each depth in a core. 
 
-
-median_ali is the median age and lower_95/upper_95 is the 95% confidence interval. 
-Let us inspect the age uncertainties:
+In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  Let us inspect the age uncertainties:
 
 ```{r}
-df = data.frame(t = data$median.ali, upper = data$upper.95, lower=data$lower.95)
+df = data.frame(t = iodp846$median.ali, upper = iodp846$upper.95, lower=iodp846$lower.95)
 library(ggplot2)
 library(ggthemes)
 ggplot(df) + geom_ribbon(aes(x=t/1000,ymin=lower-t,ymax=upper-t),fill="orange") + ggtitle("IODP 846 aligment to ProbStack, 95% CI width") + ylab("CI width (ky)") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 
-Let us prepare this dataset for analysis w/ TUTS Bayesian Frequency Selection:
+While they are not exactly Gaussian, they are not far from it, which means the time-uncertainty model can be applied with too much hand-wringing:
+
+```{r}
+age_uncert = dfs$upper-dfs$lower
+ggplot() + 
+  geom_histogram(aes(x=age_uncert,y = ..density..), bins=10 , alpha = 0.9, fill = "orange") + ggtitle("Distribution of age uncertainties") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
+```
+
+
+
+Let us prepare this dataset for analysis w/ TUTS Bayesian Frequency Selection.
+One thing to be aware of is that the core top has zero uncertainty, but TUTS requires finite (non-zero) uncertainties. We thus need to give it a small, but nonzero, value (100y, say).
 
 ```{r}
 library(tuts)
-y = data$d18O
-ti.mu = data$median.ali
+y <- dfs$d18O
+ti.mu <-  dfs$t #assume the median and the mean coincide
 # extract standard deviation. Assume that the width of the 95% intervals is 2*1.96 * \sigma
-ti.sd <- (data$upper.95 - data$lower.95)/3.92
+ti.sd <- (age_uncert)/3.92
 ti.sd[ti.sd<0.1]=0.1 # replace zero value so it doesn't break BFS
 ```
 
-This breaks my computer:
-WRAP=tuwrap(y=y,ti.mu=ti.mu,ti.sd=ti.sd,n.sim=100,CV=FALSE) 
+We are now ready to run TUTS. Now, running out a Monte Carlo Markov chain on this many frequencies might very well break your computer. So let's first run their version of the Lomb-Scargle periodogram to identify
 
-solution: 
+```{r}
+TULS=tuls(y=y,ti.mu=ti.mu,ti.sd=ti.sd,n.sim=500)
+candidate.frequencies = summary(TULS)
+```
+
+```{r}
+BFS = tubfs(y=y,ti.mu=ti.mu,ti.sd=ti.sd,n.sim=10,freqs=25)
+```
+Wow, that only took 12h!
+
+```{r}
+plot(BFS,type='periodogram')               # spectral analysis (CI, burn).
+plot(BFS,type='predTUTS', CI=0.99)         # One step predictions (CI, burn).
+plot(BFS,type='cv')                        # 5 fold cross validation plot (CI, burn).
+plot(BFS,type='GR')                        # Gelman-Rubin diagnostics (CI, burn).
+plot(BFS,type='mcmc')                      # mcmc diagnostics.
+plot(BFS,type='volatility')                # Volatility realizaitons.
+```
+
+
+
+
+#WRAP=tuwrap(y=y,ti.mu=ti.mu,ti.sd=ti.sd,n.sim=100,CV=FALSE) 
+
 
 
 
