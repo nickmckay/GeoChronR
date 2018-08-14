@@ -180,7 +180,7 @@ Interesting. There's a hint of a negative correlation during this time interval.
 
 Here we specify the ensembles and data of each timeseries, and the width of the bins for correlation. More options are available in ?corEns
 ```{r, cache=TRUE}
-corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 300,max.ens = 100)
+corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 500,max.ens = 100)
 ```
 
 ##Plot the ensemble correlation

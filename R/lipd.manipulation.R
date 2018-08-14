@@ -11,10 +11,22 @@
 tidyTs <- function(TS){
   pb <- txtProgressBar(min=0,max=length(TS),style=3)
   print(paste("Tidying your ",length(TS)," timeseries"))
+  
+  
   for(i in 1:length(TS)){
     setTxtProgressBar(pb, i)
     
     ti <- TS[[i]]
+    
+    #exclude any ensembles (For now)
+    is.mat <- sapply(ti,is.matrix)
+    ncolumns <- rep(0,length = length(is.mat)) 
+    ncolumns[which(is.mat)] <- sapply(ti[which(is.mat)],ncol)
+
+    if(any(ncolumns>1)){
+      ti <- ti[-which(ncolumns>1)]
+    }   
+
     
     #find which entries are vectors. Year and value should be. There could be more.
     al <- sapply(ti,length)

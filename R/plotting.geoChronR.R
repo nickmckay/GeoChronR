@@ -1297,6 +1297,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @description Creates a suite of plots to characterize the results of an ensemble regression.
   #' @import ggplot2
   #' @import ggridges
+  #' @import dplyr
   #' @import RColorBrewer
   #' @import grDevices
   #' @import scales
@@ -1313,6 +1314,9 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @return A ggplot object of the plot 
   plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorRamp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
  
+    
+    #force grouping by TSid
+    plot.df <- dplyr::group_by(plot.df,paleoData_TSid)
     
     #create the color function
     #start with some error checking...
@@ -1333,8 +1337,8 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
       }
     }
     plot.df <- plot.df %>%
-      mutate(scaled = scale(paleoData_values)*scaleFactor) %>%
-      filter(is.finite(scaled))
+      dplyr::mutate(scaled = scale(paleoData_values)*scaleFactor) %>%
+      dplyr::filter(is.finite(scaled))
     
     #arrange the data.frame by TSid factors
     plot.df$paleoData_TSid <- factor(plot.df$paleoData_TSid,levels = unique(plot.df$paleoData_TSid))
@@ -1346,7 +1350,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     plot.df$cv <- factor(plot.df$cv,levels = unique(plot.df$cv))
     
     axisStats <- plot.df %>%
-      summarize(variableName = unique(paleoData_variableName),
+      dplyr::summarize(variableName = unique(paleoData_variableName),
                 units = unique(paleoData_units),
                 dataSetName = unique(dataSetName),
                 archiveType = unique(archiveType),
@@ -1354,9 +1358,9 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
                 sdhigh = sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
                 sdlow = -sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
                 colorVar = unique(cv)) %>%
-      mutate(axisLabel = paste0(variableName," (",units,")")) %>%
-      mutate(axisMin = as.character(signif(sdlow,3))) %>%
-      mutate(axisMax = as.character(signif(sdhigh,3)))
+      dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
+      dplyr::mutate(axisMin = as.character(signif(sdlow,3))) %>%
+      dplyr::mutate(axisMax = as.character(signif(sdhigh,3)))
     
     colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
     

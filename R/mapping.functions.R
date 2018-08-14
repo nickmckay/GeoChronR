@@ -134,9 +134,9 @@ baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projec
     
     
     if(global){
-      dum = map(plot = FALSE)
+      dum = maps::map(plot = FALSE)
     }else{
-      dum = map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE)
+      dum = maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE)
     }
     
     #dum = map(xlim = x_cell_lim, ylim = y_cell_lim, plot = FALSE)

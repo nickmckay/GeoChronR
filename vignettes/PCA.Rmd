@@ -54,6 +54,19 @@ and filter the TS object to only include variables that have been interepreted a
 ```{r,warning=FALSE}
 TS.filtered = filterTs(TS,"interpretation1_variable == T")
 ```
+OK, let's make a quick plot stack to see what we're dealing with.
+
+```{r}
+tidyDf <- tidyTs(TS.filtered)
+```
+
+
+```{r}
+plotTimeseriesStack(tidyDf)
+```
+
+
+
 
 Now bin all the data in the TS to the same interval, 10 year interval
 ```{r,cache=TRUE}
