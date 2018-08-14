@@ -17,5 +17,6 @@ Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{getVariableIndex}},
   \code{\link{mapAgeEnsembleToPaleoData}},
   \code{\link{pullTsVariable}},
-  \code{\link{pushTsVariable}}, \code{\link{selectData}}
+  \code{\link{pushTsVariable}}, \code{\link{selectData}},
+  \code{\link{tidyTs}}
 }

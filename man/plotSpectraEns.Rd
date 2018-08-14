@@ -27,6 +27,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotScatterEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 
 Other spectra: \code{\link{ar1Surrogates}},

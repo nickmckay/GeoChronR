@@ -27,6 +27,7 @@ Other plot: \code{\link{geoChronRPlotTheme}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }
 \author{

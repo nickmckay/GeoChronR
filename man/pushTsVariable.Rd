@@ -22,5 +22,6 @@ pulls all instances of a single variable out of a TS
 Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
   \code{\link{flipCoords}}, \code{\link{getVariableIndex}},
   \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{pullTsVariable}}, \code{\link{selectData}}
+  \code{\link{pullTsVariable}}, \code{\link{selectData}},
+  \code{\link{tidyTs}}
 }

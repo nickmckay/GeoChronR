@@ -54,6 +54,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }
 \author{

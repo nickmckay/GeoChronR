@@ -1290,9 +1290,134 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     return(regPlot)
   }
   
-  
-  
-  
+  #' @export
+  #' @family plot
+  #' @author Nick McKay
+  #' @title Plot a bunch of timeseries in a vertical stack
+  #' @description Creates a suite of plots to characterize the results of an ensemble regression.
+  #' @import ggplot2
+  #' @import ggridges
+  #' @import RColorBrewer
+  #' @import grDevices
+  #' @import scales
+  #' @param plot.df A tidy data.frame, typically the output of tidyTs()
+  #' @param timeVar Which variable to put on the x-axis. Must be in plot.df. Typically "year", "age", or "depth"
+  #' @param colorVar Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.
+  #' @param fillAlpha Transparency of the shading
+  #' @param scaleFactor Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)
+  #' @param scaleHeight Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)
+  #' @param labBuff Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)
+  #' @param labSize Font size for the ylabels
+  #' @param labSpace Multiplier on labBuff for the axis label separation from the y-scale
+  #' @param colorFun A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))
+  #' @return A ggplot object of the plot 
+  plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorRamp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
+ 
+    
+    #create the color function
+    #start with some error checking...
+    if(is.character(colorRamp)){#then use that for the ramp
+      #colorFun <- function(nColors,colorRamp){rep(grDevices::rgb(maxColorValue = 255,t(grDevices::col2rgb(colorRamp))),nColors)}
+      colorFun <- function(nColors,colorRamp){rep(colorRamp,nColors)}
+    }else{
+      colorFun <- function(nColors,colorRamp){grDevices::colorRampPalette(colorRamp(nColors))(nColors)}
+    }
+    
+    
+    #check the plot.df for required variables
+    reqVar <- c("paleoData_values","paleoData_TSid","paleoData_units","paleoData_variableName","dataSetName", "archiveType",timeVar)
+    
+    for(r in 1:length(reqVar)){
+      if(!any(reqVar[r] == names(plot.df))){
+        stop(paste(reqVar[r],"must be in plot.df"))
+      }
+    }
+    plot.df <- plot.df %>%
+      mutate(scaled = scale(paleoData_values)*scaleFactor) %>%
+      filter(is.finite(scaled))
+    
+    #arrange the data.frame by TSid factors
+    plot.df$paleoData_TSid <- factor(plot.df$paleoData_TSid,levels = unique(plot.df$paleoData_TSid))
+    
+    
+    #copy the color variable into plot.df
+    plot.df$cv = plot.df[[colorVar]]
+    
+    plot.df$cv <- factor(plot.df$cv,levels = unique(plot.df$cv))
+    
+    axisStats <- plot.df %>%
+      summarize(variableName = unique(paleoData_variableName),
+                units = unique(paleoData_units),
+                dataSetName = unique(dataSetName),
+                archiveType = unique(archiveType),
+                mean = mean(paleoData_values,na.rm = T),
+                sdhigh = sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
+                sdlow = -sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
+                colorVar = unique(cv)) %>%
+      mutate(axisLabel = paste0(variableName," (",units,")")) %>%
+      mutate(axisMin = as.character(signif(sdlow,3))) %>%
+      mutate(axisMax = as.character(signif(sdhigh,3)))
+    
+    colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
+    
+    axisStats <- axisStats[colOrder,]
+    
+    nlines <- length(unique(plot.df$paleoData_TSid))
+    
+    nColors <- min(length(levels(axisStats$colorVar)),nlines)
+    
+    colVec <- colorFun(nColors,colorRamp)
+    axisStats$colors <- colVec[match(axisStats$colorVar,levels(axisStats$colorVar))]
+    
+    spag <- ggplot(plot.df, aes(height = scaled, y = paleoData_TSid,color = cv, fill = cv)) +
+      geom_ridgeline(aes_string(x = timeVar),min_height = -Inf,alpha = fillAlpha)+
+      scale_color_manual(name = colorVar,values = colVec)+
+      scale_fill_manual(name = colorVar,values = colVec)+
+      theme_ridges(grid = TRUE)+
+      theme_bw()
+    
+    
+    ylow <- seq_len(nlines)-scaleHeight
+    yhigh <-  seq_len(nlines)+scaleHeight
+    
+    
+    my.xrange <- ggplot_build(spag)$layout$panel_scales$x[[1]]$range$range
+    
+    xpos <- rep(my.xrange,times = ceiling(nlines/2))[seq_len(nlines)]
+    
+    #guess position for label
+    xrtick <- my.xrange+c(-1 ,1)*abs(diff(my.xrange))*labBuff*.25
+    xposTick <- rep(xrtick,times = ceiling(nlines/2))[seq_len(nlines)]
+    
+    xrtickLabel <- my.xrange+c(-1 ,1)*abs(diff(my.xrange))*labBuff
+    xposTickLabel <- rep(xrtickLabel,times = ceiling(nlines/2))[seq_len(nlines)]
+    
+    xrlab <- my.xrange+c(-1 ,1)*abs(diff(my.xrange))*labBuff*labSpace
+    xposLab <- rep(xrlab,times = ceiling(nlines/2))[seq_len(nlines)]
+    if(timeVar == "year"){
+      xlabName <- paste0("Year (",plot.df$yearUnits[1],")")
+    }else if(timeVar == "age"){
+      xlabName <- paste0("Age (",plot.df$ageUnits[1],")")
+    }else if(timeVar == "depth"){
+      xlabName <- paste0("Depth (",plot.df$depthUnits[1],")")
+    }else{
+      xlabName <- "¯\\_(ツ)_/¯"
+    }
+    spag <- spag+annotate(geom = "segment", colour = axisStats$colors , x = xpos, xend = xpos, y = ylow, yend  = yhigh)+
+      annotate(geom = "segment", colour = axisStats$colors , x = xpos, xend = xposTick, y = ylow, yend  = ylow)+
+      annotate(geom = "segment", colour = axisStats$colors , x = xpos, xend = xposTick, y = yhigh, yend  = yhigh)+
+      annotate(geom = "text", colour = axisStats$colors , x = xposTickLabel, y = ylow, label = axisStats$axisMin,size = labSize)+
+      annotate(geom = "text", colour = axisStats$colors , x = xposTickLabel, y = yhigh, label = axisStats$axisMax,size = labSize)+
+      annotate(geom = "text", colour = axisStats$colors , x = xposLab, y = seq_len(nlines), label = axisStats$axisLabel,size = labSize,angle = 90)+
+      scale_y_discrete(name = NULL,labels = axisStats$dataSetName, expand = c(0.02,-0.75))+
+      scale_x_continuous(name = xlabName, expand = c(0.02,0))
+    
+    if(length(unique(axisStats$colors))==1){
+      spag = spag+theme(legend.position = "none")
+    }
+    
+    return(spag)
+  }
   
   
   

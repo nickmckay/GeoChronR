@@ -1,5 +1,88 @@
 
 #' @export
+#' @import dplyr
+#' @import tibble
+#' @import purrr
+#' @family LiPD manipulation
+#' @title create tidy data.frame from TS
+#' @description takes a TS object and turns it into a long, tidy, data.frame. Useful for data manipulation and analysis in the tidyverse and plotting
+#' @param TS a LiPD Timeseries object
+#' @returns a tidy data.frame
+tidyTs <- function(TS){
+  pb <- txtProgressBar(min=0,max=length(TS),style=3)
+  print(paste("Tidying your ",length(TS)," timeseries"))
+  for(i in 1:length(TS)){
+    setTxtProgressBar(pb, i)
+    
+    ti <- TS[[i]]
+    
+    #find which entries are vectors. Year and value should be. There could be more.
+    al <- sapply(ti,length)
+    
+    #going to assume that we only want the longest ones here
+    long <- which(al==max(al))
+    
+    if(!any(names(long)=="paleoData_values")){
+      stop(paste0(as.character(i),": paleoData_values didn't show up as being the longest vector"))
+    }
+    
+    if(!(any(names(long)=="year") | any(names(long)=="age") | any(names(long)=="depth") )){
+      stop(paste0(as.character(i),": There must be an 'age', 'year', or 'depth' column that's the same length as paleoData_values"))
+    }
+    
+    sdf <- tibble::as.tibble(ti[long])
+    
+    #separate numeric and character values
+    if(is.character(sdf$paleoData_values)){
+      sdf$paleoData_values_char <- sdf$paleoData_values
+      sdf$paleoData_values <- NA
+    }
+    
+    
+    #handle ts variables that are longer than 1, but not the full length by concatenating
+    
+    med <- ti[which(al<max(al) & al>1)]
+    collapsed <- sapply(med, paste,collapse = ", ")
+    ti[which(al<max(al) & al>1)] <- collapsed
+    
+    #check length again
+    al2 <- sapply(ti,length)
+    
+    #replicate the metadata to each observation row
+    short <- which(al2==1)
+    mdf <- as.data.frame(ti[short])
+    meta.df <- purrr::map_df(seq_len(nrow(sdf)), ~mdf)
+    
+    #combine them together
+    tdf <- dplyr::bind_cols(sdf,meta.df)
+    if(i == 1){
+      tidyData <- tdf
+    }else{
+      
+      
+      
+      nt <- try(dplyr::bind_rows(tidyData,tdf),silent = T)
+      if(is.data.frame(nt)){
+        tidyData <- nt
+      }else{#try to fix it.
+        comp <- arsenal::compare(tidyData,tdf)
+        class1 <- unlist(comp$vars.summary$class.x)
+        class2 <- unlist(comp$vars.summary$class.y)
+        tc <- comp$vars.summary$var.x[which(class1 == "character" & class2 == "numeric")]
+        for(tci in 1:length(tc)){
+          tdf[tc[tci]] <- as.character(tdf[tc[tci]])
+        }
+        tidyData <- dplyr::bind_rows(tidyData,tdf)
+      }
+      
+    }
+  }
+  return(tidyData)
+}
+
+
+
+#' @export
 #' @family LiPD manipulation
 #' @title pull variable out of TS object
 #' @description pulls all instances of a single variable out of a TS
@@ -15,25 +98,25 @@ pullTsVariable = function(TS,variable){
     which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
     if(length(which.var) == 1){#
       warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
-      }else if(length(which.var) == 0){
-        stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
-      }else{
-        stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
-      }
+    }else if(length(which.var) == 0){
+      stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
+    }else{
+      stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+    }
     variable <- allNames[which.var]  
   }
-
+  
   #pull out the variable
   var <- sapply(TS,"[[",variable)
   
-
+  
   if(is.list(var)){#if it's a list, try to unpack it.
     if(length(unlist(var)) < length(var)){#there are some NULS
       newVar <- matrix(NA,nrow = length(var))
       isNull <- sapply(var, is.null)
       newVar[which(!isNull)] <- unlist(var)
       var <- newVar
-      }
+    }
   }
   
   return(var)
@@ -56,26 +139,26 @@ pushTsVariable = function(TS,variable,vec,createNew = FALSE){
   }
   
   if(!createNew){
-  #test for exact match
-  which.var <- which(variable == allNames)
-  
-  if(length(which.var) == 0){#try a fuzzier search
-    which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
-    if(length(which.var) == 1){#
-      warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
-    }else if(length(which.var) == 0){
-      stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
-    }else{
-      stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+    #test for exact match
+    which.var <- which(variable == allNames)
+    
+    if(length(which.var) == 0){#try a fuzzier search
+      which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
+      if(length(which.var) == 1){#
+        warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
+      }else if(length(which.var) == 0){
+        stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
+      }else{
+        stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+      }
+      variable <- allNames[which.var]  
     }
-    variable <- allNames[which.var]  
-  }
   }
   #loop over the variable (Is there a better solution for this? I couldn't find one.)
   for(i in 1:length(TS)){
     TS[[i]][[variable]] <- vec[i]
   }
-
+  
   return(TS)
   
 }
@@ -161,8 +244,8 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
     }
   }
   
-
-    #make sure the ensemble is there, with data
+  
+  #make sure the ensemble is there, with data
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
@@ -199,25 +282,25 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   
   
   if(!copyAE){
-  #get the depth from the paleo measurement table
-  print("getting depth from the paleodata table...")
-  depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
-  
-  #restrict ensemble members
-  if(!is.na(max.ensemble.members)){
-    if(ncol(ens)>max.ensemble.members){
-      #randomly select the appropriate number of ensemble members
-      ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
+    #get the depth from the paleo measurement table
+    print("getting depth from the paleodata table...")
+    depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
+    
+    #restrict ensemble members
+    if(!is.na(max.ensemble.members)){
+      if(ncol(ens)>max.ensemble.members){
+        #randomly select the appropriate number of ensemble members
+        ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
+      }
     }
-  }
-
-  #interpolate
-  na.depth.i = which(!is.na(depth))
-  aei = matrix(nrow = length(depth),ncol = ncol(ens))
-  aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
-  aei[na.depth.i,] = aeig
-
-
+    
+    #interpolate
+    na.depth.i = which(!is.na(depth))
+    aei = matrix(nrow = length(depth),ncol = ncol(ens))
+    aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
+    aei[na.depth.i,] = aeig
+    
+    
   }else{
     #check to see if the ensemble needs to be flipped
     #correlate pdya with ens[,1]
@@ -231,7 +314,7 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   }
   
   #guess
-if(is.na(which.ens)){which.ens=1}
+  if(is.na(which.ens)){which.ens=1}
   
   
   #assign into measurementTable
@@ -247,7 +330,7 @@ if(is.na(which.ens)){which.ens=1}
   
   
 }
-  
+
 #' @title  What OS is this?
 #' @description Returns the OS
 #' @return A string ("osx","linux",or "windows")
@@ -370,7 +453,7 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
   
   #check to see if varName is null, and return 0 if so
   if(is.null(varName)){
-  return(NA)
+    return(NA)
   }
   
   varName <- tolower(varName)
@@ -438,7 +521,7 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
         }else{
           idi = idi[as.numeric(n)]
         }
-
+        
       }else{
         cat(paste("Use",cnames[idi], "?"), "\n")
         q = readline(prompt="y or n?")
@@ -546,7 +629,6 @@ alignTimeseriesBin = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = 
   if(is.na(binstep)){#if the binstep isn't specified
     binstep=abs(mean(diff(binvec,na.rm=TRUE)))
   }
-
-return(list(binX = binX, binY=binY,binstep=binstep,yearBins = yearX))
-}
   
+  return(list(binX = binX, binY=binY,binstep=binstep,yearBins = yearX))
+}

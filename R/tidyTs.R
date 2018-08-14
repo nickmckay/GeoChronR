@@ -52,6 +52,8 @@
 # }
 # 
 # 
+
+# 
 # library(ggplot2)
 # library(ggridges)
 # #test plotting code
@@ -79,7 +81,7 @@
 # plotTimeseriesStack(plot.df,colorVar = "paleoData_variableName")
 # 
 # plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorFun = grDevices::colorRampPalette( RColorBrewer::brewer.pal(nColors,"Dark2"))){
-#   
+# 
 #   #start with some error checking...
 #   if(is.character(colorFun)){#then just assign all colors to that string
 #     colorFun <- function(x){rep(colorFun,x)}
@@ -87,26 +89,26 @@
 # 
 #   #check the plot.df for required variables
 #   reqVar <- c("paleoData_values","paleoData_TSid","paleoData_units","paleoData_variableName","dataSetName", "archiveType",timeVar)
-#   
+# 
 #   for(r in 1:length(reqVar)){
 #     if(!any(reqVar[r] == names(plot.df))){
 #       stop(paste(reqVar[r],"must be in plot.df"))
 #     }
 #   }
-#   plot.df <- plot.df %>% 
-#   mutate(scaled = scale(paleoData_values)*scaleFactor) %>% 
-#     filter(is.finite(scaled)) 
-#   
+#   plot.df <- plot.df %>%
+#   mutate(scaled = scale(paleoData_values)*scaleFactor) %>%
+#     filter(is.finite(scaled))
+# 
 #   #arrange the data.frame by TSid factors
 #   plot.df$paleoData_TSid <- factor(plot.df$paleoData_TSid,levels = unique(plot.df$paleoData_TSid))
-#   
-#   
+# 
+# 
 #   #copy the color variable into plot.df
 # plot.df$cv = plot.df[[colorVar]]
 # 
 # plot.df$cv <- factor(plot.df$cv,levels = unique(plot.df$cv))
-#   
-# axisStats <- plot.df %>% 
+# 
+# axisStats <- plot.df %>%
 #   summarize(variableName = unique(paleoData_variableName),
 #             units = unique(paleoData_units),
 #             dataSetName = unique(dataSetName),
@@ -114,17 +116,17 @@
 #             mean = mean(paleoData_values,na.rm = T),
 #             sdhigh = sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
 #             sdlow = -sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
-#             colorVar = unique(cv)) %>% 
-#   mutate(axisLabel = paste0(variableName," (",units,")")) %>% 
-#   mutate(axisMin = as.character(signif(sdlow,3))) %>% 
-#   mutate(axisMax = as.character(signif(sdhigh,3))) 
+#             colorVar = unique(cv)) %>%
+#   mutate(axisLabel = paste0(variableName," (",units,")")) %>%
+#   mutate(axisMin = as.character(signif(sdlow,3))) %>%
+#   mutate(axisMax = as.character(signif(sdhigh,3)))
 # 
 # colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
 # 
 # axisStats <- axisStats[colOrder,]
 # 
 # nlines <- length(unique(plot.df$paleoData_TSid))
-#   
+# 
 # nColors <- min(length(levels(axisStats$colorVar)),nlines)
 # 
 # colVec <- colorFun(nColors)
@@ -137,7 +139,7 @@
 #   scale_fill_manual(name = colorVar,values = colVec)+
 #   theme_ridges(grid = TRUE)+
 #   theme_bw()
-#   
+# 
 # 
 # ylow <- seq_len(nlines)-scaleHeight
 # yhigh <-  seq_len(nlines)+scaleHeight
@@ -168,6 +170,5 @@
 # 
 # return(spag)
 # }
-# #  annotate(geom = "rect", colour = "yellow", fill = "yellow", xmin = 1910, xmax = 1930, ymin = 0, ymax = nlines+1,alpha = 0.2)
-#   
-#   
+#  annotate(geom = "rect", colour = "yellow", fill = "yellow", xmin = 1910, xmax = 1930, ymin = 0, ymax = nlines+1,alpha = 0.2)
+

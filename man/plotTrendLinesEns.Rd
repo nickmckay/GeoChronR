@@ -36,7 +36,8 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}}
+  \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}}
 
 Other regress: \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}}, \code{\link{regressEns}}

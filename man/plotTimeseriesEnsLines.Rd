@@ -38,6 +38,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotScatterEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }
 \author{
