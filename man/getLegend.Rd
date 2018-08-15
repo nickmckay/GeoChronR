@@ -15,7 +15,8 @@ a legend grob
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorEns}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
   \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},

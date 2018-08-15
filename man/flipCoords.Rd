@@ -9,6 +9,9 @@ flipCoords(L)
 \arguments{
 \item{L}{a LiPD object}
 }
+\value{
+a LiPD object
+}
 \description{
 Swap latitude and longitude in a LiPD object
 }

@@ -37,8 +37,9 @@ Plots the output of an ensemble correlation analysis.
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChron}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

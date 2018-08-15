@@ -213,7 +213,7 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @description shows a map, timeseries, and age model diagram, and basic simple metadata
 #' @import ggplot2
 #' @import grid
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @param L A LiPD Object
 #' @return A gridArrange of ggplot grobs
 #' @examples 
@@ -781,7 +781,7 @@ getLegend<-function(a.gplot){
 #' @description Map ensemble pca loadings and plot PC timeseries
 #' @import ggplot2
 #' @import ggmap
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' @import mapproj
 #' @param ens.PC.out results of pcaEns()
 #' @param TS Timeseries object \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series} used in the pcaEns() analysis
@@ -937,9 +937,15 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     plot_sample.depth  <- plot_sample.depth  +
       scale_x_reverse("Age (yr BP)")
   }
-  
-  
-    alllist = append(maplist,plotlist)
+  alllist = vector(mode = "list",length = length(maplist)*2)
+  for(aa in 1:(length(maplist)*2)){
+    if(aa%%2==1){#if odd
+      alllist[[aa]] <- maplist[[ceiling(aa/2)]]
+    }else{
+      alllist[[aa]] <- plotlist[[aa/2]]
+    }
+  }
+  #alllist = append(maplist,plotlist)
     # tt=1:length(alllist)
     # alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
     #append on the legend
@@ -1058,11 +1064,88 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     return(add.to.plot)
   }
   
+  
   #' @export
   #' @family plot
   #' @family chron
   #' @author Nick McKay
-  #' @title Plot chronologies
+  #' @title Compare chron ensemble with paleoData age-model
+  #' @description Plots the difference of an chron ensembleTable with the paleoData age
+  #' @import ggplot2
+  #' @param L A LiPD object
+  #' @param ageEnsVar name of the age ensemble variable in the chronData to search for
+  #' @param ageVar name of the age variable in the paleoData to search for
+  #' @param depth.var name of the depth variable to search for
+  #' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
+  #' @param which.pmt an integer that corresponds to which paleo measurementTable you want to add the ensemble to?
+  #' @param which.chron  an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from
+  #' @param which.model an integer that corresponds to which chron model you want to get the ensemble from?
+  #' @param which.ens an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?
+  #' @param max.ensemble.members Maximum number of ensemble members to map
+  #' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+  #' @param probs quantiles to calculate and plot
+  #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+  #' @param x.bin vector of bin edges over which to bin.
+  #' @param y.bin vector of bin edges over which to bin.
+  #' @param bandColorLow Band color of the outer most band.
+  #' @param bandColorHigh Band color of the inner most band.
+  #' @param bandAlpha Transparency of the band plot
+  #' @param lineColor Line color (following ggplot rules)
+  #' @param lineWidth Width of the line
+  #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+  #' @param nEnsLines Number of ensemble members to plot
+  #' @param ensLineColor color of the ensemble lines
+  #' @param ensLineAlp transparency of the lines
+  #' @return A ggplot object
+  #' @examples 
+  plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",ageVar = "age",depthVar = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7){
+    
+    
+    L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,depth.var = depthVar,which.paleo = which.paleo, which.chron = which.chron, which.model = which.model,which.pmt = which.pmt, which.ens = which.ens)
+      
+    
+    #get the paleo and chron Ensemble ages
+    pAge <- selectData(L,varName = ageVar,which.data = which.paleo,which.mt = which.pmt)
+    cAgeEns <- selectData(L,varName = ageEnsVar,where = "paleoData",which.data = which.paleo,which.mt = which.pmt)
+    
+    if(is.null(pAge)){
+      stop("couldn't find the age/year ataaleoData")
+    }
+    if(is.null(cAgeEns)){
+      stop("couldn't find the mapped ageEnsemble/yearEnsemble data in paleoData")
+    }
+    
+    #calculate the difference
+    ageDiff <- list()
+    ageDiff$variableName <- paste0("Δ",pAge$variableName)
+    ageDiff$units <- pAge$units
+    ageDiff$values <- pAge$values - cAgeEns$values
+    axisLabel(ageDiff)
+     
+     
+     #see if there's depth
+    depth <- selectData(L,varName = depthVar,which.data = which.paleo,which.mt = which.pmt)
+    
+    #if no depth then use age
+    if(is.null(depth)){
+      depth <- pAge
+    }
+     
+    diffPlot <- plotTimeseriesEnsRibbons(X = depth ,Y = ageDiff,,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
+    
+    #add some traces
+    diffPlot <- plotTimeseriesEnsLines(add.to.plot = diffPlot,X = depth ,Y = ageDiff,alp = ensLineAlp,color = ensLineColor,maxPlotN = nEnsLines)
+    
+    return(diffPlot)
+    
+  }
+  
+  
+  #' @export
+  #' @family plot
+  #' @family chron
+  #' @author Nick McKay
+  #' @title Plot chron ensemble
   #' @description Plot creates an age model plot with all the bells and whistles, including a spread of ensemble members, probability distributions, and a few example ensemble members. 
   #' @import ggplot2
   #' @param L A LiPD object
@@ -1086,9 +1169,13 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param distThick thickness of the line around the distribution
   #' @param truncateDist truncate probability density values below this number. NA (default) means no truncation
   #' @param distScale controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
+  #' @param addPaleoAgeDepth add a line that shows the paleoData age depth.
+  #' @param paleo.number which paleo number for the paleoData age-depth
+  #' @param meas.num which measurement Table for the paleoData age-depth
+  #' @param paleoColor line color of the paleoData age-depth (following ggplot rules)
   #' @return A ggplot object
   #' @examples 
-  plotChron = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA){
+  plotChronEns = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA,addPaleoAgeDepth = FALSE, paleo.number = NA, meas.num = NA,paleoColor = "cyan"){
     
     C = L$chronData
     if(is.na(chron.number)){
@@ -1111,12 +1198,51 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     
     #check for ensemble table. For now this is required to plot.
     if(!any(grepl("ensembleTable",names(L$chronData[[chron.number]]$model[[model.num]])))){
-      stop("No ensemble table found. At this time, plotChron() only works with chronData objects with ensemble tables.")
+      stop("No ensemble table found. At this time, plotChronEns() only works with chronData objects with ensemble tables.")
     }
+    
+    if(addPaleoAgeDepth){#then add a line that shows depth vs age in the paleoTable
+        P <- L$paleoData
+      if(is.na(paleo.number)){
+        if(length(P)==1){
+          paleo.number = 1
+        }else{
+          print(paste0("There are ", as.character(length(P)), " paleoData objects. Which do you want to plot?"))
+          paleo.number=as.integer(readline(prompt = "Which chronData do you want to plot? Enter an integer "))
+        }
+      }
+      
+      if(is.na(meas.num)){
+        if(length(P[[paleo.number]]$measurementTable)==1){
+          meas.num = 1
+        }else{
+          print(paste0("There are ", as.character(length(P[[paleo.number]]$measurementTable)), " paleo models. Which do you want to plot?"))
+          meas.num=as.integer(readline(prompt = "Which model do you want to plot? Enter an integer "))
+        }
+      }
+      
+      #get the data from the paleo measurement table
+      pDepth = selectData(L,varName = "depth",where = "paleoData",tableType = "measurement",which.mt = meas.num,which.data = paleo.number)
+      pAge = selectData(L,varName = "age",where = "paleoData",tableType = "measurement",which.mt = meas.num,which.data = paleo.number)
+      
+      
+    }
+    
+    
+    
     
     #get the data from the chron ensemble table
     depth = selectData(L,varName = depthVar,where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
     ageEnsemble = selectData(L,varName = ageVar,where = "chronData",tableType = "ensemble",model.num = model.num,which.data = chron.number)
+    
+    #if there's no depth, just plot by an index
+    if(is.null(depth)){
+      depth <- list()
+      depth$values <- seq_len(nrow(ageEnsemble$values))
+      depth$variableName <- "Index"
+      depth$units <- "NA"
+    }
+    
     
     #quick fix to ensemble list bug
     ageEnsemble$values = as.matrix(as.data.frame(ageEnsemble$values))
@@ -1129,12 +1255,19 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
       chronPlot = plotModelDistributions(L,which.data = chron.number,model.num = model.num,add.to.plot = chronPlot,alp=distAlp,color = distColor,distType = distType,thick = distThick,scaleFrac = distScale,truncateDist = truncateDist)
     }
     
+    
     #A few traces last...
     chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = ensLineColor,add.to.plot = chronPlot,maxPlotN = nEnsLines)
     
+    #Compare with the paleoData depth-age ensemble
+    if(addPaleoAgeDepth){
+      chronPlot <- chronPlot+geom_line(aes(x = pAge$values, y = pDepth$value), color = paleoColor)
+    }
+    
+  
     
     #Tidy up...
-    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(ageEnsemble)) + xlab(axisLabel(depth)) + ggtitle(paste0(L$dataSetName))
+    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName))
     
     return(chronPlot)
     
@@ -1214,7 +1347,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @title Plot ensemble regression results
   #' @description Creates a suite of plots to characterize the results of an ensemble regression.
   #' @import ggplot2
-  #' @import gridExtra
+  #' @importFrom gridExtra grid.arrange
   #' @param regEnsList output of regressEns()
   #' @param alp Transparency of the scatter plot.
   #' @param quantiles quantiles to calculate and plot
@@ -1312,7 +1445,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param labSpace Multiplier on labBuff for the axis label separation from the y-scale
   #' @param colorFun A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))
   #' @return A ggplot object of the plot 
-  plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorRamp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
+  plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2, lineSize = 0.5,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorRamp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
  
     
     #force grouping by TSid
@@ -1374,7 +1507,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     axisStats$colors <- colVec[match(axisStats$colorVar,levels(axisStats$colorVar))]
     
     spag <- ggplot(plot.df, aes(height = scaled, y = paleoData_TSid,color = cv, fill = cv)) +
-      geom_ridgeline(aes_string(x = timeVar),min_height = -Inf,alpha = fillAlpha)+
+      geom_ridgeline(aes_string(x = timeVar),min_height = -Inf,alpha = fillAlpha,size = lineSize)+
       scale_color_manual(name = colorVar,values = colVec)+
       scale_fill_manual(name = colorVar,values = colVec)+
       theme_ridges(grid = TRUE)+

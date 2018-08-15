@@ -102,8 +102,8 @@ myPlot <- plotTimeseriesStack(plot.df, #create another plot, storing the output
                     labSize = 2,
                     colorRamp = "black",#if we specify one color, all the records will get that
                     fillAlpha = 0, #make the fill transparent
-                    labSpace = 3) #add it a bit more space between the axis labels and ticks
-
+                    labSpace = 3, #add it a bit more space between the axis labels and ticks
+                    lineSize = 0.4) #make the lines a bit thinner
 print(myPlot)                   
                    
 ```

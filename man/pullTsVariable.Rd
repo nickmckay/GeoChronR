@@ -11,6 +11,9 @@ pullTsVariable(TS, variable)
 
 \item{variable}{the name of variable in a TS object}
 }
+\value{
+a vector of the values, with NA representing instances without this variable.
+}
 \description{
 pulls all instances of a single variable out of a TS
 }

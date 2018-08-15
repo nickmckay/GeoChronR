@@ -29,9 +29,9 @@ Plot an ensemble timeseries as a set of lines. Useful for displaying a handful o
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

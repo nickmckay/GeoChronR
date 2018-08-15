@@ -15,6 +15,9 @@ pushTsVariable(TS, variable, vec, createNew = FALSE)
 
 \item{createNew}{allow the function to create a new variable in the TS?}
 }
+\value{
+a vector of the values, with NA representing instances without this variable.
+}
 \description{
 pulls all instances of a single variable out of a TS
 }

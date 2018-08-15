@@ -1,14 +1,16 @@
 
 #' @export
-#' @import dplyr
+#' @importFrom dplyr bind_cols bind_rows group_by
 #' @import tibble
-#' @import purrr
+#' @importFrom purrr map_df
+#' @import arsenal
 #' @family LiPD manipulation
 #' @title create tidy data.frame from TS
 #' @description takes a TS object and turns it into a long, tidy, data.frame. Useful for data manipulation and analysis in the tidyverse and plotting
 #' @param TS a LiPD Timeseries object
-#' @returns a tidy data.frame
+#' @return a tidy data.frame
 tidyTs <- function(TS){
+  options(warn = -2)
   pb <- txtProgressBar(min=0,max=length(TS),style=3)
   print(paste("Tidying your ",length(TS)," timeseries"))
   
@@ -89,6 +91,7 @@ tidyTs <- function(TS){
       
     }
   }
+  tidyData <- dplyr::group_by(tidyData,paleoData_TSid)
   return(tidyData)
 }
 
@@ -100,7 +103,7 @@ tidyTs <- function(TS){
 #' @description pulls all instances of a single variable out of a TS
 #' @param TS a LiPD Timeseries object
 #' @param variable the name of variable in a TS object
-#' @returns a vector of the values, with NA representing instances without this variable.
+#' @return a vector of the values, with NA representing instances without this variable.
 pullTsVariable = function(TS,variable){
   allNames <- unique(unlist(sapply(TS,names)))
   
@@ -142,7 +145,7 @@ pullTsVariable = function(TS,variable){
 #' @param variable the name of variable in a TS object
 #' @param vec a vector of data to be added to the TS object
 #' @param createNew allow the function to create a new variable in the TS?
-#' @returns a vector of the values, with NA representing instances without this variable.
+#' @return a vector of the values, with NA representing instances without this variable.
 pushTsVariable = function(TS,variable,vec,createNew = FALSE){
   allNames <- unique(unlist(sapply(TS,names)))
   
@@ -180,7 +183,7 @@ pushTsVariable = function(TS,variable,vec,createNew = FALSE){
 #' @title Flip Coordinates
 #' @description Swap latitude and longitude in a LiPD object
 #' @param L a LiPD object
-#' @returns a LiPD object
+#' @return a LiPD object
 flipCoords = function(L){
   olat = L$geo$latitude
   olon = L$geo$longitude

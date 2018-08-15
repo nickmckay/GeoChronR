@@ -9,6 +9,9 @@ tidyTs(TS)
 \arguments{
 \item{TS}{a LiPD Timeseries object}
 }
+\value{
+a tidy data.frame
+}
 \description{
 takes a TS object and turns it into a long, tidy, data.frame. Useful for data manipulation and analysis in the tidyverse and plotting
 }

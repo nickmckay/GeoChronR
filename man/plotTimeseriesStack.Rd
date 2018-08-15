@@ -5,8 +5,8 @@
 \title{Plot a bunch of timeseries in a vertical stack}
 \usage{
 plotTimeseriesStack(plot.df, timeVar = "year", colorVar = "paleoData_TSid",
-  fillAlpha = 0.2, scaleFactor = 1/3, scaleHeight = 0.75,
-  labBuff = 0.02, labSize = 3, labSpace = 2,
+  fillAlpha = 0.2, lineSize = 0.5, scaleFactor = 1/3,
+  scaleHeight = 0.75, labBuff = 0.02, labSize = 3, labSpace = 2,
   colorRamp = function(nColors) {     RColorBrewer::brewer.pal(nColors,
   "Dark2") })
 }
@@ -40,9 +40,9 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

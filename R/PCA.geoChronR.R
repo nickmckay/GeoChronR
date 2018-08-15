@@ -8,7 +8,6 @@
 #' @param PCAtype Correlation ("corr" - default) or Covariance ("cov"), matrix
 #' @param nPCs number of PCs/EOFs to calculate
 #' @param nens how many ensemble members?
-#' @import matrixStats
 #' @import pcaMethods
 
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
