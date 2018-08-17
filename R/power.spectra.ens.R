@@ -159,8 +159,8 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
     t = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
     dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
     ti = dfi$t  # interpolation timescale
-    mtm.main    <- mtm.func(dfe,padfac=padfac,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
-    mtm.sigfreq <- mtm.func(dfe,padfac=padfac,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
+    mtm.main    <- mtm.func(dfe,padfac=padfac,genplot = F,output=1, verbose = F)
+    mtm.sigfreq <- mtm.func(dfe,padfac=padfac,genplot = F,output=2, verbose = F)
     # define output matrices
     ens.mtm.power   <-  matrix(NA,ncol=nens,nrow=length(mtm.main$Frequency))
     ens.mtm.sigfreq <-  matrix(0,ncol=nens,nrow=length(mtm.main$Frequency))
@@ -174,8 +174,8 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
       t = time[,tind[k]]; v = vals[,vind[k]] 
       dfl = data.frame(approx(t,v,ti)) 
       #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
-      mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
-      mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
+      mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F)
+      mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F)
       ens.mtm.power[,k] <- mtm.main$Power
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
       if(k%%round(nens/50)==0){
@@ -189,10 +189,8 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
     spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtmPL.power, powerSyn = NA, prob = freqs.prob)
     }
   else if ( method=='nuspectral') {
-      #sigma <- 0.02; wgtrad=0.2
-  } else {
-    stop("Unknown method: Valid choices are: mtm, nuspectral, or lomb-scargle") 
-  }
+    # HERE GOES THE NUSPECTRAL CODE
+  } else {stop("Unknown method: Valid choices are: mtm, nuspectral, or lomb-scargle")}
   
   return(spec.ens)
 }
