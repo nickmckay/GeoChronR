@@ -1471,7 +1471,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
     regPlot = list()
     #scatter plot
-    scatterplot = plotScatterEns(regEnsList$binX,regEnsList$binY,alp=alp)
+    scatterplot = plotScatterEns(X = regEnsList$binX,Y = regEnsList$binY,alp=alp)
     #add trendlines
     scatterplot = plotTrendLinesEns(mb.df = t(rbind(regEnsList$m,regEnsList$b)),xrange = range(regEnsList$binX,na.rm=TRUE), alp = alp,add.to.plot = scatterplot)
     
@@ -1498,8 +1498,8 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     binX[is.nan(binX)]=NA
     
     #plot timeseries of regression and target over interval
-    regPlot$XPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binX,nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
-    regPlot$YPlot = plotTimeseriesEnsRibbons(regEnsList$yearX,regEnsList$binY,colorHigh = "red",nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
+    regPlot$XPlot = plotTimeseriesEnsRibbons(X = regEnsList$yearX,Y = regEnsList$binX,nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
+    regPlot$YPlot = plotTimeseriesEnsRibbons(X = regEnsList$yearX,Y = regEnsList$binY,colorHigh = "red",nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
     
     
     
