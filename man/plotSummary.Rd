@@ -4,10 +4,30 @@
 \alias{plotSummary}
 \title{Plot a summary figure}
 \usage{
-plotSummary(L)
+plotSummary(L, paleo.age.var = "age", paleo.data.var = NA,
+  chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA,
+  chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, ...)
 }
 \arguments{
-\item{L}{A LiPD Object}
+\item{L}{A LiPD object}
+
+\item{paleo.age.var}{variableName to use for x axis of the paleo plot ("age" by default)}
+
+\item{paleo.data.var}{variableName to use for the y axis of the paleo plot (NA by default, which lets you choose)}
+
+\item{chron.number}{which chronData object to use (NA by default, will ask if needed)}
+
+\item{paleo.meas.num}{which paleo measurement table to use (NA by default, will ask if needed)}
+
+\item{chron.meas.num}{which chron measurement table to use (NA by default, will ask if needed)}
+
+\item{chron.depth.var}{variableName to use for chron depth ("depth" by default)}
+
+\item{chron.age.var}{variableName to use for chron age ("age" by default)}
+
+\item{...}{arguments to pass on to plotChronEns()}
+
+\item{dotsize}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 }
 \value{
 A gridArrange of ggplot grobs
@@ -23,8 +43,9 @@ myPlot = summaryPlot(L)
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{plotChronEns}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

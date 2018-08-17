@@ -72,8 +72,8 @@ Plots the difference of an chron ensembleTable with the paleoData age
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{plotChronEns}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
+  \code{\link{plotChron}}, \code{\link{plotCorEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -85,6 +85,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotTrendLinesEns}}
 
 Other chron: \code{\link{plotChronEns}},
+  \code{\link{plotChron}},
   \code{\link{plotModelDistributions}}
 }
 \author{

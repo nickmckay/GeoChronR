@@ -213,13 +213,23 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @description shows a map, timeseries, and age model diagram, and basic simple metadata
 #' @import ggplot2
 #' @import grid
+#' @import gridExtra
 #' @importFrom gridExtra grid.arrange
-#' @param L A LiPD Object
+#' @param L A LiPD object
+#' @param paleo.age.var variableName to use for x axis of the paleo plot ("age" by default)
+#' @param paleo.data.var variableName to use for the y axis of the paleo plot (NA by default, which lets you choose)
+#' @param chron.number which chronData object to use (NA by default, will ask if needed)
+#' @param paleo.meas.num which paleo measurement table to use (NA by default, will ask if needed)
+#' @param chron.meas.num which chron measurement table to use (NA by default, will ask if needed)
+#' @param chron.depth.var variableName to use for chron depth ("depth" by default)
+#' @param chron.age.var variableName to use for chron age ("age" by default)
+#' @param dotsize what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
+#' @param ... arguments to pass on to plotChronEns()
 #' @return A gridArrange of ggplot grobs
 #' @examples 
 #' myPlot = summaryPlot(L)
 #' 
-plotSummary = function(L){
+plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA, chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, ...){
   #is this a LiPD file?
   if(is.list(L)){
     if(is.null(L$dataSetName)){
@@ -229,43 +239,36 @@ plotSummary = function(L){
     stop("plotSummary requires a single LiPD object as input")
   }
   
-  map = mapLipd(L,extend.range = 5)
+  map <- mapLipd(L,extend.range = 8)
   
   #plot paleoData
   
+  if(is.na(paleo.age.var)){
   print("What should we plot on the X-axis?")
   print("We'll look for age or year...")
-  age=selectData(L,varName = "age",always.choose = FALSE,altNames="year")
-  
-  print("What should we plot on the Y-axis?")
-  variable=selectData(L)
-  
-  paleoPlot = plotLine(age,variable)
-  paleoPlot = paleoPlot + labs(title = paste("PaleoData:",variable$variableName))
+    age=selectData(L,varName = "age",altNames = "year",which.mt = paleo.meas.num)
+  }else{
+    age=selectData(L,varName = paleo.age.var, which.mt = paleo.meas.num)
+  }
+
+  if(is.na(paleo.data.var)){
+    print("What should we plot on the Y-axis?")
+    variable=selectData(L,which.mt = paleo.meas.num)
+  }else{
+    variable=selectData(L,varName = paleo.data.var,which.mt = paleo.meas.num)
+  }
+
+  paleoPlot = plotLine(X = age,Y = variable)
+  paleoPlot = paleoPlot + ggtitle(paste("PaleoData:",variable$variableName))
   
   #do chron.
-  if(!is.null(L$chronData[[1]]$measurementTable)){
-    #looking for age model data.
+ chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize, ...)
     
-    print("looking for ages...")
-    age2=selectData(L,varName = "age14C",always.choose = FALSE,altNames="year",where = "chronData")
-    
-    #     print("looking for age uncertainty")
-    #     ageUnc = selectData(L,varName = "age14CUncertainty",always.choose = FALSE,altNames=c("uncertainty","error","age"),where = "chronData")
-    
-    print("looking for depths....")
-    depth=selectData(L,varName = "depth",always.choose = FALSE,where = "chronData")
-    c.df = data.frame(x=age2$values,y=depth$values)
-    chronPlot = plotLine(age2,depth)
-    chronPlot = chronPlot+
-      geom_point(data=c.df,aes(x=x,y=y),colour="black",size=7)+
-      scale_y_reverse()+
-      scale_x_reverse()+
-      labs(title = paste("ChronData: chronology"))
-    
-  }else{
-    chronPlot = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)),textGrob("No chronData"))
+  if(is.na(chronPlot)){
+    chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
   }
+ 
+ 
   
   lay = rbind(c(1,1,2,2),
               c(3,3,2,2),
@@ -273,10 +276,29 @@ plotSummary = function(L){
               c(3,3,4,4))
   
   
-  dataSetText = paste(L$dataSetName,"\n","Archive Type: ",L$archiveType,"\n","Authors: ",L$pub[[1]]$author)
-  summaryText = grobTree(rectGrob(gp = gpar(fill = 1,alpha=.1)), textGrob(dataSetText) )
+  if(!is.null(L$pub[[1]]$citation)){
+    citation <- L$pub[[1]]$citation
+  }else{
+    authors <- L$pub[[1]]$author
+    if(is.list(authors)){
+      authors <-  unlist(authors)
+    }
+    year <- L$pub[[1]]$year
+    if(is.null(year)){
+      year <-  L$pub[[1]]$pubYear
+    }
+    title <- L$pub[[1]]$title
+    journal <- L$pub[[1]]$journal
+      volume <- L$pub[[1]]$volume
+    pages <- L$pub[[1]]$pages
+    
+    citation <- paste0(authors," (",as.character(year),"). ",title,". ",journal, " ", as.character(volume),", ",pages,".")
+  }
+  citation <- paste(strwrap( citation, width = 40, simplify = FALSE)[[1]],collapse = "\n          ")
+  dataSetText = paste("DataSetName:",L$dataSetName,"\nArchive Type: ",L$archiveType,"\nCitation:",citation)
+  summaryText = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)), grid::textGrob(x = unit(0.03, "npc"), y = unit(0.5, "npc"),dataSetText,just = "left",check.overlap = FALSE,gp = grid::gpar(fontfamily = "mono",fontsize = 10)))
   
-  summary = grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
+  summary = gridExtra::grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
   return(summary)
   
 }
@@ -294,17 +316,18 @@ plotSummary = function(L){
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
 #' @examples 
-plotLine = function(X,Y,color="black",alp = 1, add.to.plot=ggplot()){
+plotLine = function(add.to.plot=ggplot(),X,Y,color="black",alp = 1){
   
   #X and Y and are LiPD variable list, including values, units, names, etc...
   df = data.frame(x = X$values, y = Y$values)
   plot = add.to.plot+ geom_line(data=df,aes(x=x,y=y),colour =color, alpha = alp)+
     ylab(axisLabel(Y))+
-    xlab(axisLabel(X))+
     geoChronRPlotTheme()
   
-  if(tolower(X$variableName)=="age"){
-    plot = plot+scale_x_reverse()
+  if(grepl("AD",X$units) | grepl("CE",X$units)){
+    plot = plot+scale_x_continuous(name = axisLabel(X))
+  }else{
+    plot = plot+scale_x_reverse(name = axisLabel(X))
   }
   return(plot)
 }
@@ -1131,6 +1154,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
       depth <- pAge
     }
      
+    
     diffPlot <- plotTimeseriesEnsRibbons(X = depth ,Y = ageDiff,,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
     #add some traces
@@ -1141,6 +1165,84 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   }
   
   
+  
+  
+  #' @export
+  #' @family plot
+  #' @family chron
+  #' @author Nick McKay
+  #' @title High-level chron plotting
+  #' @description Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model
+  #' @import ggplot2
+  #' @param L A LiPD object
+  #' @param depth.var variableName to use for depth ("depth" by default)
+  #' @param age.var variableName to use for age ensemble ("ageEnsemble" by default)
+  #' @param chron.number which chronData object to use (NA by default, will ask if needed)
+  #' @param meas.num which chronData model to use (NA by default, will ask if needed)
+  #' @param dotsize what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
+  #' @param ... arguments to pass on to plotChronEns()
+  #' @return a ggplot object, or NA if there's chronData to plot
+plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", dotSize = 5, ...){
+  #grab the chronData 
+  C = L$chronData
+  
+  #there must be a chronData to proceed
+  if(is.null(C)){
+    warning("Must have chronData to proceed. Exiting...")
+    return(NA)
+  }
+  
+  #figure out a chron.number
+  if(is.na(chron.number)){
+    if(length(C)==1){
+      chron.number = 1
+    }else{
+      print(paste0("There are ", as.character(length(C)), " chronData objects. Which do you want to plot?"))
+      chron.number=as.integer(readline(prompt = "Which chronData do you want to plot? Enter an integer "))
+    }
+  }
+  
+  #is there a model?
+  if(!is.null({C[[chron.number]]$model})){#then use plotChronEns!
+    chronPlot <- plotChronEns(L,chron.number = chron.number, depthVar = depth.var, ageVar = age.var, ...)
+  }else{#make a simpler plot from the measurementTable
+    #look for the measurementTable
+    if(is.null(C[[chron.number]]$measurementTable)){
+      warning("No chron model, or measurementTable. Exiting...")
+      return(NA)
+    }
+    
+    #figure out a measurementTable number
+    if(is.na(meas.num)){
+      if(length(C[[chron.number]]$measurementTable)==1){
+        meas.num = 1
+      }else{
+        print(paste0("There are ", as.character(length(C[[chron.number]]$measurementTable)), " chron measurement tables. Which do you want to plot?"))
+        meas.num=as.integer(readline(prompt = "Which model do you want to plot? Enter an integer "))
+      }
+    }
+    
+    #get depth
+    depth <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = depth.var)
+    #get age
+    age <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age.var)
+    
+    chronPlot <- ggplot()+geom_point(aes(x = age$values, y = depth$values), size = dotSize)+
+      scale_y_reverse(name = axisLabel(depth))+
+      geoChronRPlotTheme() +
+      ggtitle(paste0(L$dataSetName,": chronData ", as.character(chron.number), " - measurementTable ", as.character(meas.num)))
+    
+    if(any(grepl("AD",age$units)) | any(grepl("CE",age$units))){
+      chronPlot <- chronPlot + scale_x_continuous(name = axisLabel(age))
+    }else{
+      chronPlot <- chronPlot + scale_x_reverse(name = axisLabel(age))
+    }
+  }
+  
+  return(chronPlot)
+  
+}
+ 
   #' @export
   #' @family plot
   #' @family chron
@@ -1149,8 +1251,10 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @description Plot creates an age model plot with all the bells and whistles, including a spread of ensemble members, probability distributions, and a few example ensemble members. 
   #' @import ggplot2
   #' @param L A LiPD object
-  #' @param dist.var Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default. 
-  #' @param y.var Name of the y-axis variable. "depth" by default. 
+  #' @param depthVar variableName to use for depth ("depth" by default)
+  #' @param ageVar ariableName to use for age ensemble ("ageEnsemble" by default)
+  #' @param chron.number which chronData object to use (NA by default, will ask if needed)
+  #' @param model.num which chronData model to use (NA by default, will ask if needed)
   #' @param probs quantiles to calculate and plot
   #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
   #' @param x.bin vector of bin edges over which to bin.
@@ -1246,6 +1350,8 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     
     #quick fix to ensemble list bug
     ageEnsemble$values = as.matrix(as.data.frame(ageEnsemble$values))
+    
+    print("plotting your chron ensemble. This make take a few seconds...")
     
     #Ribbons first
     chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)

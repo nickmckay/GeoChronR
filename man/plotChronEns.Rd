@@ -17,6 +17,14 @@ plotChronEns(L, ageVar = "ageEnsemble", depthVar = "depth",
 \arguments{
 \item{L}{A LiPD object}
 
+\item{ageVar}{ariableName to use for age ensemble ("ageEnsemble" by default)}
+
+\item{depthVar}{variableName to use for depth ("depth" by default)}
+
+\item{chron.number}{which chronData object to use (NA by default, will ask if needed)}
+
+\item{model.num}{which chronData model to use (NA by default, will ask if needed)}
+
 \item{probs}{quantiles to calculate and plot}
 
 \item{x.bin}{vector of bin edges over which to bin.}
@@ -59,10 +67,6 @@ plotChronEns(L, ageVar = "ageEnsemble", depthVar = "depth",
 
 \item{paleoColor}{line color of the paleoData age-depth (following ggplot rules)}
 
-\item{dist.var}{Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default.}
-
-\item{y.var}{Name of the y-axis variable. "depth" by default.}
-
 \item{bandAlpha}{Transparency of the band plot}
 }
 \value{
@@ -75,8 +79,8 @@ Plot creates an age model plot with all the bells and whistles, including a spre
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
+  \code{\link{plotChron}}, \code{\link{plotCorEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -88,6 +92,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotTrendLinesEns}}
 
 Other chron: \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChron}},
   \code{\link{plotModelDistributions}}
 }
 \author{
