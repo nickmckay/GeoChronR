@@ -21,6 +21,26 @@ plotSpectraEns = function (spec.ens){
 }
 
 #' @export
+#' @title Annotate plot of spectra with periodicities
+#' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities
+#' @family plot
+#' @family spectra
+#' @param specPlot Output from plotSpectraEns (or other ggplot)
+#' @return ggplot object of spectrum plot
+# define function to annotate the spectrum (assumes log10 scaling)
+plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100)){
+  #get the x- and y-axis ranges actually used in the graph
+  ggp <- ggplot_build(specPlot)
+  ylims <- ggp$layout$panel_params[[1]]$y.range # this will break with multiplots... 
+  for(per in periods){
+    specPlot <- specPlot + annotate("segment", x = 1/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
+                      colour = "red", alpha = 0.5)
+    specPlot <- specPlot +  annotate("text", x = 1.03*1/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = "red")
+  }
+  return(specPlot)  
+
+
+#' @export
 #' @title Find quantiles across an ensemble
 #' @family gridding
 #' @description Determine quantiles across ensembles of x and/or y, as a function of x, using interpolation
@@ -494,7 +514,7 @@ plotTimeseriesEnsRibbons = function(X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.b
 #' @import ggplot2
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
-#' @param alp Line transparency
+#' @param alp Marker transparency
 #' @param maxPlotN Whats the maximum number of lines to plot?
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
 #' @return A ggplot object

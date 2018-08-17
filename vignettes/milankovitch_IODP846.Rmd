@@ -5,10 +5,11 @@ output: html_notebook
 
 ## Introduction
 In this notebook we hunt for Milankovitch cycles in the record of:
-- Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.
-- Shackleton, N. J. (1995), New data on the evolution of Pliocene climate variability, in Paleoclimate and Evolution, With Emphasis on Human Origins, edited by E. S. Vrba et al., pp. 242-248, Yale Univ. Press, New Haven, Ct.
 
-The data were aligned to the ProbStack of [Ahn et al (2017)](https://academic.oup.com/climatesystem/article/2/1/dzx002/3892410) using [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713).  
+  - Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.
+  - Shackleton, N. J. (1995), New data on the evolution of Pliocene climate variability, in Paleoclimate and Evolution, With Emphasis on Human Origins, edited by E. S. Vrba et al., pp. 242-248, Yale Univ. Press, New Haven, CT.
+
+The data were aligned to the Benthic Stack of  [Lisiecki & Raymo (2005)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004PA001071) using the [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713) algorithm.  
 
 First, load the data from `HMM_Alignment_8461.mat`. 
 ```{r}
@@ -25,7 +26,7 @@ probstack <- read.table("/Users/julieneg/Documents/Science/Research/GeoChronR/sp
 
 Let's plot it
 ```{r}
-df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O, upper=iodp846$upper.95, lower=iodp846$lower.95)
+df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O, upper=iodp846$upper.95, lower=iodp846$lower.95,tens = iodp846$alignment)
 ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, central estimate") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 Clearly there is a long-term trend here, paired with the transition from "41k world" to "100k world" somewhere around 0.8 Ma [Paillard, 2001]. 
@@ -80,7 +81,8 @@ The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timese
 
 ```{r}
 library(astrochron)
-dfe = linterp(dfs,dt=2.5)
+dti = 2.5  # interpolation interval
+dfe = linterp(dfs,dt=dti)
 spec.mtm <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=1, verbose = F, detrend=T)
 sig.freq <- astrochron::mtm(dfe,padfac=1,ar1=TRUE,genplot = F,output=2, verbose = F, detrend=T)
 
@@ -93,8 +95,8 @@ show(p.mtm)
 We notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals strong power law behavior (linear decrease in these log units) from periods of 5 to 100 ky. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis. The plain vanilla *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2` will export the frequencies identified as "significant" by this procedure. In this case, it identifies 41 and 19 ky (as it should), 90 ky (close enough to 100ky given the resolution), but surprisingly favors 55ky over the known 23ky precessional peak. Here it's helpful to take a step back and contemplate our null hypothesis. If we assume that the continuum of climate variability [Huybers & Curry, 2006] is well described by a power-law, maybe that is a better null. Never fear! astrochron has an app for that:
 
 ```{r}
-spec.mtmPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=1, verbose = F, flow=0.005, fhigh=0.1)
-sig.freqPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=2, verbose = F, flow=0.005, fhigh=0.1)
+spec.mtmPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
+sig.freqPL <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
 
 # plot this 
 p.mtmPL <- ggplot() + geom_line(aes(x=spec.mtmPL$Frequency,y=spec.mtmPL$Power)) + xlab("Frequency (1/kyr)") + ylab("Normalized Power") + scale_x_log10() +scale_y_log10() + ggtitle("IODP 846 d18O, Multi-taper method, power-law null")
@@ -117,7 +119,7 @@ library(ggthemes)
 ggplot(df) + geom_ribbon(aes(x=t/1000,ymin=lower-t,ymax=upper-t),fill="orange") + ggtitle("IODP 846 aligment to ProbStack, 95% CI width") + ylab("CI width (ky)") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 
-While they are not exactly Gaussian, they are not far from it, which means the time-uncertainty model can be applied with too much hand-wringing:
+While they are not exactly Gaussian, they are not far from it over the past 1 Ma, which means the time-uncertainty model can be applied with too much hand-wringing:
 
 ```{r}
 age_uncert = dfs$upper-dfs$lower
@@ -125,8 +127,115 @@ ggplot() +
   geom_histogram(aes(x=age_uncert,y = ..density..), bins=10 , alpha = 0.9, fill = "orange") + ggtitle("Distribution of age uncertainties") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 
+### GeoChronR Ensemble Strategy
+As you can tell by now, the GeoChronR approach to uncertanty quantification and propagation is to leverage the power of ensembles. Here we will illustrate this with MTM. 
+the HMM_match output for IODP846 comes with 1,000 realizations of the age model. Let us repeat the previous analysis by looping over those: 
+```{r}
+pf = 2 # padding factor
+fl = 0.005
+fh = 0.1
+nens = 1000
+values = dfs$d18O
+time = dfs$tens.1
+#  apply workflow to first member
+dfe = linterp(data.frame(time,values),dt=dti,genplot=F,check=F,verbose=F)  # define local dataframe
+mtmPL.main    <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
+mtmPL.sigfreq <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
+# define output matrices
+ens.mtmPL.power   <-  matrix(NA,ncol=nens,nrow=length(mtmPL.main$Frequency))
+ens.mtmPL.sigfreq <-  matrix(0,ncol=nens,nrow=length(mtmPL.main$Frequency))
+# store output for first member
+ens.mtmPL.power[,1] <-mtmPL.main$Power
+ens.mtmPL.sigfreq[match(mtmPL.sigfreq$Frequency, mtmPL.main$Frequency, nomatch = 0),1] <- 1
+
+pb = txtProgressBar(min=2,max = nens,style = 3)
+# rinse, repeat
+for (k in 2:nens){ 
+  time = dfs[,k+4]
+  dfe = linterp(data.frame(time,values),dt=dti,genplot=F,check=F,verbose=F)  # define local dataframe
+  mtmPL.main <- astrochron::mtmPL(dfe,padfac=pf,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
+  mtmPL.sigfreq <- astrochron::mtmPL(dfe,padfac=pf,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
+  ens.mtmPL.power[,k] = mtmPL.main$Power
+  ens.mtmPL.sigfreq[match(mtmPL.sigfreq$Frequency, mtmPL.main$Frequency, nomatch = 0),k]=1
+}
+freqs.prob = rowMeans(ens.mtmPL.sigfreq)
+f = mtmPL.main$Frequency
+spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtmPL.power, powerSyn = NA, prob = freqs.prob)
+# let's select frequencies for plotting
+highlight.freqs = f[freqs.prob>.5]
+highlight.probs = freqs.prob[freqs.prob>.5]
+# plot it
+specPlot <- ggplot() + scale_alpha_continuous(range = c(0.4,.8)) + geom_vline(xintercept = highlight.freqs,colour = "red",alpha=highlight.probs, size = 2)
+period = c(10,20,50,100,200)
+# basic pattern: 10   20   50, then repeat
+specPlot <- specPlot + xlab("Period (ka)") + ylab("Normalized Spectral Density") + scale_x_log10(labels = as.character(period),breaks = 1/period) + scale_y_log10() + ggtitle("IODP 846 d18O, MTM with 1,000 age models")
+#specPlot <- plotSpectraAnnotate(specPlot) +
+
+specPlot <- plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power,add.to.plot = specPlot)
+
+show(specPlot)
+
+# need to snatch units from LiPD file
+# label periods 
+# find closest
+#period10Max = ceiling((max(time) - min(time))/10)*10 # longest period
+#period10Min = floor(1/max(freqs)/10)*10
+#library(pracma)
+#period = logspace(log10(periodMin),log10(periodMax),7) # not 
 
 
+#specPlot <- specPlot + scale_x_continuous(labels = as.character(period),breaks = 1/period) # label periods
+```
+
+
+Now let's do this with GeoChronR. 
+
+```{r}
+time = iodp846$alignment[1:382,]
+values = dfs$d18O
+mtm.ens.spec = computeSpectraEns(values, time,method = 'mtm')
+```
+
+
+
+pretty plot [(credit)](https://stackoverflow.com/questions/37326686/ggplot2-geom-ribbon-with-alpha-dependent-on-data-density-along-y-axis-for-each)
+
+# you'll need to set alpha=sort(group) in the geom_ribbon call, as otherwise it thinks group 59 is next quantile from 591
+
+```{r}
+library(splines)
+library(quantreg)
+library(reshape2)
+library(dplyr)
+
+
+#Set quantiles for density ribbons:
+nq = 50 # Numbre of quantiles
+qq = seq(0,1, length.out=nq)
+#Run the quantile regression for each quantile. We use a flexible spline function to get a good fit to the sine function:
+m1 = rq(y ~ ns(x,10), data=sim.df, tau=qq)
+Create data frame for use by geom_ribbon to plot density quantiles.
+
+Create a data frame of regression quantile predictions using predict:
+
+xvals = seq(min(sim.df$x), max(sim.df$x), length.out=100)
+rqs = data.frame(x=xvals, predict(m1, newdata=data.frame(x=xvals)))
+names(rqs) = c("x", paste0("p",100*qq))
+Reshape the data so that the predictions for each quantile serve as the ymax for one quantile and the ymin for the next quantile in succession (with the exception that the first quantile serves only once as the first ymin and the last quantile serves only once as the last ymax). Put the data in long format so that we can group by quantile in ggplot:
+dat1 = rqs[, -length(rqs)]
+names(dat1)[-1] = paste0(names(dat1)[-1])
+dat2 = rqs[, -2]
+names(dat2)[-1] = paste0(names(dat1)[-1])
+
+```
+```{r}
+x = 
+   ns(x,10)
+```
+
+
+
+### Bayesian Frequency Selection
 Let us prepare this dataset for analysis w/ TUTS Bayesian Frequency Selection.
 One thing to be aware of is that the core top has zero uncertainty, but TUTS requires finite (non-zero) uncertainties. We thus need to give it a small, but nonzero, value (100y, say).
 
@@ -159,7 +268,7 @@ plot(BFS,type='GR')                        # Gelman-Rubin diagnostics (CI, burn)
 plot(BFS,type='mcmc')                      # mcmc diagnostics.
 plot(BFS,type='volatility')                # Volatility realizaitons.
 ```
-
+This is going nowhere. 
 
 
 
