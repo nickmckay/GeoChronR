@@ -38,7 +38,7 @@ plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100)){
     specPlot <- specPlot +  annotate("text", x = 1.03*1/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = "red")
   }
   return(specPlot)  
-
+}
 
 #' @export
 #' @title Find quantiles across an ensemble
@@ -1180,7 +1180,7 @@ plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
                                           layout_matrix=lay)  
   
 return(regPlot)
-  }
+}
 
 
 

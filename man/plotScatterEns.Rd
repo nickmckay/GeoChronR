@@ -11,7 +11,7 @@ plotScatterEns(X, Y, alp = 0.2, maxPlotN = 1000, add.to.plot = ggplot())
 
 \item{Y}{A LiPD variable list to plot, including values, units, names, and more}
 
-\item{alp}{Line transparency}
+\item{alp}{Marker transparency}
 
 \item{maxPlotN}{Whats the maximum number of lines to plot?}
 
@@ -31,6 +31,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
+  \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},

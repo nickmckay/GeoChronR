@@ -51,13 +51,13 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
+  \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTrendLinesEns}}
 
 Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{createSyntheticTimeseries}},
   \code{\link{pcaEns}}
 }
 \author{
