@@ -348,13 +348,11 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   
   #print results...
   print("Variable choices for reuse...")
-  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", 
-               stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  
   print(varUsedStr)
   assign("bacon_varUsedStr",value = varUsedStr,envir = .GlobalEnv)
 
-  
-  
   #merge variables as needed
   depth <- MT[[depthi]]$values
   if(is.null(depth)){

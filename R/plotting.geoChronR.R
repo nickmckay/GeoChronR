@@ -1577,7 +1577,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @title Plot a bunch of timeseries in a vertical stack
   #' @description Creates a suite of plots to characterize the results of an ensemble regression.
   #' @import ggplot2
-  #' @importFrom ggridges geom_ridgeline
+  #' @importFrom ggridges geom_ridgeline theme_ridges
   #' @import dplyr
   #' @import RColorBrewer
   #' @import grDevices
