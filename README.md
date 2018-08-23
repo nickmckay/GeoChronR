@@ -1,8 +1,8 @@
 # [GeoChronR](https://nickmckay.github.io/LiPD-utilities/)
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60812.svg)](http://doi.org/10.5281/zenodo.60812)
-[![R](https://img.shields.io/badge/R-3.3.1-blue.svg)]()
-[![R Studio](https://img.shields.io/badge/RStudio-0.99.903-yellow.svg)]()
+[![R](https://img.shields.io/badge/R-3.3.3-blue.svg)]()
+[![R Studio](https://img.shields.io/badge/RStudio-1.1.453-yellow.svg)]()
 [![license](https://img.shields.io/badge/license-GPL-brightgreen.svg)]()
 
 
@@ -18,9 +18,9 @@ Quantifying age uncertainties is a critical component of paleoscience (paleoclim
 
 ## Requirements
 
-R - v3.3.1
+R - v3.3.3
 
-R Studio - v0.99.903+
+R Studio - v1.1.453
 
 R devtools package - v1.12.0+
 
