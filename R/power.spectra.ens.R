@@ -158,7 +158,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
     t = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
     dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
     dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
-    #ti = dfi$t  # interpolatedtimescale
+    ti = dfi$t  # interpolatedtimescale
     mtm.main    <- mtm.func(dfi,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
     mtm.sigfreq <- mtm.func(dfi,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
     # define output matrices
@@ -172,8 +172,10 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
     # rinse, repeat
     for (k in 2:nens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
-      dfl = data.frame(approx(t,v,ti)) 
+      dfl = data.frame(approx(t,v,ti,rule = 2)) 
       #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
+      #dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
+      #dfl = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
       mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
       mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
       ens.mtm.power[,k] <- mtm.main$Power
@@ -183,10 +185,10 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
       }
     }
     close(pb)
-    freqs.prob = rowMeans(ens.mtmPL.sigfreq)
+    freqs.prob = rowMeans(ens.mtm.sigfreq)
     f = mtm.main$Frequency
     # allocate output
-    spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtmPL.power, powerSyn = NA, prob = freqs.prob)
+    spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtm.power, powerSyn = NA, prob = freqs.prob)
     }
   else if ( method=='nuspectral') {
     # TO DO
