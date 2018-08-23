@@ -119,6 +119,19 @@ gaussianize <- function (X,jitter=FALSE){
 }
 
 
+#' @export
+#' @title ModeSelektor
+#' @author Julien Emile-Geay 
+#' @param x data vector
+#' @return mode value and index. 
+#' @description Finds the mode of a vector X. Astonishingly, this is not a standard R function.
+#' @references https://www.modeselektor.com
+#' @references https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode
+modeSelektor <- function (x){ 
+  ux <- unique(x)
+  umode = ux[which.max(tabulate(match(x, ux)))]
+  return(umode)
+}
 
 
 

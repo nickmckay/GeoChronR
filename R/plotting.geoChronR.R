@@ -21,17 +21,16 @@ plotSpectraEns = function (spec.ens){
 }
 
 #' @export
-#' @title Annotate plot of spectra with periodicities
-#' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities
+#' @title Annotate plot of spectra with given periodicities
+#' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
 #' @family plot
 #' @family spectra
 #' @param specPlot Output from plotSpectraEns (or other ggplot)
 #' @return ggplot object of spectrum plot
-# define function to annotate the spectrum (assumes log10 scaling)
 plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100)){
   #get the x- and y-axis ranges actually used in the graph
   ggp <- ggplot_build(specPlot)
-  ylims <- ggp$layout$panel_params[[1]]$y.range # this will break with multiplots... 
+  ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
   for(per in periods){
     specPlot <- specPlot + annotate("segment", x = 1/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
                       colour = "red", alpha = 0.5)

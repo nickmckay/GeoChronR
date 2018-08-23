@@ -82,7 +82,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' }
 #' @import lomb
 #' @import astrochron
-computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.05,mtm_null='power_law'){
+computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.05,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -108,7 +108,6 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
   
   # random sampling of columns in case of very large ensembles
   tind = sample.int(ncol(time),size = min(nens,ncol(time)))
-  
   vind = sample.int(ncol(vals),size = min(nens,ncol(vals)))
   if (ncol(time) < nens){tind = rep_len(tind,nens)}
   if (ncol(vals) < nens){vind = rep_len(vind,nens)} 
@@ -157,10 +156,11 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
     
     #  apply workflow to first member
     t = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
-    dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
-    ti = dfi$t  # interpolation timescale
-    mtm.main    <- mtm.func(dfe,padfac=padfac,genplot = F,output=1, verbose = F)
-    mtm.sigfreq <- mtm.func(dfe,padfac=padfac,genplot = F,output=2, verbose = F)
+    dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
+    dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
+    #ti = dfi$t  # interpolatedtimescale
+    mtm.main    <- mtm.func(dfi,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
+    mtm.sigfreq <- mtm.func(dfi,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
     # define output matrices
     ens.mtm.power   <-  matrix(NA,ncol=nens,nrow=length(mtm.main$Frequency))
     ens.mtm.sigfreq <-  matrix(0,ncol=nens,nrow=length(mtm.main$Frequency))
@@ -168,14 +168,14 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
     ens.mtm.power[,1] <- mtm.main$Power
     ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),1] <- 1
     
-    pb = txtProgressBar(min=2,max = nens,style = 3)
+    pb = txtProgressBar(min = 2, max = nens, style = 3)
     # rinse, repeat
     for (k in 2:nens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
       dfl = data.frame(approx(t,v,ti)) 
       #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
-      mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F)
-      mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F)
+      mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
+      mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
       ens.mtm.power[,k] <- mtm.main$Power
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
       if(k%%round(nens/50)==0){
@@ -184,12 +184,12 @@ computeSpectraEns = function(time,values,max.ens=NA,method='lomb-scargle',gauss=
     }
     close(pb)
     freqs.prob = rowMeans(ens.mtmPL.sigfreq)
-    f = mtmPL.main$Frequency
+    f = mtm.main$Frequency
     # allocate output
     spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtmPL.power, powerSyn = NA, prob = freqs.prob)
     }
   else if ( method=='nuspectral') {
-    # HERE GOES THE NUSPECTRAL CODE
+    # TO DO
   } else {stop("Unknown method: Valid choices are: mtm, nuspectral, or lomb-scargle")}
   
   return(spec.ens)

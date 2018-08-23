@@ -9,7 +9,7 @@ In this notebook we hunt for Milankovitch cycles in the record of:
   - Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.
   - Shackleton, N. J. (1995), New data on the evolution of Pliocene climate variability, in Paleoclimate and Evolution, With Emphasis on Human Origins, edited by E. S. Vrba et al., pp. 242-248, Yale Univ. Press, New Haven, CT.
 
-The data were aligned to the Benthic Stack of  [Lisiecki & Raymo (2005)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004PA001071) using the [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713) algorithm.  
+The data were aligned to the Benthic Stack of [Lisiecki & Raymo (2005)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004PA001071) using the [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713) algorithm [(Khider et al, 2017)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2016PA003057).  
 
 First, load the data from `HMM_Alignment_8461.mat`. 
 ```{r}
@@ -24,9 +24,21 @@ iodp846 <- readMat(pathname)
 probstack <- read.table("/Users/julieneg/Documents/Science/Research/GeoChronR/spectral/data/Prob_stack.txt", header = FALSE)
 ```
 
+```{r}
+library(lipdR)
+I = readLipd("ODP846.Lawrence.2006.lpd")
+d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
+age.median <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
+age.upper <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$upper95$values
+age.lower <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$lower95$values
+age.ens  <-  I$chronData[[1]]$model[[1]]$ensembleTable[[1]]$age$values
+```
+
+
+
 Let's plot it
 ```{r}
-df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O, upper=iodp846$upper.95, lower=iodp846$lower.95,tens = iodp846$alignment)
+df = data.frame(t = age.median, d18O=d18O, upper=age.upper, lower=age.lower, tens = age.ens)
 ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, central estimate") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 Clearly there is a long-term trend here, paired with the transition from "41k world" to "100k world" somewhere around 0.8 Ma [Paillard, 2001]. 
