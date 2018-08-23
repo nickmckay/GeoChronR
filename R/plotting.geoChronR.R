@@ -213,7 +213,6 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @description shows a map, timeseries, and age model diagram, and basic simple metadata
 #' @import ggplot2
 #' @import grid
-#' @import gridExtra
 #' @importFrom gridExtra grid.arrange
 #' @param L A LiPD object
 #' @param paleo.age.var variableName to use for x axis of the paleo plot ("age" by default)
@@ -229,7 +228,7 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @examples 
 #' myPlot = summaryPlot(L)
 #' 
-plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA, chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, ...){
+plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA, chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, summary.font.size = 10, text.width = 400/summary.font.size, legend.position = c(0.7,0.3),  ...){
   #is this a LiPD file?
   if(is.list(L)){
     if(is.null(L$dataSetName)){
@@ -262,7 +261,7 @@ plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number 
   paleoPlot = paleoPlot + ggtitle(paste("PaleoData:",variable$variableName))
   
   #do chron.
- chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize, ...)
+ chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize,legend.position = legend.position, ...)
     
   if(is.na(chronPlot)){
     chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
@@ -294,9 +293,9 @@ plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number 
     
     citation <- paste0(authors," (",as.character(year),"). ",title,". ",journal, " ", as.character(volume),", ",pages,".")
   }
-  citation <- paste(strwrap( citation, width = 40, simplify = FALSE)[[1]],collapse = "\n          ")
+  citation <- paste(strwrap( citation, width = text.width, simplify = FALSE)[[1]],collapse = "\n          ")
   dataSetText = paste("DataSetName:",L$dataSetName,"\nArchive Type: ",L$archiveType,"\nCitation:",citation)
-  summaryText = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)), grid::textGrob(x = unit(0.03, "npc"), y = unit(0.5, "npc"),dataSetText,just = "left",check.overlap = FALSE,gp = grid::gpar(fontfamily = "mono",fontsize = 10)))
+  summaryText = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)), grid::textGrob(x = unit(0.03, "npc"), y = unit(0.5, "npc"),dataSetText,just = "left",check.overlap = FALSE,gp = grid::gpar(fontfamily = "mono",fontsize = summary.font.size)))
   
   summary = gridExtra::grid.arrange(grobs = list(summaryText,paleoPlot,map,chronPlot),layout_matrix=lay)    
   return(summary)
@@ -1176,13 +1175,15 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @import ggplot2
   #' @param L A LiPD object
   #' @param depth.var variableName to use for depth ("depth" by default)
-  #' @param age.var variableName to use for age ensemble ("ageEnsemble" by default)
+  #' @param age.var variableName to use for age ensemble ("age" by default)
+  #' @param age14C.var variableName to use for age ensemble ("age14C" by default)
   #' @param chron.number which chronData object to use (NA by default, will ask if needed)
   #' @param meas.num which chronData model to use (NA by default, will ask if needed)
   #' @param dotsize what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
+  #' @param legend.position where to put the legend on the chron plot?
   #' @param ... arguments to pass on to plotChronEns()
   #' @return a ggplot object, or NA if there's chronData to plot
-plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", dotSize = 5, ...){
+plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", age14C.var = "age14C", dotSize = 5, legend.position = c(0.7,0.3), ...){
   #grab the chronData 
   C = L$chronData
   
@@ -1224,12 +1225,29 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     
     #get depth
     depth <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = depth.var)
+    
     #get age
     age <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age.var)
+    #get 14Cage
+    age14C <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age14C.var)
     
-    chronPlot <- ggplot()+geom_point(aes(x = age$values, y = depth$values), size = dotSize)+
+    if(!is.null(age) & is.null(age14C)){
+    ageDf <- data.frame(age = age$values, ageType = "calibratedAge")
+    }else if(is.null(age) & !is.null(age14C)){
+      ageDf <- data.frame(age = age14C$values, ageType = "14C Age")
+    }else if(!is.null(age) & !is.null(age14C)){
+      ageDf14C <- data.frame(age = age14C$values, ageType = "14C Age",stringsAsFactors = FALSE)
+      ageDf <- data.frame(age = age$values, ageType = "calibrated age",stringsAsFactors = FALSE)
+      naCal <- which(is.na(ageDf$age))
+      ageDf[naCal, ] <- ageDf14C[naCal, ] 
+    }else{
+      stop("couldn't find any age data in chron measurement table")
+    }
+    
+    ageDf$depth <- depth$values
+    chronPlot <- ggplot(ageDf)+geom_point(aes(x = age, y = depth, color = ageType), size = dotSize)+
       scale_y_reverse(name = axisLabel(depth))+
-      geoChronRPlotTheme() +
+      geoChronRPlotTheme() +  theme(legend.position = legend.position) +
       ggtitle(paste0(L$dataSetName,": chronData ", as.character(chron.number), " - measurementTable ", as.character(meas.num)))
     
     if(any(grepl("AD",age$units)) | any(grepl("CE",age$units))){
@@ -1356,14 +1374,17 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     #Ribbons first
     chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
-    #distributions second...
+
+    
+    #A few traces second
+    chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = ensLineColor,add.to.plot = chronPlot,maxPlotN = nEnsLines)
+    
+    
+    #distributions last
     if(is.list(C[[chron.number]]$model[[model.num]]$distributionTable)){#if it exists. Add it.
       chronPlot = plotModelDistributions(L,which.data = chron.number,model.num = model.num,add.to.plot = chronPlot,alp=distAlp,color = distColor,distType = distType,thick = distThick,scaleFrac = distScale,truncateDist = truncateDist)
     }
     
-    
-    #A few traces last...
-    chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = ensLineColor,add.to.plot = chronPlot,maxPlotN = nEnsLines)
     
     #Compare with the paleoData depth-age ensemble
     if(addPaleoAgeDepth){

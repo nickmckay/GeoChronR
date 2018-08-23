@@ -109,18 +109,21 @@ corMatrix = function(M1,M2){
   
   for(i in 1:ncol(M1)){
     for(j in 1:ncol(M2)){
-      r[j+ncol(M2)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
-      effN = effectiveN(M1[,i],M2[,j])
-      pAdj[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],effN)
-      p[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
-    setTxtProgressBar(pb, j+ncol(M2)*(i-1))
+      #test for singularity
+      effN = try(effectiveN(M1[,i],M2[,j]),silent = TRUE)
+      if(is.numeric(effN)){
+        r[j+ncol(M2)*(i-1)] = cor(M1[,i],M2[,j],use="pairwise")
+        pAdj[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],effN)
+        p[j+ncol(M2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(M2)*(i-1)],sum(!is.na(M1[,i])&!is.na(M2[,j])))
+      }
+      setTxtProgressBar(pb, j+ncol(M2)*(i-1))
     }
   }
   
-  pAdj[is.nan(pAdj)]=1#This is for instances whenn NEff <=2. I guess this is a reasonable solution?
-
+  pAdj[!is.finite(pAdj)]=1#This is for instances whenn NEff <=2. I guess this is a reasonable solution?
+  
   # apply false discovery rate procedure to ADJUSTED p-values
-  fdrOut = fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean') 
+  fdrOut =  suppressMessages(fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean'))
   sig_fdr = matrix(0,nens)
   sig_fdr[fdrOut] = 1 
  
@@ -130,7 +133,7 @@ corMatrix = function(M1,M2){
   # export to data frame
   out = data.frame("r"=r,"pSerial"=pAdj,"pRaw"=p,"sig_fdr"=sig_fdr)
   close(pb)
-  return(out)
+  return(na.omit(out))
 }
 
 #' @export

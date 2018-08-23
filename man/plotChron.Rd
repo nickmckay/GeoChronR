@@ -5,7 +5,7 @@
 \title{High-level chron plotting}
 \usage{
 plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
-  age.var = "age", dotSize = 5, ...)
+  age.var = "age", age14C.var = "age14C", dotSize = 5, ...)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -16,7 +16,9 @@ plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
 
 \item{depth.var}{variableName to use for depth ("depth" by default)}
 
-\item{age.var}{variableName to use for age ensemble ("ageEnsemble" by default)}
+\item{age.var}{variableName to use for age ensemble ("age" by default)}
+
+\item{age14C.var}{variableName to use for age ensemble ("age14C" by default)}
 
 \item{...}{arguments to pass on to plotChronEns()}
 

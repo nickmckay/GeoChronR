@@ -1,10 +1,10 @@
 ---
-title: "Introduction to geoChronR -- Correlations"
+title: "ensemble PCA"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to geoChronR}
+  %\VignetteIndexEntry{ensemble PCA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,8 @@ knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 
 
   
-```{r}
+```{r,results="hide",fig.keep="all"}
+
 library(lipdR)
 library(geoChronR)
 library(magrittr)
@@ -36,7 +37,7 @@ FD <- readLipd(system.file("extdata", "arc2k", package = "geoChronR"))
 mapLipds(FD)
 ```
 yeah, the google maps don't work well at the poles. Try a line map.
-```{r, warning=FALSE}
+```{r,results="hide",fig.keep="all"}
 mapLipds(FD,map.type = "line",projection = "stereo",f = 0.1)
 
 ```
@@ -60,12 +61,12 @@ TS = extractTs(FD2)
 ```
 
 and filter the TS object to only include variables that have been interepreted as temperature:
-```{r,warning=FALSE}
+```{r,results="hide",fig.keep="all"}
 TS.filtered = filterTs(TS,"interpretation1_variable == T")
 ```
 OK, let's make a quick plot stack to see what we're dealing with.
 
-```{r,results="hide"}
+```{r,results="hide",fig.keep="all"}
 tidyDf <- tidyTs(TS.filtered)
 ```
 

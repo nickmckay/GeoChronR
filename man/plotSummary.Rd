@@ -6,7 +6,8 @@
 \usage{
 plotSummary(L, paleo.age.var = "age", paleo.data.var = NA,
   chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA,
-  chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, ...)
+  chron.depth.var = "depth", chron.age.var = "age", dotSize = 5,
+  summary.font.size = 10, text.width = 400/summary.font.size, ...)
 }
 \arguments{
 \item{L}{A LiPD object}

@@ -14,7 +14,7 @@ vignette: >
   This is the first of 4 vignettes that showcase the functionality of GeoChronR to solve real problems with geochronologic data. Here is a table of contents of the other guides included here:
   
   1. [Introduction to GeoChronR & age-uncertain Correlation](Introduction.html)
-  2. [Age-uncertain regression and calibration in time](regression.html)
+  2. [Age-uncertain regression and calibration-in-time](regression.html)
   3. [Age-uncertain spectral analysis](spectral.html)
   4. [Age-uncertain PCA analysis](pca.html)
   
@@ -24,7 +24,7 @@ vignette: >
 
 Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
   
-```{r}
+```{r,  results = 'hide'}
 library(lipdR)
 library(geoChronR)
 library(magrittr)
@@ -34,7 +34,7 @@ library(ggplot2)
 
 In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. To load a LiPD file from your computer, use `L <- readLipd()` to interactively select a file (or a directory), or enter the path to file or the directory that you want: `L <- readLipd("~/Downloads/my.lpd")`
 
-```{r, message=FALSE}
+```{r}
 hulu <- readLipd(system.file("extdata", "Hulucave.Wang.2001.lpd", package = "geoChronR"))
 ```
 
@@ -47,14 +47,14 @@ We're going to specify many of the parameters here for simplicity, but you can r
 
 and it will prompt you for the details.
 
-```{r, cache=TRUE, message=FALSE,warning=FALSE}
+```{r, cache=TRUE, results = 'hide'}
 hulu <- runBchron(hulu,calCurves = "normal", iter = 10000,which.table = 2,interpolate = T,age14CVar = "age",age14CuncertaintyVar = "ageUncertaintyHigh",labIDVar = NULL,reject = F,ageVar = NULL,ageUncertaintyVar = NULL,rejectedAgesVar = NULL,extractDate = 10000)
 ```
 
 ##Plotting the chronology
 OK, let's take a look at the model. 
 ```{r,warning=FALSE}
-plotChron(hulu,truncateDist = 1e-4)
+plotChronEns(hulu,truncateDist = 1e-4)
 ```
 
 `plotChron()` is a wrapper for multiple plotting functions, and has a lot of options, which probably require tinkering to produce a nice plot. See all the options by running `?plotChron`
@@ -63,7 +63,7 @@ plotChron(hulu,truncateDist = 1e-4)
 
 The ensemble chronology in a chronModel may or may not have values corresponding to the paleoclimatic or paleoenvironmental measurements in paleoData. To map the model ensemble values to a measurement table in paleoData, use
 
-```{r}
+```{r , results = 'hide'}
 hulu = mapAgeEnsembleToPaleoData(hulu,age.var = "ageEnsemble",which.pmt = 2)
 ```
 
@@ -179,7 +179,7 @@ Interesting. There's a hint of a negative correlation during this time interval.
 ##Calculate the ensemble correlations
 
 Here we specify the ensembles and data of each timeseries, and the width of the bins for correlation. More options are available in ?corEns
-```{r, cache=TRUE}
+```{r, cache=TRUE,  results = 'hide'}
 corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 500,max.ens = 100)
 ```
 

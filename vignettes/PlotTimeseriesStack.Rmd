@@ -4,7 +4,7 @@ author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Plot a stack of proxy timeseries}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -33,7 +33,7 @@ library(ggplot2) #for plotting
 
 ##Load in your data
 Load in some prepackaged data. Remember, you'd typically specify the path to a file or folder here `D <- readLipd("~/MyLipds/")`, or use it interactive mode `D <- readLipd()`. If you're selecting a directory in interactive mode, just click on any file in the directory that you want. 
-```{r, warning=FALSE}
+```{r, results='hide'}
 D <- readLipd(system.file("extdata", "euro", package = "geoChronR")) 
 ```
 
@@ -47,7 +47,7 @@ TS <- extractTs(D)
 ##Filtering the TS object for the data you want.
 There will be two opportunities to filter your potentially very large collection of data down to what you want to analyze. Our next step, creating a "tidy" data frame, can be *very* slow with large TS options, so it's best to filter what you can with the TS object first. See `?filterTs` for options on how to do that. Here, we're going to grab all the records with the "paleoData_useInGlobalTemperatureAnalysis" flag, and filter geographically a bit.  
 
-```{r, warning = FALSE}
+```{r, results='hide'}
 mts <- filterTs(TS, "paleoData_useInGlobalTemperatureAnalysis == TRUE") %>% 
   filterTs("geo_longitude > 0") %>% 
   filterTs("geo_latitude > 20")
@@ -57,7 +57,7 @@ mts <- filterTs(TS, "paleoData_useInGlobalTemperatureAnalysis == TRUE") %>%
 ##Now create a "tidy" data.frame for querying, filtering and plotting. 
 The `tidyTs()` function will take a timeseries object and turn it into a long, "tidy", data frame, where each row is an observation, and each column a variable. This will play very nicely with the [tidyverse](https://www.tidyverse.org/) and facilitate efficient data analysis and visualzation. *With large TS objects, this can result in data.frames with millions of rows, and can be quite slow to create*. 
 
-```{r, warning=FALSE,message=FALSE}
+```{r, results='hide'}
 tidyData <- tidyTs(mts)
 ```
 
@@ -72,7 +72,7 @@ plot.df <- tidyData %>%
   group_by(paleoData_TSid) %>% #group by column
   arrange(archiveType) #and sort by archiveType
 ```
-That last `arrange()` operator controls the order of the data frame, and will also control the order of the stack. 
+That last `arrange()` command controls the order of the data frame, and will also control the order of the stack. 
 
 ##OK, we have a tidy data.frame that includes the data we want to plot.
 The key function for this is plotTimeseriesStack(), and has many options (`?plotTimeseriesStack`). We can start simply by giving it the data frame and using the default options:
@@ -124,5 +124,5 @@ myPlot + annotate(geom = "rect", colour = NA, fill = "yellow", xmin = 1645, xmax
 plotTimeseriesStack() is handy for quick visualization, but also can be tinkered to near-publication-quality. For now, this does not work with ageEnsembles, although we hope to include this in the future.
 
 
-```
+
 
