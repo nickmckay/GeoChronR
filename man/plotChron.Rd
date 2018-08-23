@@ -5,7 +5,8 @@
 \title{High-level chron plotting}
 \usage{
 plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
-  age.var = "age", age14C.var = "age14C", dotSize = 5, ...)
+  age.var = "age", age14C.var = "age14C", dotSize = 5,
+  legend.position = c(0.7, 0.3), ...)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -20,6 +21,8 @@ plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
 
 \item{age14C.var}{variableName to use for age ensemble ("age14C" by default)}
 
+\item{legend.position}{where to put the legend on the chron plot?}
+
 \item{...}{arguments to pass on to plotChronEns()}
 
 \item{dotsize}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
@@ -33,7 +36,8 @@ Plot a chronology, either from a chron model (preferred) or from a chron measure
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
   \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},

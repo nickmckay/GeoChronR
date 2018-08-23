@@ -18,7 +18,8 @@ Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus co
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},
   \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
   \code{\link{plotLine}},

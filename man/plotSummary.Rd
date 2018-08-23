@@ -7,7 +7,8 @@
 plotSummary(L, paleo.age.var = "age", paleo.data.var = NA,
   chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA,
   chron.depth.var = "depth", chron.age.var = "age", dotSize = 5,
-  summary.font.size = 10, text.width = 400/summary.font.size, ...)
+  summary.font.size = 10, text.width = 400/summary.font.size,
+  legend.position = c(0.7, 0.3), ...)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -43,7 +44,8 @@ myPlot = summaryPlot(L)
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},
   \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
   \code{\link{plotLine}},

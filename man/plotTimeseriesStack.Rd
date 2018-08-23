@@ -40,7 +40,8 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},
   \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
   \code{\link{plotLine}},

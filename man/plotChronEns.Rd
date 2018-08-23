@@ -78,9 +78,10 @@ Plot creates an age model plot with all the bells and whistles, including a spre
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChron}}, \code{\link{plotCorEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},

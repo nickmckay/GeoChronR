@@ -30,7 +30,8 @@ Plots ensemble data as a histogram
 \seealso{
 Other plot: \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},
   \code{\link{plotCorEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},

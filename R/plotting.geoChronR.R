@@ -1,3 +1,28 @@
+
+#get ggplot x and y ranges
+#' @export
+#' @family plot
+#' @title Get ggplot x and y ranges
+#' @description Use this to extract x and y ranges from ggplot, dealing with changes in version
+#' @param h a ggplot object
+#' @return a list of x and y ranges
+getPlotRanges <- function(h){
+  if(compareVersion(as.character(packageVersion("ggplot2")),"2") >=0){ #deal with ggplot versions
+    if(compareVersion(as.character(packageVersion("ggplot2")),"3") >=0){#then version > 3
+      ylims = ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits()
+      xlims = ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits()
+    }else{#version 2
+      ylims = ggplot_build(h)$layout$panel_scales$y[[1]]$get_limits()
+      xlims = ggplot_build(h)$layout$panel_scales$x[[1]]$get_limits()
+    }
+  }else{#version 1
+    ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
+    xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
+  }
+  return(list(xlims = xlims, ylims = ylims))
+}  
+
+
 #' @export
 #' @family plot
 #' @title Define a plot theme for GeoChronR
@@ -658,14 +683,10 @@ plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot
     scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
   
   
-  #determine initial
-  if(compareVersion(as.character(packageVersion("ggplot2")),"2") >=0){ #deal with ggplot versions
-    ylims = ggplot_build(h)$layout$panel_scales$y[[1]]$get_limits()
-    xlims = ggplot_build(h)$layout$panel_scales$x[[1]]$get_limits()
-  }else{
-    ylims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
-    xlims = ggplot_build(h)$panel$ranges[[1]]$x.range # get x range
-  }
+  ranges <- getPlotRanges(h)
+
+  xlims <- ranges$xlims
+  ylims <- ranges$ylims
   
   #how many lines?
   lineType= rep("dashed",times = nrow(corStats))
@@ -1556,7 +1577,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @title Plot a bunch of timeseries in a vertical stack
   #' @description Creates a suite of plots to characterize the results of an ensemble regression.
   #' @import ggplot2
-  #' @import ggridges
+  #' @importFrom ggridges geom_ridgeline
   #' @import dplyr
   #' @import RColorBrewer
   #' @import grDevices
@@ -1645,7 +1666,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     yhigh <-  seq_len(nlines)+scaleHeight
     
     
-    my.xrange <- ggplot_build(spag)$layout$panel_scales$x[[1]]$range$range
+    my.xrange <- getPlotRanges(spag)$xlims
     
     xpos <- rep(my.xrange,times = ceiling(nlines/2))[seq_len(nlines)]
     
