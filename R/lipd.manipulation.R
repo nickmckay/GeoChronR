@@ -79,8 +79,8 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
     }
   }
   
-
-    #make sure the ensemble is there, with data
+  
+  #make sure the ensemble is there, with data
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
@@ -93,15 +93,15 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
     #get year, age or depth from paleodata
-    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch)$values
+      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
     }
     if(is.null(pdya)){
       stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
@@ -117,31 +117,39 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   
   
   if(!copyAE){
-  #get the depth from the paleo measurement table
-  print("getting depth from the paleodata table...")
-  depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens)$values
-  
-  #restrict ensemble members
-  if(!is.na(max.ensemble.members)){
-    if(ncol(ens)>max.ensemble.members){
-      #randomly select the appropriate number of ensemble members
-      ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
+    #get the depth from the paleo measurement table
+    print("getting depth from the paleodata table...")
+    depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
+    
+    #restrict ensemble members
+    if(!is.na(max.ensemble.members)){
+      if(ncol(ens)>max.ensemble.members){
+        #randomly select the appropriate number of ensemble members
+        ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
+      }
     }
-  }
-
-  #interpolate
-  na.depth.i = which(!is.na(depth))
-  aei = matrix(nrow = length(depth),ncol = ncol(ens))
-  aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
-  aei[na.depth.i,] = aeig
-
-
+    
+    #interpolate
+    na.depth.i = which(!is.na(depth))
+    aei = matrix(nrow = length(depth),ncol = ncol(ens))
+    aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
+    aei[na.depth.i,] = aeig
+    
+    
   }else{
-    aei = ens
+    #check to see if the ensemble needs to be flipped
+    #correlate pdya with ens[,1]
+    
+    test.cor <- cor(pdya,ens[,1])
+    if(test.cor < 0){
+      aei <- apply(ens,2,rev)
+    }else{
+      aei = ens
+    }
   }
   
   #guess
-if(is.na(which.ens)){which.ens=1}
+  if(is.na(which.ens)){which.ens=1}
   
   
   #assign into measurementTable
