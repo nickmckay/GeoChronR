@@ -14,11 +14,57 @@ tidyTs <- function(TS){
   pb <- txtProgressBar(min=0,max=length(TS),style=3)
   print(paste("Tidying your ",length(TS)," timeseries"))
   
+  #preallocate 
+  nprows <- sum(sapply(TS,function(x){length(x$paleoData_values)}))
+  
+  pcolnames <- unique(unlist(sapply(TS,names)))
+  
+
+  
+  
+  additional.names <- c("paleoData_values_char")
+  
+  pcolnames <- c(pcolnames,additional.names)
+  tidyData <- as.data.table(matrix(data = NA,nrow = nprows,ncol = length(pcolnames)))
+
+  names(tidyData) <- pcolnames
+  
+  #determine classes
+  for(cc in 1:length(pcolnames)){
+    if(cc==length(pcolnames)){
+      class(tidyData[[pcolnames[cc]]]) = "character"
+    }else{
+      
+      
+      pv <- pullTsVariable(TS,pcolnames[cc])
+      if(is.character(pv)){
+        class(tidyData[[pcolnames[cc]]]) = "character"
+      }else if(is.numeric(pv)){
+        class(tidyData[[pcolnames[cc]]]) = "numeric"
+      }else if(is.list(pv)){
+        if(is.numeric(pv[[1]])){
+          class(tidyData[[pcolnames[cc]]]) = "numeric"
+        }else{
+          class(tidyData[[pcolnames[cc]]]) = "character"
+        }
+      }else{
+        class(tidyData[[pcolnames[cc]]]) = "character"
+      }
+    }
+  }
+  
+  
+  sr <- 1
   
   for(i in 1:length(TS)){
     setTxtProgressBar(pb, i)
     
     ti <- TS[[i]]
+    
+    #get all classes
+    classes <- sapply(ti,class)
+    
+    
     
     #exclude any ensembles (For now)
     is.mat <- sapply(ti,is.matrix)
@@ -54,7 +100,6 @@ tidyTs <- function(TS){
     
     
     #handle ts variables that are longer than 1, but not the full length by concatenating
-    
     med <- ti[which(al<max(al) & al>1)]
     collapsed <- sapply(med, paste,collapse = ", ")
     ti[which(al<max(al) & al>1)] <- collapsed
@@ -69,28 +114,34 @@ tidyTs <- function(TS){
     
     #combine them together
     tdf <- dplyr::bind_cols(sdf,meta.df)
-    if(i == 1){
-      tidyData <- tdf
-    }else{
+    er <- nrow(tdf)+sr-1
+    nm <- na.omit(match(pcolnames,names(tdf)))
+    
+    #if(i == 1){
+    set(tidyData, i= sr:er,j = nm, tdf)
       
-      
-      
-      nt <- try(dplyr::bind_rows(tidyData,tdf),silent = T)
-      if(is.data.frame(nt)){
-        tidyData <- nt
-      }else{#try to fix it.
-        comp <- arsenal::compare(tidyData,tdf)
-        class1 <- unlist(comp$vars.summary$class.x)
-        class2 <- unlist(comp$vars.summary$class.y)
-        tc <- comp$vars.summary$var.x[which(class1 == "character" & class2 == "numeric")]
-        for(tci in 1:length(tc)){
-          tdf[tc[tci]] <- as.character(tdf[tc[tci]])
-        }
-        tidyData <- dplyr::bind_rows(tidyData,tdf)
-      }
-      
-    }
+    # }else{
+    #   
+    #   set(tidyData,i = sr:er, j = which(pcolnames %in% names(tdf)),tdf$year)
+    #   # nt <- try(set(tidyData,i = sr:er, j = which(names(tdf) %in% pcolnames),tdf),silent = T)
+    #   # if(is.data.table(nt)){
+    #   #   tidyData <- nt
+    #   # }else{#try to fix it.
+    #   #   comp <- arsenal::compare(tidyData,tdf)
+    #   #   class1 <- unlist(comp$vars.summary$class.x)
+    #   #   class2 <- unlist(comp$vars.summary$class.y)
+    #   #   tc <- comp$vars.summary$var.x[which(class1 == "character" & class2 == "numeric")]
+    #   #   for(tci in 1:length(tc)){
+    #   #     tdf[tc[tci]] <- as.character(tdf[tc[tci]])
+    #   #   }
+    #   #   set(tidyData,i = sr:er, j = which(names(tdf) %in% pcolnames),tdf)
+    #   #   }
+    # }
+    # 
+    sr = er+1
+    
   }
+  #tidyData <- as.tibble(tidyData)
   tidyData <- dplyr::group_by(tidyData,paleoData_TSid)
   return(tidyData)
 }
