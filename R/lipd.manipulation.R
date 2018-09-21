@@ -1,7 +1,7 @@
 
 #' @export
 #' @importFrom dplyr bind_cols bind_rows group_by
-#' @import tibble
+#' @import tibble data.table
 #' @importFrom purrr map_df
 #' @import arsenal
 #' @family LiPD manipulation
@@ -115,8 +115,7 @@ tidyTs <- function(TS){
     #combine them together
     tdf <- dplyr::bind_cols(sdf,meta.df)
     er <- nrow(tdf)+sr-1
-    nm <- na.omit(match(pcolnames,names(tdf)))
-    
+    nm <- match(names(tdf),pcolnames)
     #if(i == 1){
     set(tidyData, i= sr:er,j = nm, tdf)
       
