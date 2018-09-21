@@ -53,6 +53,11 @@ tidyTs <- function(TS){
     }
   }
   
+  #specify some classes
+  class(tidyData$paleoData_values) <- "numeric"
+  class(tidyData$paleoData_values_char) <- "character"
+  
+  
   
   sr <- 1
   
