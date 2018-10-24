@@ -67,7 +67,7 @@ mapLipds = function(D,shape= 21,size=8,color = sapply(D,"[[","archiveType") ,map
 #' @param projection Map project. All options on: ?mapproject
 #' @param extend.range increase the span of the map by this much (lat/long degrees)
 #' @return ggmap base map 
-baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
+baseMap = function(lon,lat,map.type="google",f=.1,restrict.map.range=TRUE,projection="mercator",boundcirc=FALSE,global=FALSE,extend.range=10){
   if(length(lat)==1 & length(lon)==1){
     lon = lon + c(-extend.range,extend.range)
     lat = lat + c(-extend.range,extend.range)
@@ -93,24 +93,24 @@ baseMap = function(lon,lat,map.type="google",f=.3,restrict.map.range=TRUE,projec
   }else{
     lnp=FALSE
     bb=bbnew
-    if(map.type=="google"){
-    if(bb[4] > 89){
-      diff <- bb[4]-89
-      bb[2] <- bb[2]-(diff*2)
-      bb[4] <- bb[4]-(diff*2)
-    }
-    }else if(bb[4] > 90){
+    # if(map.type=="google"){
+    # if(bb[4] > 89){
+    #   diff <- bb[4]-89
+    #   bb[2] <- bb[2]-(diff*2)
+    #   bb[4] <- bb[4]-(diff*2)
+    # }
+    if(bb[4] > 90){
       bb[4]=90
     }
     #save(bb,file="bound.box.Rdata")
   }
   
   if(map.type=="google"){
-    #if(lnp){
-    #  newmap = try(load("newmap.Rdata"),silent = TRUE)
+  #if(lnp){
+  #  newmap = try(load("newmap.Rdata"),silent = TRUE)
     #  if(grepl(class(newmap),pattern="error")){newmap <- get_map(location=bb,maptype="terrain",source="google")}
     #}else{
-    newmap <- get_map(location=bb,maptype="terrain",source="google")
+    newmap <- get_map(location=bb,maptype="terrain",source="stamen")
     #}
     #  save(newmap,file="newmap.RData")
     baseMap = ggmap(newmap,maprange=TRUE) 

@@ -4,7 +4,7 @@
 \alias{baseMap}
 \title{Make a base map}
 \usage{
-baseMap(lon, lat, map.type = "google", f = 0.3, restrict.map.range = TRUE,
+baseMap(lon, lat, map.type = "google", f = 0.1, restrict.map.range = TRUE,
   projection = "mercator", boundcirc = FALSE, global = FALSE,
   extend.range = 10)
 }

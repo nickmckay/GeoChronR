@@ -39,7 +39,9 @@ Imports:
 	MASS,
 	neotoma,
 	pbapply,
-	dplR       
+	dplR       ,
+    ggridges,
+    arsenal
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
