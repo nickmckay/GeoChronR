@@ -41,7 +41,8 @@ Imports:
 	pbapply,
 	dplR       ,
     ggridges,
-    arsenal
+    arsenal,
+    rbacon
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
