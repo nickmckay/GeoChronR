@@ -12,17 +12,25 @@ installGeoChronR= function(){devtools::install_github("nickmckay/geoChronR")}
 #' @param X A LiPD variable list or a vector of years BP 
 #' @return X A LiPD variable list or a vector of Calendar years AD 
 convertBP2AD = function(X){
-if(is.list(X)){
-  if(tolower(X$units)=="ad" | tolower(X$units)=="ce"){
-    print("already in AD or CE, aborting...")
-    return(X)
-  }
-  X$units = "AD"
+  if(is.list(X)){
+    if(tolower(X$units)=="ad" | tolower(X$units)=="ce"){
+      print("already in AD or CE, aborting...")
+      return(X)
+    }
+    X$units = "AD"
+    if(all(is.na(X$values))){
+      return(X)
+    }
     X$values=1950-X$values
-  X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
-}else{
-  X=1950-X
-  X[which(X <= 0)]=X[which(X <= 0)]-1#remember, there's no year 0
+    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
+    
+  }else{
+    if(all(is.na(X))){
+      return(X)
+    }
+    X=1950-X
+    X[which(X <= 0)]=X[which(X <= 0)]-1#remember, there's no year 0
+    
   }
   return(X)
 }
@@ -39,12 +47,19 @@ convertAD2BP = function(X){
       print("already in BP, aborting...")
       return(X)
     }
+    if(all(is.na(X$values))){
+      return(X)
+    }
     X$units = "BP"
-    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
     X$values=1950-X$values
+    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
+    
   }else{
-    X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0
-    X=1950-X
+    if(all(is.na(X))){
+      return(X)
+    }
+      X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0
+      X=1950-X
   }
   return(X)
 }

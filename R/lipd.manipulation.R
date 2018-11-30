@@ -4,6 +4,7 @@
 #' @import tibble data.table
 #' @importFrom purrr map_df
 #' @import arsenal
+#' @import data.table
 #' @family LiPD manipulation
 #' @title create tidy data.frame from TS
 #' @description takes a TS object and turns it into a long, tidy, data.frame. Useful for data manipulation and analysis in the tidyverse and plotting
