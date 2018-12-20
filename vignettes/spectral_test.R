@@ -5,7 +5,7 @@ library(geoChronR)
 
 
 # load LiPD file
-I = readLipd("~/Downloads/ODP846.Lawrence.2006.lpd")
+I = readLipd("ODP846.Lawrence.2006.lpd")
 # extract relevant data 
 
 I <- mapAgeEnsembleToPaleoData(I,which.pmt = 1)

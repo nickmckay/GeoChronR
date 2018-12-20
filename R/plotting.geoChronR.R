@@ -27,14 +27,13 @@ plotSpectraEns = function (spec.ens){
 #' @family spectra
 #' @param specPlot Output from plotSpectraEns (or other ggplot)
 #' @return ggplot object of spectrum plot
-plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100)){
-  #get the x- and y-axis ranges actually used in the graph
+plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100), dt = 1, colour = "red"){
   ggp <- ggplot_build(specPlot)
   ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
   for(per in periods){
-    specPlot <- specPlot + annotate("segment", x = 1/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
-                      colour = "red", alpha = 0.5)
-    specPlot <- specPlot +  annotate("text", x = 1.03*1/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = "red")
+    specPlot <- specPlot + annotate("segment", x = dt/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
+                      colour = colour, alpha = 0.5)
+    specPlot <- specPlot +  annotate("text", x = 1.03*dt/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = "red")
   }
   return(specPlot)  
 }
