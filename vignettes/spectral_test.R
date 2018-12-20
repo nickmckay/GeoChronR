@@ -1,51 +1,46 @@
 library(ggplot2)
 library(ggthemes)
-library(lipdR)
 library(geoChronR)
 
 
-# load LiPD file
-I = readLipd("ODP846.Lawrence.2006.lpd")
-# extract relevant data 
+# test case on synthetic colored noise with Milankovitch frequencies.
+time = seq(0,1000,by=2)
+nt = length(time)
+m = nt %/% 4
+y = matrix(nrow = nt, ncol = m)
+alpha = 0.7 # noise color
+f0 = 1/nt
+theta = 2*pi*runif(m)
+for(j in 1:nt){
+  for(k in 1:m){
+    y[j,k] = (f0*k)^(-alpha/2)*sin(2*k*f0*time[j] + theta[k])
+  }
+}
 
-I <- mapAgeEnsembleToPaleoData(I,which.pmt = 1)
+ys = rowSums(y)
 
-temp <- selectData(I,varName = "temp",which.mt = 1)
-age <- selectData(I,varName = "age",which.mt = 1)
-ageEns <- selectData(I,varName = "ageEnsemble",which.mt = 1)
+periods = c(100,41,23,19)
+kp = nt %/% periods
+amp = 30
 
+for(i in 1:4){ 
+  ys = ys + amp*sin(2*kp[i]*f0*time)
+}
 
-age.upper <- selectData(I, varName = "upper95",where = "chronData",tableType = "summary")
-age.median <- selectData(I, varName = "median",where = "chronData",tableType = "summary")
-age.lower <- selectData(I, varName = "lower95",where = "chronData",tableType = "summary")
+ys = scale(ys) 
 
-age.ens  <- selectData(I, varName = "age",where = "chronData",tableType = "ensemble")
-
-
-
-# put into dataframe
-df <- data.frame(t = age$values, temp = temp$values)
-#df = data.frame(t = age.median$values, temp = temp$values, upper=age.upper$values, lower=age.lower$values)
-# plot
-#ggplot(df) + geom_line(aes(x=t/1000,y=temp),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, central estimate") + ylab("Temperature (deg C)") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_x_reverse() + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
-
-plotLine(X = age, Y  = temp,color = "orange") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL) + ggtitle("IODP 846 aligment to ProbStack, central estimate")
-
-# hone in on past 1 Ma 
-dfs = dplyr::filter(df,t<=1000)
-
-# put into matrix
-values = dfs$d18O
-#time = iodp846$alignment[1:382,]  
-
-# apply geoChronR method
-spec.ens.mtm <- computeSpectraEns(ageEns,temp,method='mtm')
+p <- ggplot() + geom_line(aes(x=time,y=ys),colour="orange") + ggtitle("Colored Milankovitch noise") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (ka)") + scale_y_reverse() + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
+show(p)
 
 
-#OLD WAY: load Matlab file
-# library(R.matlab)
-# path <- "/Users/julieneg/Documents/Science/Research/GeoChronR/spectral/data"
-# pathname <- file.path(path, "HMM_Alignment_8461_v6.mat")
-# iodp846 <- readMat(pathname)
-# df = data.frame(t = iodp846$median.ali, d18O=iodp846$d18O, upper=iodp846$upper.95, lower=iodp846$lower.95,tens = iodp846$alignment)
-# 
+spec.wwz = nuwavelet_psd(time,ys,sigma=0.05)
+
+orb.freq = 
+  dtm  = median(diff(time))
+# plot this 
+p.wwz <- ggplot() + geom_line(aes(x=spec.wwz$Frequency,y=spec.wwz$Power),colour="orange") + xlab("Frequency (1/kyr)") + ylab("Normalized Power") + scale_x_log10() +scale_y_log10() + ggtitle("Colored Milankovitch noise, WWZ") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
+p.wwz <- geoChronR::plotSpectraAnnotate(p.wwz,periods = periods)
+show(p.wwz)
+
+
+
