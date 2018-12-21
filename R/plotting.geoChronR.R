@@ -27,16 +27,52 @@ plotSpectraEns = function (spec.ens){
 #' @family spectra
 #' @param specPlot Output from plotSpectraEns (or other ggplot)
 #' @return ggplot object of spectrum plot
-plotSpectraAnnotate = function (specPlot, periods = c(19,23,41,100), dt = 1, colour = "red"){
+FrequencyAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
   ggp <- ggplot_build(specPlot)
   ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
   for(per in periods){
-    specPlot <- specPlot + annotate("segment", x = dt/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
-                      colour = colour, alpha = 0.5)
-    specPlot <- specPlot +  annotate("text", x = 1.03*dt/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = "red")
+    specPlot <- specPlot + annotate("segment", x = 1/per, xend = 1/per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
+                      colour = colour, alpha = 0.5, linetype = "dotdash")
+    specPlot <- specPlot +  annotate("text", x = 1.03/per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = colour)
   }
   return(specPlot)  
 }
+
+#' @export
+#' @title Annotate plot of spectra with given periodicities
+#' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
+#' @family plot
+#' @family spectra
+#' @param specPlot Output from plotSpectraEns (or other ggplot)
+#' @param periods the periods to highlight in the spectrum
+#' @param colour the color with of the text and lines
+#' @return ggplot object of spectrum plot
+PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
+  ggp <- ggplot_build(specPlot)
+  ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
+  for(per in periods){
+    specPlot <- specPlot + annotate("segment", x = per, xend = per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
+                                    colour = colour, alpha = 0.5, linetype = "dotdash")
+    specPlot <- specPlot +  annotate("text", x = 1.03*per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = colour)
+  }
+  return(specPlot)  
+}
+
+#' @export
+#' @title Reverse axis in log10 scale
+#' @description Reverse axis in log10 scale
+#' @family plot
+#' @family spectra
+
+library("scales")
+reverselog_trans <- function(base = exp(1)) {
+  trans <- function(x) -log(x, base)
+  inv <- function(x) base^(-x)
+  trans_new(paste0("reverselog-", format(base)), trans, inv, 
+            log_breaks(base = base), 
+            domain = c(1e-100, Inf))
+}
+
 
 #' @export
 #' @title Find quantiles across an ensemble
