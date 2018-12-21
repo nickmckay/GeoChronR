@@ -67,7 +67,7 @@ show(p.mtm2)
 
 # WWZ method
 tau = seq(min(time),max(time),length = max(nt %/% 2,5))
-spec.wwz = nuspectral::nuwavelet_psd(time,yt,sigma=0.05,taus = )
+spec.wwz = nuspectral::nuwavelet_psd(time,yt,sigma=0.05,taus = tau)
 period_range =  c(10, 1000) 
 freq = spec.wwz$Frequency
 f.low = 1/period_range[2]
