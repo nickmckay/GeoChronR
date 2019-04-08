@@ -30,6 +30,20 @@ getPlotRanges <- function(h){
 geoChronRPlotTheme = ggplot2::theme_bw
 
 #' @export
+#' @family plot
+#' @import scales trans_new
+#' @title convert a BP age scale to AD
+#' @description a ggplot scale to convert a BP axis to AD
+BP2AD_trans <- function() scales::trans_new("BP2AD",convertBP2AD,convertAD2BP)
+
+#' @export
+#' @family plot
+#' @import scales trans_new
+#' @title convert an AD age scale to BP
+#' @description a ggplot scale to convert a BP axis to AD
+AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
+
+#' @export
 #' @title Plot ensemble spectra output
 #' @description Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus confidence levels
 #' @family plot
@@ -1027,7 +1041,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
   #' @return A ggplot object
   #' @examples 
-  plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",which.data = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,dist.plot = NA,distType = "violin",thick = 0.1,truncateDist = NA){
+  plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",which.data = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,equalArea = TRUE,dist.plot = NA,distType = "violin",thick = 0.1,truncateDist = NA){
     
     
     P = L[[paste0(mode,"Data")]]
@@ -1085,11 +1099,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     }
     
     
-    pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T)
-    scaler = scaleFrac*abs(diff(plot.range))/max(pd)
-    
-    
-    #loop through individual ages...
+  #loop through individual ages...
     for(y in dist.plot){
       this.dist = dist[[y]]
       if(!is.na(truncateDist)){
@@ -1097,7 +1107,9 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
         this.dist$probabilityDensity$values = this.dist$probabilityDensity$values[tgood]
         this.dist$age$values = this.dist$age$values[tgood]
       }
-      pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T) * scaler
+      pd = this.dist$probabilityDensity$values/sum(this.dist$probabilityDensity$values,na.rm=T)
+      scaler = scaleFrac*abs(diff(plot.range))/max(pd)
+      pd = pd * scaler
       this.df = data.frame(x= this.dist[[dist.var]]$values,ymin = this.dist[[y.var]] - pd,ymax = this.dist[[y.var]] + pd )
       if(distType == "up"){this.df$ymin =  this.dist[[y.var]]}
       if(distType == "down"){this.df$ymax =  this.dist[[y.var]]}
