@@ -181,8 +181,8 @@ pullTsVariable = function(TS,variable){
   var <- sapply(TS,"[[",variable)
   
   
-  if(is.list(var)){#if it's a list, try to unpack it.
-    if(length(unlist(var)) < length(var)){#there are some NULS
+  if(is.list(var) & !grepl("author",variable)){#if it's a list, try to unpack it. Unless it's author then don't
+    if(length(unlist(var)) < length(var)){#there are some NULlS
       newVar <- matrix(NA,nrow = length(var))
       isNull <- sapply(var, is.null)
       newVar[which(!isNull)] <- unlist(var)
