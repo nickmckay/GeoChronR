@@ -15,7 +15,7 @@ getBaconDir <- function(baconDir = NA){
       baconDir=baconDir
     }else{
       baconDir=get("baconDir",envir = .GlobalEnv)
-      if(is.na(baconDir)){
+      if(is.na(baconDir) | !is.char(baconDir)){
         cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
         baconFile=file.choose()
         baconDir<<-dirname(dirname(baconFile))
