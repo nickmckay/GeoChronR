@@ -134,7 +134,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
       # JEG: the frequency axis will be subtly different for each iteration.  I think it would be better to interpolate to a common frequency axis if we are to compare them all. Or does quantile2d already take care of that?
       fMat[,k]=out$scanned
       pMat[,k]=out$power
-      if(i%%round(nens/50)==0){
+      if(k%%round(nens/50)==0){
         setTxtProgressBar(pb,k)
       }
     }

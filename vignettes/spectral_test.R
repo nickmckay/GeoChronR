@@ -3,7 +3,7 @@ library(ggplot2)
 library(ggthemes)
 library(astrochron)
 
-devtools::install_github("nickmckay/nuspectral")
+#devtools::install_github("nickmckay/nuspectral")
 library(nuspectral)
 
 # generate synthetic colored noise with Milankovitch frequencies.
@@ -51,7 +51,7 @@ f = spec.mtmPL$Frequency
 period_ticks= c(10, 20, 50, 100, 200, 500, 1000)
 # Plot as a function of period
 p.mtm1 <- ggplot() + geom_line(aes(x=1/f,y=spec.mtmPL$Power)) + geom_line(aes(x=1/f,y=spec.mtmPL$PowerLaw_fit),colour="blue")
-p.mtm1 <- p.mtm1 + scale_x_continuous(breaks=period_ticks, trans=reverselog_trans(10)) 
+p.mtm1 <- p.mtm1 + scale_x_continuous(breaks=period_ticks, trans=geoChronR::reverselog_trans(10)) 
 p.mtm1 <- p.mtm1 + xlab("Period (kyr)") + ylab("Normalized Power") + scale_y_log10() + ggtitle("Colored Milankovitch noise, MTM, power-law null")
 p.mtm1 <- PeriodAnnotate(p.mtm1,periods = 1/sig.freqPL)
 show(p.mtm1)

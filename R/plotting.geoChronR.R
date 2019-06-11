@@ -4,6 +4,7 @@
 #' @description Use this to define a theme across geoChronR
 geoChronRPlotTheme = ggplot2::theme_bw
 
+
 #' @export
 #' @title Plot ensemble spectra output
 #' @description Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus confidence levels
@@ -16,7 +17,15 @@ plotSpectraEns = function (spec.ens){
   specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
   #{to do} label significant peaks
   
+  period_range =  c(10, 1000) # make 
+  freq = spec.wwz$Frequency
+  f.low = 1/period_range[2]
+  f.high = 1/period_range[1]
+  freq_range = (freq>= f.low & freq<=f.high)
+  
+  
   specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
+  
   return(specPlot)
 }
 
@@ -27,6 +36,8 @@ plotSpectraEns = function (spec.ens){
 #' @family spectra
 #' @param specPlot Output from plotSpectraEns (or other ggplot)
 #' @return ggplot object of spectrum plot
+#' @author Julien Emile-Geay
+
 FrequencyAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
   ggp <- ggplot_build(specPlot)
   ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
@@ -47,6 +58,8 @@ FrequencyAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red
 #' @param periods the periods to highlight in the spectrum
 #' @param colour the color with of the text and lines
 #' @return ggplot object of spectrum plot
+#' @author Julien Emile-Geay
+
 PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
   ggp <- ggplot_build(specPlot)
   ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
@@ -59,13 +72,13 @@ PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
 }
 
 #' @export
+#' @import scales
 #' @title Reverse axis in log10 scale
 #' @description Reverse axis in log10 scale
 #' @family plot
 #' @family spectra
-
-library("scales")
-reverselog_trans <- function(base = exp(1)) {
+#' @author Julien Emile-Geay
+reverselog_trans = function (base = exp(1)) {
   trans <- function(x) -log(x, base)
   inv <- function(x) base^(-x)
   trans_new(paste0("reverselog-", format(base)), trans, inv, 
