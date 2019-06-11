@@ -77,7 +77,7 @@ PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
 #' @description Reverse axis in log10 scale
 #' @family plot
 #' @family spectra
-#' @author Julien Emile-Geay
+#' @author Nick McKay, Julien Emile-Geay
 reverselog_trans = function (base = exp(1)) {
   trans <- function(x) -log(x, base)
   inv <- function(x) base^(-x)

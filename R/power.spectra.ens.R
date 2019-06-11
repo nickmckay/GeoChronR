@@ -65,7 +65,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' @export
 #' @family spectra
 #' @title Calculate ensemble power spectra
-#' @description Calculate ensemble power spectra using lomb-scargle
+#' @description Calculate ensemble power spectra using a variety of spectral methods: Lomb-Scargle, Multi-Taper, and Weighted Wavelet Z-transform
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param max.ens Maximum number of ensemble members to analyze
