@@ -51,7 +51,7 @@ ggplot() + xlim(c(0,10)) +
   geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(base_size = 12, base_family = "sans", style = "darkunica", bgcolor = NULL)
 ```
 
-We see that over the past Ma, the time increments (dt) are sharply peaked around 2.5 ka, but they range from 0 to about 7.5. For now, let us assume that the time axis, uneven though it is, is well-known (no uncertainty). 
+We see that over the past Ma, the time increments (dt) are sharply peaked around 2.5 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, uneven though it is, is well-known (no uncertainty). 
 
 ## Time-certain spectral analysis 
 There are two ways to proceed: 1) use methods that explictly deal with unevenly-spaced data, or 2) interpolate to a regular grid and apply standard methods. 
@@ -89,7 +89,7 @@ show(p.ls)
 Where it is clearly seen that the data appear to contain periodic signals at the Milankotich frequencies (as well as quite a few others that appear almost as strong). 
 
 ### Multi-taper Method
-The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], though the method currently only handles evenly-spaced data. Small potatoes! The data are not that far from evenly-spaced, so let's interpolate and see what we get. Conveniently, both the interpolation routine and MTM are available within the [astrochron](https://www.rdocumentation.org/packages/astrochron) package:
+The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982]. The downside is that it only handles evenly-spaced data. Small potatoes! The data are not that far from evenly-spaced, so let's interpolate and see what we get. Conveniently, both the interpolation routine and MTM are available within the [astrochron](https://www.rdocumentation.org/packages/astrochron) package:
 
 ```{r}
 library(astrochron)
@@ -104,7 +104,7 @@ p.mtm <- plotSpectraAnnotate(p.mtm,periods = 1/sig.freq)
 show(p.mtm)
 ```
 
-We notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals strong power law behavior (linear decrease in these log units) from periods of 5 to 100 ky. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis. The plain vanilla *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2` will export the frequencies identified as "significant" by this procedure. In this case, it identifies 41 and 19 ky (as it should), 90 ky (close enough to 100ky given the resolution), but surprisingly favors 55ky over the known 23ky precessional peak. Here it's helpful to take a step back and contemplate our null hypothesis. Past work has shown that the continuum of climate variability is well described by power laws [Huybers & Curry, 2006] - this would be a far better null. Never fear! *Astrochron* has an app for that:
+We notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals a strong power law behavior from periods of 5 to 100 ky, which in this log-log plotting convention manifests as a linear decrease. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis. The plain vanilla *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2` will export the frequencies identified as "significant" by this procedure. In this case, it identifies 41 and 19 ky (as it should), 90 ky (close enough to 100ky given the resolution), but surprisingly favors 55ky over the known 23ky precessional peak. Here it's helpful to take a step back and contemplate our null hypothesis. Past work has shown that the continuum of climate variability is well described by power laws [Huybers & Curry, 2006] - this would be a far better null. Never fear! *Astrochron* has an app for that:
 
 ```{r}
 fl = 0.005; fh = 0.1
@@ -117,7 +117,7 @@ p.mtmPL <- plotSpectraAnnotate(p.mtmPL,periods = 1/sig.freqPL)
 show(p.mtmPL)
 ```
 
-This gets rid of the 55 kyr cycle, and now we've got the split precessional peak, consistent with the astronomical forcing [Berger, 1978]. Here we defined `fhigh = 0.1` as the highest frequency at which to see cycles. Tweak it to see what happens when you use a higher one. 
+Sure enough, this gets rid of the 55 kyr cycle, and now we've got the split precessional peak, consistent with the astronomical forcing [Berger, 1978]. Here we defined `fhigh = 0.1` as the highest frequency at which to see cycles. Tweak it to see what happens when you use a higher one. 
 
 ### Weighted Wavelet Z-transform (*nuspectral*)
 
