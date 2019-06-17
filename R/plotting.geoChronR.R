@@ -78,12 +78,12 @@ PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
 #' @family plot
 #' @family spectra
 #' @author Nick McKay, Julien Emile-Geay
-reverselog_trans = function (base = exp(1)) {
-  trans <- function(x) -log(x, base)
-  inv <- function(x) base^(-x)
-  trans_new(paste0("reverselog-", format(base)), trans, inv, 
-            log_breaks(base = base), 
-            domain = c(1e-100, Inf))
+reverselog10_trans <- function(){
+  trans <- function(x) -log(x, 10)
+  inv <- function(x) 10^(-x)
+  return(scales::trans_new("reverselog10-", trans, inv, 
+            log_breaks(base = 10), 
+            domain = c(1e-100, Inf)))
 }
 
 
