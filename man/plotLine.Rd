@@ -24,7 +24,8 @@ A ggplot object
 Plots or adds a line to aplot
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},

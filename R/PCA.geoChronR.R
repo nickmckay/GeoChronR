@@ -8,10 +8,22 @@
 #' @param PCAtype Correlation ("corr" - default) or Covariance ("cov"), matrix
 #' @param nPCs number of PCs/EOFs to calculate
 #' @param nens how many ensemble members?
-#' @import pcaMethods
+#' @import BiocManager
+#' 
 
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
- 
+  
+  #check for the pcaMethods package
+  if (!requireNamespace("pcaMethods", quietly = TRUE)){
+    print("pcaMethods package needed for this function. Would you like to install it?")
+    ans=as.character(readline(prompt = "pcaMethods package needed for this function. Would you like to install it?"))
+    if(grepl("y",tolower(ans))){
+      BiocManager::install("pcaMethods")
+    }else{
+      stop("pcaEns cannot run without pcaMethods")
+    }
+  }
+  
   #the option type controls whether the analysis is done on a correlation (default) or covariance matrix ("cov")
 #the function uses the pcaMethods library to do the heavy lifting
   time = bin.list[[1]]$time
@@ -50,9 +62,9 @@ for(n in 1:nEns){#for each ensemble member
   PCAMAT = PCAMAT[goodRows,]
   #remove means, and scale if correlation matrix
   if(PCAtype=="corr"){
-    pca.out=pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=nPCs)
+    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=nPCs)
   }else if(PCAtype=="cov"){
-    pca.out=pca(PCAMAT,method,center=TRUE,scale="none",nPcs=nPCs)
+    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="none",nPcs=nPCs)
   }
   
   loads[,,n]=loadings(pca.out)

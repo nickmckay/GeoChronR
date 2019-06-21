@@ -34,7 +34,8 @@ a ggplot object, or NA if there's chronData to plot
 Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},

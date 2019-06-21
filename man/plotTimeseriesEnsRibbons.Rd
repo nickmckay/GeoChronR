@@ -43,7 +43,8 @@ A ggplot object OR list of plotted quantiles, depending on export.quantiles
 Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},

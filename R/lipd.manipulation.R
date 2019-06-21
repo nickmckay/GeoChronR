@@ -26,7 +26,7 @@ tidyTs <- function(TS){
   additional.names <- c("paleoData_values_char")
   
   pcolnames <- c(pcolnames,additional.names)
-  tidyData <- as.data.table(matrix(data = NA,nrow = nprows,ncol = length(pcolnames)))
+  tidyData <- suppressWarnings(as.data.table(matrix(data = NA,nrow = nprows,ncol = length(pcolnames))))
 
   names(tidyData) <- pcolnames
   
@@ -96,7 +96,7 @@ tidyTs <- function(TS){
       stop(paste0(as.character(i),": There must be an 'age', 'year', or 'depth' column that's the same length as paleoData_values"))
     }
     
-    sdf <- tibble::as.tibble(ti[long])
+    sdf <- suppressWarnings(tibble::as.tibble(ti[long]))
     
     #separate numeric and character values
     if(is.character(sdf$paleoData_values)){
@@ -115,7 +115,7 @@ tidyTs <- function(TS){
     
     #replicate the metadata to each observation row
     short <- which(al2==1)
-    mdf <- as.data.frame(ti[short])
+    mdf <- suppressWarnings(as.data.frame(ti[short]))
     meta.df <- purrr::map_df(seq_len(nrow(sdf)), ~mdf)
     
     #combine them together
