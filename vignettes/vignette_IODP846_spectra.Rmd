@@ -31,9 +31,9 @@ age.ens  <-  I$chronData[[1]]$model[[1]]$ensembleTable[[1]]$age$values
 # put into a dataframe for easier access
 df  <- data.frame(t = age.median, d18O=d18O, upper=age.upper, lower=age.lower, tens = age.ens)
 #  try the LiPD way    NEED NICK ASSISTANCE
-L <- geoChronR:::mapAgeEnsembleToPaleoData(I)
-X = geoChronR:::selectData(L,"ageEnsemble")
-Y = geoChronR:::selectData(L,"temperature")
+L <- geoChronR::mapAgeEnsembleToPaleoData(I)
+X = geoChronR::selectData(L,"ageEnsemble",which.mt = 1)
+Y = geoChronR::selectData(L,"temp muller",which.mt = 1)
 ```
 
 Now let us take a first look at the median age model:
