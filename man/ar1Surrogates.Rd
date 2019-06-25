@@ -25,10 +25,12 @@ a vector or matrix of AR(1) surrogates for series X
 create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 }
 \seealso{
-Other spectra: \code{\link{computeSpectraEns}},
-  \code{\link{plotSpectraAnnotate}},
-  \code{\link{plotSpectraEns}}
-
+Other spectra: \code{\link{FrequencyAnnotate}},
+  \code{\link{PeriodAnnotate}},
+  \code{\link{computeSpectraEns}},
+  \code{\link{createSyntheticTimeseries}},
+  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
+  \code{\link{reverselog10_trans}}
 
 Other pca: \code{\link{createSyntheticTimeseries}},
   \code{\link{getLegend}}, \code{\link{pcaEns}},

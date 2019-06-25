@@ -32,14 +32,14 @@ geoChronRPlotTheme = ggplot2::theme_bw
 
 #' @export
 #' @family plot
-#' @import scales trans_new
+#' @importFrom scales trans_new
 #' @title convert a BP age scale to AD
 #' @description a ggplot scale to convert a BP axis to AD
 BP2AD_trans <- function() scales::trans_new("BP2AD",convertBP2AD,convertAD2BP)
 
 #' @export
 #' @family plot
-#' @import scales trans_new
+#' @importFrom scales trans_new
 #' @title convert an AD age scale to BP
 #' @description a ggplot scale to convert a BP axis to AD
 AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)

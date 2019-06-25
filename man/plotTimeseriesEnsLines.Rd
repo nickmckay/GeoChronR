@@ -28,7 +28,9 @@ Plot an ensemble timeseries as a set of lines. Useful for displaying a handful o
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}},
+  \code{\link{FrequencyAnnotate}},
+  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -39,11 +41,12 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraAnnotate}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
+  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
+  \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}}
+  \code{\link{plotTrendLinesEns}},
+  \code{\link{reverselog10_trans}}
 }
 \author{
 Nick McKay

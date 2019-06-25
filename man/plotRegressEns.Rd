@@ -30,7 +30,9 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}},
+  \code{\link{FrequencyAnnotate}},
+  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -40,12 +42,13 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraAnnotate}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
+  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
+  \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}}
+  \code{\link{plotTrendLinesEns}},
+  \code{\link{reverselog10_trans}}
 
 Other regress: \code{\link{plotScatterEns}},
   \code{\link{plotTrendLinesEns}}, \code{\link{regressEns}}

@@ -11,7 +11,8 @@ a ggplot scale to convert a BP axis to AD
 }
 \seealso{
 Other plot: \code{\link{BP2AD_trans}},
-  \code{\link{axisLabel}},
+  \code{\link{FrequencyAnnotate}},
+  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -22,9 +23,11 @@ Other plot: \code{\link{BP2AD_trans}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
+  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
+  \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}}
+  \code{\link{plotTrendLinesEns}},
+  \code{\link{reverselog10_trans}}
 }
