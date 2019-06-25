@@ -30,10 +30,10 @@ age.lower <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$lower95$values
 age.ens  <-  I$chronData[[1]]$model[[1]]$ensembleTable[[1]]$age$values
 # put into a dataframe for easier access
 df  <- data.frame(t = age.median, d18O=d18O, upper=age.upper, lower=age.lower, tens = age.ens)
-#  try the LiPD way
-I <- geoChronR::mapAgeEnsembleToPaleoData(I)
-#X = selectData(L,"ageEnsemble")
-#Y = selectData(L,"temperature")
+#  try the LiPD way    NEED NICK ASSISTANCE
+L <- geoChronR:::mapAgeEnsembleToPaleoData(I)
+X = geoChronR:::selectData(L,"ageEnsemble")
+Y = geoChronR:::selectData(L,"temperature")
 ```
 
 Now let us take a first look at the median age model:
@@ -217,7 +217,6 @@ Now let's consider age uncertainties.
 In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  Let us inspect the age uncertainties:
 
 ```{r visualize timeseries with age uncertainties, message=FALSE, warning=FALSE}
-library(geoChronR)
 #plotTimeseriesEnsRibbons(X=age.ens,Y=d18O) + scale_y_reverse()
 # this works but returns many error messages. We may need to put d18O into the paleoData tables to make it work properly. 
 
@@ -291,9 +290,9 @@ show(specPlot)
 Now let's do this with GeoChronR. 
 
 ```{r}
-time = iodp846$alignment[1:382,]
+time = age.ens[1:382,1:1000]  # age ensemble for ~ last 1 Ma
 values = dfs$d18O
-mtm.ens.spec = computeSpectraEns(values, time,method = 'mtm')
+mtm.ens.spec = geoChronR:::computeSpectraEns(values, time, method = 'mtm')
 ```
 
 
