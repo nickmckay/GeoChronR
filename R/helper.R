@@ -2,8 +2,60 @@
 installLipd = function(){devtools::install_github("nickmckay/lipd-utilities",subdir = "R")}
 
 #' @export
-
 installGeoChronR= function(){devtools::install_github("nickmckay/geoChronR")}
+
+#' @export
+#' @title Makes a guess about the units of a time vector based on the values
+#' @description Guesses year units based on some simple heuristics
+#' @param X A LiPD variable list or a vector of years BP 
+#' @return A *guessed* string unit label
+heuristicUnits = function(X,rangeMin = 25){
+  if(is.list(X)){
+    if(all(is.na(X$values))){
+      return(NA)
+    }
+    miv <- min(X$values,na.rm = TRUE)
+    mav <- max(X$values,na.rm = TRUE)
+    rv <- diff(range(X$values, na.rm = TRUE))  
+  }else{
+    if(all(is.na(X))){
+      return(X)
+    }
+    miv <- min(X,na.rm = TRUE)
+    mav <- max(X,na.rm = TRUE)
+    rv <- diff(range(X, na.rm = TRUE))  
+  }
+  
+  #See if the highest value would be in the future for AD
+    todayCheckAD <-  mav > as.numeric(substring(date(),21))
+  
+  #See if the lowest values would be in the future for BP
+    todayCheckBP <- miv < convertAD2BP(as.numeric(substring(date(),21)))
+    
+    #see if range of values implies ka not BP
+    rangeCheck <- rv < rangeMin
+    
+    #now work out some scenarios
+    if(todayCheckBP & !todayCheckAD){
+        unitGuess <- "AD"
+    }else if(!todayCheckBP & todayCheckAD){
+      unitGuess <- "BP"
+    }else if(rangeCheck){
+      unitGuess <- "ka"
+    }else if(todayCheckBP & todayCheckAD){
+      unitGuess <- "somethings wrong here, doesn't seem to be AD, BP, or ka"
+    }else{
+      if(miv > 0 & mav > 1900){
+        unitGuess <- "AD"
+      }else if(miv >-50  & mav < 100){
+          unitGuess <- "BP"
+      }else{
+        unitGuess <- "cant make a reasonable guess"
+      }
+    }
+    
+    return(unitGuess)
+}
 
 
 #' @export
@@ -12,17 +64,25 @@ installGeoChronR= function(){devtools::install_github("nickmckay/geoChronR")}
 #' @param X A LiPD variable list or a vector of years BP 
 #' @return X A LiPD variable list or a vector of Calendar years AD 
 convertBP2AD = function(X){
-if(is.list(X)){
-  if(tolower(X$units)=="ad" | tolower(X$units)=="ce"){
-    print("already in AD or CE, aborting...")
-    return(X)
-  }
-  X$units = "AD"
+  if(is.list(X)){
+    if(tolower(X$units)=="ad" | tolower(X$units)=="ce"){
+      print("already in AD or CE, aborting...")
+      return(X)
+    }
+    X$units = "AD"
+    if(all(is.na(X$values))){
+      return(X)
+    }
     X$values=1950-X$values
-  X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
-}else{
-  X=1950-X
-  X[which(X <= 0)]=X[which(X <= 0)]-1#remember, there's no year 0
+    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
+    
+  }else{
+    if(all(is.na(X))){
+      return(X)
+    }
+    X=1950-X
+    X[which(X <= 0)]=X[which(X <= 0)]-1#remember, there's no year 0
+    
   }
   return(X)
 }
@@ -39,12 +99,19 @@ convertAD2BP = function(X){
       print("already in BP, aborting...")
       return(X)
     }
+    if(all(is.na(X$values))){
+      return(X)
+    }
     X$units = "BP"
-    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
     X$values=1950-X$values
+    X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
+    
   }else{
-    X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0
-    X=1950-X
+    if(all(is.na(X))){
+      return(X)
+    }
+      X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0
+      X=1950-X
   }
   return(X)
 }

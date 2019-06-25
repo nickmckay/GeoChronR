@@ -4,9 +4,11 @@
 \alias{plotLine}
 \title{Plot or add a line to plot}
 \usage{
-plotLine(X, Y, color = "black", alp = 1, add.to.plot = ggplot())
+plotLine(add.to.plot = ggplot(), X, Y, color = "black", alp = 1)
 }
 \arguments{
+\item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot() .}
+
 \item{X}{A LiPD variable list to plot, including values, units, names, and more}
 
 \item{Y}{A LiPD variable list to plot, including values, units, names, and more}
@@ -14,8 +16,6 @@ plotLine(X, Y, color = "black", alp = 1, add.to.plot = ggplot())
 \item{color}{Line color (following ggplot rules)}
 
 \item{alp}{Line transparency}
-
-\item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot() .}
 }
 \value{
 A ggplot object
@@ -24,10 +24,13 @@ A ggplot object
 Plots or adds a line to aplot
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -36,6 +39,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }
 \author{

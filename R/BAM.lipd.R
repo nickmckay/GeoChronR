@@ -246,11 +246,11 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   
   #place into paleoData appropriately.
   #assign into measurementTable
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$values = ensName
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$variableName = ensName
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$values = ensOut
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$units = yearData$units
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$frommodel = which.model
+  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$fromModel = which.model
   L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
   
   return(L)

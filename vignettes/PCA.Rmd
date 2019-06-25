@@ -1,0 +1,188 @@
+---
+title: "ensemble PCA"
+author: "Nick McKay"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ensemble PCA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r,echo = FALSE}
+knitr::opts_chunk$set(fig.retina = 2, fig.width = 8,fig.height = 6) 
+knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
+
+```
+
+
+  
+```{r,results="hide",fig.keep="all"}
+
+library(lipdR)
+library(geoChronR)
+library(magrittr)
+library(dplyr)
+```
+  
+load in all of the files in the "Arctic2kLipds" folder
+
+```{r}
+FD <- readLipd(system.file("extdata", "arc2k", package = "geoChronR")) 
+#FD <- readLipd() 
+```
+
+##Make a map
+```{r}
+mapLipds(FD)
+```
+yeah, the google maps don't work well at the poles. Try a line map.
+```{r,results="hide",fig.keep="all"}
+mapLipds(FD,map.type = "line",projection = "stereo",f = 0.1)
+
+```
+
+More map projections are available too. A list is available here:
+`?mapproject`
+
+##Grab the age ensembles for each record. 
+We need to "map"" the age ensembles to paleo for all of these datasets. In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth varaible because they're layer counted.
+```{r,results="hide"}
+
+#FD2 = sapply(FD[-c(3,5,12,14,20,26)],mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
+FD2 = sapply(FD,mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
+
+     
+```
+
+Now extract all the "timeseries" into at "TS object" that will facilitate working with multiple records.
+```{r}
+TS = extractTs(FD2)
+```
+
+and filter the TS object to only include variables that have been interepreted as temperature:
+```{r,results="hide",fig.keep="all"}
+TS.filtered = filterTs(TS,"interpretation1_variable == T")
+```
+OK, let's make a quick plot stack to see what we're dealing with.
+
+```{r,results="hide",fig.keep="all"}
+tidyDf <- tidyTs(TS.filtered)
+```
+
+
+```{r}
+plotTimeseriesStack(tidyDf, 
+                    colorVar = "paleoData_variableName", 
+                    colorRamp = c("DarkBlue","Orange","Black","Dark Green"),
+                    lineSize = .1, 
+                    fillAlpha = .05,
+                    labSize = 2,
+                    labSpace = 3)
+```
+
+
+
+
+Now bin all the data in the TS from 1400 to 2000, an interval of pretty good data coverage, into 5 year bins. 
+```{r,results="hide",cache=TRUE}
+binned.TS = binTs(TS.filtered,binvec = seq(1400,2000,by=5),timeVar = "ageEnsemble")
+```
+
+
+and calculate the MCEOF
+```{r,results="hide",warning=FALSE}
+pcout = pcaEns(binned.TS)
+```
+
+OK! Let's plot the results. 
+
+```{r}
+plotPCA = plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.1,legendPosition = c(0.5,.6),which.PCs = 1:2,which.leg = 2)
+```
+
+Nice! A summary plot that combines the major features is produced, but all of the components, are included in the "plotPCA" list that was exported. 
+
+Here's the first map
+```{r}
+plotPCA$maps[[1]]
+```
+
+The second timeseries
+```{r}
+plotPCA$lines[[2]]
+```
+
+A 
+
+```{r}
+plotPCA$sampleDepth
+```
+
+
+
+this time - grab only those that are d18O, and use a covariance matrix
+let's look at all the names in the TS
+```{r}
+varNames <- pullTsVariable(TS, "variableName")
+```
+Oops - looks like we didn't use quite the correct name. Next time use: 
+
+```{r}
+varNames <- pullTsVariable(TS, "paleoData_variableName")
+```
+
+and take a look at the unique variableNames in the TS
+
+```{r}
+unique(varNames)
+```
+
+OK. Let's filter the timeseries again, this time pulling all the d18O data.
+
+```{r,results="hide"}
+d18OTS = filterTs(TS,"paleoData_variableName == d18O")
+```
+
+```{r,results="hide"}
+tidyd18O <- tidyTs(d18OTS)
+
+```
+```{r}
+#arrange the tidy dataframe by record length
+tidyd18O <- tidyd18O %>% 
+  group_by(paleoData_TSid) %>% 
+  mutate(range = max(year) - min(year)) %>% 
+  arrange(range)
+
+```
+
+
+```{r}
+plotTimeseriesStack(tidyd18O, 
+                    colorVar = "paleoData_variableName", 
+                    colorRamp = c("DarkBlue"),
+                    lineSize = .1, 
+                    fillAlpha = .05,
+                    labSize = 2,
+                    labSpace = 2,
+                    labBuff = 0.03)
+```
+
+Now, we'll bin again.
+```{r,results="hide"}
+binned.TS2 = binTs(d18OTS,binvec = seq(1400,2000,by=5),na.col.rm = T)
+```
+
+And calculate the ensemble PCA, this time using a covariance matrix
+```{r,results="hide"}
+pcout2 = pcaEns(binned.TS2,PCAtype = "cov")
+```
+
+
+```{r}
+plotPCA2 = plotPcaEns(pcout2,TS = d18OTS,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.2)
+```
+
+
+

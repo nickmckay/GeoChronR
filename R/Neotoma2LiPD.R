@@ -6,12 +6,12 @@
 #' @param range1 name of one of the range variables
 #' @param range2 name of the other range variable
 #' @return MT: a LiPD measurementTable with a new unc.estimate variable
-#' @import matrixStats
+#' @importFrom matrixStats rowDiffs
 #'
 estimateUncertaintyFromRange = function(MT,range1="age.young",range2="age.old"){
   val1=MT[[range1]]$values
   val2=MT[[range2]]$values
-  diffVals=abs(rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
+  diffVals=abs(matrixStats::rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
   uncVal = diffVals/2
   MT$unc.estimate$values = uncVal
   MT$unc.estimate$variableName = "unc.estimate"

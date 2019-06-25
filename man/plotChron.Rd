@@ -2,71 +2,45 @@
 % Please edit documentation in R/plotting.geoChronR.R
 \name{plotChron}
 \alias{plotChron}
-\title{Plot chronologies}
+\title{High-level chron plotting}
 \usage{
-plotChron(L, ageVar = "ageEnsemble", depthVar = "depth",
-  chron.number = NA, model.num = NA, probs = c(0.025, 0.25, 0.5, 0.75,
-  0.975), x.bin = NA, y.bin = NA, nbins = 100, bandColorLow = "white",
-  bandColorHigh = "grey70", bandAlp = 1, lineColor = "Black",
-  lineWidth = 1, add.to.plot = ggplot2::ggplot(), nEnsLines = 5,
-  ensLineColor = "red", ensLineAlp = 0.7, distAlp = 0.3,
-  distType = "violin", distColor = "purple", distThick = 0.1,
-  distScale = 0.02, truncateDist = NA)
+plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
+  age.var = "age", age14C.var = "age14C", dotSize = 5,
+  legend.position = c(0.7, 0.3), ...)
 }
 \arguments{
 \item{L}{A LiPD object}
 
-\item{probs}{quantiles to calculate and plot}
+\item{chron.number}{which chronData object to use (NA by default, will ask if needed)}
 
-\item{x.bin}{vector of bin edges over which to bin.}
+\item{meas.num}{which chronData model to use (NA by default, will ask if needed)}
 
-\item{y.bin}{vector of bin edges over which to bin.}
+\item{depth.var}{variableName to use for depth ("depth" by default)}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{age.var}{variableName to use for age ensemble ("age" by default)}
 
-\item{bandColorLow}{Band color of the outer most band.}
+\item{age14C.var}{variableName to use for age ensemble ("age14C" by default)}
 
-\item{bandColorHigh}{Band color of the inner most band.}
+\item{legend.position}{where to put the legend on the chron plot?}
 
-\item{lineColor}{Line color (following ggplot rules)}
+\item{...}{arguments to pass on to plotChronEns()}
 
-\item{lineWidth}{Width of the line}
-
-\item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
-
-\item{nEnsLines}{Number of ensemble members to plot}
-
-\item{ensLineColor}{color of the ensemble lines}
-
-\item{ensLineAlp}{transparency of the lines}
-
-\item{distType}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
-
-\item{distColor}{distribution color (following ggplot rules)}
-
-\item{distThick}{thickness of the line around the distribution}
-
-\item{distScale}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
-
-\item{truncateDist}{truncate probability density values below this number. NA (default) means no truncation}
-
-\item{dist.var}{Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default.}
-
-\item{y.var}{Name of the y-axis variable. "depth" by default.}
-
-\item{bandAlpha}{Transparency of the band plot}
+\item{dotsize}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 }
 \value{
-A ggplot object
+a ggplot object, or NA if there's chronData to plot
 }
 \description{
-Plot creates an age model plot with all the bells and whistles, including a spread of ensemble members, probability distributions, and a few example ensemble members.
+Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotCorrEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
+  \code{\link{plotHistEns}}, \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -75,9 +49,12 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 
-Other chron: \code{\link{plotModelDistributions}}
+Other chron: \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}},
+  \code{\link{plotModelDistributions}}
 }
 \author{
 Nick McKay

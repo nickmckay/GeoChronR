@@ -29,5 +29,8 @@ Other spectra: \code{\link{computeSpectraEns}},
   \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}
 
-Other pca: \code{\link{pcaEns}}, \code{\link{plotPcaEns}}
+
+Other pca: \code{\link{createSyntheticTimeseries}},
+  \code{\link{getLegend}}, \code{\link{pcaEns}},
+  \code{\link{plotPcaEns}}
 }
