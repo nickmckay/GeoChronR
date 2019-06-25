@@ -4,8 +4,14 @@
 \alias{runBchron}
 \title{Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object}
 \usage{
-runBchron(L, which.chron = NA, site.name = L$dataSetName, modelNum = NA,
-  calCurves = NA)
+runBchron(L, which.chron = NA, which.table = NA,
+  site.name = L$dataSetName, modelNum = NA, calCurves = NA, reject = NA,
+  interpolate = NA, iter = NA, extractDate = NA, labIDVar = "labID",
+  age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc",
+  ageVar = "age", ageUncertaintyVar = "ageUnc", depthVar = "depth",
+  reservoirAge14CVar = "reservoirAge",
+  reservoirAge14CUncertaintyVar = "reservoirAge14C",
+  rejectedAgesVar = "rejected", paleoDepthVar = "depth")
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -35,4 +41,6 @@ L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, ca
 Deborah Khider
 
 Andrew Parnell
+
+Nick McKay
 }

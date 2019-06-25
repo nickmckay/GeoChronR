@@ -15,7 +15,7 @@ getBaconDir <- function(baconDir = NA){
       baconDir=baconDir
     }else{
       baconDir=get("baconDir",envir = .GlobalEnv)
-      if(is.na(baconDir)){
+      if(is.na(baconDir) | !is.character(baconDir)){
         cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
         baconFile=file.choose()
         baconDir<<-dirname(dirname(baconFile))
@@ -36,6 +36,7 @@ getBaconDir <- function(baconDir = NA){
 #' @description This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
 #' @inheritParams writeBacon
 #' @param maxEns the maximum number of ensembles to load in (default = 1000)
+#' @param ... arguments to pass on to Bacon
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 
 #' Run in interactive mode:
@@ -43,7 +44,7 @@ getBaconDir <- function(baconDir = NA){
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = NA,baconAccMean = 20){
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = NA,baconAccMean = 20,...){
   cur.dir = getwd()
   #initialize which.chron
   if(is.na(which.chron)){
@@ -89,7 +90,7 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   #if(is.null(baconFile)){baconFile = "Bacon.R"}
   
   #source(baconFile)
-  rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest)
+  rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest,...)
   
   print("taking a short break...")
   Sys.sleep(5)
@@ -101,7 +102,6 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
 #' @export
 #' @title Sample ensemble ages from Bacon
 #' @description Pulls ensemble members from Bacon output. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
-#' @import plyr
 #' @family Bacon
 #' @author Simon Goring
 #' @author Nick McKay
@@ -349,13 +349,11 @@ writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.reject
   
   #print results...
   print("Variable choices for reuse...")
-  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", 
-               stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
+  
   print(varUsedStr)
   assign("bacon_varUsedStr",value = varUsedStr,envir = .GlobalEnv)
 
-  
-  
   #merge variables as needed
   depth <- MT[[depthi]]$values
   if(is.null(depth)){

@@ -13,7 +13,7 @@ runBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
   rejectedAgesVar = "rejected", BaconAsk = TRUE, BaconSuggest = TRUE,
-  baconThick = NA, baconAccMean = 20)
+  baconThick = NA, baconAccMean = 20, ...)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -40,6 +40,8 @@ runBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
 }}
 
 \item{maxEns}{the maximum number of ensembles to load in (default = 1000)}
+
+\item{...}{arguments to pass on to Bacon}
 }
 \value{
 L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.

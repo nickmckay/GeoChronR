@@ -25,10 +25,14 @@ A ggplot object
 Plot an ensemble of trendlines based on slope and intercept.
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -36,7 +40,8 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}}
+  \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}}
 
 Other regress: \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}}, \code{\link{regressEns}}

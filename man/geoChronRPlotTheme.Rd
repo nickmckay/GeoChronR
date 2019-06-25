@@ -4,15 +4,20 @@
 \alias{geoChronRPlotTheme}
 \title{Define a plot theme for GeoChronR}
 \usage{
-geoChronRPlotTheme(base_size = 11, base_family = "")
+geoChronRPlotTheme(base_size = 11, base_family = "",
+  base_line_size = base_size/22, base_rect_size = base_size/22)
 }
 \description{
 Use this to define a theme across geoChronR
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -21,5 +26,6 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }

@@ -4,10 +4,12 @@
 \alias{plotTimeseriesEnsLines}
 \title{Plot an ensemble timeseries as a set of lines}
 \usage{
-plotTimeseriesEnsLines(X, Y, alp = 0.2, color = "blue", maxPlotN = 1000,
-  add.to.plot = ggplot())
+plotTimeseriesEnsLines(add.to.plot = ggplot(), X, Y, alp = 0.2,
+  color = "blue", maxPlotN = 100)
 }
 \arguments{
+\item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot() .}
+
 \item{X}{A LiPD variable list to plot, including values, units, names, and more}
 
 \item{Y}{A LiPD variable list to plot, including values, units, names, and more}
@@ -17,8 +19,6 @@ plotTimeseriesEnsLines(X, Y, alp = 0.2, color = "blue", maxPlotN = 1000,
 \item{color}{Line color (following ggplot rules)}
 
 \item{maxPlotN}{Whats the maximum number of lines to plot?}
-
-\item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot() .}
 }
 \value{
 A ggplot object
@@ -27,10 +27,14 @@ A ggplot object
 Plot an ensemble timeseries as a set of lines. Useful for displaying a handful of ensemble members to characterize individual paths.
 }
 \seealso{
-Other plot: \code{\link{axisLabel}},
+Other plot: \code{\link{AD2BP_trans}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
-  \code{\link{plotChron}}, \code{\link{plotCorrEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
+  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{plotChronEnsDiff}},
+  \code{\link{plotChronEns}}, \code{\link{plotChron}},
+  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
+  \code{\link{plotLine}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
@@ -38,6 +42,7 @@ Other plot: \code{\link{axisLabel}},
   \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsRibbons}},
+  \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 }
 \author{
