@@ -12,7 +12,7 @@ ar1Surrogates(time, vals, detrend_bool = TRUE, method = "redfit",
 
 \item{vals}{LiPD "variable list" or vector of values}
 
-\item{detrend_bool}{boolean variable, indicating whether one should remove trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries}
+\item{detrend_bool}{boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries}
 
 \item{method}{Method used for estimation. Possible values are "even" or "redfit"}
 
@@ -25,9 +25,10 @@ a vector or matrix of AR(1) surrogates for series X
 create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 }
 \seealso{
-Other spectra: \code{\link{createSyntheticTimeseries}},
-  \code{\link{plotSpectraEns}},
-  \code{\link{powerSpectrumEns}}
+Other spectra: \code{\link{computeSpectraEns}},
+  \code{\link{plotSpectraAnnotate}},
+  \code{\link{plotSpectraEns}}
+
 
 Other pca: \code{\link{createSyntheticTimeseries}},
   \code{\link{getLegend}}, \code{\link{pcaEns}},

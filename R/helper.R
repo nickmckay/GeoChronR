@@ -148,17 +148,17 @@ setupGeoChronR = function(){
 #' @param X data matrix
 #' @param jitter boolean variable ; if TRUE, add jitter to data to prevent ties
 #' @return gaussianized data matrix
+#' @description Transforms each column of data matrix X to normality using the inverse
+#   Rosenblatt transform
 #' @references Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp- 12-31-2016.
+#' @references Van Albada, S.J., Robinson P.A. (2006), Transformation of arbitrary distributions to the normal distribution with application to EEG test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004 
 gaussianize <- function (X,jitter=FALSE){ 
-  #   Transform each column of data matrix X to normality using the inverse
-  #   Rosenblatt transform.
-  #
   # inspired by split.m in normal.m by Van Albada, S.J., Robinson P.A. (2006)
   # Transformation of arbitrary distributions to the normal distribution with application to EEG
   # test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004
   #
-  #  Written 26/06/2015 by Julien Emile-Geay (USC)
-  #translated to R and added jitter option by 29/06/2015 by Nick McKay (NAU) 
+  #  History: - Written 26/06/2015 by Julien Emile-Geay (USC)
+  #           - translated to R and added jitter option by 29/06/2015 by Nick McKay (NAU) 
   
   if(!is.matrix(X)){
     X=as.matrix(X)
@@ -186,6 +186,19 @@ gaussianize <- function (X,jitter=FALSE){
 }
 
 
+#' @export
+#' @title ModeSelektor
+#' @author Julien Emile-Geay 
+#' @param x data vector
+#' @return mode value and index. 
+#' @description Finds the mode of a vector X. Astonishingly, this is not a standard R function.
+#' @references https://www.modeselektor.com
+#' @references https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode
+modeSelektor <- function (x){ 
+  ux <- unique(x)
+  umode = ux[which.max(tabulate(match(x, ux)))]
+  return(umode)
+}
 
 
 

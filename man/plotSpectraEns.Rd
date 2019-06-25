@@ -27,13 +27,15 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotModelDistributions}},
   \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}}, \code{\link{plotSummary}},
+  \code{\link{plotScatterEns}},
+  \code{\link{plotSpectraAnnotate}},
+  \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
   \code{\link{plotTimeseriesStack}},
   \code{\link{plotTrendLinesEns}}
 
 Other spectra: \code{\link{ar1Surrogates}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{powerSpectrumEns}}
+  \code{\link{computeSpectraEns}},
+  \code{\link{plotSpectraAnnotate}}
 }

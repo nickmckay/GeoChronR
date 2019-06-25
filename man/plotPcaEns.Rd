@@ -60,6 +60,7 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotPvalsEnsFdr}},
   \code{\link{plotRegressEns}},
   \code{\link{plotScatterEns}},
+  \code{\link{plotSpectraAnnotate}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSummary}},
   \code{\link{plotTimeseriesEnsLines}},
   \code{\link{plotTimeseriesEnsRibbons}},
@@ -67,9 +68,9 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotTrendLinesEns}}
 
 Other pca: \code{\link{ar1Surrogates}},
+
   \code{\link{createSyntheticTimeseries}},
   \code{\link{getLegend}}, \code{\link{pcaEns}}
-}
 \author{
 Nick McKay
 }
