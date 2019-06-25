@@ -15,19 +15,58 @@ geoChronRPlotTheme = ggplot2::theme_bw
 plotSpectraEns = function (spec.ens){
   specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power)
   specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
-  #{to do} label significant peaks
-  
-  period_range =  c(10, 1000) # make 
-  freq = spec.wwz$Frequency
-  f.low = 1/period_range[2]
-  f.high = 1/period_range[1]
-  freq_range = (freq>= f.low & freq<=f.high)
-  
   
   specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
   
   return(specPlot)
 }
+
+#' @export
+#' @title Plot single spectrum, with confidence limits
+#' @description Plota a single spectrum, with confidence limits (no age ensemble)
+#' @family plot
+#' @family spectra
+#' @param spec.df dataframe containing frequency (freq) and power (pwr)
+#' @param cl.df dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)
+#' @param period_range range of plotted periodicities
+#' @return ggplot object of spectrum plot
+#' @author Julien Emile-Geay
+plotSpectrum = function (spec.df,cl.df = NULL,period_range=NULL,period_ticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL){
+  # TO DO: - handling of units. 
+  #        - general handling of colors (theme)
+  period <- 1/spec.df$freq
+  if (is.null(period_range)) {
+    period_range = c(min(period),max(period))
+  } else {
+    f.low = 1/period_range[2]
+    f.high = 1/period_range[1]
+  }
+  freq_range = (freq>= f.low & freq<=f.high)
+  
+  if (is.null(ylims)) {
+    m <- floor(log10(min(pwr[freq_range]))) 
+    M <- ceiling(log10(max(pwr[freq_range]))) 
+  }
+  else {
+    m <- log10(ylims[1])
+    M <- log10(ylims[2])
+  }
+
+  specPlot <- ggplot() + geom_line(aes(x=period,y=spec.df$pwr),colour="orange") + 
+    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                  labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                  limits = c(10^m,10^M)) + 
+    scale_x_continuous(breaks=period_ticks, minor_breaks = NULL, trans=reverselog10_trans(), limits = rev(period_range)) +
+    xlab("Period (units)") + ylab("Normalized Power")
+  
+  if (!is.null(cl.df)) {# if data about confidence limit are provided, plot them
+    cl.df = reshape2::melt(cl.df,id = 1) # reshape to facilitate on-line plotting call
+    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour="white")
+  }
+  
+  return(specPlot)
+}
+
 
 #' @export
 #' @title Annotate plot of spectra with given periodicities
@@ -54,19 +93,23 @@ FrequencyAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red
 #' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
 #' @family plot
 #' @family spectra
-#' @param specPlot Output from plotSpectraEns (or other ggplot)
+#' @param specPlot ggplot handle to figure containing spectrum
 #' @param periods the periods to highlight in the spectrum
-#' @param colour the color with of the text and lines
+#' @param colour the color of the text and lines
 #' @return ggplot object of spectrum plot
 #' @author Julien Emile-Geay
 
-PeriodAnnotate = function (specPlot, periods = c(19,23,41,100), colour = "red"){
-  ggp <- ggplot_build(specPlot)
-  ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
+PeriodAnnotate = function (specPlot, periods, colour = "orange",log10scale = T, ylims = NULL, size = 4){
+  
+  if (is.null(ylims)) {
+    ggp <- ggplot_build(specPlot)
+    ylims <- ggp$layout$panel_params[[1]]$y.range # this could break with multiplots... 
+  }
+  
   for(per in periods){
-    specPlot <- specPlot + annotate("segment", x = per, xend = per, y = 10**(ylims[1]-1), yend = 10**ylims[2],
-                                    colour = colour, alpha = 0.5, linetype = "dotdash")
-    specPlot <- specPlot +  annotate("text", x = 1.03*per, y = 2*10**ylims[2], label = format(per,digits=2, nsmall=0), colour = colour)
+      specPlot <- specPlot + annotate("segment", x = per, xend = per, y = ylims[1], yend = ylims[2],
+                                      colour = colour, alpha = 0.3, linetype = "dotdash")
+      specPlot <- specPlot +  annotate("text", x = 1.03*per, y = 1.2*ylims[2], label = format(per,digits=2, nsmall=0), colour = colour, size = size)
   }
   return(specPlot)  
 }
@@ -82,8 +125,8 @@ reverselog10_trans <- function(){
   trans <- function(x) -log(x, 10)
   inv <- function(x) 10^(-x)
   return(scales::trans_new("reverselog10-", trans, inv, 
-            log_breaks(base = 10), 
-            domain = c(1e-100, Inf)))
+                           scales::log_breaks(base = 10), 
+                           domain = c(1e-100, Inf)))
 }
 
 
