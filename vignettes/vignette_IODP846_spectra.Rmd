@@ -21,6 +21,7 @@ We first load the data using the LiPD utilities.
 
 ```{r load data, message=FALSE}
 library(lipdR)
+library(geoChronR)
 I = readLipd("ODP846.Lawrence.2006.lpd")
 d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
 age.median <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
@@ -30,9 +31,9 @@ age.ens  <-  I$chronData[[1]]$model[[1]]$ensembleTable[[1]]$age$values
 # put into a dataframe for easier access
 df  <- data.frame(t = age.median, d18O=d18O, upper=age.upper, lower=age.lower, tens = age.ens)
 #  try the LiPD way
-L <- mapAgeEnsembleToPaleoData(I)
-X = selectData(L,"ageEnsemble")
-Y = selectData(L,"temperature")
+I <- geoChronR::mapAgeEnsembleToPaleoData(I)
+#X = selectData(L,"ageEnsemble")
+#Y = selectData(L,"temperature")
 ```
 
 Now let us take a first look at the median age model:
@@ -217,10 +218,12 @@ In our original dataframe (`df`), `median_ali` is the median age and `lower_95/u
 
 ```{r visualize timeseries with age uncertainties, message=FALSE, warning=FALSE}
 library(geoChronR)
-plotTimeseriesEnsRibbons(X=age.ens,Y=d18O) + scale_y_reverse()
+#plotTimeseriesEnsRibbons(X=age.ens,Y=d18O) + scale_y_reverse()
 # this works but returns many error messages. We may need to put d18O into the paleoData tables to make it work properly. 
 
-# (optionally) make it work with theme
+ggplot(df) + geom_ribbon(aes(x=t/1000,ymin=,ymax=ymax),fill=fillCol[b],alpha=alp)) + 
+  geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
+
 ```
 
 
