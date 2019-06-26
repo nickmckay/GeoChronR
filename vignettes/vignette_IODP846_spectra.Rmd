@@ -24,43 +24,53 @@ library(lipdR)
 library(geoChronR)
 I = readLipd("ODP846.Lawrence.2006.lpd")
 d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
-age.median <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
-age.upper <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$upper95$values
-age.lower <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$lower95$values
-age.ens  <-  I$chronData[[1]]$model[[1]]$ensembleTable[[1]]$age$values
+#temp =  I$paleoData[[1]]$measurementTable[[1]]$`temp muller`$values
+t.med <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
 # put into a dataframe for easier access
-df  <- data.frame(t = age.median, d18O=d18O, upper=age.upper, lower=age.lower, tens = age.ens)
+df  <- data.frame(t = t.med, d18O=d18O, tens = age.ens)
 #  try the LiPD way    NEED NICK ASSISTANCE
 L <- geoChronR::mapAgeEnsembleToPaleoData(I)
-X = geoChronR::selectData(L,"ageEnsemble",which.mt = 1)
-Y = geoChronR::selectData(L,"temp muller",which.mt = 1)
+age = geoChronR::selectData(L,"ageEnsemble",which.mt = 1)
+temp = geoChronR::selectData(L,"temp muller",which.mt = 1)
+# define plotting theme
+library(ggthemes)
+geoChronRPlotTheme = theme_hc(style = "darkunica")
 ```
 
 Now let us take a first look at the median age model:
 
 ```{r plot the timeseries}
 library(ggplot2)
-library(ggthemes)
 library(reshape2)
-ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
+ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + geoChronRPlotTheme
 ```
+```{r}
+plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,colorLow="orchid",colorHigh="darkorange3",lineColor="orange",lineWidth=0.5,alp=0.3) + theme_hc(style = "darkunica") + scale_x_reverse()
+```
+
+
 
 This paleoclimate record features:
 
-- a long-term trend (d18O getting heavier over time, indicative of long-term cooling)
+- a long-term cooling trend
 - some quasi-periodic oscillations (the legendary [Pleistocene Ice Ages](https://www.ncdc.noaa.gov/abrupt-climate-change/Glacial-Interglacial%20Cycles))
 - nonstationary behavior, related to the well-known mid-Pleistocene transition from a "41k world" to a "100k world" somewhere around 0.8 Ma [(Paillard, 2001)](https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2000RG000091). 
 
-To keep things simple and lower computational cost, let's focus on the last 1 Ma. Now, a standard assumption of spectral analysis is that data are evenly spaced in time. In real-world paleo timeseries this is seldom the case. Let's look at the distribution of time increments in this particular core, as contrained by this tuned age model: 
+To keep things simple and lower computational cost, let's focus on the last 1 Ma, and use the median age model. Now, a standard assumption of spectral analysis is that data are evenly spaced in time. In real-world paleo timeseries this is seldom the case. Let's look at the distribution of time increments in this particular core, as contrained by this tuned age model: 
 
-```{r}
-dfs = dplyr::filter(df,t<=1000)
-dt = diff(dfs$t)
+```{r, message=FALSE}
+age.median = matrixStats::rowQuantiles(age$values,probs = 0.5)
+temp.median = matrixStats::rowQuantiles(as.matrix(temp$values),probs = 0.5)
+t <-age.median[age.median < 1000]
+X <- temp.median[age.median < 1000]
+X <- X - mean(X)
+#dfs = dplyr::filter(df,t<=1000)
+dt = diff(t)
 ggplot() + xlim(c(0,10)) + 
   geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(style = "darkunica") + xlab(axisLabel(X))
 ```
 
-We see that over the past 1 Ma, the time increments (dt) are sharply peaked around 2.5 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, albeit uneven, is well-known (no uncertainty). 
+We see that over the past 1 Ma, the time increments (dt) are sharply peaked around 2 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, albeit uneven, is well-known (no uncertainty). 
 
 ## Time-certain spectral analysis 
 From here there are two ways to proceed: 1) use methods that explictly deal with unevenly-spaced data, or 2) interpolate to a regular grid and apply standard methods. 
@@ -74,12 +84,12 @@ To establish significance, we have a few choices. We re-use Stephen Meyer's exce
 
 ```{r lomb-scargle}
 library(lomb)
-spec.ls = lomb::lsp(dfs$d18O,times=dfs$t,ofac=2,plot = F) 
-# estimate significance against a power-law fit
-plaw.ls = astrochron::pwrLawFit(df.lomb, dof = 2, flow = f.low, fhigh = f.high, output = 1, genplot = F)
-
-# export to dataframes
+spec.ls <-  lomb::lsp(x=X,times=t,ofac=2,plot = F) 
 ls.df <- data.frame("freq" = spec.ls$scanned, "pwr" = spec.ls$power)
+# estimate significance against a power-law fit
+f.low <-  1e-3; f.high <- 0.1
+plaw.ls <-  astrochron::pwrLawFit(ls.df, dof = 2, flow = f.low, fhigh = f.high, output = 1, genplot = F)
+
 cl.df <- data.frame(plaw.ls[,union(1,c(5:7))]) # extract confidence limits 
 # rename columns to be less silly
 names(cl.df)[1] <- "freq"
@@ -109,6 +119,7 @@ A notable downside of MTM is that it only handles evenly-spaced data. Small pota
 
 ```{r interpolation, results="hide"}
 library(astrochron)
+dfs = data.frame(time=t,temp=X)
 dti = 2.5  # interpolation interval, corresponding to the mode of the \Delta t distribution
 dfe = linterp(dfs,dt=dti)
 ```
@@ -117,49 +128,60 @@ Most of the `astrochron` routines produce a diagnostic graphical output, which y
 Now let's compute the spectrum using MTM using the equally-spaced data stored in `dfe`.
 We continue to manually label Milankovitch frequencies (in orange) and label in green (technically, "chartreuse") the periodicities idenitified as significant by the test. Here, we start with the default option of a test against an AR(1) background.
 
-```{r MTM}
+```{r MTM, warning=F, message=F}
 spec.mtm <- astrochron::mtm(dfe,tbw=3,padfac=5,ar1=TRUE,genplot = F,output=1, verbose = F, detrend=T)  # tbw is the time-bandwidth product, p in the above
 sig.freq <- astrochron::mtm(dfe,tbw=3, padfac=5,ar1=TRUE,genplot = F,output=2, verbose = F, detrend=T)
-
 mtm.df <- data.frame("freq" = spec.mtm$Frequency, "pwr" = spec.mtm$Power)
-
 
 # plot this 
 prange = c(5,1000)
-p.mtm <- plotSpectrum(mtm.df,period_range=prange,period_ticks = pticks) + 
+
+p.mtm <- plotSpectrum(mtm.df,period_range=prange,period_ticks = pticks, ylims = c(1e-6,10)) + 
   ggtitle("IODP 846 d18O, Multi-taper method, AR(1) null") + xlab("Period (ky)") +
   theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
 
 # label periodicities of interest
-p.mtm <- PeriodAnnotate(p.mtm, periods = c(19,23,41,100))
-p.mtm <- PeriodAnnotate(p.mtm, periods = 1/sig.freq$Frequency,colour = "chartreuse")
+p.mtm <- PeriodAnnotate(p.mtm, periods = c(19,23,41,100), ylims = c(1e-6,1))
+p.mtm <- PeriodAnnotate(p.mtm, periods = 1/sig.freq$Frequency,colour = "chartreuse",ylims = c(1e-6,.1))
 show(p.mtm)
 ```
 
-You may notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals a strong power law behavior from periods of 5 to 100 ky, which in this log-log plotting convention manifests as a linear decrease. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis.  *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2`, it will export the frequencies identified as "significant" by this procedure. In this case, it identifies the Milankovitch frequencies we expected to find, with the addition of 55ka. What should we make of that? Also, the 100ka cycle is now labeled as 94 ka, though given the peak's width, one should not be foolish enough to consider them distinct. There is also evidence that this peak may be the result of ice ages clustering every 2 to 3 obliquity cycles (81 or 123 ka), averaging around 100 over the pleistocene [Huybers & Wunsch (2005)](https://www.nature.com/articles/nature03401). Bottom line: with such spectral resolution, 94 and 100 are one and the same, and may really be a mixture of 80 and 120. 
+You may notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals a strong power law behavior from periods of 5 to 100 ky, which in this log-log plotting convention manifests as a linear decrease. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis.  *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2`, it will export the frequencies identified as "significant" by this procedure. In this case, it identifies the Milankovitch frequencies we expected to find, with the addition of 55ka. What should we make of that? Also, the 100ka cycle is now labeled as 90 ka, though given the peak's width, one should not be foolish enough to consider them distinct. There is also evidence that this peak may be the result of ice ages clustering every 2 to 3 obliquity cycles (81 or 123 ka), averaging around 100 over the pleistocene [Huybers & Wunsch (2005)](https://www.nature.com/articles/nature03401). Bottom line: with such spectral resolution, 94 and 100 are one and the same, and may really be a mixture of 80 and 120.  Overall, this test identifies 8 periodicities as significant, compared to the 4 we'd expect. 
 
-It's helpful to take a step back and contemplate our null hypothesis of AR(1) background, and the real possibility that without adjustments, we might be overestimating the lag-1 autocorrelation, hence making the test too stringent. There are alternatives to that in *Astrochron*, using either the robust method of [Mann & Lees (1996)](https://link.springer.com/article/10.1007/BF00142586) or a less error-prone version by the author [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), called LOWSPEC. You might want to experiment with that.
+It's helpful to take a step back and contemplate our null hypothesis of AR(1) background, and the real possibility that without adjustments, we might be underestimating the lag-1 autocorrelation, hence making the test too lenient. There are alternatives to that in *Astrochron*, using either the robust method of [Mann & Lees (1996)](https://link.springer.com/article/10.1007/BF00142586) or a less error-prone version by the author [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), called LOWSPEC. You might want to experiment with that.
 
 Another factor to play with is the padding factor (`padfac`). To make a long-story short, padding helps you increase the spectral resolution (see [here](https://dsp.stackexchange.com/questions/741/why-should-i-zero-pad-a-signal-before-taking-the-fourier-transform) for an informal account). You should also try and see what happens when it varies. (note: we used the *Astrochron* default values here)
 
-Perhaps more important is the choice of null. Past work has shown that the continuum of climate variability is well described by power laws [Huybers & Curry (2006)](https://www.nature.com/articles/nature04745), so this should be a far better null against which to test the emergence of spectral peaks. Never fear! *Astrochron* has an app for that:
+Most important of all is the choice of null [(Vaughan et al, 2011)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2011PA002195). Past work has shown that the continuum of climate variability is well described by power laws [Huybers & Curry (2006)](https://www.nature.com/articles/nature04745), so this should be a far better null against which to test the emergence of spectral peaks. Never fear! *Astrochron* has an app for that:
 
 ```{r}
-fl = 0.005; fh = 0.1 # define limits for power-law fit
-sig.freqPL <- astrochron::mtmPL(dfe,tbw=3,padfac=5,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
+
+mtmPL.df <- astrochron::mtmPL(dfe,tbw=3,padfac=5,genplot = F,output=1, verbose = F, flow=f.low, fhigh=f.high)
+sig.freqPL <- astrochron::mtmPL(dfe,tbw=3,padfac=5,genplot = F,output=2, verbose = F, flow=f.low, fhigh=f.high)
+mtm.df = mtmPL.df[c(1,2)]
+names(mtm.df)[1] <- "freq"
+names(mtm.df)[2] <- "pwr"
+
+cl.df <- data.frame(mtmPL.df[,union(1,c(5:7))]) # extract confidence limits 
+# rename columns to be less silly
+names(cl.df)[1] <- "freq"
+names(cl.df)[2] <- "90% CL"
+names(cl.df)[3] <- "95% CL"
+names(cl.df)[4] <- "99% CL"
+
 
 # plot it 
-p.mtmPL <- plotSpectrum(mtm.df,period_range=prange,period_ticks = pticks) + 
+p.mtmPL <- plotSpectrum(mtm.df,cl.df,period_range=prange,period_ticks = pticks, ylims = c(1e-6,10)) + 
   ggtitle("IODP 846 d18O, Multi-taper method, power-law null") + xlab("Period (ky)") +
   theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
 
 # label periodicities of interest
-p.mtmPL <- PeriodAnnotate(p.mtmPL, periods = c(19,23,41,100))
-p.mtmPL <- PeriodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,colour = "chartreuse")
+p.mtmPL <- PeriodAnnotate(p.mtmPL, periods = c(19,23,41,100), ylims = c(1e-6,1))
+p.mtmPL <- PeriodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,colour = "chartreuse",ylims = c(1e-6,.1))
 show(p.mtmPL)
 ```
 
-Sure enough, this gets rid of the 55 kyr cycle, with impressive conistency between theoretical predictions and cycles estimated by this procedure. 
+Sure enough, this gets rid of a few cycles, but many remain. 
 
 Here we defined `fhigh = 0.1` as the highest frequency at which to see cycles. Tweak it to see what happens when you use a higher one. 
 
@@ -176,9 +198,9 @@ Let us see how it performs in on IODP846.
 
 ```{r nuspectral estimation}
 library(nuspectral)
-time = dfs$t; nt = length(time)
-tau = seq(min(time),max(time),length = max(nt %/% 2,5))
-nuspec <-  nuspectral:::nuwavelet_psd(time,dfs$d18O,sigma=0.02,taus = tau)
+nt = length(t)
+tau = seq(min(t),max(t),length = max(nt %/% 2,5))
+nuspec <-  nuspectral:::nuwavelet_psd(t,X,sigma=0.02,taus = tau)
 nf <- length(nuspec$Frequency)
 nus.df <- data.frame("freq" = nuspec$Frequency, "pwr" = nuspec$Power) 
 

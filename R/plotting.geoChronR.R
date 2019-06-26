@@ -27,7 +27,7 @@ getPlotRanges <- function(h){
 #' @family plot
 #' @title Define a plot theme for GeoChronR
 #' @description Use this to define a theme across geoChronR
-geoChronRPlotTheme = ggplot2::theme_bw
+geoChronRPlotTheme = ggplot2::theme_minimal()
 
 
 #' @export
@@ -74,6 +74,7 @@ plotSpectraEns = function (spec.ens){
 plotSpectrum = function (spec.df,cl.df = NULL,period_range=NULL,period_ticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL){
   # TO DO: - handling of units. 
   #        - general handling of colors (theme)
+  
   period <- 1/spec.df$freq
   if (is.null(period_range)) {
     period_range = c(min(period),max(period))
@@ -81,11 +82,11 @@ plotSpectrum = function (spec.df,cl.df = NULL,period_range=NULL,period_ticks= c(
     f.low = 1/period_range[2]
     f.high = 1/period_range[1]
   }
-  freq_range = (freq>= f.low & freq<=f.high)
+  freq_range = (spec.df$freq>= f.low & spec.df$freq<=f.high)
   
   if (is.null(ylims)) {
-    m <- floor(log10(min(pwr[freq_range]))) 
-    M <- ceiling(log10(max(pwr[freq_range]))) 
+    m <- floor(log10(min(spec.df$pwr[freq_range]))) 
+    M <- ceiling(log10(max(spec.df$pwr[freq_range]))) 
   }
   else {
     m <- log10(ylims[1])
@@ -640,7 +641,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
     
     #deal with colors
     fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
-    lineColor="black"
+    #lineColor="black"
     
     
     for(b in 1:(ncol(bandMat)/2)){
