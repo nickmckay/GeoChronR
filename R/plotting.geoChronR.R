@@ -52,9 +52,10 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @param spec.ens Output from powerSpectrumEns()
 #' @return ggplot object of spectrum plot
 plotSpectraEns = function (spec.ens){
-  specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power)
-  specPlot = plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
-  
+  specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs,Y = spec.ens$power)
+  if(!is.na(spec.ens$powerSyn)){
+  specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs, Y = spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+  }
   specPlot = specPlot +xlab("Frequency (1/yr)") +ylab("Power") +scale_x_log10() +scale_y_log10()
   
   return(specPlot)

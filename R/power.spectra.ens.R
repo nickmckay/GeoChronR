@@ -197,8 +197,9 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
       #tu = unique(t) # avoid duplicates 
       v = vals[,vind[k]] 
       out = lsp(v,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
-      syn = ar1Surrogates(time=tu,vals = vu) #create matrix of synthetic timeseries  
-      synOut = lsp(syn,times=tu,ofac=ofac,plot = F) # apply to AR(1) surrogate 
+      syn = ar1Surrogates(time=t,vals = v) #create matrix of synthetic timeseries  
+      #NM: tu & vu doesn't seem to exist, perhaps t & v?
+      synOut = lsp(syn,times=t,ofac=ofac,plot = F) # apply to AR(1) surrogate 
       pMatSyn[1:length(synOut$power),k] =  synOut$power # store for later  
       # JEG: the frequency axis will be subtly different for each iteration.  I think it would be better to interpolate to a common frequency axis if we are to compare them all. Or does quantile2d already take care of that?
       fMat[,k]=out$scanned
