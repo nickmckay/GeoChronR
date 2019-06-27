@@ -34,18 +34,14 @@ age = geoChronR::selectData(L,"ageEnsemble",which.mt = 1)
 temp = geoChronR::selectData(L,"temp muller",which.mt = 1)
 # define plotting theme
 library(ggthemes)
-geoChronRPlotTheme = theme_hc(style = "darkunica")
 ```
 
 Now let us take a first look at the median age model:
 
-```{r plot the timeseries}
-library(ggplot2)
-library(reshape2)
-ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + geoChronRPlotTheme
-```
+
 ```{r}
-plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,colorLow="orchid",colorHigh="darkorange3",lineColor="orange",lineWidth=0.5,alp=0.3) + theme_hc(style = "darkunica") + scale_x_reverse()
+#ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
+plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,colorLow="orchid",colorHigh="darkorange3",lineColor="orange",lineWidth=0.5,alp=0.3) + scale_x_reverse() + theme_hc(style = "darkunica")
 ```
 
 
@@ -110,7 +106,7 @@ p.ls <- PeriodAnnotate(p.ls, periods = c(19,23,41,100), ylims =c(0.01,100))
 show(p.ls)
 ```
 
-Where it is clearly seen that the data appear to contain periodic signals at the Milankotich frequencies.  These frequencies rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of Lomb-Scargle. Other methods smooth out that noise.  
+Where it is clearly seen that the data appear to contain periodic signals near, but not exactly at, the Milankotich frequencies.  These frequencies (particularly the eccentricity and obliquity frequencies) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of Lomb-Scargle. Other methods smooth out that noise.  
 
 ### Multi-taper Method
 The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], which is consistent (the variance of each estimate goes to zero asymptotically, meaning that the more data you have, the better you know the spectrum). Formally, MTM optimizes the classic bias-variance tradeoff inherent to all kinds of statistical inference. It does so by minimizing leakage outside of a frequency band with half bandwidth equal to $pf_R$, where $f_R=1/(N \Delta t)$ is the Rayleigh frequency, $\Delta t$ is the sampling interval, $N$ the number  f measurements, and $p$ is the so-called time-bandwidth product. $p$ can only take a finite number of values, all multiples of 1/2 between 2 and 4. A larger $p$ means lower variance (i.e. less uncertainty about the power), but broader peaks (i.e. a lower spectral resolution), synonymous with more uncerainty about the exact location of the harmonic. So while MTM might not distinguish between closely-spaced harmonics, it is much less likely to identify spurious peaks, especially at high frequencies.  In addition, a battery of formal tests have been devised with MTM, allowing under reasonably broad assumptions to ascertain the significance of spectral peaks. We show how to use this "hamornic F-test below"
@@ -123,9 +119,9 @@ dfs = data.frame(time=t,temp=X)
 dti = 2.5  # interpolation interval, corresponding to the mode of the \Delta t distribution
 dfe = linterp(dfs,dt=dti)
 ```
-Most of the `astrochron` routines produce a diagnostic graphical output, which you can silence by turning the `genplot` flag to `FALSE`. However, it is instructive to peak and the top left panel and see where the interpolation has made a difference. We see that the black line closely espouses the red measurements for most of the timeseries, except around 350 ky BP. 
+Most of the `astrochron` routines produce a diagnostic graphical output, which you can silence by turning the `genplot` flag to `FALSE`. However, it is instructive to take a peak at the top-left panel and see where the interpolation has made a difference. We see that the black line closely espouses the red measurements for most of the timeseries, reassuring us that this process did not introduce spurious excursions or oscillations. 
 
-Now let's compute the spectrum using MTM using the equally-spaced data stored in `dfe`.
+Now let's compute the spectrum using MTM on the equally-spaced data stored in `dfe`.
 We continue to manually label Milankovitch frequencies (in orange) and label in green (technically, "chartreuse") the periodicities idenitified as significant by the test. Here, we start with the default option of a test against an AR(1) background.
 
 ```{r MTM, warning=F, message=F}
@@ -146,7 +142,7 @@ p.mtm <- PeriodAnnotate(p.mtm, periods = 1/sig.freq$Frequency,colour = "chartreu
 show(p.mtm)
 ```
 
-You may notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. This reveals a strong power law behavior from periods of 5 to 100 ky, which in this log-log plotting convention manifests as a linear decrease. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis.  *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2`, it will export the frequencies identified as "significant" by this procedure. In this case, it identifies the Milankovitch frequencies we expected to find, with the addition of 55ka. What should we make of that? Also, the 100ka cycle is now labeled as 90 ka, though given the peak's width, one should not be foolish enough to consider them distinct. There is also evidence that this peak may be the result of ice ages clustering every 2 to 3 obliquity cycles (81 or 123 ka), averaging around 100 over the pleistocene [Huybers & Wunsch (2005)](https://www.nature.com/articles/nature03401). Bottom line: with such spectral resolution, 94 and 100 are one and the same, and may really be a mixture of 80 and 120.  Overall, this test identifies 8 periodicities as significant, compared to the 4 we'd expect. 
+You may notice a few differences to the Lomb-Scargle periodogram. First, the high frequency part is much smoother, getting rid of a lot of high-frequency noise. THere is also a clear power law behavior from periods of 5 to 100 ky, which in this log-log plotting convention manifests as a linear decrease. *Astrochron* implements several tests to detect harmonic (sinusoidal) components. Like all tests, they are heavily dependent on a null hypothesis. By default, *astrochron::mtm()* assumes that we test against an AR(1) model. Using the option `output = 2`, it will export the frequencies identified as "significant" by this procedure. In this case, it roughly identifies the Milankovitch frequencies we expected to find, plus many others. What should we make of that? The 100ka cycle is now labeled as 90 ka, though given the peak's width, one should not be foolish enough to consider them distinct. There is also evidence that this peak may be the result of ice ages clustering every 2 to 3 obliquity cycles (81 or 123 ka), averaging around 100 over the pleistocene [Huybers & Wunsch (2005)](https://www.nature.com/articles/nature03401). Bottom line: with such spectral resolution, 94 and 100 are one and the same, and may really be a mixture of 80 and 120.  Overall, this test identifies 8 periodicities as significant, compared to the 4 we'd expect. 
 
 It's helpful to take a step back and contemplate our null hypothesis of AR(1) background, and the real possibility that without adjustments, we might be underestimating the lag-1 autocorrelation, hence making the test too lenient. There are alternatives to that in *Astrochron*, using either the robust method of [Mann & Lees (1996)](https://link.springer.com/article/10.1007/BF00142586) or a less error-prone version by the author [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), called LOWSPEC. You might want to experiment with that.
 
@@ -181,9 +177,7 @@ p.mtmPL <- PeriodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,colour = "ch
 show(p.mtmPL)
 ```
 
-Sure enough, this gets rid of a few cycles, but many remain. 
-
-Here we defined `fhigh = 0.1` as the highest frequency at which to see cycles. Tweak it to see what happens when you use a higher one. 
+Sure enough, this gets rid of a few cycles, but many remain. Taking the 95% level as a benchmak, we see that a few regions of the spectrum poke above it, but one should not be so foolish as to identify every singlle periodicity in these ranges to be equally significant. This is related to the [multiple hypothesis problem](https://en.wikipedia.org/wiki/Multiple_comparisons_problem). However, as ppinted out by [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), even that misses the point: sedimentary processes (and many processes in other proxy archives) tend to smooth out the signal over the depth axis, making comparisons at neighboring frequencies highly dependent. One solution is to use predictions made by a physical model about the frequency and relative amplitude of astronomical cycles [Meyers & Sageman, 2007](http://www.ajsonline.org/content/307/5/773). However this may not be applicable to all spectral detection problems. We thus refrain from implementing "cookie-cutter" solutions in GeoChronR, to force the user to think deeply about the null hypothesis and the most sensible way to test it. 
 
 ### Weighted Wavelet Z-transform (*nuspectral*)
 An interpolation-free alternative to MTM is the Weighted Wavelet Z-transform of [Foster, (1996)](http://adsabs.harvard.edu/cgi-bin/bib_query?1996AJ....112.1709F). The idea of spectral analysis is to decompose the signal on an orthogonal basis of sines and cosines. Data gaps cause this basis to lose its orthogonality, creating energy leakage. WWZ mitigates this problem using an optimization approach. Because it is wavelet based, it does not rely on interpolation or detrending. WWZ was adapted  by [Kirchner & Neal (2013)](https://www.pnas.org/content/110/30/12213.short), who employed basis rotations to mitigate the numerical instability that occurs in pathological cases with the original algorithm. A paleoclimate example of its use is given in [Zhu et al (2019)](https://www.pnas.org/content/116/18/8728.short)). 
@@ -200,7 +194,7 @@ Let us see how it performs in on IODP846.
 library(nuspectral)
 nt = length(t)
 tau = seq(min(t),max(t),length = max(nt %/% 2,5))
-nuspec <-  nuspectral:::nuwavelet_psd(t,X,sigma=0.02,taus = tau)
+nuspec <-  nuspectral:::nuwavelet_psd(t,X,sigma=0.01,taus = tau)
 nf <- length(nuspec$Frequency)
 nus.df <- data.frame("freq" = nuspec$Frequency, "pwr" = nuspec$Power) 
 
@@ -219,17 +213,17 @@ Compared to the previous methods, which were essentially instantaneous on this d
 As before, we leverage *astrochron*'s capabilities to fit a power-law to the spectrum. The power law comes out with a slope around 1, as before. 
 
 ```{r nuspectral plotting}
-p.nus <- plotSpectrum(nus.df,cl.df,period_range=c(10,1000),period_ticks = pticks, ylims = c(0.01,100)) + 
+p.nus <- plotSpectrum(nus.df,cl.df,period_range=c(10,1000),period_ticks = pticks, ylims = c(0.1,300)) + 
   ggtitle("IODP 846 d18O, Lomb-Scargle periodogram") +
   theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
 
 # label periodicities of interest
-p.nus <- PeriodAnnotate(p.nus, periods = c(19,23,41,100),ylims = c(0.01,10))
+p.nus <- PeriodAnnotate(p.nus, periods = c(19,23,41,100),ylims = c(0.1,100))
 show(p.nus)
 ```
 
 Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the $\sigma$ parameter ; the default (0.05) would have overly damped the peaks. We note, by the way, that this default value is not backed by good theoretical arguments or Monte Carlo simulations, which is a weakness of this method. 
-Also notable is that the confidence limits affect peak detection very differently here; only the 100k and 41k cycles rise above the 95% and 99% level; the 23k cycle barely reaches 90%. You can tweak the range over which this power law is fit and it will not change much.
+Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% level; other cycles are sumarily dismissed. You can tweak the range over which this power law is fit and it will not change much.
 
 An alternative is to use the Python implementation of [WWZ](http://linkedearth.github.io/Pyleoclim_util/Spectral.html), available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package. This can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
 
@@ -237,15 +231,6 @@ An alternative is to use the Python implementation of [WWZ](http://linkedearth.g
 Now let's consider age uncertainties.
 
 In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  Let us inspect the age uncertainties:
-
-```{r visualize timeseries with age uncertainties, message=FALSE, warning=FALSE}
-#plotTimeseriesEnsRibbons(X=age.ens,Y=d18O) + scale_y_reverse()
-# this works but returns many error messages. We may need to put d18O into the paleoData tables to make it work properly. 
-
-ggplot(df) + geom_ribbon(aes(x=t/1000,ymin=,ymax=ymax),fill=fillCol[b],alpha=alp)) + 
-  geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
-
-```
 
 
 ### GeoChronR Ensemble Strategy
@@ -321,18 +306,10 @@ mtm.ens.spec = geoChronR:::computeSpectraEns(values, time, method = 'mtm')
 
 pretty plot [(credit)](https://stackoverflow.com/questions/37326686/ggplot2-geom-ribbon-with-alpha-dependent-on-data-density-along-y-axis-for-each)
 
+To conclude, we must emphasize that hunting for astronomical (or other) frequencies in paleoclimate timeseries takes extreme care, and cannot be answered in one function call. Depending on the goals and applications, readers might want to consider the work of Stephen Meyers:
+- Meyers, 2015
+- Meyers & Malinverno 2018
+- Crampon et al 2018
 
 
-
-
-
-
-<!-- Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by -->
-<!-- pressing *Cmd+Option+I*. -->
-<!-- When you save the notebook, an HTML file containing the code and output will be -->
-<!-- saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview -->
-<!-- the HTML file). -->
-<!-- The preview shows you a rendered HTML copy of the contents of the editor. -->
-<!-- Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, -->
-<!-- the output of the chunk when it was last run in the editor is displayed. -->
 
