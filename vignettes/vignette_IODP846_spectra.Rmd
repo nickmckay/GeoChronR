@@ -184,7 +184,8 @@ An interpolation-free alternative to MTM is the Weighted Wavelet Z-transform of 
 
 The WWZ method has one adjustable parameter, a decay constant that balances the time resolution and frequency resolution of the wavelet analysis. The smaller this constant is, the sharper the peaks. 
 
-We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the *nuspectral* method of [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) based on a similar idea. We stress that it is not exactly equivalent to WWZ, or to work using the latter method. 
+We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the *nuspectral* method of [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) based on a similar idea. We stress that it is not equivalent to WWZ . The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. 
+If what you want is a 
 
 To learn more about *nuspectral* in an ideal setting, see [LINK to nuspectral vignette]. 
 
@@ -223,90 +224,44 @@ show(p.nus)
 ```
 
 Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the $\sigma$ parameter ; the default (0.05) would have overly damped the peaks. We note, by the way, that this default value is not backed by good theoretical arguments or Monte Carlo simulations, which is a weakness of this method. 
-Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% level; other cycles are sumarily dismissed. You can tweak the range over which this power law is fit and it will not change much.
+Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming `dof = 2` at each frequency, which is most likely violated with wavelets. Internally, `nuwavelet_psd` does use variable DOFs, but ... (export dof and check value) You can tweak the range over which this power law is fit and it will not change much.
 
 An alternative is to use the Python implementation of [WWZ](http://linkedearth.github.io/Pyleoclim_util/Spectral.html), available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package. This can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
 
 ## Time-uncertain spectral analysis 
 Now let's consider age uncertainties.
 
-In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  Let us inspect the age uncertainties:
+In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  
 
+The GeoChronR approach to pretty much everything (particularly, to quantifying and propagatng uncertainties) is to leverage the power of ensembles. Here we will illustrate this with MTM. 
+Let us repeat the previous analysis by looping over the 1,000 age realizations output by the tuning algorithm HMM-Match 
 
-### GeoChronR Ensemble Strategy
-As you can tell by now, the GeoChronR approach to uncertanty quantification and propagation is to leverage the power of ensembles. Here we will illustrate this with MTM. 
-the HMM_match output for IODP846 comes with 1,000 realizations of the age model. Let us repeat the previous analysis by looping over those: 
-```{r}
-pf = 2 # padding factor
-fl = 0.005
-fh = 0.1
-nens = 1000
-values = dfs$d18O
-time = dfs$tens.1
-#  apply workflow to first member
-dfe = linterp(data.frame(time,values),dt=dti,genplot=F,check=F,verbose=F)  # define local dataframe
-mtmPL.main    <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
-mtmPL.sigfreq <- astrochron::mtmPL(dfe,padfac=2,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
-# define output matrices
-ens.mtmPL.power   <-  matrix(NA,ncol=nens,nrow=length(mtmPL.main$Frequency))
-ens.mtmPL.sigfreq <-  matrix(0,ncol=nens,nrow=length(mtmPL.main$Frequency))
-# store output for first member
-ens.mtmPL.power[,1] <-mtmPL.main$Power
-ens.mtmPL.sigfreq[match(mtmPL.sigfreq$Frequency, mtmPL.main$Frequency, nomatch = 0),1] <- 1
-
-pb = txtProgressBar(min=2,max = nens,style = 3)
-# rinse, repeat
-for (k in 2:nens){ 
-  time = dfs[,k+4]
-  dfe = linterp(data.frame(time,values),dt=dti,genplot=F,check=F,verbose=F)  # define local dataframe
-  mtmPL.main <- astrochron::mtmPL(dfe,padfac=pf,genplot = F,output=1, verbose = F, flow=fl, fhigh=fh)
-  mtmPL.sigfreq <- astrochron::mtmPL(dfe,padfac=pf,genplot = F,output=2, verbose = F, flow=fl, fhigh=fh)
-  ens.mtmPL.power[,k] = mtmPL.main$Power
-  ens.mtmPL.sigfreq[match(mtmPL.sigfreq$Frequency, mtmPL.main$Frequency, nomatch = 0),k]=1
-}
-freqs.prob = rowMeans(ens.mtmPL.sigfreq)
-f = mtmPL.main$Frequency
-spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtmPL.power, powerSyn = NA, prob = freqs.prob)
-# let's select frequencies for plotting
-highlight.freqs = f[freqs.prob>.5]
-highlight.probs = freqs.prob[freqs.prob>.5]
-# plot it
-specPlot <- ggplot() + scale_alpha_continuous(range = c(0.4,.8)) + geom_vline(xintercept = highlight.freqs,colour = "red",alpha=highlight.probs, size = 2)
-period = c(10,20,50,100,200)
-# basic pattern: 10   20   50, then repeat
-specPlot <- specPlot + xlab("Period (ka)") + ylab("Normalized Spectral Density") + scale_x_log10(labels = as.character(period),breaks = 1/period) + scale_y_log10() + ggtitle("IODP 846 d18O, MTM with 1,000 age models")
-#specPlot <- plotSpectraAnnotate(specPlot) +
-
-specPlot <- plotTimeseriesEnsRibbons(spec.ens$freqs,spec.ens$power,add.to.plot = specPlot)
-
-show(specPlot)
-
-# need to snatch units from LiPD file
-# label periods 
-# find closest
-#period10Max = ceiling((max(time) - min(time))/10)*10 # longest period
-#period10Min = floor(1/max(freqs)/10)*10
-#library(pracma)
-#period = logspace(log10(periodMin),log10(periodMax),7) # not 
-
-
-#specPlot <- specPlot + scale_x_continuous(labels = as.character(period),breaks = 1/period) # label periods
+```{r ensemble-mode MTM, compute}
+time = age$values[age.median < 1000,]  # age ensemble for ~ last 1 Ma
+values = temp$values[age.median < 1000]
+mtm.ens.spec = geoChronR:::computeSpectraEns(time,values,max.ens = 1000, method = 'mtm',tbw=3, padfac=5)
 ```
 
+This took a minute or so, and the resulting output is close to 40 Mb. Not an issue for modern computers, but you can see why people weren't doing this in the 70's, even if they had wanted to. Now, let's plot the result:
 
-Now let's do this with GeoChronR. 
+```{r ensemble-mode MTM, plot}
+plotSpectraEns(mtm.ens.spec)
+# see what you can do with mtm.ens.spec$prob 
+```
 
+ 
 ```{r}
-time = age.ens[1:382,1:1000]  # age ensemble for ~ last 1 Ma
-values = dfs$d18O
-mtm.ens.spec = geoChronR:::computeSpectraEns(values, time, method = 'mtm')
+nuspec.ens.spec = geoChronR:::computeSpectraEns(time,values,max.ens = 3, method = 'nuspectral')
 ```
 
 
 
-pretty plot [(credit)](https://stackoverflow.com/questions/37326686/ggplot2-geom-ribbon-with-alpha-dependent-on-data-density-along-y-axis-for-each)
 
-To conclude, we must emphasize that hunting for astronomical (or other) frequencies in paleoclimate timeseries takes extreme care, and cannot be answered in one function call. Depending on the goals and applications, readers might want to consider the work of Stephen Meyers:
+
+To conclude, we must emphasize that hunting for astronomical (or other) frequencies in paleoclimate timeseries takes extreme care, and cannot be answered in one function call. In this particular example where the data are nearly evenly spaced, and interpolation has a negligible impact, the best choice is MTM for seeral reasons, because its minimizes spectral leakage, and because the implementation used here (derived from *astrochron*) allows to flexibly apply different tests of significance. Not such luxury is afforded by the other two methods (Lomb-Scargle, nuspectral) at present, and nuspectral is desperately slow on this dataset. 
+
+
+Depending on their goals, readers might want to consider the work of Stephen Meyers:
 - Meyers, 2015
 - Meyers & Malinverno 2018
 - Crampon et al 2018

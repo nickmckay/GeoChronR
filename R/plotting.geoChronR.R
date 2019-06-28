@@ -85,12 +85,12 @@ plotSpectraEns = function (spec.ens){
     specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour="white")
   }
   
-  
-  
   if(!is.na(spec.ens$powerSyn)){
   specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs, Y = spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
   }
 
+  # Other option: https://stackoverflow.com/questions/37326686/ggplot2-geom-ribbon-with-alpha-dependent-on-data-density-along-y-axis-for-each
+  
   return(specPlot)
 }
 

@@ -151,7 +151,8 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' }
 #' @import lomb
 #' @import astrochron
-computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.05,mtm_null='power_law'){
+#' @import nuspectral
+computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -261,7 +262,39 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
     spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtm.power, powerSyn = NA, prob = freqs.prob)
     }
   else if ( method=='nuspectral') {
-    # TO DO
+    nt = length(time)
+    tau = seq(min(time),max(time),length = max(nt %/% 5,10))
+    
+    # first iteration to define matrix sizes
+    t = time[,tind[1]]; v = vals[,vind[1]] 
+    nuspec <-  nuspectral:::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    noutrow <- length(nuspec$Frequency)
+    
+    #preallocate matrices
+    fMat = matrix(NA,ncol=nens,nrow=noutrow)
+    pMat = fMat
+    pMatSyn = fMat
+    
+    # 1st, heard-earned ensemble member
+    pMat[,1] <- nuspec$Power
+    fMat[,1] <- nuspec$Frequency
+    
+    pb = txtProgressBar(min=1,max = nens,style = 3)  # run the loop with progress bar
+    for (k in 2:nens){
+      t = time[,tind[k]]; v = vals[,vind[k]] 
+      nuspec   <-  nuspectral:::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+      pMat[,k] <- nuspec$Power
+      fMat[,k] <- nuspec$Frequency
+  
+      if(k%%round(nens/10)==0){
+        setTxtProgressBar(pb,k)
+      }
+    }
+    close(pb)
+    
+    # allocate output
+    spec.ens = list(freqs = fMat, power = pMat, powerSyn = NA, prob = NA)
+    
   } else {stop("Unknown method: Valid choices are: mtm, nuspectral, or lomb-scargle")}
   
   return(spec.ens)
