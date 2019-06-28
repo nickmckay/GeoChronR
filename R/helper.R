@@ -148,8 +148,7 @@ setupGeoChronR = function(){
 #' @param X data matrix
 #' @param jitter boolean variable ; if TRUE, add jitter to data to prevent ties
 #' @return gaussianized data matrix
-#' @description Transforms each column of data matrix X to normality using the inverse
-#   Rosenblatt transform
+#' @description Transforms each column of data matrix X to normality using the inverse Rosenblatt transform
 #' @references Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp- 12-31-2016.
 #' @references Van Albada, S.J., Robinson P.A. (2006), Transformation of arbitrary distributions to the normal distribution with application to EEG test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004 
 gaussianize <- function (X,jitter=FALSE){ 
@@ -158,28 +157,26 @@ gaussianize <- function (X,jitter=FALSE){
   # test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004
   #
   #  History: - Written 26/06/2015 by Julien Emile-Geay (USC)
-  #           - translated to R and added jitter option by 29/06/2015 by Nick McKay (NAU) 
+  #           - translated to R and added jitter option on 29/06/2015 by Nick McKay (NAU) 
+  #           - added capability to handle missing values on 27/06/2019 by Julien Emile-Geay 
   
   if(!is.matrix(X)){
     X=as.matrix(X)
   }
-  
-  p=NCOL(X)
-  n=NROW(X) 
+ 
+  p=NCOL(X); n=NROW(X) # dimensions
   
   if(jitter){
-    #add tiny random numbers to avoid ties
-    X=array(rnorm(p*n,mean=0,sd=sd(as.vector(X))/1e6),c(n,p))+X
+    X=array(rnorm(p*n,mean=0,sd=sd(as.vector(X))/1e6),c(n,p))+X #add tiny random numbers to avoid ties
   }
   
-  Xn    = matrix(data = 0,nrow = n,ncol = p)
+  Xn    = matrix(data = NA,nrow = n,ncol = p)
   for (j in 1:p){
-    # Sort the data in ascending order and retain permutation indices
-    R = rank(X[,j])
-    # The cumulative distribution function
-    CDF = R/N - 1/(2*N)
-    # Apply the inverse Rosenblatt transformation
-    Xn[,j] = qnorm(CDF)  # Xn is now normally distributed
+    nz  <- !is.na(X)
+    N   <- sum(nz)
+    R   <- rank(X[nz,j]) # Sort the data in ascending order and retain permutation indices
+    CDF <-R/N - 1/(2*N) # Obtain cumulative distribution function
+    Xn[nz,j] <- qnorm(CDF)  # Apply the inverse Rosenblatt transformation
   }
   
   return(Xn)
