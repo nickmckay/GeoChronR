@@ -226,12 +226,10 @@ show(p.nus)
 Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the $\sigma$ parameter ; the default (0.05) would have overly damped the peaks. We note, by the way, that this default value is not backed by good theoretical arguments or Monte Carlo simulations, which is a weakness of this method. 
 Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming `dof = 2` at each frequency, which is most likely violated with wavelets. Internally, `nuwavelet_psd` does use variable DOFs, but ... (export dof and check value) You can tweak the range over which this power law is fit and it will not change much.
 
-An alternative is to use the Python implementation of [WWZ](http://linkedearth.github.io/Pyleoclim_util/Spectral.html), available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package. This can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
+Readers interested in a more robust implementation of WWZ should consider [Python](http://linkedearth.github.io/Pyleoclim_util/Spectral.html) implementation, available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package.  Note that this can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
 
 ## Time-uncertain spectral analysis 
-Now let's consider age uncertainties.
-
-In our original dataframe (`df`), `median_ali` is the median age and `lower_95/upper_95` delineate the 95% confidence interval obtained from the HMM_match procedure.  
+Now let's consider age uncertainties. 
 
 The GeoChronR approach to pretty much everything (particularly, to quantifying and propagatng uncertainties) is to leverage the power of ensembles. Here we will illustrate this with MTM. 
 Let us repeat the previous analysis by looping over the 1,000 age realizations output by the tuning algorithm HMM-Match 
@@ -249,7 +247,7 @@ plotSpectraEns(mtm.ens.spec)
 # see what you can do with mtm.ens.spec$prob 
 ```
 
- 
+ Now let us try the same thing with *nuspectral*
 ```{r}
 nuspec.ens.spec = geoChronR:::computeSpectraEns(time,values,max.ens = 3, method = 'nuspectral')
 ```
