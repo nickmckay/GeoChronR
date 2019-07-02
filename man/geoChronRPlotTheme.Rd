@@ -4,18 +4,17 @@
 \alias{geoChronRPlotTheme}
 \title{Define a plot theme for GeoChronR}
 \usage{
-geoChronRPlotTheme(base_size = 11, base_family = "",
-  base_line_size = base_size/22, base_rect_size = base_size/22)
+geoChronRPlotTheme(base_size = 12, base_family = "sans",
+  style = c("default", "darkunica"), bgcolor = NULL)
 }
 \description{
 Use this to define a theme across geoChronR
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
+  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
+  \code{\link{axisLabel}}, \code{\link{getLegend}},
+  \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},
   \code{\link{plotCorEns}}, \code{\link{plotHistEns}},

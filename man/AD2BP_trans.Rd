@@ -11,7 +11,6 @@ a ggplot scale to convert a BP axis to AD
 }
 \seealso{
 Other plot: \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}},
   \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},

@@ -22,8 +22,7 @@ Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -42,8 +41,7 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotTrendLinesEns}},
   \code{\link{reverselog10_trans}}
 
-Other spectra: \code{\link{FrequencyAnnotate}},
-  \code{\link{ar1Surrogates}},
+Other spectra: \code{\link{ar1Surrogates}},
   \code{\link{computeSpectraEns}},
   \code{\link{createSyntheticTimeseries}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},

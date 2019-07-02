@@ -17,9 +17,8 @@ Use this to extract x and y ranges from ggplot, dealing with changes in version
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
+  \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{plotChronEnsDiff}},
   \code{\link{plotChronEns}}, \code{\link{plotChron}},

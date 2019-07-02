@@ -6,7 +6,7 @@
 \usage{
 computeSpectraEns(time, values, max.ens = NA, method = "mtm",
   gauss = FALSE, ofac = 1, padfac = 2, tbw = 3, wgtrad = 1,
-  sigma = 0.05, mtm_null = "power_law")
+  sigma = 0.02, mtm_null = "power_law")
 }
 \arguments{
 \item{time}{LiPD "variable list" or vector of year/age values}
@@ -37,8 +37,7 @@ a list of ensemble spectra results
 Calculate ensemble power spectra using a variety of spectral methods: Lomb-Scargle, Multi-Taper, and Weighted Wavelet Z-transform
 }
 \seealso{
-Other spectra: \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}},
+Other spectra: \code{\link{PeriodAnnotate}},
   \code{\link{ar1Surrogates}},
   \code{\link{createSyntheticTimeseries}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},

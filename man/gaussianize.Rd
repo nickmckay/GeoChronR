@@ -15,7 +15,7 @@ gaussianize(X, jitter = FALSE)
 gaussianized data matrix
 }
 \description{
-Transforms each column of data matrix X to normality using the inverse
+Transforms each column of data matrix X to normality using the inverse Rosenblatt transform
 }
 \references{
 Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp- 12-31-2016.

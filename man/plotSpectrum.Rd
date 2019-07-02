@@ -2,29 +2,37 @@
 % Please edit documentation in R/plotting.geoChronR.R
 \name{plotSpectrum}
 \alias{plotSpectrum}
-\title{Plot single spectrum, with confidence limits}
+\title{Plot spectrum with confidence limits}
 \usage{
 plotSpectrum(spec.df, cl.df = NULL, period_range = NULL,
-  period_ticks = c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL)
+  period_ticks = c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL,
+  colour.main = "orange", colour.cl = "white")
 }
 \arguments{
-\item{spec.df}{dataframe containing frequency (freq) and power (pwr)}
+\item{spec.df}{list or dataframe containing frequency (freq) and power (pwr)}
 
-\item{cl.df}{dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)}
+\item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)}
 
 \item{period_range}{range of plotted periodicities}
+
+\item{period_ticks}{ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)}
+
+\item{ylims}{2-vector for the y-axis. If NULL, computed from range(pwr)}
+
+\item{color.main}{color of the line representing the spectrum}
+
+\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99%)}
 }
 \value{
-ggplot object of spectrum plot
+SpecPlot, a ggplot object
 }
 \description{
-Plota a single spectrum, with confidence limits (no age ensemble)
+Plota a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
+  \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -42,8 +50,7 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotTrendLinesEns}},
   \code{\link{reverselog10_trans}}
 
-Other spectra: \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}},
+Other spectra: \code{\link{PeriodAnnotate}},
   \code{\link{ar1Surrogates}},
   \code{\link{computeSpectraEns}},
   \code{\link{createSyntheticTimeseries}},

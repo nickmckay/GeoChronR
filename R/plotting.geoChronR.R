@@ -54,26 +54,26 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @family spectra
 #' @param spec.ens Output from computeSpectraEns()
 #' @return ggplot object of spectrum plot
-plotSpectraEns = function (spec.ens){
-  period <- 1/spec.df$freq
+plotSpectraEns = function (spec.ens,cl.df = NULL,period_range=NULL,period_ticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL, colour.main="orange", colour.cl = "white"){
+  period <- 1/spec.ens$freqs
   if (is.null(period_range)) {
     period_range = c(min(period),max(period))
   } else {
     f.low = 1/period_range[2]
     f.high = 1/period_range[1]
   }
-  freq_range = (spec.df$freq>= f.low & spec.df$freq<=f.high)
+  freq_range = which(spec.ens$freq>= f.low & spec.ens$freq<=f.high)
   
   if (is.null(ylims)) {
-    m <- floor(log10(min(spec.df$pwr[freq_range]))) 
-    M <- ceiling(log10(max(spec.df$pwr[freq_range]))) 
+    m <- floor(log10(min(spec.ens$power[freq_range]))) 
+    M <- ceiling(log10(max(spec.ens$power[freq_range]))) 
   }
   else {
     m <- log10(ylims[1])
     M <- log10(ylims[2])
   }
   
-  specPlot = plotTimeseriesEnsRibbons(X = period,Y = spec.df$pwr,colour=colour.main) +
+   specPlot = plotTimeseriesEnsRibbons(X = period,Y = spec.ens$power) +
     scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
                   labels = scales::trans_format("log10", scales::math_format(10^.x)),
                   limits = c(10^m,10^M)) + 

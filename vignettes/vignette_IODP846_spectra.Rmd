@@ -27,9 +27,9 @@ d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
 #temp =  I$paleoData[[1]]$measurementTable[[1]]$`temp muller`$values
 t.med <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
 # put into a dataframe for easier access
-df  <- data.frame(t = t.med, d18O=d18O, tens = age.ens)
+# df  <- data.frame(t = t.med, d18O=d18O, tens = age.ens)
 #  try the LiPD way    NEED NICK ASSISTANCE
-L <- geoChronR::mapAgeEnsembleToPaleoData(I)
+L <- geoChronR::mapAgeEnsembleToPaleoData(I,which.pmt = 1)
 age = geoChronR::selectData(L,"ageEnsemble",which.mt = 1)
 temp = geoChronR::selectData(L,"temp muller",which.mt = 1)
 # define plotting theme
@@ -40,6 +40,7 @@ Now let us take a first look at the median age model:
 
 
 ```{r}
+library(ggplot2)
 #ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
 plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,colorLow="orchid",colorHigh="darkorange3",lineColor="orange",lineWidth=0.5,alp=0.3) + scale_x_reverse() + theme_hc(style = "darkunica")
 ```
@@ -243,7 +244,7 @@ mtm.ens.spec = geoChronR:::computeSpectraEns(time,values,max.ens = 1000, method 
 This took a minute or so, and the resulting output is close to 40 Mb. Not an issue for modern computers, but you can see why people weren't doing this in the 70's, even if they had wanted to. Now, let's plot the result:
 
 ```{r ensemble-mode MTM, plot}
-plotSpectraEns(mtm.ens.spec)
+plotSpectraEns(spec.ens = mtm.ens.spec)
 # see what you can do with mtm.ens.spec$prob 
 ```
 

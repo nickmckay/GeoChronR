@@ -7,19 +7,18 @@
 plotSpectraEns(spec.ens)
 }
 \arguments{
-\item{spec.ens}{Output from powerSpectrumEns()}
+\item{spec.ens}{Output from computeSpectraEns()}
 }
 \value{
 ggplot object of spectrum plot
 }
 \description{
-Plot the output of powerSpectrumEns() as a ribbon plot of distributions, plus confidence levels
+Plot the output of computeSpectraEns() as a ribbon plot of distributions, plus analytical or Monte-Carlo-based confidence levels
 }
 \seealso{
 Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}},
-  \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}}, \code{\link{axisLabel}},
+  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
+  \code{\link{axisLabel}},
   \code{\link{geoChronRPlotTheme}},
   \code{\link{getLegend}}, \code{\link{getPlotRanges}},
   \code{\link{plotChronEnsDiff}},
@@ -37,8 +36,7 @@ Other plot: \code{\link{AD2BP_trans}},
   \code{\link{plotTrendLinesEns}},
   \code{\link{reverselog10_trans}}
 
-Other spectra: \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}},
+Other spectra: \code{\link{PeriodAnnotate}},
   \code{\link{ar1Surrogates}},
   \code{\link{computeSpectraEns}},
   \code{\link{createSyntheticTimeseries}},

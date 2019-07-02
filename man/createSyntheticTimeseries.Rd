@@ -21,8 +21,7 @@ a vector or matrix of synthetic values
 create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 }
 \seealso{
-Other spectra: \code{\link{FrequencyAnnotate}},
-  \code{\link{PeriodAnnotate}},
+Other spectra: \code{\link{PeriodAnnotate}},
   \code{\link{ar1Surrogates}},
   \code{\link{computeSpectraEns}},
   \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
