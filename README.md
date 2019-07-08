@@ -33,15 +33,13 @@ Install the devtools package:
  install.packages("devtools")
 ```
 
-The two packages below do not install automatically through geoChronR, so you need to install them manually.
+The packages below do not install automatically through geoChronR, so you need to install them manually.
 
-Install the  BiocLite package:
+Install lipdR and nuspectral from github:
 
 ```
-      ## try http:// if https:// URLs are not supported
- 
-      source("https://bioconductor.org/biocLite.R")
-      biocLite(“pcaMethods”)
+devtools::install_github("nickmckay/lipd-utilities",subdir = "R")
+devtools::install_github("nickmckay/nuspectral")
 ```
 
 Install the rBacon package:
