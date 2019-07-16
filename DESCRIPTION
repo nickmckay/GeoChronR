@@ -1,48 +1,42 @@
 Package: geoChronR
 Type: Package
 Title: Tools to analyze and visualize time-uncertain geoscientific data
-Version: 0.2
-Date: 2017-08-11
+Version: 0.3
+Date: 2019-07-16
 Author: Nick McKay, Chris Heiser, Deborah Khider, Julien Emile-Geay
 Maintainer: Nick McKay <nick@nau.edu>
 Description: Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
 License: GNU Public License
 LazyData: TRUE
 RoxygenNote: 6.1.1
-Imports:
-	Bchron,
-	inline,
-	lomb,
-	data.table,
-	devtools,
-	matrixStats,
-	mapproj,
-	maps,
-	gridExtra,
-	Hmisc,
-	ggplot2,
-	ggmap,
-	Formula,
-	survival,
-	lattice,
-	plyr,
-	BBmisc,
-	jsonlite,
-	RJSONIO,
-	scales,
-	RgoogleMaps,
-	geosphere,
-	jpeg,
-	proto,
-	reshape2,
-	rjson,
-	MASS,
-	neotoma,
-	pbapply,
-	dplR       ,
-    ggridges,
+Imports: 
+    Bchron,
+    RColorBrewer,
     arsenal,
-    rbacon
+    astrochron,
+    data.table,
+    dplR,
+    dplyr,
+    ggmap,
+    ggplot2,
+    ggthemes,
+    grDevices,
+    grid,
+    lomb,
+    mapproj,
+    maps,
+    neotoma,
+    rbacon,
+    reshape2,
+    scales,
+    tibble,
+    ggridges,
+    gridExtra,
+    purrr,
+    matrixStats
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Remotes: 
+    nickmckay/nuspectral
+    
