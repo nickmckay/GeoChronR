@@ -4,7 +4,9 @@
 \alias{plotSpectraEns}
 \title{Plot ensemble spectra output}
 \usage{
-plotSpectraEns(spec.ens)
+plotSpectraEns(spec.ens, cl.df = NULL, period_range = NULL,
+  period_ticks = c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL,
+  colour.main = "orange", colour.cl = "white")
 }
 \arguments{
 \item{spec.ens}{Output from computeSpectraEns()}

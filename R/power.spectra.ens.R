@@ -151,7 +151,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' }
 #' @import lomb
 #' @import astrochron
-#' @import nuspectral
+#' @suggest nuspectral
 computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
