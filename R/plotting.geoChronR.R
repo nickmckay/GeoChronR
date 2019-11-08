@@ -204,15 +204,24 @@ reverselog10_trans <- function(){
 #' @examples
 #' 
 #' 
-quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y)))){
+quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y))), seed = 111, limitOutliersX = .025){
   #interpolates then finds
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
   
+  #set a seed for reproducibility
+  set.seed(seed)
   
   #interpolate option...
   sx = sort(c(x))
+  
+  #cut the range to exclude outliers
+  if(!is.na(limitOutliersX)){
+    cuts <- quantile(sx,probs = c(limitOutliersX,1-limitOutliersX))
+    sx <- sx[sx > min(cuts) & sx < max(cuts)]
+  }
+  
   if(all(is.na(x.bin))){
     x.bin <- approx(1:length(sx),sx,seq(1,length(sx),length.out = nbins))$y #adjust it along y
   }
@@ -581,7 +590,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
 #' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 #' @examples 
-plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,export.quantiles = FALSE){
+plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,export.quantiles = FALSE,...){
   #check to see if time and values are "column lists"
   oX = X
   oY = Y
@@ -624,7 +633,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
     # }
     ###END DEPRECATED - old method.
     
-    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs)
+    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs,...)
     if(export.quantiles){
       return(probMatList)
     }
