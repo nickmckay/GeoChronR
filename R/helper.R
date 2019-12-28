@@ -69,15 +69,28 @@ convertBP2AD = function(X){
       print("already in AD or CE, aborting...")
       return(X)
     }
-    X$units = "AD"
+
+    
+    
+    
+    if(!is.numeric(X$values)){
+      print("non-numeric dates, aborting...")
+      return(X)
+    }
     if(all(is.na(X$values))){
       return(X)
     }
+    if(grepl(pattern = "k",x = X$units,ignore.case = TRUE)){#in ka or kyr!
+      #convert to BP first
+      X$values <- X$values*1000
+    }
+    
+    X$units = "AD"
     X$values=1950-X$values
     X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]-1#remember, there's no year 0
     
   }else{
-    if(all(is.na(X))){
+    if(all(is.na(X)) | !is.numeric(X)){
       return(X)
     }
     X=1950-X
@@ -103,11 +116,15 @@ convertAD2BP = function(X){
       return(X)
     }
     X$units = "BP"
+    if(!is.numeric(X$values)){
+      print("non-numeric dates, aborting...")
+      return(X)
+    }
     X$values=1950-X$values
     X$values[which(X$values <= 0)]=X$values[which(X$values <= 0)]+1#remember, there's no year 0
     
   }else{
-    if(all(is.na(X))){
+    if(all(is.na(X))| !is.numeric(X)){
       return(X)
     }
       X[which(X <= 0)]=X[which(X <= 0)]+1#remember, there's no year 0

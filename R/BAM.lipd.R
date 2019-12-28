@@ -38,6 +38,7 @@
 #' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
 
 
+
 runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens.number = NA,makeNew=FALSE,nens = 1000,model = NA){
   
   #initialize which.paleo
