@@ -58,32 +58,32 @@ names(nmt) <- sapply(nmt,"[[","variableName")
 return(nmt)
 
 }
-
-library(lipdR)
-library(geoChronR)
-library(magrittr)
-
-L1 <- readLipd("~/Downloads/ANS1.Kjellman.2019.lpd")
-L2 <- readLipd("~/Downloads/ANP3.Kjellman.2019.lpd")
-
-
-#composite two independent records
-L1 <- mapAgeEnsembleToPaleoData(L1,which.pmt = 1,age.var = "ageEnsemble")
-
-ae1 <- selectData(L1,"ageEnsemble",which.mt = 1) 
-pd1 <- selectData(L1,"C28d2H",,which.mt = 1)
-
-L2 <- mapAgeEnsembleToPaleoData(L2,which.pmt = 1,age.var = "ageEnsemble")
-
-ae2 <- selectData(L2,"ageEnsemble",which.mt = 1) 
-pd2 <- selectData(L2,"C28d2H",,which.mt = 1)
-
-
-
-cmt <- createConcatenatedEnsembleMeasurementTable(ae1,pd1,ae2,pd2)
-
-
-plotTimeseriesEnsRibbons(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite) %>% 
-  plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,maxPlotN = 5,color = "red")
-  
+# 
+# library(lipdR)
+# library(geoChronR)
+# library(magrittr)
+# 
+# L1 <- readLipd("~/Downloads/ANS1.Kjellman.2019.lpd")
+# L2 <- readLipd("~/Downloads/ANP3.Kjellman.2019.lpd")
+# 
+# 
+# #composite two independent records
+# L1 <- mapAgeEnsembleToPaleoData(L1,which.pmt = 1,age.var = "ageEnsemble")
+# 
+# ae1 <- selectData(L1,"ageEnsemble",which.mt = 1) 
+# pd1 <- selectData(L1,"C28d2H",,which.mt = 1)
+# 
+# L2 <- mapAgeEnsembleToPaleoData(L2,which.pmt = 1,age.var = "ageEnsemble")
+# 
+# ae2 <- selectData(L2,"ageEnsemble",which.mt = 1) 
+# pd2 <- selectData(L2,"C28d2H",,which.mt = 1)
+# 
+# 
+# 
+# cmt <- createConcatenatedEnsembleMeasurementTable(ae1,pd1,ae2,pd2)
+# 
+# 
+# plotTimeseriesEnsRibbons(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite) %>% 
+#   plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,maxPlotN = 5,color = "red")
+#   
 
