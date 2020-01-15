@@ -7,7 +7,7 @@
 plotTimeseriesEnsRibbons(add.to.plot = ggplot(), X, Y, alp = 1,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975), x.bin = NA, y.bin = NA,
   nbins = 200, colorLow = "white", colorHigh = "grey70",
-  lineColor = "Black", lineWidth = 1, export.quantiles = FALSE)
+  lineColor = "Black", lineWidth = 1, export.quantiles = FALSE, ...)
 }
 \arguments{
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}

@@ -437,11 +437,14 @@ bin = function(time,values,binvec,binfun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
   #the bin vector describes the edges of the bins
   #binfun is the function to use for the binning, mean, sum, sd are all reasonable options
+  
+
   bin_y = rep(NA,times = length(binvec)-1)
   bin_x = apply(cbind(binvec[-1],binvec[-length(binvec)]),1,mean)
   
   for(i in 1:length(bin_y)){
-    q = which(time > binvec[i] & time <= binvec[i+1])
+    be <- sort(binvec[i:(i+1)])
+    q = which(time > be[1] & time <= be[2])
     bin_y[i] = binfun(values[q],na.rm=TRUE)
   }
   

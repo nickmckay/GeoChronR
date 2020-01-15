@@ -27,10 +27,6 @@ An integer index
 Gets the index for a LiPD "variable list"
 }
 \seealso{
-Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
-  \code{\link{flipCoords}},
-  \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{pullTsVariable}},
-  \code{\link{pushTsVariable}}, \code{\link{selectData}},
-  \code{\link{tidyTs}}
+Other LiPD manipulation: \code{\link{mapAgeEnsembleToPaleoData}},
+  \code{\link{selectData}}
 }

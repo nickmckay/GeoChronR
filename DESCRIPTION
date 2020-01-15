@@ -9,7 +9,7 @@ Description: Time uncertain analysis, including correlation, regression, spectra
 License: GNU Public License
 LazyData: TRUE
 RoxygenNote: 6.1.1
-Imports: 
+Imports:
     Bchron,
     RColorBrewer,
     arsenal,
@@ -35,8 +35,8 @@ Imports:
     purrr,
     matrixStats
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
-Remotes: 
+Remotes:
     nickmckay/nuspectral
-    

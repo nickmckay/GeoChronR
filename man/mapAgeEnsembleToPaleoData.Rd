@@ -36,9 +36,6 @@ L a lipd object
 Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 }
 \seealso{
-Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
-  \code{\link{flipCoords}}, \code{\link{getVariableIndex}},
-  \code{\link{pullTsVariable}},
-  \code{\link{pushTsVariable}}, \code{\link{selectData}},
-  \code{\link{tidyTs}}
+Other LiPD manipulation: \code{\link{getVariableIndex}},
+  \code{\link{selectData}}
 }

@@ -5,7 +5,8 @@
 \title{Find quantiles across an ensemble}
 \usage{
 quantile2d(x, y, nbins = 500, x.bin = NA, probs = c(0.025, 0.25, 0.5,
-  0.75, 0.975), nens = max(c(ncol(x), ncol(y))))
+  0.75, 0.975), nens = max(c(ncol(x), ncol(y))), seed = 111,
+  limitOutliersX = 0.025)
 }
 \arguments{
 \item{x}{n by m matrix where n is the number of observations and m is >= 1}

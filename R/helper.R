@@ -1,10 +1,4 @@
 #' @export
-installLipd = function(){devtools::install_github("nickmckay/lipd-utilities",subdir = "R")}
-
-#' @export
-installGeoChronR= function(){devtools::install_github("nickmckay/geoChronR")}
-
-#' @export
 #' @title Makes a guess about the units of a time vector based on the values
 #' @description Guesses year units based on some simple heuristics
 #' @param X A LiPD variable list or a vector of years BP 
@@ -131,22 +125,6 @@ convertAD2BP = function(X){
       X=1950-X
   }
   return(X)
-}
-
-#' @title Clear all variables and functions from global environment
-#' @description Removes all variables and functions from global environment. Use at your own risk.
-#' @export
-clearAll = function(){
-  rm(list = ls(envir = .GlobalEnv),envir = .GlobalEnv)
-}
-
-#' @export
-#' @title Detach all packages
-#' @description Detachs all packages
-detachAll = function(){
-pkgs = names(sessionInfo()$otherPkgs)
-pkgs = paste('package:', pkgs, sep = "") 
-lapply(pkgs, detach, character.only = TRUE, unload = TRUE)
 }
 
 #' @export
