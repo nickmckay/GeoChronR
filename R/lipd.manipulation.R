@@ -11,6 +11,7 @@
 #' @param which.ens an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?
 #' @param max.ensemble.members Maximum number of ensemble members to map
 #' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+#' @import pbapply
 #' @return L a lipd object
 #' @export
 mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE){

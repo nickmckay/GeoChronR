@@ -32,10 +32,16 @@ library(ggplot2)
 ```
 ##Loading in your data
 
-In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. To load a LiPD file from your computer, use `L <- readLipd()` to interactively select a file (or a directory), or enter the path to file or the directory that you want: `L <- readLipd("~/Downloads/my.lpd")`
+In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. If you have the lipdR package, you can load a LiPD file directly from your computer, use `L <- readLipd()` to interactively select a file (or a directory), or enter the path to file or the directory that you want: `L <- readLipd("~/Downloads/my.lpd")`
+
+If you don't have lipdR yet, then we can use the preloaded version of the dataset included in the package
 
 ```{r}
-hulu <- readLipd(system.file("extdata", "Hulucave.Wang.2001.lpd", package = "geoChronR"))
+if (requireNamespace("lipdR", quietly = TRUE)) {#if you have lipdR, you can load it this way
+hulu <- lipdR::readLipd(system.file("extdata", "Hulucave.Wang.2001.lpd", package = "geoChronR"))
+}else{ #otherwise lets just get it from the package
+  hulu <- hulu
+}
 ```
 
 Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don't have that for this record. For this example we're going to use the original U/Th dates to create a new a model using BChron.

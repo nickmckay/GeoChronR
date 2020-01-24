@@ -1,3 +1,6 @@
+#create an environment for package variables
+geoChronREnv <- new.env()
+
 #' @export
 #' @author Nick McKay
 #' @title Get the name of bacon core directory
@@ -6,26 +9,36 @@
 #' @return baconDir the bacon core directory
 getBaconDir <- function(baconDir = NA){
   #initialize bacon directory
-  if(is.na(baconDir)){
-    #check global first
-    if(!exists("baconDir",where = .GlobalEnv)){
+  if(is.na(baconDir) | !is.character(baconDir)){
+    #check geoChronR env first
+    if(!exists("baconDir",where = geoChronREnv)){
       cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
       baconFile=file.choose()
-      baconDir<<-dirname(dirname(baconFile))
-      baconDir=baconDir
+      assign("baconDir",value = dirname(dirname(baconFile)),envir = geoChronREnv)
+      baconDir=dirname(dirname(baconFile))
     }else{
-      baconDir=get("baconDir",envir = .GlobalEnv)
+      baconDir=get("baconDir",envir = geoChronREnv)
       if(is.na(baconDir) | !is.character(baconDir)){
         cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
         baconFile=file.choose()
-        baconDir<<-dirname(dirname(baconFile))
-        baconDir=baconDir
+        assign("baconDir",value = dirname(dirname(baconFile)),envir = geoChronREnv)
+        baconDir=dirname(dirname(baconFile))
       }
     }
   }
   return(baconDir)
 }
 
+#' @export
+#' @author Nick McKay
+#' @title Set the name of bacon core directory
+#' @description Use this to programmatically set the baconDir 
+#' @param baconDir if you already have it
+#' @return baconDir the bacon core directory
+setBaconDir <- function(baconDir){
+      assign("baconDir",value = baconDir,envir = geoChronREnv)
+      print(paste0("baconDir set to ",baconDir))
+}
 
 #' @export
 #' @author Nick McKay
