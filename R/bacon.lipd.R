@@ -220,221 +220,45 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 #' #Run in interactive mode
 #' 
 #' writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
-writeBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,labIDVar="labID",
-                        age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age", 
-                        ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",
-                        reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected"){
-  cur.dir = getwd()
-  #initialize which.chron
-  if(is.na(which.chron)){
-    if(length(L$chronData)==1){
-      which.chron=1
-    }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to run bacon for? "))
-    }
-  }
-  if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$model[[1]])){
-      #no models, this is first
-      modelNum=1
-    }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
-      modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
-    }
-  }
+writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,...){
   
+  #deal with directories
+  cur.dir = getwd()
   
   #get bacon directory
   baconDir <- getBaconDir(baconDir)
   
   #pull out chronology
+  cdf <- createChronMeasInputDf(L,...)
   
-  
-  C=L$chronData[[which.chron]]
-  
-  #check for measurementTables
-  if(is.na(which.mt)){
-    if(length(C$measurementTable)==1){
-      which.mt = 1  
-    }else{
-      print(paste("There are", length(L$chronData[[which.chron]]$measurementTable), "measurement tables in chronData " ,which.chron))
-      which.mt=as.integer(readline(prompt = "Which do you want to use here? (Enter an integer)"))
-    }
-  }
-  
-  MT=C$measurementTable[[which.mt]]
-  
-  
-  #go through required fields for bacon
-  
-  #labID
-  print("Looking for laboratory ID...")
-  idi = getVariableIndex(MT,labIDVar,altNames = "id")
-  if(is.na(idi)){
-    labIDVar <- NULL
-  }else{
-    labIDVar <- MT[[idi]]$variableName
-  }
-  
-  
-  #14C age
-  print("Looking for radiocarbon ages...")
-  c14i = getVariableIndex(MT,age14CVar,altNames = "age")
-  if(is.na(c14i)){
-    age14CVar <- NULL
-  }else{
-    age14CVar <- MT[[c14i]]$variableName
-  }
-  
-  
-  #14C age uncertainty
-  print("Looking for radiocarbon age uncertainty...")
-  c14unci = getVariableIndex(MT,age14CuncertaintyVar,altNames = c("age","uncertainty"))
-  if(is.na(c14unci)){
-    age14CuncertaintyVar <- NULL
-  }else{
-    age14CuncertaintyVar <- MT[[c14unci]]$variableName
-  }
-  
-  #age (calibrated)
-  print("Looking for calibrated ages...")
-  agei = getVariableIndex(MT,ageVar,altNames = "age")
-  if(is.na(agei)){
-    ageVar <- NULL
-  }else{
-    ageVar <- MT[[agei]]$variableName
-  }
-  
-  #age uncertainty (calibrated)
-  print("Looking for calibrated age uncertainty...")
-  ageunci = getVariableIndex(MT,ageUncertaintyVar,altNames = c("age","uncertainty"))
-  if(is.na(ageunci)){
-    ageUncertaintyVar <- NULL
-  }else{
-    ageUncertaintyVar <- MT[[ageunci]]$variableName
-  }
-  
-  #depth
-  print("Looking for depth...")
-  depthi = getVariableIndex(MT,depthVar)
-  if(is.na(depthi)){
-    depthVar <- NULL
-  }else{
-    depthVar <- MT[[depthi]]$variableName
-  }
-  
-  #reservoir age
-  print("Looking for radiocarbon reservoir age offsets (deltaR)...")
-  print("can also use radiocarbon reservoir ages if need be...")
-  resi = getVariableIndex(MT,reservoirAge14CVar,altNames = "reservoir")
-  if(is.na(resi)){
-    reservoirAge14CVar <- NULL
-  }else{
-    reservoirAge14CVar <- MT[[resi]]$variableName
-  }
-  
-  #reservoir uncertainty
-  print("Looking for radiocarbon reservoir age uncertainties...")
-  resUnci = getVariableIndex(MT,reservoirAge14CUncertaintyVar,altNames = c("reservoir","unc"))
-  if(is.na(resUnci)){
-    reservoirAge14CUncertaintyVar <- NULL
-  }else{
-    reservoirAge14CUncertaintyVar <- MT[[resUnci]]$variableName
-  }
-  
-  #rejected ages
-  print("Looking for column of reject ages, or ages not included in age model")
-  rejeci = getVariableIndex(MT,rejectedAgesVar,altNames = c("reject","ignore"))
-  if(is.na(rejeci)){
-    rejectedAgesVar <- NULL
-  }else{
-    rejectedAgesVar <- MT[[rejeci]]$variableName
-  }
-  
-  stringifyVariables <- function(varName){
-    if(is.null(varName)){
-      so <- paste0(deparse(substitute(varName))," = NULL")
-    }else{
-      so <- paste0(deparse(substitute(varName))," = '", varName, "'")
-    }
-    return(so)
-}
-  
-  #print results...
-  print("Variable choices for reuse...")
-  varUsedStr <- paste0(stringifyVariables(labIDVar),", ", stringifyVariables(age14CVar),", ", stringifyVariables(age14CuncertaintyVar),", ", stringifyVariables(ageVar),", ", stringifyVariables(ageUncertaintyVar),", ", stringifyVariables(depthVar),", ", stringifyVariables(reservoirAge14CVar),", ", stringifyVariables(reservoirAge14CUncertaintyVar),", ", stringifyVariables(rejectedAgesVar))
-  
-  print(varUsedStr)
-  assign("bacon_varUsedStr",value = varUsedStr,envir = .GlobalEnv)
 
   #merge variables as needed
-  depth <- MT[[depthi]]$values
-  if(is.null(depth)){
-    stop("No depth. Depth is required by bacon")
+  if(all(is.na(cdf$depth))){
+    stop("No depth values. Depth is required by bacon")
   }
-  
   
   #ages in uncertainties. Assign calibrated ages when 14C ages are empty
-  #14C age
-  cage <- MT[[c14i]]$values
-  if(is.null(cage)){
-    cage <- rep(NA,len=length(depth))
-  }
-  
-  #calibrated age
-  calage <- MT[[agei]]$values
-  if(is.null(calage)){
-    calage <- rep(NA,len=length(depth))
-  }
-  
-  age <- cage
-  which.calage <- which(is.na(cage) & !is.na(calage))
-  age[which.calage] <- calage[which.calage]
-  
+  cdf$allAge <- cdf$age14C
+  no14Ci <- which(is.na(cdf$age14C))
+  cdf$allAge[no14Ci] <- cdf$age[no14Ci]
   
   #load in uncertainties. Assign calibrated uncertainties when 14C uncertainty is empty
-  error <- MT[[c14unci]]$values
-  if(is.null(error)){
-    error <- rep(NA,len=length(depth))
-  }
-  
-  calageerror <-  MT[[ageunci]]$values
-  if(is.null(calageerror)){
-    calageerror <- rep(NA,len=length(depth))
-  }
-  
-  error[which.calage] <- calageerror[which.calage]
+  cdf$allUnc <- cdf$age14CUnc
+  cdf$allUnc[no14Ci] <- cdf$ageUnc[no14Ci]
   
   reservoir <- MT[[resi]]$values
-  if(is.null(reservoir)){
-    reservoir <- rep(NA,len=length(depth))
-  }else{
+  if(!all(is.na(cdf$reservoirAge))){
+    if(ask){
     print("bacon uses delta-R: deviation from the reservoir curve")
-    
-    print("If your data are in abolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
+    print("If your data are in absolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
     print("Take a look at the values")
-    print(head(reservoir))
-    R=as.numeric(readline(prompt = "enter the number of years you'd like to subtract from your data (0 leaves the data unchanged of course) "))
-    reservoir=reservoir-R
+    print(head(cdf$reservoirAge))
+    R=as.numeric(askUser("enter the number of years you'd like to subtract from your data (0 leaves the data unchanged of course) "))
+    cdf$reservoirAge=cdf$reservoirAge-R
+    }
   }
   
-  
-  reservoir_error <- MT[[resUnci]]$values
-  if(is.null(reservoir_error)){
-    reservoir_error <- rep(NA,len=length(depth))
-  }
-  
-  rejected <- MT[[rejeci]]$values
-  if(is.null(rejected)){
-    rejected <- rep(NA,len=length(depth))
-  }
-  
-  id <- MT[[idi]]$values
-  if(is.null(idi)){
-    id <- rep(NA,len=length(depth))
-  }
-  
-  
+  #Stopped here 2/7.
   #Now build the table
   
   

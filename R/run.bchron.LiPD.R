@@ -19,7 +19,7 @@
 #'Run in noninteractive mode:
 #'L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
 
-runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA,reject = NA,interpolate = NA,iter = NA,extractDate = NA,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",paleoDepthVar = "depth"){
+runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA,reject = NA,interpolate = NA,iter = NA,extractDate = NA,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",paleoDepthVar = "depth",ask = TRUE){
   
   
   cur.dir = getwd()
@@ -254,7 +254,7 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
   print("How many iterations would you like to perform?")
   iter = as.integer(readline(prompt = "Enter the number of iterations: "))
   }
-  if (iter<10000){
+  if(ask & iter<10000){
     iter =10000
   }else if (iter>1000000){
     print("This is a large number of iterations!!!")
@@ -295,9 +295,14 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
     age_sds = age14Cuncertainty
   }
   
+  #combine calibrated and uncalibrated ages
+  tr <- which(is.na(ages) & !is.na(calibratedAges))
+  
+  
+  
   # Perfom the run (finally)
   if (extractDate !=0){
-    run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter, extractDate = extractDate,positionThicknesses = c(rep(1,length(depth))),jitterPositions = TRUE )
+    run = ?Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter, extractDate = extractDate,positionThicknesses = c(rep(1,length(depth))),jitterPositions = TRUE )
   } else {
     run = Bchron::Bchronology(ages = ages, ageSds = age_sds, calCurves = c(rep(calCurves,length(depth))), positions = depth, predictPositions = depth_predict, iterations = iter,positionThicknesses = rep(1,length(depth)),jitterPositions = TRUE)
   }

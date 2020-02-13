@@ -11,7 +11,7 @@ runBchron(L, which.chron = NA, which.table = NA,
   ageVar = "age", ageUncertaintyVar = "ageUnc", depthVar = "depth",
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected", paleoDepthVar = "depth")
+  rejectedAgesVar = "rejected", paleoDepthVar = "depth", ask = TRUE)
 }
 \arguments{
 \item{L}{a single LiPD object}

@@ -107,6 +107,11 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
     print("getting depth from the paleodata table...")
     depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
     
+    #check that depth is numeric
+    if(!is.numeric(depth)){
+      stop("Uh oh, paleo depth is not a numeric vector. That will cause problems - check paleoData[[p]]measurementTable[[m]]$depth$values (or similar if variable name is not depth)")
+    }
+    
     #restrict ensemble members
     if(!is.na(max.ensemble.members)){
       if(ncol(ens)>max.ensemble.members){
@@ -274,6 +279,9 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
   
   #check to see if varName is null, and return 0 if so
   if(is.null(varName)){
+    return(NA)
+  }
+  if(isTRUE(varName == "NULL")){
     return(NA)
   }
   

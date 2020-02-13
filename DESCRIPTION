@@ -9,6 +9,7 @@ Description: Time uncertain analysis, including correlation, regression, spectra
 License: GNU Public License
 LazyData: TRUE
 RoxygenNote: 6.1.1
+biocViews:
 Imports:
     Bchron,
     RColorBrewer,
@@ -25,7 +26,6 @@ Imports:
     lomb,
     mapproj,
     maps,
-    neotoma,
     rbacon,
     reshape2,
     scales,
@@ -33,10 +33,9 @@ Imports:
     ggridges,
     gridExtra,
     purrr,
-    matrixStats
+    matrixStats,
+    pcaMethods
 Suggests: knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-Remotes:
-    nickmckay/nuspectral

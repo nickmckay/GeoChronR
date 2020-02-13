@@ -127,14 +127,6 @@ convertAD2BP = function(X){
   return(X)
 }
 
-#' @export
-#' @title Setup GeoChronR for first time use
-#' @description installs special packages. Should have to be run once.
-setupGeoChronR = function(){
-  install.packages("ggmap", type = "source")
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("pcaMethods")
-}
 
 #' @export
 #' @title Gaussianize
