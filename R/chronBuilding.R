@@ -54,10 +54,6 @@ askUser <- function(query){
 createChronMeasInputDf <- function(L,
                                    which.chron=NA,
                                    which.mt = NA,
-                                   overwrite=TRUE,
-                                   site.name=L$dataSetName,
-                                   modelNum=NA,
-                                   useMarine = NULL,
                                    labIDVar="labID",
                                    age14CVar = "age14C", 
                                    age14CuncertaintyVar = "age14CUnc", 
@@ -77,17 +73,19 @@ createChronMeasInputDf <- function(L,
       which.chron=as.integer()
     }
   }
-  if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$model[[1]])){
-      #no models, this is first
-      modelNum=1
-    }else{
-      print(cat(crayon::yellow(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))))
-      modelNum=as.integer(askUser("Enter the number for this model- will overwrite if necessary "))
-    }
-  }
   
-  
+  #We no longer get this
+  # if(is.na(modelNum)){
+  #   if(is.null(L$chronData[[which.chron]]$model[[1]])){
+  #     #no models, this is first
+  #     modelNum=1
+  #   }else{
+  #     print(cat(crayon::yellow(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))))
+  #     modelNum=as.integer(askUser("Enter the number for this model- will overwrite if necessary "))
+  #   }
+  # }
+  # 
+  # 
   #pull out chronology
   C=L$chronData[[which.chron]]
   
@@ -200,7 +198,21 @@ createChronMeasInputDf <- function(L,
   #store this for later use
   assign("chron_varUsedStr",value = varUsedStr,envir = geoChronREnv)
   cat(crayon::green(crayon::bold("For future reference: here are the options you chose:\n Find later with getLastVarString()\n")))
-  cat(crayon::green(varUsedStr))
+  cat(crayon::green(paste0(varUsedStr,"\n")))
+  
+  #calculate a few more columns
+  #create combined age column.  Assign calibrated ages when 14C ages are empty
+  chronDf$allAge <- chronDf$age14C
+  no14Ci <- which(is.na(chronDf$age14C))
+  chronDf$allAge[no14Ci] <- chronDf$age[no14Ci]
+  
+  #Create combined age uncertainty column. Assign calibrated uncertainties when 14C uncertainty is empty
+  chronDf$allUnc <- chronDf$age14CUnc
+  chronDf$allUnc[no14Ci] <- chronDf$ageUnc[no14Ci]
+  
+  #Createa an age type column
+  chronDf$ageType <- "14C"
+  chronDf$ageType[no14Ci] <- "cal"
   
   return(chronDf)
   

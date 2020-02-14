@@ -1566,7 +1566,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   
     
     #Tidy up...
-    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName))
+    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName)) + geoChronRPlotTheme()
     
     return(chronPlot)
     

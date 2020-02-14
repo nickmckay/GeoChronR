@@ -57,8 +57,13 @@ setBaconDir <- function(baconDir){
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",BaconAsk = TRUE,BaconSuggest = TRUE,baconThick = NA,baconAccMean = 20,...){
+runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",baconThick = NA,baconAccMean = NA,...){
+  
+  
+  
   cur.dir = getwd()
+  
+  
   #initialize which.chron
   if(is.na(which.chron)){
     if(length(L$chronData)==1){
@@ -91,24 +96,35 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
   #write bacon file
   L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine, labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
   
+  totalDepth <- abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))
+  totalAge <- abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,2])))
+  
   #estimate thickness parameter
   if(is.na(baconThick)){
-  thick = abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))/100
+    thick <- totalDepth/100
+    K <- 100
   }else{
-    thick = baconThick
+    thick <- baconThick
+    K <- ceiling(totalDepth/thick)
   }
-
+  
+  #estimate acc mean
+  #estimate thickness parameter
+  if(is.na(baconAccMean)){
+    baconAccMean <- totalAge/totalDepth
+  }
+  
   #run bacon
   setwd(baconDir)
   #if(is.null(baconFile)){baconFile = "Bacon.R"}
   
   #source(baconFile)
-  rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,ask = BaconAsk,acc.mean = baconAccMean,suggest = BaconSuggest,...)
+  rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,acc.mean = baconAccMean,...)
   
   print("taking a short break...")
   Sys.sleep(5)
   #pull bacon data into lipd structure
-  L = loadBaconOutput(L,site.name=L$dataSetName,which.chron=which.chron,baconDir=baconDir,modelNum=modelNum,maxEns = maxEns)
+  L = loadBaconOutput(L,site.name=L$dataSetName,K = K, which.chron=which.chron,baconDir=baconDir,modelNum=modelNum,maxEns = maxEns)
   return(L)
 }
 
@@ -237,16 +253,6 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
     stop("No depth values. Depth is required by bacon")
   }
   
-  #ages in uncertainties. Assign calibrated ages when 14C ages are empty
-  cdf$allAge <- cdf$age14C
-  no14Ci <- which(is.na(cdf$age14C))
-  cdf$allAge[no14Ci] <- cdf$age[no14Ci]
-  
-  #load in uncertainties. Assign calibrated uncertainties when 14C uncertainty is empty
-  cdf$allUnc <- cdf$age14CUnc
-  cdf$allUnc[no14Ci] <- cdf$ageUnc[no14Ci]
-  
-  reservoir <- MT[[resi]]$values
   if(!all(is.na(cdf$reservoirAge))){
     if(ask){
     print("bacon uses delta-R: deviation from the reservoir curve")
@@ -258,76 +264,83 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
     }
   }
   
-  #Stopped here 2/7.
-  #Now build the table
+  nrows <- nrow(cdf)
+  cdf$ta <- 3
+  cdf$tb <- 4
   
-  
-  #nrows <- NROW(cbind(id,age,error,reservoir,depth))
-  nrows <- length(depth)
-  print(nrows)
-  ta <- rep(3,len=nrows)
-  tb <- rep(4,len=nrows)
   if(is.na(cc)){
     if(any(names(L)=="archiveType")){
       if(grepl("marine",tolower(L$archiveType))){#assume a marine cal curve if it's marine
-        cc <- rep(2,len=nrows)
+        cdf$cc <- rep(2,len=nrows)
       }else{
-        cc <- rep(1,len=nrows)
+        cdf$cc <- rep(1,len=nrows)
       }
     }else{
       if(is.null(useMarine)){
         useMarine = readline(prompt = "Do you want to use the Marine13 curve?")
       }
       if(grepl(useMarine,pattern = "y")){
-        cc <- rep(2,len=nrows)
+        cdf$cc <- rep(2,len=nrows)
         
       }else{
-        cc <- rep(1,len=nrows)
+        cdf$cc <- rep(1,len=nrows)
       } 
       
       
     }
   }else{# force it to be what was prescribed
-    cc <- rep(cc,len=nrows)
+    cdf$cc <- rep(cc,len=nrows)
     
   }
   
   #for calibrated ages, use a gaussian and no calibration
-  ta[which.calage] <- 33
-  tb[which.calage] <- 34
-  cc[which.calage] <- 0
+  which.calage <- which(grepl(cdf$ageType,pattern = "cal"))
+  cdf$ta[which.calage] <- 33
+  cdf$tb[which.calage] <- 34
+  cdf$cc[which.calage] <- 0
   
   
-  out.table <- as.data.frame(matrix(NA,nrow=nrows,ncol=9))
-  if(!is.null(id)){out.table[,1] <- id[1:nrows]}
-  
-  if(!is.null(age)) {
-    
-    out.table[,2] <- age}
-  if(!is.null(error) ) {
-    out.table[,3] <- error}
-  
-  
-  if(!is.null(depth) ) {
-    
-    out.table[,4] <- depth}
-  
-  if(!is.null(cc) ) {
-    out.table[,5] <- cc}
-  
-  if(!is.null(reservoir) ) {
-    out.table[,6] <- reservoir}else
-    {out.table[,6] <- 0}
-  
-  if(!is.null(reservoir_error) ) {
-    out.table[,7] <-reservoir_error}else
-    {out.table[,7] <- 0}
-  
-  if(!is.null(ta) ) {
-    out.table[,8] <-ta}
-  if(!is.null(tb) ) {
-    out.table[,9] <-tb}
-  
+  out.table <- cdf %>% 
+    select(labID,
+           allAge,
+           allUnc,
+           depth, 
+           cc, 
+           reservoirAge, 
+           reservoirAgeUnc,
+           ta,
+           tb)
+      
+  #     as.data.frame(matrix(NA,nrow=nrows,ncol=9))
+  # if(!is.null(id)){out.table[,1] <- id[1:nrows]}
+  # 
+  # if(!is.null(age)) {
+  #   
+  #   out.table[,2] <- age}
+  # if(!is.null(error) ) {
+  #   out.table[,3] <- error}
+  # 
+  # 
+  # if(!is.null(depth) ) {
+  #   
+  #   out.table[,4] <- depth}
+  # 
+  # if(!is.null(cc) ) {
+  #   out.table[,5] <- cc}
+  # 
+  # if(!is.null(reservoir) ) {
+  #   out.table[,6] <- reservoir}else
+  #   {out.table[,6] <- 0}
+  # 
+  # if(!is.null(reservoir_error) ) {
+  #   out.table[,7] <-reservoir_error}else
+  #   {out.table[,7] <- 0}
+  # 
+  # if(!is.null(ta) ) {
+  #   out.table[,8] <-ta}
+  # if(!is.null(tb) ) {
+  #   out.table[,9] <-tb}
+  # 
   
   #replace NAs appropriately
   out.table[is.na(out.table[,1]),1] <- "unknown"
@@ -341,7 +354,7 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
   
   colnames(out.table) <- c("id","age","error","depth","cc","dR","dSTD","ta","tb")
   
-  which.rejected <- which(!is.na(rejected))
+  which.rejected <- which(!is.na(cdf$rejected))
   
   if(remove.rejected & length(which.rejected)>1){
     out.table <- out.table[-which.rejected,]
@@ -382,8 +395,6 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
     L$chronData[[which.chron]]$model[[modelNum]]=list(inputTable = out.table)
   }
   return(L)
-  
-  
 }
 
 #' @export
@@ -401,7 +412,7 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
 #' @examples 
 #' loadBaconOutput(L)
 #' #Run in interactive mode
-loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA,maxEns = 1000){
+loadBaconOutput = function(L,site.name=L$dataSetName, K = NA, which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA,maxEns = 1000){
   
   #get bacon directory
   baconDir <- getBaconDir(baconDir)
@@ -493,12 +504,15 @@ loadBaconOutput = function(L,site.name=L$dataSetName,which.chron=NA,baconDir=NA,
   }
   
   #summary table!
-  st=dir(pattern="*ages.txt")
+  if(is.na(K)){
+    st=dir(pattern="*ages.txt")
+  }else{
+    st=dir(pattern=paste0("*_",K,"_ages.txt"))
+  }
   if(length(st)!=1){
     cat("select the correct ages.txt file","\n")
     st=file.choose()
   }
-  
   
   K=as.numeric(regmatches(st, gregexpr("[0-9]*?(?=\\_ages.txt)", st, perl=TRUE))[[1]])[1]
   summTable = read.table(st,header = TRUE)
