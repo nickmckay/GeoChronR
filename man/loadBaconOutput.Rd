@@ -4,7 +4,7 @@
 \alias{loadBaconOutput}
 \title{Load the ensemble, summary and distribution data from a Bacon simulation}
 \usage{
-loadBaconOutput(L, site.name = L$dataSetName, which.chron = NA,
+loadBaconOutput(L, site.name = L$dataSetName, K = NA, which.chron = NA,
   baconDir = NA, modelNum = NA, makeNew = NA, maxEns = 1000)
 }
 \arguments{

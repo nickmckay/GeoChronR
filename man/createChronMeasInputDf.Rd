@@ -5,8 +5,7 @@
 \title{Title}
 \usage{
 createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
-  overwrite = TRUE, site.name = L$dataSetName, modelNum = NA,
-  useMarine = NULL, labIDVar = "labID", age14CVar = "age14C",
+  labIDVar = "labID", age14CVar = "age14C",
   age14CuncertaintyVar = "age14CUnc", ageVar = "age",
   ageUncertaintyVar = "ageUnc", depthVar = "depth",
   reservoirAge14CVar = "reservoirAge",
@@ -19,14 +18,6 @@ createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
 \item{which.chron}{}
 
 \item{which.mt}{}
-
-\item{overwrite}{}
-
-\item{site.name}{}
-
-\item{modelNum}{}
-
-\item{useMarine}{}
 
 \item{labIDVar}{}
 
@@ -45,6 +36,14 @@ createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
 \item{reservoirAge14CUncertaintyVar}{}
 
 \item{rejectedAgesVar}{}
+
+\item{overwrite}{}
+
+\item{site.name}{}
+
+\item{modelNum}{}
+
+\item{useMarine}{}
 }
 \value{
 a standardized dataframe of chron measurements

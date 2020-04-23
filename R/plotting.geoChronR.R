@@ -1376,7 +1376,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   }
   
   #is there a model?
-  if(!is.null({C[[chron.number]]$model})){#then use plotChronEns!
+  if(!is.null({C[[chron.number]]$model[[1]]$ensembleTable})){#then use plotChronEns!
     chronPlot <- plotChronEns(L,chron.number = chron.number, depthVar = depth.var, ageVar = age.var, ...)
   }else{#make a simpler plot from the measurementTable
     #look for the measurementTable

@@ -92,9 +92,9 @@ runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dat
     }
   }
   
-  
+#  writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,...){
   #write bacon file
-  L=writeBacon(L,which.chron = which.chron,which.mt = which.mt,baconDir = baconDir,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine, labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
+  L=writeBacon(L,baconDir = baconDir, which.chron = which.chron,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,modelNum = modelNum,useMarine = useMarine,which.mt = which.mt,labIDVar=labIDVar, age14CVar = age14CVar, age14CuncertaintyVar = age14CuncertaintyVar, ageVar = ageVar,ageUncertaintyVar = ageUncertaintyVar, depthVar = depthVar, reservoirAge14CVar = reservoirAge14CVar,reservoirAge14CUncertaintyVar = reservoirAge14CUncertaintyVar,rejectedAgesVar=rejectedAgesVar)
   
   totalDepth <- abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,4])))
   totalAge <- abs(diff(range(L$chronData[[which.chron]]$model[[modelNum]]$inputTable[,2])))
@@ -236,7 +236,7 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
 #' #Run in interactive mode
 #' 
 #' writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
-writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,...){
+writeBacon <-  function(L,baconDir=NA,which.chron = 1, remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA,useMarine = NULL,askReservoir = TRUE,...){
   
   #deal with directories
   cur.dir = getwd()
@@ -245,7 +245,9 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
   baconDir <- getBaconDir(baconDir)
   
   #pull out chronology
-  cdf <- createChronMeasInputDf(L,...)
+  cdf <- createChronMeasInputDf(L,
+                                which.chron = which.chron,
+                                ...)
   
 
   #merge variables as needed
@@ -254,7 +256,7 @@ writeBacon <-  function(L,baconDir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,
   }
   
   if(!all(is.na(cdf$reservoirAge))){
-    if(ask){
+    if(askReservoir){
     print("bacon uses delta-R: deviation from the reservoir curve")
     print("If your data are in absolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
     print("Take a look at the values")
@@ -508,6 +510,9 @@ loadBaconOutput = function(L,site.name=L$dataSetName, K = NA, which.chron=NA,bac
     st=dir(pattern="*ages.txt")
   }else{
     st=dir(pattern=paste0("*_",K,"_ages.txt"))
+    if(length(st)==0){#wrong K?
+      st=dir(pattern="*ages.txt")
+    }
   }
   if(length(st)!=1){
     cat("select the correct ages.txt file","\n")

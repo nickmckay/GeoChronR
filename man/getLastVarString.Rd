@@ -2,10 +2,10 @@
 % Please edit documentation in R/chronBuilding.R
 \name{getLastVarString}
 \alias{getLastVarString}
-\title{Get the last set of parameters you used in createChronMeasInputDf(L)}
+\title{Get the last set of parameters you used in createChronMeasInputDf()}
 \usage{
 getLastVarString()
 }
 \description{
-Get the last set of parameters you used in createChronMeasInputDf(L)
+Get the last set of parameters you used in createChronMeasInputDf()
 }
