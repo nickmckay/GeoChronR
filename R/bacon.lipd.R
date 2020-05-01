@@ -414,7 +414,14 @@ writeBacon <-  function(L,baconDir=NA,which.chron = 1, remove.rejected=TRUE,over
 #' @examples 
 #' loadBaconOutput(L)
 #' #Run in interactive mode
-loadBaconOutput = function(L,site.name=L$dataSetName, K = NA, which.chron=NA,baconDir=NA,modelNum=NA,makeNew=NA,maxEns = 1000){
+loadBaconOutput = function(L,
+                           site.name=L$dataSetName, 
+                           K = NA, 
+                           which.chron=NA,
+                           baconDir=NA,
+                           modelNum=NA,
+                           makeNew=NA,
+                           maxEns = 1000){
   
   #get bacon directory
   baconDir <- getBaconDir(baconDir)

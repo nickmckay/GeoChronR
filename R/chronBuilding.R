@@ -1,3 +1,5 @@
+
+
 #' Convert variable names to strings
 #'
 #' @param varName 
@@ -29,7 +31,7 @@ askUser <- function(query){
 }
 
 
-#' Title
+#' Create a data frame for chron measurement data
 #'
 #' @param L 
 #' @param which.chron 
@@ -47,6 +49,8 @@ askUser <- function(query){
 #' @param reservoirAge14CVar 
 #' @param reservoirAge14CUncertaintyVar 
 #' @param rejectedAgesVar 
+#' @param splitAges if there's an age_type column, and only one age column, intelligently split between age and age14C
+
 #'
 #' @import purrr crayon 
 #' @return a standardized dataframe of chron measurements
@@ -62,7 +66,8 @@ createChronMeasInputDf <- function(L,
                                    depthVar = "depth", 
                                    reservoirAge14CVar = "reservoirAge",
                                    reservoirAge14CUncertaintyVar = "reservoirAge14C",
-                                   rejectedAgesVar="rejected"){
+                                   rejectedAgesVar="rejected",
+                                   splitAges = TRUE){
   
   
   #initialize which.chron
@@ -199,6 +204,56 @@ createChronMeasInputDf <- function(L,
   assign("chron_varUsedStr",value = varUsedStr,envir = geoChronREnv)
   cat(crayon::green(crayon::bold("For future reference: here are the options you chose:\n Find later with getLastVarString()\n")))
   cat(crayon::green(paste0(varUsedStr,"\n")))
+  
+  
+  #split if possible
+  il <- purrr::map_lgl(MT,is.list)
+  varNames <- purrr::map_chr(MT[il],function(x) x$variableName)
+  
+  if(splitAges & "age_type" %in% varNames){#check for age type
+    #see if only one age column was used
+    a14v <- v2gUsed[v2gus == "age14CVar"]
+    av <- v2gUsed[v2gus == "ageVar"]
+    
+    if(a14v == "NULL"){#only cal was used
+      is14 <- grepl(MT$age_type$values,pattern = "14")
+      
+      oa <- chronDf$age
+      oau <- chronDf$ageUnc
+      #reassign 14C
+      chronDf$age14C <- NA
+      chronDf$age14CUnc <- NA
+      chronDf$age14C[is14] <- oa[is14] 
+      chronDf$age14CUnc[is14] <- oau[is14] 
+      
+      #and calibrated
+      chronDf$age <- NA
+      chronDf$ageUnc <- NA
+      chronDf$age[!is14] <- oa[!is14] 
+      chronDf$ageUnc[!is14] <- oau[!is14] 
+      
+    }else if(av == "NULL"){#only 14C was used
+      is14 <- grepl(MT$age_type$values,pattern = "14")
+      oa <- chronDf$age14C
+      oau <- chronDf$age14CUnc
+      #reassign 14C
+      chronDf$age14C <- NA
+      chronDf$age14CUnc <- NA
+      chronDf$age14C[is14] <- oa[is14] 
+      chronDf$age14CUnc[is14] <- oau[is14] 
+      
+      #and calibrated
+      chronDf$age <- NA
+      chronDf$ageUnc <- NA
+      chronDf$age[!is14] <- oa[!is14] 
+      chronDf$ageUnc[!is14] <- oau[!is14] 
+      
+    }
+    
+    
+  }
+  
+  
   
   #calculate a few more columns
   #create combined age column.  Assign calibrated ages when 14C ages are empty
