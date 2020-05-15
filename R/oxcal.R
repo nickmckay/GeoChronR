@@ -14,7 +14,7 @@ oxCalDateExpression <- function(...,
   
   
   #create Curve expression
-  if(calCurve == "intcal13" | grepl(calCurve,pattern = "atmo")){
+  if(tolower(calCurve) == "intcal13" | grepl(calCurve,pattern = "atmo")){
     curveExp <- 'Curve("Atmospheric","IntCal13.14c");\n'
     cal <- "atmo"
   }else if(grepl(calCurve,pattern = "marine")){
@@ -221,6 +221,13 @@ loadOxcalOutput <- function(L,
                             makeNew=NA,
                             maxEns = 1000){
   
+  
+  #see if the path has MCMC results
+  if(!file.exists(dirname(oxcalResultFilePath),"MCMC_Sample.csv")){
+    stop("It doesn't look like the model ran properly. Typically this is because of parameter choices. If all else seems right, consider increasing the depthInterval, or increasing eventsPerUnitLength")
+  }
+  
+  
   # setup storage -----------------------------------------------------------
   
   
@@ -344,4 +351,144 @@ loadOxcalOutput <- function(L,
 }
 
 
+
+#' @export
+#' @author Nick McKay
+#' @family oxcal
+#' @import oxcAAR
+#' @title Generate an oxcal Age Model and add it into a LiPD object
+#' @description This is a high-level function that uses oxcal to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Bronk Ramsey et al. 2008 doi:10.1016/j.quascirev.2007.01.019
+#' @inheritParams writeBacon
+#' @param maxEns the maximum number of ensembles to load in (default = 1000)
+#' @param staticReservoirAge optionally assign a deltaR to all radiocarbon dates
+#' @param staticReservoirAgeUnc optionally assign a deltaR uncertainty to all radiocarbon dates
+#' @param ... arguments to pass to createChronMeasInputDf
+#' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
+#' @examples 
+#' Run in interactive mode:
+#' L = runOxcal(L)
+#' 
+#' Run in noninteractive mode, describing everything:
+#' L = runOxcal(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+runOxcal <-  function(L,
+                      which.chron=NA,
+                      which.mt = NA,
+                      oxcalPath=NA,
+                      modelNum=NA,
+                      remove.rejected=TRUE,
+                      overwrite=TRUE,
+                      maxEns = 1000,
+                      staticReservoirAge = NA,
+                      staticReservoirAgeUnc = NA,
+                      surfaceAge = NA,
+                      surfaceAgeUnc = NA,
+                      surfaceAgeDepth = 0,
+                      depthInterval = NA,
+                      eventsPerUnitLength = NA,
+                      eventsPerUnitLengthUncertainty = 0,
+                      outlierProb = .05,
+                      calCurve = "IntCal13",
+                      
+                      
+                      ...){
+  
+  
+  #get oxcal directory
+  oxcalPath <- getOxcalPath(oxcalPath)
+  oxcAAR::setOxcalExecutablePath(oxcalPath)
+  
+  
+  #initialize which.chron
+  if(is.na(which.chron)){
+    if(length(L$chronData)==1){
+      which.chron=1
+    }else{
+      which.chron=as.integer(readline(prompt = "Which chronData do you want to run oxcal for? "))
+    }
+  }
+  
+  
+  #initialize model number
+  if(is.na(modelNum)){
+    if(is.null(L$chronData[[which.chron]]$model[[1]])){
+      #no models, this is first
+      modelNum=1
+    }else{
+      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[which.chron]]$model)+1))
+      
+      modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+    }
+  }
+  
+  
+  #create the chron data.frame
+  cdf <- createChronMeasInputDf(L,...)
+  
+  #assign in reservoir ages?
+  if(!is.na(staticReservoirAge)){
+    cdf$reservoirAge <- staticReservoirAge
+  }
+  if(!is.na(staticReservoirAgeUnc)){
+    cdf$reservoirAgeUnc <- staticReservoirAgeUnc
+  }
+  
+  #add surface age estimate?
+  if(!is.na(surfaceAge)){
+    
+    if(is.na(surfaceAgeUnc)){
+      stop("you cannot add a surface age without an uncertainty")
+    }
+    
+    sage <- data.frame(labID = "surface",
+                       age = surfaceAge,
+                       ageUnc = surfaceAgeUnc,
+                       depth = surfaceAgeDepth)
+    cdf <- dplyr::bind_rows(sage,cdf)
+  }
+  
+  
+  #remove rejected
+  which.rejected <- which(!is.na(cdf$rejected))
+  if(remove.rejected & length(which.rejected)>1){
+    cdf <- cdf[-which.rejected,]
+  }
+  
+  #prepare for model input
+  if(is.na(depthInterval)){
+    #take a stab at it
+    depthInterval <- abs(diff(range(cdf$depth)))/50
+    cat(crayon::bold(paste("No depthInterval entered, trying",crayon::red(depthInterval),"\n Specify your own depthInterval if preferred\n")))
+  }
+  
+  if(is.na(eventsPerUnitLength)){
+    #take a stab at it
+    eventsPerUnitLength <- 1/depthInterval
+    cat(crayon::bold(paste("No eventsPerUnitLength entered, trying",crayon::red(eventsPerUnitLength),"\n Specify your own eventsPerUnitLength if preferred\n")))
+  }
+  
+  cat(crayon::blue("Oxcal is now running, depending on your settings and your computer, this may take a few minutes to several hours. The model is complete when a table of model diagnostics appears.\n"))
+  
+  #create the model input
+  oxMod <- createOxcalModel(cdf,
+                            depthInterval = depthInterval,
+                            eventsPerUnitLength = eventsPerUnitLength,
+                            eventsPerUnitLengthUncertainty = eventsPerUnitLengthUncertainty,
+                            outlierProb = outlierProb,
+                            calCurve = calCurve)
+  
+  
+ #run the file!
+  oxcalResultFilePath <- oxcAAR::executeOxcalScript(oxMod$modelText)
+  
+  
+  L <- loadOxcalOutput(L,
+                       oxcalResultFilePath,
+                       oxMod,
+                       which.chron = which.chron,
+                       maxEns = maxEns,
+                       modelNum = modelNum,
+                       makeNew = overwrite)
+  return(L)
+}
 

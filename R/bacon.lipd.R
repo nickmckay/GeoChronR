@@ -53,14 +53,14 @@ getOxcalPath <- function(path = NA){
     #check geoChronR env first
     if(!exists("oxcalPath",where = geoChronREnv)){
       cat(crayon::magenta('please select the oxcal executable (typically within OxCal/bin/)',"\n"))
-      oxcalFile <- file.choose()
-      assign("oxcalPath",value = oxcalFile,envir = geoChronREnv)
+      path <- file.choose()
+      assign("oxcalPath",value = path,envir = geoChronREnv)
     }else{
       path=get("oxcalPath",envir = geoChronREnv)
       if(is.na(path) | !is.character(path)){
         cat(crayon::magenta('please select the oxcal executable (typically within OxCal/bin/)',"\n"))
-        oxcalFile <- file.choose()
-        assign("oxcalPath",value = oxcalFile,envir = geoChronREnv)
+        path <- file.choose()
+        assign("oxcalPath",value = path,envir = geoChronREnv)
       }
     }
   }
@@ -95,7 +95,29 @@ setOxcalPath <- function(path){
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
-runBacon <-  function(L,which.chron=NA,which.mt = NA,baconDir=NA,site.name=L$dataSetName,modelNum=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,maxEns = 1000,useMarine = NULL,labIDVar="labID", age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",baconThick = NA,baconAccMean = NA,...){
+runBacon <-  function(L,
+                      which.chron=NA,
+                      which.mt = NA,
+                      baconDir=NA,
+                      site.name=L$dataSetName,
+                      modelNum=NA,
+                      remove.rejected=TRUE,
+                      overwrite=TRUE,
+                      cc=NA,
+                      maxEns = 1000,
+                      useMarine = NULL,
+                      labIDVar="labID",
+                      age14CVar = "age14C", 
+                      age14CuncertaintyVar = "age14CUnc", 
+                      ageVar = "age",
+                      ageUncertaintyVar = "ageUnc", 
+                      depthVar = "depth", 
+                      reservoirAge14CVar = "reservoirAge",
+                      reservoirAge14CUncertaintyVar = "reservoirAge14C",
+                      rejectedAgesVar="rejected",
+                      baconThick = NA,
+                      baconAccMean = NA
+                      ,...){
   
   
   
