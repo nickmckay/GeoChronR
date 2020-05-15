@@ -41,6 +41,7 @@ A LiPD "variable list" object
 Selects and extracts a LiPD "variable list"
 }
 \seealso{
-Other LiPD manipulation: \code{\link{getVariableIndex}},
+Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
+  \code{\link{getVariableIndex}},
   \code{\link{mapAgeEnsembleToPaleoData}}
 }

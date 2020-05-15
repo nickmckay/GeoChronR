@@ -2,7 +2,7 @@
 % Please edit documentation in R/chronBuilding.R
 \name{createChronMeasInputDf}
 \alias{createChronMeasInputDf}
-\title{Title}
+\title{Create a data frame for chron measurement data}
 \usage{
 createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
   labIDVar = "labID", age14CVar = "age14C",
@@ -10,7 +10,7 @@ createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
   ageUncertaintyVar = "ageUnc", depthVar = "depth",
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected")
+  rejectedAgesVar = "rejected", splitAges = TRUE)
 }
 \arguments{
 \item{L}{}
@@ -37,6 +37,8 @@ createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
 
 \item{rejectedAgesVar}{}
 
+\item{splitAges}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
+
 \item{overwrite}{}
 
 \item{site.name}{}
@@ -49,5 +51,5 @@ createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
 a standardized dataframe of chron measurements
 }
 \description{
-Title
+Create a data frame for chron measurement data
 }
