@@ -108,6 +108,9 @@ createChronMeasInputDf <- function(L,
   
   #NM: move this to google speadsheet import?
   
+  ageVars <- c(2,3,4,5,7,8)
+  depthVars <- 6
+  
   #go through required fields for bacon
   v2go <- c("labID",
             "age14C",
@@ -166,7 +169,7 @@ createChronMeasInputDf <- function(L,
               "rejected ages")  #rejectedAgesVar))
   
   #set up used string
-  v2gUsed <- v2gu
+  v2gUsed <- rep("empty string",times = length(v2gu))
   
   nObsTable <- max(purrr::map_dbl(MT,function(x){
     if(is.list(x)){
@@ -184,8 +187,32 @@ createChronMeasInputDf <- function(L,
     cat(crayon::cyan(paste("Looking for",crayon::bold(v2gv[tv]),"\n")))
     ci <- getVariableIndex(MT,v2gu[tv],altNames = v2ga[tv])
     if(!is.na(ci)){
+      if(MT[[ci]]$variableName %in% v2gUsed){
+        cont <- askUser(paste0("The variable ",crayon::red(MT[[ci]]$variableName)," has already been used\n Do you want to continue?\n If not you can select a different variable, or specify in function input"))
+        if(tolower(stringr::str_sub(cont,1,1)) == "n"){
+          ci <- getVariableIndex(MT)
+
+        }
+      }
+    }
+    if(!is.na(ci)){  
+      if(tv %in% ageVars){
+        unitConversionFactor <- 1
+        
+        #check units
+        u <- MT[[ci]]$units
+       if(!is.na(u)){
+         if(grepl(pattern = "k",x = u,ignore.case = T)){#it's probably ka
+           unitConversionFactor <- 1000
+           cat(crayon::red(paste("converting",v2gv[tv],"from ka to yr BP")),"\n")
+         }
+       } 
+        chronDf[,tv] <- MT[[ci]]$values * unitConversionFactor
+        v2gUsed[tv] <- MT[[ci]]$variableName
+      }else{#not ages
       chronDf[,tv] <- MT[[ci]]$values
       v2gUsed[tv] <- MT[[ci]]$variableName
+      }
     }else{
       cat(crayon::red(paste(crayon::bold(v2gv[tv]),"does not seem to exist, moving on.\n")))
       v2gUsed[tv] <- "NULL"
@@ -268,6 +295,25 @@ createChronMeasInputDf <- function(L,
   #Createa an age type column
   chronDf$ageType <- "14C"
   chronDf$ageType[no14Ci] <- "cal"
+  
+  #check to make sure that labIDs exist and are unique
+  li <- as.character(chronDf$labID)
+  inli <- which(is.na(li))
+  for(ili in inli){
+    li[ili] <-  paste0("randomLabId_",paste(sample(c(letters,LETTERS,0:9),10),collapse = ""))
+  }
+  
+  #check duplication
+  while(any(duplicated(li))){
+    idup <- which(duplicated(li))
+    for(idu in idup){
+      li[idu] <- paste0(li[idu],sample(0:9,size = 1))
+    }
+  }
+  
+  chronDf$labID <- li
+  
+  
   
   return(chronDf)
   

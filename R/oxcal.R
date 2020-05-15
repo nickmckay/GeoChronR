@@ -1,45 +1,103 @@
 
-#write oxcal expression for each date.
-oxCalDateExpression <- function(...,defaultOutlierProb = 0.05){
+#' write oxcal expression for each date.
+#'
+#' @param ... 
+#' @param defaultOutlierProb 
+#'
+#' @return
+#' @export
+oxCalDateExpression <- function(...,
+                                defaultOutlierProb = 0.05,
+                                calCurve = "intcal13",
+                                unknownDeltaR = FALSE
+){
+  
+  
+  #create Curve expression
+  if(calCurve == "intcal13" | grepl(calCurve,pattern = "atmo")){
+    curveExp <- 'Curve("Atmospheric","IntCal13.14c");\n'
+    cal <- "atmo"
+  }else if(grepl(calCurve,pattern = "marine")){
+    curveExp <- 'Curve("Oceanic","Marine13.14c");\n'
+    cal <- "marine"
+  }else if(grepl(calCurve,pattern = "south")){
+    curveExp <- 'Curve("SH","SHCal.14c");\n'
+    cal <- "SH"
+  }else{
+    stop(paste0("unrecognized calibration curve: ",calCurve))
+  } 
+  
   
   adf <- tibble::tibble(...)
-  #setup labID
-  if(is.na(adf$labID)){#grab a new name
-    adf$labID <- paste0("randomLabId_",paste(sample(c(letters,LETTERS,0:9),10),collapse = ""))
-  }
-  if("outlierProb" %in% names(adf)){
-    if(is.na(adf$outlierProb)){#assign default
-      adf$outlierProb <- defaultOutlierProb
-    }
-  }else{
+  
+
+if("outlierProb" %in% names(adf)){
+  if(is.na(adf$outlierProb)){#assign default
     adf$outlierProb <- defaultOutlierProb
   }
+}else{
+  adf$outlierProb <- defaultOutlierProb
+}
+
+#figure out date type
+if(!is.na(adf$age14C)){#radiocarbon
+  #check labID
+  if(is.na(adf$labID)){#throw an error - this is required
+    stop("no lab ID, all dated layers must have a unique lab ID")
+  }
+  if(is.na(adf$age14CUnc)){
+    stop("seems like a 14C date, but no uncertainty included (age14CUnc)")
+  }  
   
-  #figure out date type
-  if(!is.na(adf$age14C)){#radiocarbon
-    if(is.na(adf$age14CUnc)){stop("seems like a 14C date, but no uncertainty included (age14CUnc)")}  
-    
-    #create expression
-    dateExp <- paste0('R_Date("',adf$labID,'",',adf$age14C,',',adf$age14CUnc,'){ z=',adf$depth,'; Outlier(',adf$outlierProb,'); };\n')
-    
-  }else if(!is.na(adf$age)){#normally distributed cal date
-    if(is.na(adf$ageUnc)){stop("seems like a calibrated date, but no uncertainty included (ageUnc)")}  
-    
-    
-    #create expression
-    dateExp <- paste0('C_Date("',adf$labID,'",',convertBP2AD(adf$age),',',adf$ageUnc,'){ z=',adf$depth,'; Outlier(',adf$outlierProb,'); };\n')
-    
-  }else{#undated layer
-    dateExp <- paste0('Date("D"){ z=',adf$depth,'; };\n')
-    
+  #check for reservoir corrections
+  drExp <- NA #initialize
+  if(cal == "marine"){#only do this for marine curves
+    if(!is.na(adf$reservoirAge)){
+      if(is.na(adf$reservoirAgeUnc)){
+        adf$reservoirAgeUnc <- adf$reservoirAge/2
+        print("no reservoirAgeUnc found...\n using half of the reservoirAge value")
+      }
+      drExp <- paste0('Delta_R("Local Marine",',adf$reservoirAge,',',adf$reservoirAgeUnc,');\n')
+    }else if(unknownDeltaR){#use a uniform distribution here instead
+      drExp <- 'Delta_R("uniform",U(0,800))\n'
+    }
   }
   
-  return(dateExp)
+  #create expression
+  dateLine <- paste0('R_Date("',adf$labID,'",',adf$age14C,',',adf$age14CUnc,'){ z=',adf$depth,'; Outlier(',adf$outlierProb,'); };\n')
+  
+  #build full expresion
+  if(!is.na(drExp)){
+    dateExp <- paste0(curveExp,drExp,dateLine)
+  }else{
+    dateExp <- paste0(curveExp,dateLine)
+  }
+  
+}else if(!is.na(adf$age)){#normally distributed cal date
+  if(is.na(adf$ageUnc)){
+    stop("seems like a calibrated date, but no uncertainty included (ageUnc)")
+  } 
+  
+  if(is.na(adf$labID)){#throw an error - this is required
+    stop("no lab ID, all dated layers must have a unique lab ID")
+  }
+  
+  
+  
+  #create expression
+  dateExp <- paste0('C_Date("',adf$labID,'",',convertBP2AD(adf$age),',',adf$ageUnc,'){ z=',adf$depth,'; Outlier(',adf$outlierProb,'); };\n')
+  
+}else{#undated layer
+  dateExp <- paste0('Date("D"){ z=',adf$depth,'; };\n')
   
 }
 
+return(dateExp)
 
-#' Title
+}
+
+
+#' Create the oxcal model script
 #'
 #' @param cdf 
 #' @param depthsToModel 
@@ -47,6 +105,7 @@ oxCalDateExpression <- function(...,defaultOutlierProb = 0.05){
 #' @param thin 
 #' @param nIt 
 #' @param eventsPerUnitLength 
+#' @param eventsPerUnitLengthUncertainty In orders of magnitude 
 #' @param seqType 
 #' @param topBoundary 
 #' @param bottomBoundary 
@@ -54,71 +113,105 @@ oxCalDateExpression <- function(...,defaultOutlierProb = 0.05){
 #'
 #' @return
 #' @export
-#'
-#' @examples
 createOxcalModel <- function(cdf,
                              depthsToModel = NA,
                              depthInterval = 10,
                              thin = 50,
                              nIt = 10000,
                              eventsPerUnitLength = 1,
+                             eventsPerUnitLengthUncertainty = 2,
                              seqType = "P_Sequence",
                              topBoundary = "Boundary",
-                             bottomBoundary = "Boundary"){
-
-
-if(is.na(depthsToModel)){
-depthsToModel <- data.frame(depth = seq(0,max(cdf$depth),by = depthInterval))
+                             bottomBoundary = "Boundary",
+                             outlierProb = 0.05,
+                             calCurve = "intcal13"){
+  
+  
+  
+  
+  
+  if(is.na(depthsToModel)){
+    depthsToModel <- data.frame(depth = seq(0,max(cdf$depth),by = depthInterval))
+  }
+  
+  if(!is.data.frame(depthsToModel)){
+    depthsToModel <- data.frame(depth = depthsToModel)
+    
+  }
+  
+  depthsToModel <- dplyr::filter(depthsToModel,!depth %in% cdf$depth)
+  
+  #create oxcal code
+  #pull in relevant data
+  #fold in depths to date
+  
+  age2m <- cdf %>%
+    bind_rows(depthsToModel) %>%
+    arrange(desc(depth))
+  
+  #create the guts
+  modGuts <- purrr::pmap_chr(age2m,
+                             oxCalDateExpression,outlierProb = outlierProb,
+                             calCurve = calCurve)
+  
+  
+  if(is.na(eventsPerUnitLengthUncertainty) | eventsPerUnitLengthUncertainty <= 0){#no uncertainty on K
+    eventsPerUnitLengthExp <- eventsPerUnitLength
+  }else{
+    eventsPerUnitLengthExp <- paste0('"variable",',
+                                     eventsPerUnitLength,
+                                     ',',
+                                     eventsPerUnitLengthUncertainty,
+                                     ',U(-',
+                                     eventsPerUnitLengthUncertainty,
+                                     ',',
+                                     eventsPerUnitLengthUncertainty,
+                                     ')')
+  }
+  
+  
+  #model start text
+  modStart <- paste0(seqType,"(",eventsPerUnitLengthExp,")\n",
+                     "{\n",
+                     topBoundary,"();\n"
+  )
+  
+  #model end text
+  modEnd <- paste0(bottomBoundary,"();\n",
+                   "MCMC_Sample(",thin,",",nIt,");\n",
+                   "};")
+  
+  modText <- paste(c(modStart,modGuts,modEnd),collapse = "")
+  
+  #write out parameters
+  parameters <- list( thin = thin,
+                      nIt = nIt,
+                      eventsPerUnitLength = eventsPerUnitLength,
+                      seqType = seqType,
+                      topBoundary = topBoundary,
+                      bottomBoundary = bottomBoundary)
+  
+  return(list(modelText = modText,
+              parameters= parameters,
+              inputData = age2m))
+  
 }
 
-if(!is.data.frame(depthsToModel)){
-  depthsToModel <- data.frame(depth = depthsToModel)
-
-}
-
-depthsToModel <- dplyr::filter(depthsToModel,!depth %in% cdf$depth)
-
-#create oxcal code
-#pull in relevant data
-#fold in depths to date
-
-age2m <- cdf %>%
-  bind_rows(depthsToModel) %>%
-  arrange(desc(depth))
-
-#create the guts
-modGuts <- purrr::pmap_chr(age2m,oxCalDateExpression,outlierProb = .05)
-
-#model start text
-modStart <- paste0(seqType,"(",eventsPerUnitLength,")\n",
-                   "{\n",
-                   topBoundary,"();\n"
-)
-
-#model end text
-modEnd <- paste0(bottomBoundary,"();\n",
-                 "MCMC_Sample(",thin,",",nIt,");\n",
-                 "};")
-
-modText <- paste(c(modStart,modGuts,modEnd),collapse = "")
-
-#write out parameters
-parameters <- list( thin = thin,
-                    nIt = nIt,
-                    eventsPerUnitLength = eventsPerUnitLength,
-                    seqType = seqType,
-                    topBoundary = topBoundary,
-                    bottomBoundary = bottomBoundary)
-
-return(list(modelText = modText,
-            parameters= parameters,
-            inputData = age2m))
-
-}
 
 
-
-#load oxcal output
+#' Load oxcal output
+#'
+#' @param L 
+#' @param oxcalResultFilePath 
+#' @param modelParameters 
+#' @param depthUnits 
+#' @param which.chron 
+#' @param modelNum 
+#' @param makeNew 
+#' @param maxEns 
+#'
+#' @return
+#' @export
 loadOxcalOutput <- function(L,
                             oxcalResultFilePath,
                             modelParameters,
@@ -127,9 +220,9 @@ loadOxcalOutput <- function(L,
                             modelNum=NA,
                             makeNew=NA,
                             maxEns = 1000){
-
-# setup storage -----------------------------------------------------------
-
+  
+  # setup storage -----------------------------------------------------------
+  
   
   #setup storage in LiPD file
   
@@ -173,11 +266,11 @@ loadOxcalOutput <- function(L,
     }
   }
   
-
-
-# load in methods ---------------------------------------------------------
   
-  oxText <- readOxcalOutput(oxcalResultFilePath)
+  
+  # load in methods ---------------------------------------------------------
+  
+  oxText <- oxcAAR::readOxcalOutput(oxcalResultFilePath)
   
   methods = list("parameters"= modelParameters$parameters)
   methods$algorithm = "oxcal"
@@ -195,10 +288,10 @@ loadOxcalOutput <- function(L,
   }else{
     L$chronData[[which.chron]]$model[[modelNum]]$methods=methods
   }
-
-# get probability distributions -------------------------------------------
-
-    oxData <- parseOxcalOutput(oxText)
+  
+  # get probability distributions -------------------------------------------
+  
+  oxData <- oxcAAR::parseOxcalOutput(oxText)
   L$chronData[[which.chron]]$model[[modelNum]]$distributionTable <- vector(mode = "list",length = length(oxData))
   for(dd in 1:length(oxData)){
     dTable = list()
@@ -214,42 +307,41 @@ loadOxcalOutput <- function(L,
   }
   
   
-# get ensemble data -------------------------------------------------------
-
+  # get ensemble data -------------------------------------------------------
+  
   MCMCfile <- file.path(dirname(oxcalResultFilePath),"MCMC_Sample.csv")
   
-    oxEns <- read.csv(MCMCfile)
-    
-    
-    ensembleTable=list()
-    ensembleTable$depth$values <- modelParameters$inputData$depth
-    ensembleTable$depth$variableName  <-  "depth"
-    ensembleTable$depth$units <- depthUnits
-    
-    names(oxEns)
-    goodColumns <- seq(3,ncol(oxEns)-2)
-    
-    if(length(goodColumns) != length( ensembleTable$depth$values)){
-      stop("depths and age ensemble levels don't match!")
-    }
-    
-    #only take the end of the posterior
-    goodRows <- seq(nrow(oxEns)-maxEns+1,nrow(oxEns))
-    goodRows <- goodRows[goodRows >0]
-    
-    ensembleTable$ageEnsemble$values <-  convertAD2BP(t(as.matrix(oxEns[goodRows,goodColumns])))
-    ensembleTable$ageEnsemble$variableName = "ageEnsemble"
-    ensembleTable$ageEnsemble$units <- "BP"
-    
-    L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]] <-  ensembleTable
-    
-    
-    
-    
-    return(L)
+  oxEns <- read.csv(MCMCfile)
+  
+  
+  ensembleTable=list()
+  ensembleTable$depth$values <- modelParameters$inputData$depth
+  ensembleTable$depth$variableName  <-  "depth"
+  ensembleTable$depth$units <- depthUnits
+  
+  names(oxEns)
+  goodColumns <- seq(3,ncol(oxEns)-2)
+  
+  if(length(goodColumns) != length( ensembleTable$depth$values)){
+    stop("depths and age ensemble levels don't match!")
+  }
+  
+  #only take the end of the posterior
+  goodRows <- seq(nrow(oxEns)-maxEns+1,nrow(oxEns))
+  goodRows <- goodRows[goodRows >0]
+  
+  ensembleTable$ageEnsemble$values <-  convertAD2BP(t(as.matrix(oxEns[goodRows,goodColumns])))
+  ensembleTable$ageEnsemble$variableName = "ageEnsemble"
+  ensembleTable$ageEnsemble$units <- "BP"
+  
+  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]] <-  ensembleTable
+  
+  
+  
+  
+  return(L)
   
 }
 
 
 
-  

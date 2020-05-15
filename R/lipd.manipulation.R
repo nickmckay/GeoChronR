@@ -1,3 +1,64 @@
+#' @export
+#' @family LiPD manipulation
+#' @title Estimate uncertainty estimates from high/low range
+#' @description Estimate uncertainty (plus/minus values) from a range of values
+#' @import matrixStats
+#'
+#' @param range1 name of one of the range variables
+#' @param range2 name of the other range variable
+#' @param L A lipd dataset 
+#' @param where chron or paleo
+#' @param sigmaRange what sigma range are the measurement uncertainties (default is 2)
+#' @param which.mt which measurment table
+#' @param which.data which chron or paleoData?
+#'
+#' @return MT: a LiPD measurementTable with a new unc.estimate variable
+#' @importFrom matrixStats rowDiffs
+#'
+estimateUncertaintyFromRange = function(L,
+                                        range1=NA,
+                                        range2=NA,
+                                        chronPaleo = "chronData",
+                                        sigmaRange = 2,
+                                        which.mt = 1,
+                                        which.data = 1){
+  
+  cat(crayon::bold("Finding the low end of the range"),"\n")
+  v1 <- selectData(L,
+                   varName = range1,
+                   where = chronPaleo,
+                   which.mt = which.mt,
+                   which.data = which.data)
+  
+  cat(crayon::bold("Finding the high end of the range"),"\n")
+  v2 <- selectData(L,
+                   varName = range2,
+                   where = chronPaleo,
+                   which.mt = which.mt,
+                   which.data = which.data)
+  
+  
+  
+  val1 <- v1$values
+  val2 <- v2$values
+  diffVals <- abs(matrixStats::rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
+  uncVal <-  diffVals/sigmaRange
+  
+  MT <-L[[chronPaleo]][[which.data]][["measurementTable"]][[which.mt]]
+  MT$uncEstimate$values <-  uncVal
+  MT$uncEstimate$variableName <-  "uncEstimate"
+  MT$uncEstimate$TSid <- paste0("EUR", 
+                                 format(Sys.time(), "%y%m%d"), 
+                                 paste0(sample(c(letters,LETTERS, 0:9),
+                                 size = 16, replace = T), collapse = ""))
+  
+  MT$uncEstimate$units <- v2$units
+  
+  L[[chronPaleo]][[which.data]][["measurementTable"]][[which.mt]] <- MT
+  return(L)
+}
+
+
 #' @title  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
 #' @family LiPD manipulation
 #' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.

@@ -40,6 +40,44 @@ setBaconDir <- function(baconDir){
       print(paste0("baconDir set to ",baconDir))
 }
 
+
+#' @export
+#' @author Nick McKay
+#' @title Get the name of  directory
+#' @description This is a mostly internal function that returns the core directory. Interactive if given a NA
+#' @param baconDir if you already have it, it just returns this, (default=NA)
+#' @return baconDir the bacon core directory
+getOxcalPath <- function(path = NA){
+  #initialize bacon directory
+  if(is.na(path) | !is.character(path)){
+    #check geoChronR env first
+    if(!exists("oxcalPath",where = geoChronREnv)){
+      cat(crayon::magenta('please select the oxcal executable (typically within OxCal/bin/)',"\n"))
+      oxcalFile <- file.choose()
+      assign("oxcalPath",value = oxcalFile,envir = geoChronREnv)
+    }else{
+      path=get("oxcalPath",envir = geoChronREnv)
+      if(is.na(path) | !is.character(path)){
+        cat(crayon::magenta('please select the oxcal executable (typically within OxCal/bin/)',"\n"))
+        oxcalFile <- file.choose()
+        assign("oxcalPath",value = oxcalFile,envir = geoChronREnv)
+      }
+    }
+  }
+  return(path)
+}
+
+#' @export
+#' @author Nick McKay
+#' @title Set the oxcal path into geochronR's memory
+#' @description Use this to programmatically set the oxcal path 
+#' @param path if you already have it
+#' @return baconDir the bacon core directory
+setOxcalPath <- function(path){
+  assign("oxcalPath",value = path,envir = geoChronREnv)
+  print(paste0("oxcal executable path set to ",path))
+}
+
 #' @export
 #' @author Nick McKay
 #' @author Maarten Blaauw (Bacon)
