@@ -149,10 +149,12 @@ runBchron =  function(L,
                             calCurves = c(cdf$calCurve), 
                             positions = c(cdf$depth),
                             iterations = iter,
+                            jitterPositions = TRUE,
                             outlierProbs = cdf$outlierProbs)
                             
                             # r,
-                            # ...)
+                            # ...
+  
   
   # Write back into a LiPD file
   
