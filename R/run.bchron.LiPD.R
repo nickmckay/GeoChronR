@@ -19,7 +19,26 @@
 #'Run in noninteractive mode:
 #'L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
 
-runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,modelNum=NA, calCurves = NA,ask = TRUE,labIDVar="labID",  age14CVar = "age14C", age14CuncertaintyVar = "age14CUnc", ageVar = "age",ageUncertaintyVar = "ageUnc", depthVar = "depth", reservoirAge14CVar = "reservoirAge",reservoirAge14CUncertaintyVar = "reservoirAge14C",rejectedAgesVar="rejected",depth.units = "cm", ...){
+runBchron =  function(L,
+                      which.chron=NA,
+                      which.table = NA,
+                      site.name=L$dataSetName,
+                      modelNum=NA, 
+                      calCurves = NA,
+                      iter = 10000,
+                      outlierProbs = 0.05,
+                      ask = TRUE,
+                      labIDVar="labID",  
+                      age14CVar = "age14C", 
+                      age14CuncertaintyVar = "age14CUnc", 
+                      ageVar = "age",
+                      ageUncertaintyVar = "ageUnc", 
+                      depthVar = "depth", 
+                      reservoirAge14CVar = "reservoirAge",
+                      reservoirAge14CUncertaintyVar = "reservoirAge14C",
+                      rejectedAgesVar="rejected",
+                      depth.units = "cm",
+                      ...){
   
   
   cur.dir = getwd()
@@ -46,8 +65,9 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
   }
   
   #get chron data data frame
-  cdf <- createChronMeasInputDf(L, which.chron,
-                                which.mt,
+  cdf <- createChronMeasInputDf(L,
+                                which.chron,
+                                which.table,
                                 labIDVar,
                                 age14CVar, 
                                 age14CuncertaintyVar, 
@@ -105,10 +125,10 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
   # Set up everything for the Bchron run
   # adjust for reservoir ages
   #remove the reservoir age correction from the 14C ages
-    cdf$adjustedAges = cdf$allAge - cdf$reservoirAge
+    cdf$adjustedAges <- cdf$allAge - cdf$reservoirAge
     
     # calculate the uncertainty due to the radiocarbon measurement and the reservoir age correction
-    cdf$adjustedAgeUncertainty = sqrt(cdf$allUnc^2 + cdf$reservoirAgeUnc^2)
+    cdf$adjustedAgeUncertainty <- sqrt(cdf$allUnc^2 + cdf$reservoirAgeUnc^2)
     
     #figure out calcurves
     cdf$calCurve <- calCurves
@@ -118,13 +138,21 @@ runBchron =  function(L,which.chron=NA,which.table = NA,site.name=L$dataSetName,
     
     too.old <- which(cdf$adjustedAges + 3*cdf$adjustedAgeUncertainty > 35000)
     cdf$calCurve[too.old] <- "normal"
+    
+    #add in outlier probs
+    cdf$outlierProbs <- outlierProbs
 
 
   # Perfom the run (finally)
-  run = Bchron::Bchronology(ages = cdf$adjustedAges, 
-                            ageSds = cdf$adjustedAgeUncertainty, 
-                            calCurves = cdf$calCurve, 
-                            positions = cdf$depth,...)
+  run <-  Bchron::Bchronology(ages = c(cdf$adjustedAges)/10, 
+                            ageSds = c(cdf$adjustedAgeUncertainty)/10, 
+                            calCurves = c(cdf$calCurve), 
+                            positions = c(cdf$depth),
+                            iterations = iter,
+                            outlierProbs = cdf$outlierProbs)
+                            
+                            # r,
+                            # ...)
   
   # Write back into a LiPD file
   
