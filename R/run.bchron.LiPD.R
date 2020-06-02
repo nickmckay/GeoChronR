@@ -144,21 +144,19 @@ runBchron =  function(L,
 
 
   # Perfom the run (finally)
-  run <-  Bchron::Bchronology(ages = c(cdf$adjustedAges)/10, 
-                            ageSds = c(cdf$adjustedAgeUncertainty)/10, 
-                            calCurves = c(cdf$calCurve), 
-                            positions = c(cdf$depth),
+  run <-  Bchron::Bchronology(ages = cdf$adjustedAges, 
+                            ageSds = cdf$adjustedAgeUncertainty, 
+                            calCurves = cdf$calCurve, 
+                            positions = cdf$depth,
+                            positionThicknesses = rep(1,length(cdf$depth)),
                             iterations = iter,
                             jitterPositions = TRUE,
                             outlierProbs = cdf$outlierProbs)
                             
-                            # r,
-                            # ...
-  
   
   # Write back into a LiPD file
   
-  # Create the place holder for the LiPD fil
+  # Create the place holder for the LiPD file
   # Grab the methods first
   methods = list()
   methods$algorithm = 'Bchron'
