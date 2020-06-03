@@ -151,7 +151,8 @@ runBchron =  function(L,
                             positionThicknesses = rep(1,length(cdf$depth)),
                             iterations = iter,
                             jitterPositions = TRUE,
-                            outlierProbs = cdf$outlierProbs)
+                            outlierProbs = cdf$outlierProbs,
+                            ...)
                             
   
   # Write back into a LiPD file
