@@ -4,8 +4,8 @@
 \alias{baseMap}
 \title{Make a base map}
 \usage{
-baseMap(lon, lat, map.type = "google", f = 0.1, restrict.map.range = TRUE,
-  projection = "mercator", boundcirc = FALSE, global = FALSE,
+baseMap(lon, lat, map.type = "line", f = 0.1, restrict.map.range = TRUE,
+  projection = "mollweide", boundcirc = FALSE, global = FALSE,
   extend.range = 10)
 }
 \arguments{
@@ -35,7 +35,7 @@ Create a google or line map of the location of a list of LiPD objects
 }
 \seealso{
 Other mapping: \code{\link{assignColors}},
-  \code{\link{mapLipds}}, \code{\link{mapLipd}}
+  \code{\link{mapLipd}}
 }
 \author{
 Nick McKay

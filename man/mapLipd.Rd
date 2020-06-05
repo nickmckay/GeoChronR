@@ -2,33 +2,58 @@
 % Please edit documentation in R/mapping.functions.R
 \name{mapLipd}
 \alias{mapLipd}
-\title{Map a LiPD object}
+\title{Map a list of LiPD objects}
 \usage{
-mapLipd(L, color = "red", size = 8, shape = 16, map.type = "google",
-  extend.range = 10)
+mapLipd(D, color = NA, size = 8, shape = 21, labelSite = TRUE, ...)
 }
 \arguments{
-\item{L}{Single LiPD object}
+\item{D}{A list of LiPD objects}
 
 \item{color}{Color of the location marker}
 
 \item{size}{Size of the location marker}
 
 \item{shape}{Shape of the location marker}
-
-\item{map.type}{"google" or "line"}
-
-\item{extend.range}{increase the span of the map by this much (lat/long degrees)}
 }
 \value{
 ggmap object
 }
 \description{
-Create a google or line map of the location of the LiPD object
+Create a google or line map of the location of a list of LiPD objects
+}
+\details{
+#' @export
+#' @import ggplot2
+#' @family mapping
+#' @title Map a LiPD object
+#' @author Nick McKay
+#' @description Create a google or line map of the location of the LiPD object
+#' @param L Single LiPD object
+#' @param color Color of the location marker
+#' @param size Size of the location marker
+#' @param shape Shape of the location marker
+#' @param map.type "google" or "line" 
+#' @param extend.range increase the span of the map by this much (lat/long degrees)
+#' @return ggmap object
+mapLipd = function(L,
+                   color="red",
+                   size=8,
+                   shape = 16,
+                   map.type="google",
+                   extend.range=10){
+  dfp = data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
+  basemap = baseMap(dfp$lon,dfp$lat,extend.range=extend.range,map.type = map.type)
+  map = basemap + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,size=size,shape = shape) 
+  if(!is.null( L$geo$siteName)){
+    dfp$sitename = L$geo$siteName
+    map=map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-1)
+  }
+  return(map)
+}
 }
 \seealso{
 Other mapping: \code{\link{assignColors}},
-  \code{\link{baseMap}}, \code{\link{mapLipds}}
+  \code{\link{baseMap}}
 }
 \author{
 Nick McKay
