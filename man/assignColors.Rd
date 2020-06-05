@@ -16,7 +16,8 @@ a pair of high/low colors
 Quick look up for color scale pairs for mapping
 }
 \seealso{
-Other mapping: \code{\link{baseMap}}, \code{\link{mapLipd}}
+Other mapping: \code{\link{baseMap}},
+  \code{\link{mapLipd}}, \code{\link{mapTs}}
 }
 \author{
 Nick McKay

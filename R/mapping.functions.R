@@ -204,6 +204,9 @@ mapLipd <- function(D,
         }
       }
       color <- purrr::map_chr(D,af)
+      cname <- "archiveType"
+    }else{
+      cname <- ""
     }
     
     
@@ -215,7 +218,7 @@ mapLipd <- function(D,
     
     #create the baseMap
     basemap <- baseMap(dfp$lon,dfp$lat,...)
-    map <-  basemap  + geom_point(data=dfp,aes(x=lon,y=lat,fill = color),shape = shape,size=size)
+    map <-  basemap  + geom_point(data=dfp,aes(x=lon,y=lat,fill = color),shape = shape,size=size) + labs(fill = cname)  
     
   }
   return(map)
@@ -378,7 +381,7 @@ baseMap = function(lon,
     if(global){
       baseMap = baseMap+ 
         coord_map(projection,xlim = c(-180,180))+
-        geom_rect(aes(xmax=180.1,xmin=-180.1,ymax=90.1,ymin=-90.1),fill=NA, colour="black",data=bbdf)
+        geom_rect(aes(xmax=180.1,xmin=-180.1,ymax=90.1,ymin=-90.1),fill=NA, colour="black")
     }else{
       baseMap = baseMap+ coord_map(projection)
     }

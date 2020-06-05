@@ -13,7 +13,7 @@ baseMap(lon, lat, map.type = "line", f = 0.1, restrict.map.range = TRUE,
 
 \item{lat}{latitude(s) range to map}
 
-\item{map.type}{"google" or "line"}
+\item{map.type}{"stamen" or "line"}
 
 \item{f}{buffer for the map range}
 
@@ -31,11 +31,11 @@ baseMap(lon, lat, map.type = "line", f = 0.1, restrict.map.range = TRUE,
 ggmap base map
 }
 \description{
-Create a google or line map of the location of a list of LiPD objects
+Create a stamen or line map of the location of a list of LiPD objects
 }
 \seealso{
 Other mapping: \code{\link{assignColors}},
-  \code{\link{mapLipd}}
+  \code{\link{mapLipd}}, \code{\link{mapTs}}
 }
 \author{
 Nick McKay
