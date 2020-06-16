@@ -251,7 +251,7 @@ baseMap = function(lon,
                    projection="mollweide",
                    boundcirc=FALSE,
                    global=FALSE,
-                   extend.range=10){
+                   extend.range=5){
   
   #if there's only one location, extend the range. 
   if(length(lat)==1 & length(lon)==1){
@@ -308,8 +308,8 @@ baseMap = function(lon,
       warning("Stamen globally doesn't work well at high latitudes. Truncating at 70.")
     }
     if(lnp){
-      try(load(file.path(tempdir(),"newmap.Rdata")),silent = TRUE)
-      if(!exists(newmap)){
+      suppressWarnings(try(load(file.path(tempdir(),"newmap.Rdata")),silent = TRUE))
+      if(!exists("newmap")){
         newmap <- get_map(location=bb,maptype="terrain",source="stamen")
         save(newmap,file=file.path(tempdir(),"newmap.Rdata"))
         

@@ -165,7 +165,7 @@ runBacon <-  function(L,
     K <- 100
   }else{
     thick <- baconThick
-    K <- ceiling(totalDepth/thick)
+    K <- ceiling(ceiling(totalDepth)/thick)
   }
   
   #estimate acc mean

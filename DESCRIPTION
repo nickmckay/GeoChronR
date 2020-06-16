@@ -37,7 +37,8 @@ Imports:
     pcaMethods,
     mclust,
     BiocManager,
-    pbapply
+    pbapply,
+    oxcAAR
 Suggests: knitr,
     rmarkdown,
     testthat

@@ -28,20 +28,14 @@ library(dplyr)
 load in all of the files in the "Arctic2kLipds" folder
 
 ```{r}
-if (requireNamespace("lipdR", quietly = TRUE)) {#if you have lipdR, you can load it this way
-FD <- readLipd(system.file("extdata", "arc2k", package = "geoChronR")) 
-}else{ #otherwise lets just get it from the package
-  FD <- Arctic2k
-}
+FD <- readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
 ```
 
 ##Make a map
-```{r}
-mapLipds(FD)
-```
 yeah, the google maps don't work well at the poles. Try a line map.
+
 ```{r,results="hide",fig.keep="all"}
-mapLipds(FD,map.type = "line",projection = "stereo",f = 0.1)
+mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
 
 ```
 
