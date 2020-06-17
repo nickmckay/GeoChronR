@@ -36,10 +36,10 @@ Imports:
     matrixStats,
     pcaMethods,
     mclust,
-    BiocManager,
     pbapply,
     oxcAAR
 Suggests: knitr,
     rmarkdown,
-    testthat
+    testthat,
+    lipdR
 VignetteBuilder: knitr

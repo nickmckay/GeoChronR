@@ -42,7 +42,7 @@ return(out)
 #' @param ageVar What age variable should be used (default = "age)
 #' @param groupVar What variable Should be used to Group the counts? (default = "archiveType)
 #' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)
-#' @import ggplot2 tidyr lipdR purrr
+#' @import ggplot2 tidyr purrr
 #' @return a ggplot object
 #' @export
 plotTimeAvailabilityTs <- function(TS,
@@ -64,10 +64,14 @@ if(is.na(step)){
 step <- round(.005 * abs(diff(ageRange)))
 }
 
+if(requireNamespace("lipdR", quietly = TRUE)){#check for lipdR
+  gv <- lipdR::pullTsVariable(TS,groupVar)
+  
+}else{#this will probably work
+  gv <- sapply(TS,"[[",groupVar)
 
-gv <- lipdR::pullTsVariable(TS,groupVar)
-gv[is.na(gv)] <- "missing metadata"
-
+}
+  gv[is.na(gv)] <- "missing metadata"
 ugv <- sort(unique(gv))
 
 
@@ -121,7 +125,6 @@ return(densityPlot)
 #' @family mapping
 #' @title Map a TS object
 #' @author Nick McKay
-#' @importFrom lipdR pullTsVariable
 #' @description Create a stamen or line map of the location of a list of LiPD objects
 #' @param TS A list of LiPD objects
 #' @param color variable by which to color
