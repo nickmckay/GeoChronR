@@ -24,7 +24,7 @@ vignette: >
 
 Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
   
-```{r,  results = 'hide'}
+```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR)
 library(geoChronR)
 library(magrittr)

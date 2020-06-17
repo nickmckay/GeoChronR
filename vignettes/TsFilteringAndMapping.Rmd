@@ -17,7 +17,7 @@ vignette: >
 #LiPD filtering and mappings
 
 
-```{r, results='hide'}
+```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR)
 library(geoChronR)
 library(ggplot2)
@@ -27,7 +27,7 @@ library(tidyverse)
 
 First let's load some data
 ```{r, results = 'hide', cache=TRUE}
-iso <- readLipd("http://lipdverse.org/iso2k/0_15_0/iso2k0_15_0.zip")
+iso <- readLipd("http://lipdverse.org/iso2k/1_0_0/iso2k1_0_0.zip")
 ```
 
 To quickly map a bunch of LiPD files, use `mapLipd()`

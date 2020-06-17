@@ -178,9 +178,9 @@ runBacon <-  function(L,
   setwd(baconDir)
   #if(is.null(baconFile)){baconFile = "Bacon.R"}
   
-  #source(baconFile)
+  #run Bacon
   rbacon::Bacon(core=site.name,coredir = baconDir,thick=thick,acc.mean = baconAccMean,...)
-  
+
   print("taking a short break...")
   Sys.sleep(5)
   #pull bacon data into lipd structure

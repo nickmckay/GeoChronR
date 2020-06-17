@@ -67,8 +67,8 @@ for(n in 1:nEns){#for each ensemble member
     pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="none",nPcs=nPCs)
   }
   
-  loads[,,n]=loadings(pca.out)
-  PCs[goodRows,,n]=scores(pca.out)
+  loads[,,n]=pcaMethods::loadings(pca.out)
+  PCs[goodRows,,n]=pcaMethods::scores(pca.out)
   
   
   #reorient PCs such that the mean loadings are positive
@@ -83,7 +83,7 @@ for(n in 1:nEns){#for each ensemble member
   
   
   #variance explained  
-  cumvariance=R2cum(pca.out)
+  cumvariance=pcaMethods::R2cum(pca.out)
   variance=cumvariance
   for (v in 2:length(variance)){
     variance[v]=cumvariance[v]-cumvariance[v-1]
