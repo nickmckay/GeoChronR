@@ -27,6 +27,7 @@ An integer index
 Gets the index for a LiPD "variable list"
 }
 \seealso{
-Other LiPD manipulation: \code{\link{mapAgeEnsembleToPaleoData}},
+Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
+  \code{\link{mapAgeEnsembleToPaleoData}},
   \code{\link{selectData}}
 }

@@ -406,7 +406,20 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @examples 
 #' myPlot = summaryPlot(L)
 #' 
-plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA, chron.depth.var = "depth", chron.age.var = "age", dotSize = 5, summary.font.size = 10, text.width = 400/summary.font.size, legend.position = c(0.7,0.3),  ...){
+plotSummary = function(L,
+                       paleo.age.var = "age",
+                       paleo.data.var = NA,
+                       chron.number = NA, 
+                       paleo.meas.num = NA, 
+                       chron.meas.num = NA, 
+                       chron.depth.var = "depth", 
+                       chron.age.var = "age", 
+                       dotSize = 5, 
+                       summary.font.size = 10, 
+                       text.width = 400/summary.font.size, 
+                       legend.position = c(0.7,0.3),
+                       ...){
+  
   #is this a LiPD file?
   if(is.list(L)){
     if(is.null(L$dataSetName)){
@@ -416,7 +429,7 @@ plotSummary = function(L,paleo.age.var = "age",paleo.data.var = NA,chron.number 
     stop("plotSummary requires a single LiPD object as input")
   }
   
-  map <- mapLipd(L,extend.range = 8)
+  map <- mapLipd(L,extend.range = 10,map.type = "line")
   
   #plot paleoData
   
@@ -1376,7 +1389,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   }
   
   #is there a model?
-  if(!is.null({C[[chron.number]]$model})){#then use plotChronEns!
+  if(!is.null({C[[chron.number]]$model[[1]]$ensembleTable})){#then use plotChronEns!
     chronPlot <- plotChronEns(L,chron.number = chron.number, depthVar = depth.var, ageVar = age.var, ...)
   }else{#make a simpler plot from the measurementTable
     #look for the measurementTable
@@ -1566,7 +1579,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   
     
     #Tidy up...
-    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName))
+    chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName)) + geoChronRPlotTheme()
     
     return(chronPlot)
     

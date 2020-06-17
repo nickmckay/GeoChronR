@@ -17,7 +17,7 @@ Quick look up for color scale pairs for mapping
 }
 \seealso{
 Other mapping: \code{\link{baseMap}},
-  \code{\link{mapLipds}}, \code{\link{mapLipd}}
+  \code{\link{mapLipd}}, \code{\link{mapTs}}
 }
 \author{
 Nick McKay

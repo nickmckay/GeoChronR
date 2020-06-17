@@ -17,28 +17,26 @@ knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 
 
   
-```{r,results="hide",fig.keep="all"}
+```{r, results = FALSE, warning = FALSE, message= FALSE }
 
 library(lipdR)
 library(geoChronR)
 library(magrittr)
 library(dplyr)
+library(purrr)
 ```
   
 load in all of the files in the "Arctic2kLipds" folder
 
 ```{r}
-FD <- readLipd(system.file("extdata", "arc2k", package = "geoChronR")) 
-#FD <- readLipd() 
+FD <- readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
 ```
 
 ##Make a map
-```{r}
-mapLipds(FD)
-```
 yeah, the google maps don't work well at the poles. Try a line map.
+
 ```{r,results="hide",fig.keep="all"}
-mapLipds(FD,map.type = "line",projection = "stereo",f = 0.1)
+mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
 
 ```
 
@@ -46,13 +44,13 @@ More map projections are available too. A list is available here:
 `?mapproject`
 
 ##Grab the age ensembles for each record. 
-We need to "map"" the age ensembles to paleo for all of these datasets. In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth varaible because they're layer counted.
+We need to "map"" the age ensembles to paleo for all of these datasets. We'll use purrr::map for this, but you could also do it with sapply(). In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth variable because they're layer counted.
 ```{r,results="hide"}
-
-#FD2 = sapply(FD[-c(3,5,12,14,20,26)],mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
-FD2 = sapply(FD,mapAgeEnsembleToPaleoData,strictSearch = TRUE,age.var = "ageEnsemble",depth.var = NULL )
-
-     
+FD2 = purrr::map(FD,
+                 mapAgeEnsembleToPaleoData,
+                 strictSearch = TRUE,
+                 age.var = "ageEnsemble",
+                 depth.var = NULL )
 ```
 
 Now extract all the "timeseries" into at "TS object" that will facilitate working with multiple records.

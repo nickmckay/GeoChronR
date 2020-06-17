@@ -4,24 +4,16 @@
 \alias{writeBacon}
 \title{Create the input file for a Bacon model from a LiPD object}
 \usage{
-writeBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
-  remove.rejected = TRUE, overwrite = TRUE, cc = NA,
-  site.name = L$dataSetName, modelNum = NA, useMarine = NULL,
-  labIDVar = "labID", age14CVar = "age14C",
-  age14CuncertaintyVar = "age14CUnc", ageVar = "age",
-  ageUncertaintyVar = "ageUnc", depthVar = "depth",
-  reservoirAge14CVar = "reservoirAge",
-  reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected")
+writeBacon(L, baconDir = NA, which.chron = 1, remove.rejected = TRUE,
+  overwrite = TRUE, cc = NA, site.name = L$dataSetName, modelNum = NA,
+  useMarine = NULL, askReservoir = TRUE, ...)
 }
 \arguments{
 \item{L}{a single LiPD object}
 
-\item{which.chron}{the number of the chronData object that you'll be working in}
-
-\item{which.mt}{the number of the measurementTable you'll be working in}
-
 \item{baconDir}{the directory where Bacon is installed on this computer.}
+
+\item{which.chron}{the number of the chronData object that you'll be working in}
 
 \item{remove.rejected}{don't write out dates that are marked as rejected}
 
@@ -37,6 +29,8 @@ writeBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
 \item{site.name}{the name used for the bacon model (and directories)}
 
 \item{modelNum}{which chronModel do you want to use?}
+
+\item{which.mt}{the number of the measurementTable you'll be working in}
 }
 \value{
 L the input LiPD file with methods added to the chronModel.

@@ -24,7 +24,7 @@ vignette: >
 
 Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you'll want both the geoChronR and lipdR libraries
   
-```{r,  results = 'hide'}
+```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR)
 library(geoChronR)
 library(magrittr)
@@ -37,11 +37,7 @@ In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a
 If you don't have lipdR yet, then we can use the preloaded version of the dataset included in the package
 
 ```{r}
-if (requireNamespace("lipdR", quietly = TRUE)) {#if you have lipdR, you can load it this way
-hulu <- lipdR::readLipd(system.file("extdata", "Hulucave.Wang.2001.lpd", package = "geoChronR"))
-}else{ #otherwise lets just get it from the package
-  hulu <- hulu
-}
+hulu <- lipdR::readLipd("http://lipdverse.org/geochronr-examples/Hulucave.Wang.2001.lpd")
 ```
 
 Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don't have that for this record. For this example we're going to use the original U/Th dates to create a new a model using BChron.
@@ -54,7 +50,20 @@ We're going to specify many of the parameters here for simplicity, but you can r
 and it will prompt you for the details.
 
 ```{r, cache=TRUE, results = 'hide'}
-hulu <- runBchron(hulu,calCurves = "normal", iter = 10000,which.table = 2,interpolate = T,age14CVar = "age",age14CuncertaintyVar = "ageUncertaintyHigh",labIDVar = NULL,reject = F,ageVar = NULL,ageUncertaintyVar = NULL,rejectedAgesVar = NULL,extractDate = 10000)
+hulu <- runBchron(hulu,
+                  calCurves = "normal", 
+                  iter = 10000,
+                  extractDate = 10000,
+                  which.table = 2,
+                  labIDVar = NULL, 
+                  ageVar = 'age', 
+                  ageUncertaintyVar = 'ageUncertaintyHigh',
+                  age14CVar = NULL,
+                  age14CuncertaintyVar =  NULL, 
+                  depthVar = 'depth', 
+                  reservoirAge14CVar = NULL, 
+                  reservoirAge14CUncertaintyVar = NULL,
+                  rejectedAgesVar = NULL)
 ```
 
 ##Plotting the chronology
