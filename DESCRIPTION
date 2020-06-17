@@ -15,7 +15,6 @@ Imports:
     RColorBrewer,
     arsenal,
     astrochron,
-    data.table,
     dplR,
     dplyr,
     ggmap,
@@ -35,7 +34,6 @@ Imports:
     purrr,
     matrixStats,
     pcaMethods,
-    mclust,
     pbapply,
     oxcAAR
 Suggests: knitr,
