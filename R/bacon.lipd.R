@@ -229,7 +229,12 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
   while(sline<10000){
     bacData=try(read.table(bfname,skip=sline,sep=c(",",";")),silent=TRUE)
     if(!is.character(bacData)){
-      if(strsplit(levels(bacData$V1)," ")[[1]][1]=="Bacon"){
+      if(getRversion()>=4){
+        toTest <- bacData$V1
+      }else{
+        toTest <- levels(bacData$V1)
+      }
+      if(strsplit(toTest," ")[[1]][1]=="Bacon"){
         break
       }else{
         sline=sline+1
