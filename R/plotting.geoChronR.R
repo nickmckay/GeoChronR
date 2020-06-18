@@ -1813,8 +1813,11 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     
     nlines <- length(unique(plot.df$paleoData_TSid))
     
-    nColors <- min(length(levels(axisStats$colorVar)),nlines)
-    
+    if(getRversion() >= 4){
+      nColors <- min(length(axisStats$colorVar),nlines)
+    }else{
+      nColors <- min(length(levels(axisStats$colorVar)),nlines)
+    }
     colVec <- colorFun(nColors,colorRamp)
     axisStats$colors <- colVec[match(axisStats$colorVar,levels(axisStats$colorVar))]
     

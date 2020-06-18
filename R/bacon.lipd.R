@@ -243,7 +243,11 @@ sampleBaconAges <- function(corename,K=NA,baconDir=NA,maxEns=NA){
       sline=sline+1
     }
   }
-  end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
+  if(getRversion()>=4){
+    end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
+  }else{
+    end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
+  }
   start.depth=bacData$V11
   Dc=(end.depth-start.depth)/(K-1)
   depths=seq(start.depth,end.depth,by=Dc)
