@@ -1,0 +1,408 @@
+body
+{
+	font-size: 10pt;
+	font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+	color: #000000;
+	padding: 0px;
+	margin: 0px;
+}
+
+div.appHeaderBar
+{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(225,225,230,0.9);
+	box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+	height: 30px;
+	width: 100%;
+}
+
+div.appFooterBar
+{
+	position: fixed;
+	bottom: 0;
+	background-color: rgba(225,225,230,0.9);
+	box-shadow: 0px -2px 4px rgba(0,0,0,0.2);
+	height: 30px;
+	width: 100%;
+}
+
+div.appHeader
+{
+	position: fixed;
+	top: 0;
+	background-color: rgba(225,225,230,0.9);
+	height: 30px;
+	width: 100%;
+}
+
+div.appLeft
+{
+	float: left;
+	margin-left: 10px;
+}
+
+div.appRight
+{
+	float: right;
+	margin-right: 10px;
+}
+
+div.appCenter { text-align: center; }
+
+div.appBody
+{
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: auto;
+	margin: 0px;
+	padding: 10px;
+	overflow: auto;
+	background-color: rgb(33, 66, 104);
+}
+
+div.appFrame
+{
+	display:none;
+	position: fixed;
+	left: 0px;
+	top: 30px;
+	bottom: 30px;
+	width: 100%;
+	height: auto;
+	margin: 0px;
+	background-color: rgb(0, 33, 71);
+}
+
+
+iframe
+{
+	border: none;
+}
+
+select
+{
+	position:relative;
+	bottom: 3px;
+}
+
+ul.appMenuMain, ul.appMenuSub, ul.appMenuSubSub
+{
+	padding: 0;
+	margin: 0;
+}
+
+ul.appMenuSub, ul.appMenuSubSub
+{
+	background-color: rgba(225,230,240,0.90);
+	box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+ul.appMenuSub
+{
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	z-index: 6;
+}
+
+ul.appMenuSubSub
+{
+	border-radius: 5px;
+	z-index: 5;
+}
+
+ul.appMenuMain li
+{
+	list-style-type: none;
+	display: inline-block;
+	vertical-align:bottom;
+}
+
+ul.appMenuSub li, ul.appMenuSubSub li
+{
+	list-style-type: none;
+	display: block;
+	height: auto;
+}
+
+ul.appMenuMain li a
+{
+	display: block;
+	min-width: 100px;
+	text-decoration: none;
+    font-weight: bold;
+	color: #000000;
+	text-align: center;
+	padding: 9px 8px 7px 8px;
+	height: 14px;
+}
+
+ul.appMenuMain li a.appSpacer
+{ 
+   border-width:0px 1px 0px 1px;
+   border-style:inset;
+   padding: 9px 0px 7px 0px;
+   margin: 0px 5px 0px 5px;
+   width:0px;
+   min-width:0px;
+   color: #FFFFFF;
+   background-color: #0066FF;
+}
+
+ul.appMenuSub li a
+{
+	display: block;
+	min-width: 120px;
+	text-decoration: none;
+    font-weight: normal;
+	color: #000000;
+	text-align: left;
+	padding: 4px;
+	height: auto;
+}
+
+ul.appMenuSub li a.appSpacer
+{ 
+   border-width:1px 0px 1px 0px;
+   border-style:inset;
+   padding:0px;
+   height:0px;
+   width:100%;
+   margin:2px 0px 2px 0px;
+   color: #FFFFFF;
+   background-color: #0066FF;
+}
+
+ul.appMenuMain li a:hover
+{
+	color: #FFFFFF;
+	background-color: #0066FF;
+}
+
+ul.appMenuMain li:hover a.appMenuMain
+{
+	color: #FFFFFF;
+	background-color: #0066FF;
+}
+
+ul.appMenuMain li:hover a.appSpacer
+{
+   color: #FFFFFF;
+   background-color: #0066FF;
+}
+
+ul.appMenuSub li:hover a.appMenuSub
+{
+	color: #FFFFFF;
+	background-color: #0066FF;
+}
+
+ul.appMenuSub li:hover a.appSpacer
+{
+   color: #FFFFFF;
+   background-color: #0066FF;
+}
+
+ul.appMenuMain li { position: relative; }
+
+ul.appMenuMain li ul.appMenuSub
+{
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+}
+
+ul.appMenuSub li ul.appMenuSubSub
+{
+	display: none;
+	position: absolute;
+	top: -5px;
+	left: 100%;
+}
+
+ul.appMenuMain li:hover ul.appMenuSub { display: block; }
+ul.appMenuSub li:hover ul.appMenuSubSub { display: block; }
+
+ul.appMenuMain li a.appButton, ul.appMenuMain li a.appButtonLeft, ul.appMenuMain li a.appButtonRight, ul.appMenuMain li a.appButtonCenter, ul.appMenuMain li a.appButtonActive
+{
+	display: block;
+	color: #333333;
+    font-weight: normal;
+	background-color: #FFFFFF;
+	padding: 4px;
+	margin: 4px;
+	border-radius: 5px;
+	min-width: 0px;
+	height: 14px;
+}
+
+ul.appMenuMain li a.appButtonLeft
+{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	margin-right: 0px;
+}
+
+ul.appMenuMain li a.appButtonRight
+{
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	margin-left: 1px;
+}
+
+ul.appMenuMain li a.appButtonCenter
+{
+	border-radius: 0px;
+	margin-left: 1px;
+	margin-right: 0px;
+}
+
+ul.appMenuMain li a.appButton:hover, ul.appMenuMain li a.appButtonLeft:hover, ul.appMenuMain li a.appButtonRight:hover, ul.appMenuMain li a.appButtonCenter:hover
+{
+	color: #333333;
+	background-color: #EEEEEE;
+}
+
+ul.appMenuMain li a.appButtonActive
+{
+	border-radius: 0px;
+	margin-left: 1px;
+	margin-right: 0px;
+	color: #FFFFFF;
+	background-color: #666666;
+}
+
+div.appDraggable
+{
+	display: none;
+	position: fixed;
+	background-color: rgba(230,230,230,0.90);
+	box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
+	border-radius: 5px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	left: 10%;
+	top: 20%;
+	cursor: move;
+}
+
+div.appVeil
+{
+	display: block;
+	position: fixed;
+	background-color: rgba(0,0,0,0.50);
+	left: 0%;
+	width: 100%;
+	top: 0%;
+	height: 100%;
+	zIndex: 1000;
+}
+
+div.appProgress
+{
+	display: block;
+	position: fixed;
+	background-color: rgba(255,255,255,0.40);
+	border-radius: 4px;
+	padding: -4px;
+	overflow: hidden;
+	left: 40%;
+	width: 20%;
+	bottom: 50%;
+	height: 8px;
+}
+
+div.appProgressBar
+{
+	display: block;
+	position: relative;
+	background-color: rgba(255,255,255,0.70);
+	left: 0%;
+	width: 0%;
+	top: 0%;
+	height: 10px;
+	 -webkit-transition: width 0.5s;
+	-moz-transition: width 0.5s;
+	transition: width 0.5s;
+
+}
+
+div.appProgressTitle
+{
+	display: block;
+	position: fixed;
+	color: rgb(255,255,255);
+	left: 0%;
+	width: 100%;
+	bottom: 55%;
+	text-align:center;
+}
+
+div.appProgressControl
+{
+	display: block;
+	position: fixed;
+	left: 40%;
+	width: 20%;
+	top: 55%;
+	text-align:center;
+}
+
+div.test
+{
+	cursor: normal;
+	background-color: green;
+}
+
+/* Icons borrowed from embed */
+
+div.appMenuIcon {
+	content: '';
+    height: 16px;
+    width: 16px;
+    position: relative;
+    bottom: 2px;
+    border: none;
+    margin: 0;
+    padding:0;
+    overflow: hidden;
+    display: inline-block;
+}
+
+/* Search */
+div.appMenuIcon div.search {
+    position:absolute;
+	top: 1px;
+	left: 1px;
+    height: 7px;
+    width: 7px;
+    background: transparent;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border: 2px solid #333;
+}
+
+div.appMenuIcon div.search:after {
+    content: '';
+    width: 2px;
+    height: 7px;
+    background: #333;
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+

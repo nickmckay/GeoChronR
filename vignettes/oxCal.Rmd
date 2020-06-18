@@ -1,0 +1,81 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Use oxCal to create an age model 
+
+```{r}
+library(geoChronR)
+library(lipdR)
+library(oxcAAR)
+library(dplyr)
+```
+
+## Setting up oxCal
+
+The `oxcAAR` package provides efficient access from R to the oxCal executables, which will need to be set up on your computer before you can use it. Once it's installed you won't need to repeat this step, just point to where it's installed. If it's already installed, it will tell you. 
+
+
+```{r}
+ L <- readLipd("http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&lipdid=BJ8-03-70GGC.Linsley.2010")
+```
+
+
+```{r}
+
+L <- runOxcal(L,
+              labIDVar = 'id', 
+              age14CVar = 'age14c', 
+              age14CuncertaintyVar = 'age14cuncertainty', 
+              ageVar = 'calendarage', 
+              ageUncertaintyVar = 'calendarageuncertainty', 
+              depthVar = 'depth', 
+              reservoirAge14CVar = NULL, 
+              reservoirAge14CUncertaintyVar = NULL, 
+              rejectedAgesVar = NULL,
+              staticReservoirAge = 70,
+              staticReservoirAgeUnc = 50,
+              oxcalPath = "~/newOxCal",
+              surfaceAge = 0,
+              surfaceAgeUnc = 25,
+              depthInterval = 10,
+              eventsPerUnitLength = .1)
+              
+                
+                
+              
+```
+
+```{r}
+plotChronEns(L)
+```
+
+
+```{r}
+L <- mapAgeEnsembleToPaleoData(L,age.var = "ageEnsemble")
+```
+
+
+```{r}
+ageEns <- selectData(L,varName = "ageEnsemble")
+SST <- selectData(L,varName = "SST")
+
+
+plotTimeseriesEnsRibbons(X = ageEns, Y = SST) %>% 
+  plotTimeseriesEnsLines(X = ageEns, Y = SST,maxPlotN = 2)
+```
+

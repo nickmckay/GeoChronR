@@ -1,0 +1,1007 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="">
+  <title>OxCal Menu</title>
+<script type="text/javascript" src="../utils/Menu.js">
+</script>
+<script type="text/javascript" src="oc_shared_left.js">
+</script>
+<script type="text/javascript" src="oci_left.js">
+</script>
+<script type="text/javascript" src="header.js">
+</script>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body class="clear" onload="initialise()">
+    <script type="text/javascript">
+    if(!parent.mainMode)
+    {
+     document.write('<div><h1 class="header">');
+     document.write(header.title.replace("OxCal","OxCalInput"));
+     document.write('<\/h1><hr><\/div>');
+    };
+</script>
+  <div id="menuSystem" style="display: none;">
+    <div>
+      <script type="text/javascript">
+   menu("main","File|Edit|View|Insert|Tools|Help");
+   if(!parent.mainMode){helpButton();};
+</script>
+    </div>
+    <div id="main0" style="display: none;">
+      <script type="text/javascript">
+   if(parent.onAServer()||parent.localFilePossible())
+   {
+    clickmenu("file",
+    "New|Open||Close|Save|Save as|Run|Insert||Manager");
+   }
+   else
+   {
+    clickmenu("file",
+    "New|Open||Close|Save||Run");
+   };
+</script>
+    </div>
+    <div id="mainHelp0" class="help">
+      <ul class="help">
+        <li>New: opens a new input window</li>
+        <li>Open: opens a file</li>
+        <li>Close: closes window (without saving)</li>
+        <li>Save: saves with current name</li>
+        <li>Save as: saves with new name</li>
+        <li>Run: runs OxCal</li>
+        <li>Insert: inserts a Prior or Curve command</li>
+        <li>Manager: opens file manager window</li>
+      </ul>
+    </div>
+    <div id="main1" style="display: none;">
+      <script type="text/javascript">
+    clickmenu("edit",
+    "Undo|Redo||Cut|Copy|Paste|Delete|Edit");
+</script>
+    </div>
+    <div id="mainHelp1" class="help">
+      <ul class="help">
+        <li>Undo: undoes last edit function</li>
+        <li>Redo: undoes undo</li>
+        <li>Cut: removes selected commands to OxCal clipboard</li>
+        <li>Copy: copies selected commands</li>
+        <li>Paste: pastes commands from OxCal clipboard</li>
+        <li>Delete: deletes selected commands</li>
+        <li>Edit: puts text of commands into an edit window - this can be copied to the usual clipboard if required;</li>
+      </ul>
+      <p>Note that double clicking on a command also allows you to edit it</p>
+    </div>
+    <div id="main2" style="display: none;">
+      <script type="text/javascript">
+    clickmenu("view",
+    "Chronological model|Stratigraphic model|List|Code");
+</script>
+    </div>
+    <div id="mainHelp2" class="help">
+      <ul class="help">
+        <li>Chronological model: shows a box model with the oldest events shown first (at the top)</li>
+        <li>Stratigraphic model: is reversed so that the oldest events are shown at the bottom</li>
+        <li>List: shows a heirarchical list of commands</li>
+        <li>Code: shows the actual code in an editable form - no other editing methods work in this mode</li>
+      </ul>
+      <p>Note in all cases except code groups can be expanded and contracted to make the model easier to work with</p>
+    </div>
+    <div id="mainExtra3" class="option">
+      <table class="menu">
+        <tbody>
+          <tr>
+            <td>
+              <script type="text/javascript">
+               commandOptions();
+              </script>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="main3" style="display: none;">
+      <form autocomplete="off">
+      <table class="menu" style="display: block;" onmouseover="makeActive('insert',-1)">
+        <tbody>
+          <tr>
+            <th class="menu" style="width: 160px;"><span id="Prompt0">Dummy</span></th>
+            <td><input value="&gt;&gt;" name="Add" onclick="add_command()" type="button"></td>
+          </tr>
+          <tr>
+            <td class="prompt" id="Prompt1">Dummy</td>
+            <td>
+              <div id="PromptR1">
+                <input id="Param1" size="15" autocomplete="off" type="text">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="prompt" id="Prompt2">Dummy</td>
+            <td>
+              <div id="PromptR2">
+                <input id="Param2" size="15" autocomplete="off" type="text">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="prompt" id="Prompt3">Dummy</td>
+            <td>
+              <div id="PromptR3">
+                <input id="Param3" size="15" autocomplete="off" type="text">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="prompt" id="Prompt4">Dummy</td>
+            <td>
+              <div id="PromptR4">
+                <input id="Param4" size="15" autocomplete="off"type="text">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="prompt" id="Prompt5">Dummy</td>
+            <td>
+              <div id="PromptR5">
+                <input id="Param5" size="15" autocomplete="off" type="text">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </form>
+      <div id="mainHelp3" class="help">
+        <ul class="help">
+          <li>Pick command to be inserted (eg R_Date)</li>
+          <li>Use short-cuts from below</li>
+          <li>Enter data for parameters</li>
+          <li>Parameters needed are shown by the prompts</li>
+        </ul>
+      </div><script type="text/javascript">
+ menu("insert","Events|Modifiers|Plot|Models|Queries");
+</script>
+      <div id="insert0" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("commandA",
+    "R_Date|R_Simulate|R_Combine||C_Date|C_Simulate|C_Combine||Date|Combine|Prior",true);
+</script>
+      </div>
+      <div id="insert1" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("commandB",
+    "Outlier||Offset|Position|Latitude|Longitude|Color",true);
+</script>
+      </div>
+      <div id="insert2" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("commandC",
+    "Plot|Axis|Comment|Label|Line|Page",true);
+</script>
+      </div>
+      <div id="insert3" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("commandD",
+    "Phase|Sequence|Boundary||After|Before||D_Sequence|Gap",true);
+</script>
+      </div>
+      <div id="insert4" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("commandE",
+    "Outlier||First|Last||Span|Interval|Difference||Order|Sum||Correlation",true);
+</script>
+      </div>
+    </div>
+    <div id="main4" style="display: none;">
+      <br>
+      <div onclick="makeActive('modelhelpTable',-1)">
+        <script type="text/javascript">
+ menu("tools","Options|Curves|Models|Import",true);
+</script>
+      </div>
+      <div id="tools0" class="option">
+        <table class="menu">
+          <tbody>
+            <tr>
+              <th class="menu">Options</th>
+              <td colspan="3"><input value="&gt;&gt;" name="Add" onclick="setOptions()" type="button"></td>
+            </tr>
+            <tr>
+              <th>Resolution</th>
+              <td colspan="3"><input id="Resolution" name="Resolution" size="3" type="text"></td>
+            </tr>
+            <tr>
+              <th colspan="4">Calibration Curve</th>
+            </tr>
+            <tr>
+              <td colspan="4">Curve <input name="Curve" id="Curve" size="10" type="text"> <select id="pickCurve" onchange="pickCurveFunc()" name="CurveDropDown">
+                <option selected="selected">
+                  IntCal 13
+                </option>
+                <option>
+                  IntCal 09
+                </option>
+                <option>
+                  IntCal 04
+                </option>
+                <option>
+                  IntCal 98
+                </option>
+                <option>
+                  SHCal 13
+                </option>
+                <option>
+                  SHCal 04
+                </option>
+                <option>
+                  Bomb 13 NH1
+                </option>
+                <option>
+                  Bomb 13 NH2
+                </option>
+                <option>
+                  Bomb 13 NH3
+                </option>
+                <option>
+                  Bomb 13 SH1 2
+                </option>
+                <option>
+                  Bomb 13 SH3
+                </option>
+                <option>
+                  Bomb 04 NH1
+                </option>
+                <option>
+                  Bomb 04 NH2
+                </option>
+                <option>
+                  Bomb 04 NH3
+                </option>
+                <option>
+                  Bomb 04 SH
+                </option>
+                <option>
+                  Kueppers 04
+                </option>
+                <option>
+                  Marine 13
+                </option>
+                <option>
+                  Marine 09
+                </option>
+                <option>
+                  Marine 04
+                </option>
+                <option>
+                  Marine 98
+                </option>
+              </select></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Default</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>Cubic Interpolation</td>
+              <td><input name="Cubic" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="Cubic" value="true" type="radio"></td>
+              <td><input name="Cubic" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>Include raw curve</td>
+              <td><input name="RawData" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="RawData" value="true" type="radio"></td>
+              <td><input name="RawData" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>Use F14C space</td>
+              <td><input name="UseF14C" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="UseF14C" value="true" type="radio"></td>
+              <td><input name="UseF14C" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <th colspan="4">Reporting</th>
+            </tr>
+            <tr>
+              <td>Use BC/AD not BP</td>
+              <td><input name="BCAD" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="BCAD" value="true" type="radio"></td>
+              <td><input name="BCAD" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>Use +/- for BC/AD</td>
+              <td><input name="PlusMinus" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="PlusMinus" value="true" type="radio"></td>
+              <td><input name="PlusMinus" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <th colspan="4">Ranges</th>
+            </tr>
+            <tr>
+              <td>Whole (floruits)</td>
+              <td><input name="Floruit" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="Floruit" value="true" type="radio"></td>
+              <td><input name="Floruit" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>Intercept method</td>
+              <td><input name="Intercept" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="Intercept" value="true" type="radio"></td>
+              <td><input name="Intercept" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>68.2%</td>
+              <td><input name="SD1" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="SD1" value="true" type="radio"></td>
+              <td><input name="SD1" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>95.4%</td>
+              <td><input name="SD2" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="SD2" value="true" type="radio"></td>
+              <td><input name="SD2" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>99.7%</td>
+              <td><input name="SD3" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="SD3" value="true" type="radio"></td>
+              <td><input name="SD3" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <th colspan="4">Advanced</th>
+            </tr>
+            <tr>
+              <td>Convergence data</td>
+              <td><input name="ConvergenceData" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="ConvergenceData" value="true" type="radio"></td>
+              <td><input name="ConvergenceData" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>Uniform span prior</td>
+              <td><input name="UniformSpanPrior" value="Undefined" checked="checked" type="radio"></td>
+              <td><input name="UniformSpanPrior" value="true" type="radio"></td>
+              <td><input name="UniformSpanPrior" value="false" type="radio"></td>
+            </tr>
+            <tr>
+              <td>MCMC iterations</td>
+              <td colspan="3"><input id="kIterations" name="kIterations" size="5" type="text"> k</td>
+            </tr>
+            <tr>
+              <td>Ensembles</td>
+              <td colspan="3"><input id="ensembles" name="ensembles" size="5" type="text"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="toolsHelp0" class="help">
+        <ul class="help">
+          <li>Resolution: bin size for probability distributions</li>
+          <li>Curve options
+            <ul class="help">
+              <li>Cubic: interpolation between curve points (otherwise linear)</li>
+              <li>Include raw data: required if you want this in your plots</li>
+              <li>Use F14C space: calibration comparisons are made in F14C rather than BP</li>
+            </ul>
+          </li>
+          <li>Whole (foruits): gives only one range (floruit if using probability method)</li>
+          <li>Intercept method: for <sup>14</sup>C calibrations (otherwise probability method)</li>
+          <li>Convergence data: include if you wish to plot</li>
+          <li>Uniform span prior: special prior factors for use with multiple phases</li>
+          <li>MCMC iterations: select higher number to ensure conversion</li>
+          <li>Ensembles: number of age-depth or KDE ensembles to store</li>
+        </ul>
+      </div>
+      <div id="tools1" style="display: none;">
+        <table class="menu">
+          <tbody>
+            <tr>
+              <th colspan="2" class="menu">14C Calibration Curve</th>
+              <td><input value="&gt;&gt;" name="Add" onclick="parent.addCommand(addCurve())" type="button"></td>
+            </tr>
+            <tr>
+              <th>Atmospheric</th>
+              <td colspan="2"><select id="pickCurveAtmos" onchange="pickCurveAtmos()">
+                <option selected="selected">
+                  IntCal 13
+                </option>
+                <option>
+                  IntCal 09
+                </option>
+                <option>
+                  IntCal 04
+                </option>
+                <option>
+                  IntCal 98
+                </option>
+                <option>
+                  SHCal 13
+                </option>
+                <option>
+                  SHCal 04
+                </option>
+               </select></td>
+            </tr>
+            <tr>
+              <th>Reservoir &tau;</th>
+              <td colspan="2"><input id="Reservoir" name="Reservoir" size="3" value="0" type="text"> &#177; <input id="ReservoirSigma" name="ReservoirSigma" size="3" value="0" type="text"></td>
+            </tr>
+            <tr>
+              <th colspan="3" class="menu">Marine/mixed curve</th>
+            </tr>
+            <tr>
+              <th>Marine</th>
+              <td colspan="2"><select id="pickCurveMarine">
+                <option selected="selected">
+                  Marine 13
+                </option>
+                <option>
+                  Marine 09
+                </option>
+                <option>
+                  Marine 04
+                </option>
+                <option>
+                  Marine 98
+                </option>
+              </select></td>
+            </tr>
+            <tr>
+              <th>Atmospheric %</th>
+              <td><input id="Atmospheric" name="Atmospheric" size="3" value="100" onchange="document.getElementById('Marine').value=100-document.getElementById('Atmospheric').value" type="text"></td>
+            </tr>
+            <tr>
+              <th>Marine %</th>
+              <td colspan="2"><input id="Marine" name="Marine" size="3" value="0" onchange="document.getElementById('Atmospheric').value=100-document.getElementById('Marine').value" type="text"> &#177; <input id="MarineSigma" name="MarineSigma" size="3" value="0" type="text"></td>
+            </tr>
+            <tr>
+              <th>Delta_R</th>
+              <td colspan="2"><input id="MarineDeltaR" name="MarineDeltaR" size="3" value="0" type="text"> &#177; <input id="MarineDeltaRSigma" name="MarineDeltaRSigma" size="3" value="0" type="text"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="toolsHelp1" class="help">
+        <p>Specific atmospheric curves can be selected. See <a href="#" onclick="helpClick('Curves');return false">help on calibration curves</a>.</p>
+        <p>An exponential reservoir time constant can be enetered where turnover is slow relative to the resolution.</p>
+        <p>Marine components can be entered in any proportion (select 100% for fully marine). You will need to set a &Delta;R offset for local effects. See <a href="#" onclick="helpClick('Curves');return false">help on calibration curves</a> for links to database of values.</p>
+      </div>
+      <div id="tools2" style="display: none;">
+        <script type="text/javascript">
+    clickmenu("modelhelp",
+    "Phases|Sequences|14C date combination|Tree-ring sequence|Deposition model|Exponential distribution|Ramped distribution|Normal distribution|Outlier model");
+</script><br>
+        <div id="toolsHelp2" class="help">
+          <p>Select required type of model</p>
+          <ul class="help">
+            <li>Phases: groups of events that have do not have their relative order defined</li>
+            <li>Sequences: groups of events where the relative order is known</li>
+            <li><sup>14</sup>C date combination: combine several <sup>14</sup>C dates</li>
+            <li>Dendro wiggle match: groups of events where the exact age gap between events is known (eg tree rings)</li>
+            <li>Deposition model: events from a context where linear or Poisson deposition rate can be assumed</li>
+            <li>Exponential distribution: events exponentially distributed in time (exponential rise or fall)</li>
+            <li>Ramped distribution: events ramping linearly up or down in probability over a period</li>
+            <li>Normal distribution: events with an expected Normal or Gaussian distribution</li>
+            <li>Outlier model: model to use with outlier analysis</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable0" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Phases</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createSequence('phase','Phase')" type="button"></td>
+              </tr>
+              <tr>
+                <td>Number of phases</td>
+                <td><input id="phaseNo" size="3" type="text"></td>
+              </tr>
+              <tr>
+                <td>Contiguous</td>
+                <td><input name="phaseType" checked="checked" value="contiguous" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Sequential</td>
+                <td><input name="phaseType" value="sequential" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Overlapping</td>
+                <td><input name="phaseType" value="overlapping" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Trapezium</td>
+                <td><input id="phaseTrapezium" value="ON" type="checkbox"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp0" class="help">
+          <ul class="help">
+            <li>Number of phases: number of distinct unordered groups</li>
+            <li>Contiguous: implies that one phase starts as the previous one finishes</li>
+            <li>Sequential: implies that the phases may have intervals between them</li>
+            <li>Overlapping: implies that the phases may overlap one another</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable1" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Sequences</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createSequence('sequence','Sequence')" type="button"></td>
+              </tr>
+              <tr>
+                <td>Number of groups</td>
+                <td><input id="sequenceNo" size="3" type="text"></td>
+              </tr>
+              <tr>
+                <td>Contiguous</td>
+                <td><input name="sequenceType" checked="checked" value="contiguous" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Sequential</td>
+                <td><input name="sequenceType" value="sequential" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Overlapping</td>
+                <td><input name="sequenceType" value="overlapping" type="radio"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp1" class="help">
+          <ul class="help">
+            <li>Number of sequences: number of distinct unordered groups</li>
+            <li>Contiguous: implies that one sequence starts as the previous one finishes</li>
+            <li>Sequential: implies that the sequences may have intervals between them</li>
+            <li>Overlapping: implies that the sequences may overlap one another</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable2" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu" colspan="2"><sup>14</sup>C date combination</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createRCombine()" type="button"></td>
+              </tr>
+              <tr>
+                <td colspan="2">Name</td>
+                <td><input id="rCombineName" size="5" type="text"></td>
+              </tr>
+              <tr>
+                <td colspan="2">Extra uncertainty</td>
+                <td><input id="rCombineExtra" size="5" type="text"></td>
+              </tr>
+              <tr>
+                <th class="menu">Name</th>
+                <th class="menu"><sup>14</sup>C Date</th>
+                <th class="menu">&#177;</th>
+              </tr>
+              <tr>
+                <td colspan="3">
+                <textarea cols="35" rows="10" id="rCombineImport" class="compact">
+</textarea></td>
+              </tr>
+              <tr>
+                <td colspan="2">Separator</td>
+                <td><select size="1" name="rCombineSeparator" id="rCombineSeparator">
+                  <option selected="selected">
+                    Tab
+                  </option>
+                  <option>
+                    Comma
+                  </option>
+                  <option>
+                    Semicolon
+                  </option>
+                  <option>
+                    Colon
+                  </option>
+                  <option>
+                    Bar
+                  </option>
+                  <option>
+                    Space
+                  </option>
+                </select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp2" class="help">
+          <ul class="help">
+            <li>Enter data for dates from a spreadsheet or by hand</li>
+            <li>Three columns needed (Name, Date, Uncertainty)</li>
+            <li>Specify any extra systematic uncertainty</li>
+            <li>Separator: defines how the lines are split</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable3" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu" colspan="3">Tree-ring sequence</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createWiggle()" type="button"></td>
+              </tr>
+              <tr>
+                <th class="menu">Name</th>
+                <th class="menu"><sup>14</sup>C Date</th>
+                <th class="menu">&#177;</th>
+                <th class="menu">Gap after</th>
+              </tr>
+              <tr>
+                <td colspan="4">
+                <textarea cols="35" rows="10" id="wiggleImport" class="compact">
+</textarea></td>
+              </tr>
+              <tr>
+                <td colspan="3">Separator</td>
+                <td><select size="1" name="wiggleSeparator" id="wiggleSeparator">
+                  <option selected="selected">
+                    Tab
+                  </option>
+                  <option>
+                    Comma
+                  </option>
+                  <option>
+                    Semicolon
+                  </option>
+                  <option>
+                    Colon
+                  </option>
+                  <option>
+                    Bar
+                  </option>
+                  <option>
+                    Space
+                  </option>
+                </select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp3" class="help">
+          <ul class="help">
+            <li>Enter data for dates and gaps from a spreadsheet or by hand</li>
+            <li>Four columns needed (Name, Date, Uncertainty, Gap)</li>
+            <li>Data should be oldest first</li>
+            <li>Separator: defines how the lines are split</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable4" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu" colspan="3">Deposition model</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createDeposition()" type="button"></td>
+              </tr>
+              <tr>
+                <td colspan="3">Name</td>
+                <td><input id="depositionName" size="8" type="text"></td>
+              </tr>
+              <tr>
+                <th class="menu">Name</th>
+                <th class="menu"><select size="1" name="depositionDateType" id="depositionDateType">
+                  <option selected="selected">
+                    14C
+                  </option>
+                  <option>
+                    ArAr
+                  </option>
+                  <option>
+                    OSL
+                  </option>
+                  <option>
+                    UTh
+                  </option>
+                </select> Date
+                </th>
+                <th class="menu">&#177;</th>
+                <th class="menu">Depth</th>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: center;">Top of sequence (young)</td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                <textarea cols="35" rows="10" id="depositionImport" class="compact"  onchange="setupDeposition()">
+</textarea></td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: center;">Bottom of sequence (old)</td>
+              </tr>
+              <tr>
+                <td colspan="3">Poisson deposition</td>
+                <td><input id="poisson" value="ON" type="checkbox" onchange="setupDeposition()"></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="3">Poisson parameter, k<sub>0</sub></td>
+                <td><input id="poissonK" size="3" type="text"> depth<sup>-1</sup></td>
+              </tr>
+              <tr>
+                <td colspan="3">Interpolation rate</td>
+                <td><input id="interpolationRate" size="3" type="text"> depth<sup>-1</sup></td>
+              </tr>
+              <tr>
+                <td colspan="3">log<sub>10</sub>(k/k<sub>0</sub>)</td>
+                <td><input id="poissonV" size="5" type="text"></td>
+              </tr>
+              <tr>
+                <td colspan="3">Units</td>
+                <td><select size="1" name="poissonUnits" id="poissonUnits"  onchange="setupDeposition()">
+                  <option>
+                    mm
+                  </option>
+                  <option selected="selected">
+                    cm
+                  </option>
+                  <option>
+                    m
+                  </option>
+                </select></td>
+              </tr>
+              <tr>
+                <td colspan="3">Outlier prob.</td>
+                <td><input id="outlierDepVal" size="5" type="text"></td>
+              </tr>
+              <tr>
+                <td colspan="3">Outlier model</td>
+                <td>
+              <script type="text/javascript">
+               outlierOptions('outlierDeposition','depositionOutlierModel()');
+              </script>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">Separator</td>
+                <td><select size="1" name="depositionSeparator" id="depositionSeparator">
+                  <option selected="selected">
+                    Tab
+                  </option>
+                  <option>
+                    Comma
+                  </option>
+                  <option>
+                    Semicolon
+                  </option>
+                  <option>
+                    Colon
+                  </option>
+                  <option>
+                    Bar
+                  </option>
+                  <option>
+                    Space
+                  </option>
+                </select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp4" class="help">
+          <ul class="help">
+            <li>Enter data for dates and gaps from a spreadsheet or by hand</li>
+            <li>Four columns needed (Name, Date, Uncertainty, Depth)</li>
+            <li>Data should be entered top down</li>
+            <li>Single blank lines will allow deposition rate change</li>
+            <li>Double blank lines should be used for hiatuses</li>
+            <li>Choose a linear (rigid) or Poisson model</li>
+            <li>k is a rigidity parameter for Poisson models corresponding to the number of events per unit depth</li>
+            <li>Separator: defines how the lines are split</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable5" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Exponential distribution</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createRiseOrFall('exp','Tau_Boundary')" type="button"></td>
+              </tr>
+              <tr>
+                <td>Exponential rise</td>
+                <td><input name="expDirection" checked="checked" value="rise" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Exponential fall</td>
+                <td><input name="expDirection" value="fall" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Ordered</td>
+                <td><input id="expOrdered" value="ON" type="checkbox"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp5" class="help">
+          <ul class="help">
+            <li>Rise/Fall: defines whether the events are rising or falling in probability over the period</li>
+            <li>Ordered: defines whether the events within the group are in a particular sequence</li>
+            <li>Tau_Baoundary which is evaluated, is one exponential time constant away from the end point of the exponential- the events in the group will normally straddle this value</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable6" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Ramped distribution</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createRiseOrFall('ramp','Zero_Boundary')" type="button"></td>
+              </tr>
+              <tr>
+                <td>Rise from zero</td>
+                <td><input name="rampDirection" checked="checked" value="rise" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Fall to zero</td>
+                <td><input name="rampDirection" value="fall" type="radio"></td>
+              </tr>
+              <tr>
+                <td>Ordered</td>
+                <td><input id="rampOrdered" value="ON" type="checkbox"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp6" class="help">
+          <ul class="help">
+            <li>Rise/Fall: defines whether the events are rising or falling in probability over the period</li>
+            <li>Ordered: defines whether the events within the group are in a particular sequence</li>
+            <li>Zero_Baoundary which is evaluated, is the point at which the rise/fall terminates</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable7" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Normal distribution</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createNormal()" type="button"></td>
+              </tr>
+              <tr>
+                <td>Ordered</td>
+                <td><input id="normalOrdered" value="ON" type="checkbox"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp7" class="help">
+          <ul class="help">
+            <li>Ordered: defines whether the events within the group are in a particular sequence</li>
+            <li>The Sigma_Boundaries which are evaluated, are +/- 1&sigma; for the normal distribution - the events will usually spill outside these 'boundaries'</li>
+          </ul>
+        </div>
+        <div id="modelhelpTable8" class="option">
+          <table class="menu">
+            <tbody>
+              <tr>
+                <th class="menu">Outlier model</th>
+                <td><input value="&gt;&gt;" name="Add" onclick="createOutlierModel()" type="button"></td>
+              </tr>
+               <tr>
+                <td>Name</td>
+                <td><input id="outlierName" size="10" type="text" value="General" /></td>
+              </tr>
+             <tr>
+                <td>Distribution</td>
+                <td><input id="outlierDist" size="10" type="text" value="T(5)" /></td>
+              </tr>
+              <tr>
+                <td>Scale 10^</td>
+                <td><input id="outlierScale" size="10" type="text" value="U(0,4)" /></td>
+              </tr>
+              <tr>
+                <td>Type</td>
+                <td><input id="outlierType" size="1" type="text" value="t" /></td>
+              </tr>
+              <tr><td colspan=2><hr/></td></tr>
+              <tr>
+                <td>Examples</td>
+                <td>
+              <script type="text/javascript">
+               outlierOptions('outlierStock','stockOutlierModel()');
+              </script>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelhelpTableHelp8" class="help">
+          <ul class="help">
+            <li>The name can be used to refer to a specific model in Outlier() statements.</li>
+            <li>The distribution function defines the distribution of the outliers.</li>
+            <li>The overall scale of the outliers must be defined - this can be left wide from between 10<sup>0</sup> to 10<sup>4</sup> which should cover most eventualities.  The distribution is in powers of 10.</li>
+            <li>The types of outlier allowed are "t" for time, "r" for radiocarbon and "s" for possibly underestimated standard deviations.</li>
+          </ul>
+        </div>
+      </div>
+      <div id="tools3" style="display: none;">
+        <table class="menu" onmouseover="document.getElementById('mainExtra3').style.display='block'">
+          <tbody>
+            <tr>
+              <th colspan="2" class="menu" id="Prompt0T">Dummy</th>
+              <th colspan="3"><input value="&gt;&gt;" name="ImportButton" onclick="importData()" type="button"></th>
+            </tr>
+            <tr>
+              <th class="menu" id="Prompt1T">Dummy</th>
+              <th class="menu" id="Prompt2T">Dummy</th>
+              <th class="menu" id="Prompt3T">Dummy</th>
+              <th class="menu" id="Prompt4T">Dummy</th>
+              <th class="menu" id="Prompt5T">Dummy</th>
+            </tr>
+            <tr>
+              <td colspan="5">
+              <textarea cols="35" rows="20" id="import" class="compact">
+</textarea></td>
+            </tr>
+            <tr>
+              <td colspan="2">Separator</td>
+              <td colspan="3"><select size="1" name="importSeparator" id="importSeparator">
+                <option selected="selected">
+                  Tab
+                </option>
+                <option>
+                  Comma
+                </option>
+                <option>
+                  Semicolon
+                </option>
+                <option>
+                  Colon
+                </option>
+                <option>
+                  Bar
+                </option>
+                <option>
+                  Space
+                </option>
+              </select></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="toolsHelp3" class="help">
+        <ul class="help">
+          <li>Pick command to be duplicated (eg R_Date)</li>
+          <li>Enter data from a spreadsheet or by hand</li>
+          <li>Columns needed are shown at top of the entry box</li>
+          <li>Separator: defines how the lines are split</li>
+        </ul>
+      </div>
+    </div>
+    <div id="main5" class="option">
+      <script type="text/javascript">
+    clickmenu("help","Contents|Input|Analysis|Output|Commands|References|Tips|About",true);
+</script>
+    </div>
+    <div id="mainHelp5" class="help">
+      <p>Context Sensitive Tips ON</p>
+    </div>
+    <div id="main6" class="option">
+      <table class="menu">
+        <tbody>
+          <tr>
+            <th class="menu">Edit</th>
+          </tr>
+          <tr>
+            <td>
+            <textarea cols="35" rows="5" id="editText" class="compact">
+</textarea></td>
+          </tr>
+          <tr>
+            <td><input value="Ok" name="EditOk" onclick="editOk()" type="button"> <input value="Cancel" name="EditCancel" onclick="editCancel()" type="button"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="mainHelp6" class="help">
+      <ul class="help">
+        <li>Edit command parameters etc</li>
+        <li>Press Ok to replace current selection with edited code</li>
+        <li>Press Cancel to abandon edit</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

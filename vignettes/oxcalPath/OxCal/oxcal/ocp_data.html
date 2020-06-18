@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<title>Data Editor</title>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+
+<body class="clear" onload="parent.setData()">
+ <h1> <img onclick="parent.updateView()" onmouseover="this.src='../img/BackOver.gif'" onmouseout="this.src='../img/Back.gif'" src="../img/Back.gif" width="25" height="20"/> OxCalPlot data editor</h1>
+ <hr/>
+ <table class="menuWide">
+  <tbody>
+   <tr><th colspan="2">Data</td></tr>   
+   <tr>
+      <td>Label</td>
+      <td><input type="text" id="dataLabel" size="12""></td>
+   </tr>
+   <tr><th>Date</th><th>Value</th></tr>
+   <tr>
+    <td colspan=2><textarea rows="16" id="dataValues" cols="32" class="compact"></textarea></td>
+   </tr>
+   <tr>
+      <td>Min</td>
+      <td><input type="text" id="dataMin" size="12"></td>
+   </tr>
+   <tr>
+      <td>Max</td>
+      <td><input type="text" id="dataMax" size="12"></td>
+   </tr>
+   <tr>
+      <td>cal BC/AD</td>
+      <td><input type="checkbox" id="dataBCAD" value="ON"></td>
+   </tr>
+   <tr><td></td><td><input type="button" value="Ok" onclick="parent.dataOk()">
+    <input type="button" value="Cancel" onclick="parent.dataCancel()"></td></tr>
+  </tbody>
+ </table>
+<ul class="help">
+<li> Show data: plot at head of multiplots</li>
+<li> Label: Y-axis label for data</li>
+<li> Date and value: tab delimited data to be shown - the date is in BC/AD or BP depending on current settings</li>
+<li> Min: minimum of data on plot</li>
+<li> Max: maximum of data on plot</li>
+</ul>
+
+</body>
+
+</html>

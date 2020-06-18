@@ -1,0 +1,1229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Analysis Operations and Models</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+<script type="text/javascript" src="CoreDisplay.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body onload="initCores()">
+    <p><a href="hlp_contents.html">OxCal</a> &gt; <a href="hlp_analysis.html">Analysis</a> &gt; Operations</p>
+    <h1>Analysis Operations and Models<br></h1>
+    <hr>
+    <ul>
+        <li><a href="#oper">Operations on probability distributions</a></li>
+        <li><a href="#constr">Constraints</a></li>
+        <li><a href="#group">Groupings</a></li>
+        <li><a href="#deposit">Deposition models</a></li>
+        <li><a href="#query">Queries</a></li>
+        <li><a href="#outlier">Outlier anlysis</a></li>
+    </ul>
+    <hr>
+    <h2><a name="oper" id="oper">Operations on probability distributions</a></h2>
+    <p>Once the likelihood probability distributions have been specified, OxCal provides tools for manipulating these in various ways. To some extent this has already been seen in the <a href="hlp_analysis_inform.html#paramdate">parameterisation of date information</a> section above. More generally the aim of the program is to allow mathematical operations to be performed on parameters that have an uncertainty associated with them (expressed as a likelihood function) in just the same way as you would for exactly known parameters. This is in addition to the original methods:</p><script type="text/javascript">
+    specList(document,"oper","Combine,Sum,Shift,Difference");
+</script>
+    <p>The allowed operators are &amp; | + - * / ( ) and any of the standard maths functions (abs, exp, ln, sqrt, sin, cos ... etc.). The following table summarises the use of the operators and the equivalent functions.</p>
+    <table border>
+        <tr>
+            <th>Original style<br>
+            example</th>
+            <th>Arithmetic style<br>
+            example</th>
+            <th>Constraint</th>
+        </tr>
+        <tr>
+            <td>
+                <pre>
+Combine("C")
+{
+ R_Date("A",2000,20);
+ C_Date("B",20,30);
+};
+</pre>
+            </td>
+            <td>
+                <pre>
+C = R_Date(2000,20)  &amp; C_Date(20,30);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=t<sub>a</sub>=t<sub>b</sub></td>
+        </tr>
+        <tr>
+            <td>
+                <pre>
+Sum("C")
+{
+ R_Date("A",2000,20);
+ C_Date("B",20,30);
+};
+</pre>
+            </td>
+            <td>
+                <pre>
+C = R_Date(2000,20)  | C_Date(20,30);
+</pre>
+            </td>
+            <td>p<sub>c</sub>(t<sub>c</sub>) = p<sub>a</sub>(t<sub>c</sub>) + p<sub>b</sub>(t<sub>c</sub>)</td>
+        </tr>
+        <tr>
+            <td>
+                <pre>
+R_Date("A",2000,20);
+N("B",20,30);
+Shift("C","A","B");
+</pre>
+            </td>
+            <td>
+                <pre>
+C = R_Date(2000,20)  + N(20,30);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=t<sub>a</sub>+t<sub>b</sub></td>
+        </tr>
+        <tr>
+            <td>
+                <pre>
+R_Date("A",2000,20);
+N("B",20,30);
+Difference("C","A","B");
+</pre>
+            </td>
+            <td>
+                <pre>
+C = R_Date(2000,20)  - N(20,30);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=t<sub>a</sub>-t<sub>b</sub></td>
+        </tr>
+        <tr>
+            <td>- NA -</td>
+            <td>
+                <pre>
+C = N(2000,20) * N(2,0.1);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=t<sub>a</sub>*t<sub>b</sub></td>
+        </tr>
+        <tr>
+            <td>- NA -</td>
+            <td>
+                <pre>
+C = N(2000,20) / N(2,0.2);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=t<sub>a</sub>/t<sub>b</sub></td>
+        </tr>
+        <tr>
+            <td>- NA -</td>
+            <td>
+                <pre>
+C = 1 / N(2,0.2);
+</pre>
+            </td>
+            <td>t<sub>c</sub>=1/t<sub>a</sub></td>
+        </tr>
+    </table>
+    <p>The function Combine() equates to the &amp; (AND) operator. The use of this defines that both distributions apply to the same parameter - in the case above that the event is both radiocarbon dated AND we know that it is somewhere around AD20. Exactly the same information can actually be expressed in terms of a cross reference:</p>
+    <pre>
+  C =  R_Date(2000,20);
+  C &amp;= C_Date(20,30);
+  
+</pre>
+    <p>or:</p>
+    <pre>
+  R_Date("C",2000,20);
+  C_Date("=C",20,30);
+  
+</pre>
+    <p>The function Sum() equates to the | (OR) operator. The use of this defines that either one OR the other distribution might apply to the same parameter. This logical operation is sometimes used to provide a estimate for the distribution of different parameters - however, this distribution is folded together with the uncertainty in those parameters and so can give a misleading impression. It certainly cannot be used as a substitute for proper Bayesian analysis as it takes no account <em>per se</em> of the implicit grouping of of the parameters.</p>
+    <p>You can see the effect of all of these functions in the following examples (use [View &gt; Plot parameters] to see the output after you have run the analysis):</p><script type="text/javascript">
+startCode("operations");
+</script>
+    <pre>
+And = N(200,20)  &amp; N(150,30);
+Or = N(200,20) | N(150,30);
+Plus = N(100,20) + N(150,30);
+Minus = N(200,30) - N(20,40);
+Times = N(100,20) * N(2,0.1);
+Divide = N(300,20) / N(2,0.2);
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <h5>The &amp; (AND) operator or Combine() function</h5>
+        <p>This is used to apply more than one probability distribution to the same parameter. The combined probability is just the product the two other distributions:</p>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>) &prop; p<sub>a</sub>(t<sub>c</sub>) p<sub>b</sub>(t<sub>c</sub>)
+        </center>
+        <h5>The | (OR) operator or Sum() function</h5>
+        <p>This is used when a parameter might equally well be sampled from either distribution. The combined probability is just the sum of the other distributions:</p>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>) = p<sub>a</sub>(t<sub>c</sub>) + p<sub>b</sub>(t<sub>c</sub>)
+        </center>
+        <p>In the MCMC coding the histogram for the parameter t<sub>c</sub> contains all samples of parameters t<sub>a</sub> and t<sub>b</sub>. The area of the histogram plotted is in proportion to the number of parameters sampled.</p>
+        <h5>The operators + - * /</h5>
+        <p>All of these operate in essentially the same way. In MCMC sampling, the independent parameters t<sub>a</sub> and t<sub>b</sub> are sampled according to their probabilities. The dependent parameter t<sub>c</sub> is then calculated and a histogram created for its distribution. Mathematically the probability distribution for t<sub>c</sub> are given respectively by:</p>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>)=&int;&int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>b</sub>) &delta;(t<sub>c</sub>-(t<sub>a</sub>+t<sub>b</sub>)) dt<sub>a</sub> dt<sub>b</sub>
+        </center>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>)=&int;&int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>b</sub>) &delta;(t<sub>c</sub>-(t<sub>a</sub>-t<sub>b</sub>)) dt<sub>a</sub> dt<sub>b</sub>
+        </center>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>)=&int;&int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>b</sub>) &delta;(t<sub>c</sub>-(t<sub>a</sub>*t<sub>b</sub>)) dt<sub>a</sub> dt<sub>b</sub>
+        </center>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>)=&int;&int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>b</sub>) &delta;(t<sub>c</sub>-(t<sub>a</sub>/t<sub>b</sub>)) dt<sub>a</sub> dt<sub>b</sub>
+        </center>
+        <p>However these can more conveniently be worked out in terms of the following single integrals:</p>
+        <center>
+            <table>
+                <tr>
+                    <th>Constraint on t<sub>c</sub></th>
+                    <th>Integrated against t<sub>a</sub></th>
+                    <th>Integrated against t<sub>b</sub></th>
+                </tr>
+                <tr>
+                    <td>t<sub>c</sub>=t<sub>a</sub>+t<sub>b</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>c</sub>-t<sub>a</sub>) dt<sub>a</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>c</sub>-t<sub>b</sub>) p<sub>b</sub>(t<sub>b</sub>) dt<sub>b</sub></td>
+                </tr>
+                <tr>
+                    <td>t<sub>c</sub>=t<sub>a</sub>-t<sub>b</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>a</sub>+t<sub>c</sub>) dt<sub>a</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>c</sub>+t<sub>b</sub>) p<sub>b</sub>(t<sub>b</sub>) dt<sub>b</sub></td>
+                </tr>
+                <tr>
+                    <td>t<sub>c</sub>=t<sub>a</sub>*t<sub>b</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>c</sub>/t<sub>a</sub>) (1/t<sub>a</sub>) dt<sub>a</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>c</sub>/t<sub>b</sub>) p<sub>b</sub>(t<sub>b</sub>) (1/t<sub>b</sub>) dt<sub>b</sub></td>
+                </tr>
+                <tr>
+                    <td>t<sub>c</sub>=t<sub>a</sub>/t<sub>b</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>a</sub>) p<sub>b</sub>(t<sub>a</sub>/t<sub>c</sub>) (t<sub>a</sub>/t<sub>c</sub><sup>2</sup>) dt<sub>a</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; &int; p<sub>a</sub>(t<sub>c</sub> t<sub>b</sub>) p<sub>b</sub>(t<sub>b</sub>) t<sub>b</sub> dt<sub>b</sub></td>
+                </tr>
+                <tr>
+                    <td>t<sub>c</sub>=1/t<sub>a</sub></td>
+                    <td>p<sub>c</sub>(t<sub>c</sub>) &prop; p<sub>a</sub>(1/t<sub>c</sub>) (1/t<sub>c</sub><sup>2</sup>)</td>
+                    <td></td>
+                </tr>
+            </table>
+        </center>
+        <h5>Functions of a single variable</h5>
+        <p>In general if we have the relationship:</p>
+        <center>
+            t<sub>c</sub>=f(t<sub>a</sub>)
+        </center>
+        <p>then:</p>
+        <center>
+            p<sub>c</sub>(t<sub>c</sub>)=p<sub>a</sub>(f<sup>-1</sup>(t<sub>c</sub>))/|f'(f<sup>-1</sup>(t<sub>c</sub>))|
+        </center>
+        <p>This is used for all functions such as exp, ln, sqrt, sin, cos ... etc. Note that for MCMC analysis, again the independent parameter t<sub>a</sub> can be sampled and the dependent parameter t<sub>c</sub> calculated and a resultant histogram built up for the marginal probability density. In all cases the independent parameter will be assumed to have a uniform prior - this means that in most cases the effective prior for the dependent parameter is not uniform.</p>
+    </div>
+    <hr>
+    <h2><a name="constr" id="constr">Constraints</a></h2>
+    <p>In addition to wishing to do direct operations on parameters, it is frequently useful to be able to put constraints on them. There are different ways of expressing constraints. You might for example know that a particular sample must have a date between AD 870 and AD 1066 and that it is also radiocarbon dated to 1120&#177;27. This can be expressed in terms of a combination of two likelihoods:</p>
+    <pre>
+    R_Date(1180,27) &amp; Date(U(870,1066));
+    
+</pre>
+    <p>However, more often the constraints are not precisely known and we know only the relative order of events. In order to deal with such situations four main functions are used:</p><script type="text/javascript">
+    specList(document,"constr","Sequence,Phase,Before,After");
+</script>
+    <p>However, before we look at how these are used, we need to consider the <a href="#group">grouping</a> of events. The fact that events are related in some way almost always means that they are part of some group of events which needs to be treated as a whole. Failure to do this will mean that the events are assumed to be entirely independent apart for the constraint applied. A model with more than two events that makes this assumption always results in a wider spread than is realistic (see <a href="javascript:go_bib('steier2000bsd')">Steier  and Rom  2000</a>). OxCal will generate a warning if no groups have been defined and yet constraints are imposed.</p>
+    <p>Supposing we have a single group of events we need to define that there is some start event, and an end event. All we know is that the start S occurs before the events A, B, C, D and that these all occur before the end event E. This can be expressed as:</p><script type="text/javascript">
+startCode("Phase");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Phase()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The Sequence() term is used to define elements or groups that are in a particular order. For shorter sequences such information can also be introduced using the operators &lt; or &gt;</p>
+    <p>Now we can start to include some internal constraints. We might for example know that A &lt; B &lt; C &lt; D or in other words that A is older than B which is older than C which is older than D. This can be expressed directly as:</p>
+    <table>
+        <tr>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Sequence 1");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     R_Date("A",3050,25);
+     R_Date("B",3010,25);
+     R_Date("C",3020,25);
+     R_Date("D",3000,25);
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Sequence 2");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Sequence()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Sequence 3");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     R_Date("A",3050,25)
+       &lt; R_Date("B",3010,25)
+       &lt; R_Date("C",3020,25)
+       &lt; R_Date("D",3000,25);
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+        </tr>
+    </table>
+    <p>We might instead wish to define that A is older than B and C, we don't know their relative ages but that they are both older than D. This can be expressed as:</p>
+    <table>
+        <tr>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Mixed 1");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     R_Date("A",3050,25);
+     Phase()
+     {
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+     };
+     R_Date("D",3000,25);
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Mixed 2");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Sequence()
+     {
+      R_Date("A",3050,25);
+      Phase()
+      {
+       R_Date("B",3010,25);
+       R_Date("C",3020,25);
+      };
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td valign="top">
+                <script type="text/javascript">
+startCode("Mixed 3");
+</script>
+                <pre>
+    Sequence()
+    {
+     Boundary("S");
+     R_Date("A",3050,25)
+       &lt; (R_Date("B",3010,25) | R_Date("C",3020,25))
+       &lt; R_Date("D",3000,25);
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+        </tr>
+    </table>
+    <p>Now supposing we introduce a <em>terminus post quem</em> T for event D. This is introduced using the After() statement (equivalent to the old TPQ statement). as in:</p><script type="text/javascript">
+startCode("After");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Sequence()
+     {
+      R_Date("A",3050,25);
+      Phase()
+      {
+       R_Date("B",3010,25);
+       R_Date("C",3020,25);
+      };
+      After(R_Date("T",3100,30));
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>Note that T is not assumed to be part of the overall grouping. If you wish it to be then it may be easier to split up the model into a likelihood definition section and a model section as in:</p><script type="text/javascript">
+startCode("Separated");
+</script>
+    <pre>
+    // parameter and likelihood definitions
+    A=R_Date(3050,25);
+    B=R_Date(3010,25);
+    C=R_Date(3020,25);
+    D=R_Date(3000,25);
+    T=R_Date(3100,30);
+    
+    // set up the group
+    Boundary("S") &lt; (A|B|C|D|T) &lt; Boundary("E");
+    
+    // define the internal constraints
+    
+    A &lt; (B|C) &lt; D;
+    T &lt; D;
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>This type of definition allows complete freedom in model definition, however, it is consequently easier to make mistakes and harder to follow. The definition of constraints in terms of Sequence() and Phase() can be mixed with those defined using &lt;, &gt; and |.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>Each constraint introduces another component in the prior probability function p(<strong>t</strong>). For example the constraint t<sub>a</sub> &lt; t<sub>b</sub> introduces the factor:</p>
+        <center>
+            H(t<sub>b</sub>-t<sub>a</sub>)
+        </center>
+        <p>where H(x) is the Heaviside function which is zero is x is less than zero, half if x is equal to zero and one if x is greater than zero.</p>
+        <p>More conveniently we define a function for multiple variables:</p>
+        <center>
+            p<sub>H</sub>(t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>, ...)
+        </center>
+        <p>which is one if the arguments are in the correct order:</p>
+        <center>
+            t<sub>a</sub> &lt; t<sub>b</sub> &lt; t<sub>c</sub> &lt; ...
+        </center>
+        <p>and zero if they are not (strictly this should be half if they are all equal, though in practice as the numbers are real this has an infinitesimally small probability and is ignored).</p>
+        <p>In the case of the example above where we have the code:</p>
+        <pre>
+    A &lt; (B|C) &lt; D;
+    T &lt; D;
+    
+</pre>
+        <p>the prior will have a factor:</p>
+        <center>
+            p<sub>H</sub>(t<sub>a</sub>, t<sub>b</sub>, t<sub>d</sub>) p<sub>H</sub>(t<sub>a</sub>, t<sub>c</sub>, t<sub>d</sub>) p<sub>H</sub>(t<sub>t</sub>, t<sub>d</sub>)
+        </center>
+        <h4>Before and After</h4>
+        <p>The two functions Before() and After() are used in Bayesian models to define constraints as described above.   In addition, during the calculation phase of the program the functions calculates a cumulative integration of the probability distribution operated on:</p>
+        <center>After(p(t)) = &int;<sub>-&infin;</sub><sup>t</sup> p(t') dt'</center> 
+        <center>Before(p(t)) = &int;<sub>t</sub><sup>&infin;</sup> p(t') dt'</center> 
+    </div>
+    <hr>
+    <h2><a name="group" id="group">Groupings</a></h2>
+    <p>As well as specific constraints it is important in any model to consider implicit groupings. As a minimum each model that contains constraints should contain at least one grouping. If this is not included in the model definition, you are assuming that all of the events are unrelated and independent. With such an underlying assumption it is very unlikely that all of the events will be clustered together and the output from the model will reflect this assumption.</p>
+    <p>The most frequently used assumption is that a group of events are randomly sampled from a uniform distribution - that is a random scatter of events between a start boundary and an end boundary (based on the original work of <a href="javascript:go_bib('buck1992crr')">Buck  et al. 1992</a>). We have already seen how this is expressed in the previous section with the example of a single phase:</p><script type="text/javascript">
+startCode("Phase 2");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Phase()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>Here you can see that the Boundary() events define the group within the sequence. In the previous section it is explained how to define whether the members of the group are constrained to be in a particular order.</p>
+    <p>The uniform prior, is not the only one that can be applied however. Different pairings of specific Boundary commands:</p><script type="text/javascript">
+    specList(document,"bound","Boundary,Sigma_Boundary,Tau_Boundary,Zero_Boundary");
+</script>
+    <p>allow a range of different priors to be applied to the enclosed groups. The following table shows the distributions and their related simple Boundary functions.</p>
+    <table style="border-collapse: collapse" summary="Groupings">
+        <tbody>
+            <tr>
+                <td>Boundary</td>
+                <th style="text-align: center;"><img src="Uniform.gif" alt="Uniform" height="28" width="267"></th>
+                <td>Boundary</td>
+            </tr>
+            <tr>
+                <td>Sigma_Boundary</td>
+                <th style="text-align: center;"><img src="Gaussian.gif" alt="Gaussian" height="31" width="408"></th>
+                <td>Sigma_Boundary</td>
+            </tr>
+            <tr>
+                <td>Sigma_Boundary</td>
+                <th style="text-align: center;"><img src="GaussianRise.gif" alt="Gaussian rise" height="31" width="208"></th>
+                <td>Boundary</td>
+            </tr>
+            <tr>
+                <td>Boundary</td>
+                <th style="text-align: center;"><img src="GaussianFall.gif" alt="Gaussian fall" height="31" width="208"></th>
+                <td>Sigma_Boundary</td>
+            </tr>
+            <tr>
+                <td>Tau_Boundary</td>
+                <th style="text-align: center;"><img src="ExponentialRise.gif" alt="Exponential rise" height="28" width="267"></th>
+                <td>Boundary</td>
+            </tr>
+            <tr>
+                <td>Boundary</td>
+                <th style="text-align: center;"><img src="ExponentialFall.gif" alt="Exponential fall" height="28" width="267"></th>
+                <td>Tau_Boundary</td>
+            </tr>
+            <tr>
+                <td>Zero_Boundary</td>
+                <th style="text-align: center;"><img src="LinearRise.gif" alt="Linear rise" height="28" width="267"></th>
+                <td>Boundary</td>
+            </tr>
+            <tr>
+                <td>Boundary</td>
+                <th style="text-align: center;"><img src="LinearFall.gif" alt="Linear fall" height="28" width="267"></th>
+                <td>Zero_Boundary</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>To give a <a name="exp" id="exp">specific example</a> the following gives the model for a group of events which is assumed to be exponentially distributed rising to a maximum event probability at the end event E:</p><script type="text/javascript">
+startCode("Exponential");
+</script>
+    <pre>
+    Sequence()
+    {
+     Tau_Boundary("T");
+     Phase()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+    Tau=(E-T);
+    Tau&amp;= U(0,200);
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>In this example the last two lines define a parameter Tau which is the time constant for the exponential distribution, and a prior is assigned to this which is uniform between 0 and 200 years.</p>
+    <p>All boundary commands can take an additional argument which defines likelihood for the boundary. For example to limit the possible values of a boundary you can provide a uniform likelihood as in:</p>
+    <pre>
+    Boundary("E",Date(U(-1300,-1150)));
+    
+</pre>
+    <p>In addition to this simple Boundary models, which assume there are specific events controlling the underlying process, OxCal can also deal with more gradual transitions using what are usually called 'trapezium' priors (<a href="javascript:go_bib('karlsberg2006smr')">Karlsberg  2006</a>, <a href="javascript:go_bib('lee2012dat')">Lee  and Bronk Ramsey  2012</a>).</p>
+    <center><img src="Trapezium.png"></center>
+    <p>For these we use a model that is similar to the uniform phase model but modify it so that the Boundary has an associated Transition period (and optional Start and End queries.  The following example shows its application to a single phase:</p><script type="text/javascript">
+startCode("Trapezium");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary("MidStart")
+     {
+      Transition("Duration Start");
+      Start("Start Start");
+      End("End Start");
+     };
+     Phase()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25);
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+      R_Date("E",3140,25);
+      R_Date("F",3060,25);
+      R_Date("G",3110,25);
+      R_Date("H",3080,25);
+      R_Date("I",3250,25);
+      R_Date("J",3110,25);
+      R_Date("K",3070,25);
+      R_Date("L",3200,25);
+     };
+     Boundary("Mid End")
+     {
+      Transition("Duration End");
+      Start("Start End");
+      End("End End");
+     };
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>For each boundary in such a trapezium model, the program can return the start of the transition period, the end and the midpoint (which is returned as the boundary value itself).  The associated commands are:</p><script type="text/javascript">
+    specList(document,"trap","Transition,Start,End");
+</script>
+    <p>The project manager has facilities to automatically create models covering the main groupings; these can be found under [Tools &gt; Models].</p>
+    <p>In addtion to these groupings a KDE_Model:</p><script type="text/javascript">
+    specList(document,"KDE","KDE_Model");
+</script>command can be used as outlined in <a href="javascript:go_bib('bronkramsey2017msr')">Bronk Ramsey 2017</a>.  Although this is really too few dates for such an analysis the code should be along the lines of:</p><script type="text/javascript">
+startCode("KDE_Model");
+</script>
+    <pre>
+    KDE_Model()
+    {
+     R_Date("A",3350,25);
+     R_Date("B",3310,25);
+     R_Date("C",3320,25);
+     R_Date("D",3200,25);
+     R_Date("E",3340,25);
+     R_Date("F",3260,25);
+     R_Date("G",3210,25);
+     R_Date("H",3180,25);
+     R_Date("I",3350,25);
+     R_Date("J",3210,25);
+     R_Date("K",3070,25);
+     R_Date("L",3200,25);
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+    <h4>Single groups</h4>
+        <p>The mathematical formulation of all of these groupings is similar. In all cases we have two boundaries which we will which define the group. These are assumed to be independent parameters t<sub>a</sub> and t<sub>b</sub> of the model with uniform priors and subject to the constraint t<sub>a</sub> &lt; t<sub>b</sub>. The members of the group t<sub>i</sub> have priors which are dependent on t<sub>a</sub> and t<sub>b</sub>. In all cases the prior for the span of the group t<sub>b</sub>-t<sub>a</sub> is uniform.</p>
+        <center>
+            <table style="border-collapse: collapse" summary="Groupings">
+                <tbody>
+                    <tr>
+                        <th style="text-align: center;">Type of<br>
+                        t<sub>a</sub></th>
+                        <th style="text-align: center;">Prior for elements of the group<br>
+                        t<sub>i</sub></th>
+                        <th style="text-align: center;">Type of<br>
+                        t<sub>b</sub></th>
+                    </tr>
+                    <tr>
+                        <td>Boundary</td>
+                        <td>p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>, t<sub>b</sub>)/(t<sub>b</sub>-t<sub>a</sub>)</td>
+                        <td>Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Sigma_Boundary</td>
+                        <td>[1/((t<sub>b</sub>-t<sub>a</sub>)&radic;(&pi;/2))] exp(-(2 t<sub>i</sub>-t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>/(2(t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>)</td>
+                        <td>Sigma_Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Sigma_Boundary</td>
+                        <td>[p<sub>H</sub>(t<sub>i</sub>, t<sub>b</sub>)/((t<sub>b</sub>-t<sub>a</sub>)&radic;(2 &pi;))] exp(-(t<sub>i</sub>-t<sub>b</sub>)<sup>2</sup>/(2(t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>)</td>
+                        <td>Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Boundary</td>
+                        <td>[p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>)/((t<sub>b</sub>-t<sub>a</sub>)&radic;(2 &pi;))] exp(-(t<sub>i</sub>-t<sub>a</sub>)<sup>2</sup>/(2(t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>)</td>
+                        <td>Sigma_Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Tau_Boundary</td>
+                        <td>[p<sub>H</sub>(t<sub>i</sub>, t<sub>b</sub>)/(t<sub>b</sub>-t<sub>a</sub>)] exp(-(t<sub>b</sub>-t<sub>i</sub>)/(t<sub>b</sub>-t<sub>a</sub>))</td>
+                        <td>Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Boundary</td>
+                        <td>[p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>)/(t<sub>b</sub>-t<sub>a</sub>)] exp(-(t<sub>i</sub>-t<sub>a</sub>)/(t<sub>b</sub>-t<sub>a</sub>))</td>
+                        <td>Tau_Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Zero_Boundary</td>
+                        <td>2 p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>, t<sub>b</sub>) ((t<sub>i</sub>-t<sub>a</sub>)/(t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>)</td>
+                        <td>Boundary</td>
+                    </tr>
+                    <tr>
+                        <td>Boundary</td>
+                        <td>2 p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>, t<sub>b</sub>) ((t<sub>b</sub>-t<sub>i</sub>)/(t<sub>b</sub>-t<sub>a</sub>)<sup>2</sup>)</td>
+                        <td>Zero_Boundary</td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+        <p>See section on <a href="#constr">constraints</a> for details of the p<sub>H</sub> function.</p>
+        <p>So for example if we have a single phase within two Boundary() elements, the overall prior for this group is given by;</p>
+        <center>
+            p(<strong>t</strong>) &prop; p<sub>H</sub>(t<sub>a</sub>, t<sub>b</sub>) &Pi;<sub>i</sub> p<sub>H</sub>(t<sub>a</sub>, t<sub>i</sub>, t<sub>b</sub>)/(t<sub>b</sub>-t<sub>a</sub>)
+        </center>
+        <p>which, subject to the constraints, is just proportional to (t<sub>b</sub>-t<sub>a</sub>)<sup>-n</sup> where there are n elements in the group (cf. <a href="javascript:go_bib('buck1992crr')">Buck  et al. 1992</a>).</p>
+        <p>To take another example for an exponentially rising distribution of events (up to some terminating event t<sub>b</sub>), the overall prior is:</p>
+        <center>
+            p(<strong>t</strong>) &prop; p<sub>H</sub>(t<sub>a</sub>, t<sub>b</sub>) &Pi;<sub>i</sub> [p<sub>H</sub>(t<sub>i</sub>, t<sub>b</sub>)/(t<sub>b</sub>-t<sub>a</sub>)] exp(-(t<sub>b</sub>-t<sub>i</sub>)/(t<sub>b</sub>-t<sub>a</sub>))
+        </center>
+        <h4>Multiple groups and limits</h4>
+        <p>In many models there are multiple groups.</p>
+        <p>Where one group is nested within another, the outer boundaries of the inner group are treated in exactly the same way as any other elements within the outer group.</p>
+        <p>Where you have a whole series of boundaries, each group segment, between each pair of boundaries is treated in the same way, as described in the equations above.  However, as it is desirable that the prior for the overall span of such a sequence of groups is independent of the number of sub-groups we use the following model.<p>
+        <p>Let the boundaries be described by parameters t<sub>a</sub>, t<sub>b</sub> ... t<sub>n</sub> such that there are n boundaries in total.  As they are in a sequence of some sort we have the constraint that We assume that</p>
+        <center>t<sub>a</sub> &lt; t<sub>b</sub> &lt; ... &lt; t<sub>n</sub></center>
+        <p>We assume that t<sub>a</sub> and t<sub>n</sub> are otherwise independent and have uniform priors.  The normalised prior for any of the other boundaries t is then just:</p>
+        <center>p<sub>H</sub>(t<sub>a</sub>,t,t<sub>n</sub>)/(t<sub>n</sub>-t<sub>a</sub>)</center>
+        <p>Overall this gives a factor in the prior (in addition to the constraints) which is:</p>
+        <center>1/(t<sub>n</sub>-t<sub>a</sub>)<sup>n-2</sup></center>
+        <p>This is as recommended by <a href="javascript:go_bib('nicholls2001rdt')">Nicholls  and Jones  2001</a> and is included in the overall prior unless the option UniformSpanPrior is set to off.</p>
+        <p>In addition, if there are limits on the range of outer boundaries under consideration (because of constraints or simply because the program has to set limits somewhere) this can have an effect on the prior for the span of the overall group.  This is because the number of possible combinations of solutions depends on the overall span.  To make the prior for the overall span uniform despite these limits the following factor is added to the prior unless the UniformSpanPrior options is set to off:</p>
+    <center>1/min((ulim<sub>n</sub> - llim<sub>a</sub>) - (t<sub>n</sub> - t<sub>a</sub>),(t<sub>n</sub> - t<sub>a</sub>) - (llim<sub>n</sub> - ulim<sub>a</sub>),ulim<sub>n</sub> - llim<sub>n</sub>,ulim<sub>a</sub> - llim<sub>a</sub>)</center>
+    <p>where llim<sub>a</sub> and ulim<sub>a</sub> are the lower and upper limits on boundary t<sub>a</sub>.  This is a further extension of a similar factor suggested by <a href="javascript:go_bib('nicholls2001rdt')">Nicholls  and Jones  2001</a>.</p>
+    </div>
+    <hr>
+    <h2><a name="deposit" id="deposit">Deposition models</a></h2>
+    <p>Oxcal provides a number of models relevant to depositional sequences. For more detail on these models see <a href="javascript:go_bib('bronkramsey2008dmc')">Bronk Ramsey  2008</a> (<a href="http://c14.arch.ox.ac.uk/getPreprint.php?File=BronkRamsey2007.pdf">pre-print available</a>).</p>
+    <p>The models cover the whole range from the defined sequence D_Sequence() where the exact age gap between elements of the model are known, to the general Sequence() where all that we know is the order of the events:</p><script type="text/javascript">
+    specList(document,"bound","Sequence,D_Sequence,V_Sequence,P_Sequence,U_Sequence");
+</script>
+    <h3>Wiggle Match dating</h3>
+    <p>The D_Sequence() function, which is most often used for the wiggle-match dating of radiocarbon dated tree ring sequences, actually performs a special kind of combination (see <a href="javascript:go_bib('bronkramsey2001wmr')">Bronk Ramsey  et al. 2001</a>). By using the Gap() command, the gap between elements of the sequence are defined. In fact the Combine() function can be used to achieve the same result though in this case the Gap() command for each element should define the gap to the final combined event. This is illustrated in the following examples which perform the same calculation:</p>
+    <table>
+        <tr>
+            <td>
+                <script type="text/javascript">
+startCode("D_Sequence");
+</script>
+                <pre>
+  D_Sequence()
+  {
+   R_Date("A",2023,20);
+   Gap(10);
+   R_Date("B",1961,20);
+   Gap(10);
+   R_Date("C",1999,20);
+   Gap(10);
+   R_Date("D",1966,20);
+   Gap(10);
+   R_Date("E",1954,20);
+   Gap(10);
+   R_Date("F",1936,20);
+   Gap(10);
+   R_Date("G",1948,20);
+   Gap(10);
+   R_Date("H",1925,20);
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td>
+                <script type="text/javascript">
+startCode("Combine");
+</script>
+                <pre>
+  Combine()
+  {
+   R_Date("A",2023,20);
+   Gap(70);
+   R_Date("B",1961,20);
+   Gap(60);
+   R_Date("C",1999,20);
+   Gap(50);
+   R_Date("D",1966,20);
+   Gap(40);
+   R_Date("E",1954,20);
+   Gap(30);
+   R_Date("F",1936,20);
+   Gap(20);
+   R_Date("G",1948,20);
+   Gap(10);
+   R_Date("H",1925,20);
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+        </tr>
+    </table>
+    <p>In both of the above methods the overall function (D_Sequence() or Combine()) generates a probability distribution function for the final event (event H).</p>
+    <p>The V_Sequence method, carried forward from previous versions of OxCal extends the D_Sequence methodology to allow for uncertainty in the gaps between events. The events are also constrained to be in order (so the Normal uncertainty is truncated at zero). <a name="interv" id="interv">In the current version the same can be achieved by applying a prior to the interval</a> between events in a normal sequence. Both of the following are equivalent.</p>
+    <table>
+        <tr>
+            <td>
+                <script type="text/javascript">
+startCode("V_Sequence");
+</script>
+                <pre>
+  V_Sequence()
+  {
+   Boundary("Start");
+   Gap(10,5);
+   R_Date("A",2023,20);
+   Gap(10,5);
+   R_Date("B",1961,20);
+   Gap(10,5);
+   R_Date("C",1999,20);
+   Gap(10,5);
+   R_Date("D",1966,20);
+   Gap(10,5);
+   R_Date("E",1954,20);
+   Gap(10,5);
+   R_Date("F",1936,20);
+   Gap(10,5);
+   R_Date("G",1948,20);
+   Gap(10,5);
+   R_Date("H",1925,20);
+   Gap(10,5);
+   Boundary("End");
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+            <td>
+                <script type="text/javascript">
+startCode("V_Sequence equivalent");
+</script>
+                <pre>
+  Sequence()
+  {
+   Boundary("Start");
+   Interval(N(10,5));
+   R_Date("A",2023,20);
+   Interval(N(10,5));
+   R_Date("B",1961,20);
+   Interval(N(10,5));
+   R_Date("C",1999,20);
+   Interval(N(10,5));
+   R_Date("D",1966,20);
+   Interval(N(10,5));
+   R_Date("E",1954,20);
+   Interval(N(10,5));
+   R_Date("F",1936,20);
+   Interval(N(10,5));
+   R_Date("G",1948,20);
+   Interval(N(10,5));
+   R_Date("H",1925,20);
+   Interval(N(10,5));
+   Boundary("End");
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+            </td>
+        </tr>
+    </table>
+    <p>The latter method is potentially more powerful as any prior can be applied to the interval.</p>
+    <h3>Uniform deposition models</h3>
+    <p>In many cases the information available does not directly relate to time intervals. Instead information might be available about depth of samples in a sequence. This information tells us about the relative length of intervals. In the D_Sequence case above we defined the time gap between events precisely (as we might be able to do in the case for tree-ring sequences, for example). Supposing instead we knew that the events were equally spaced in time. This is the situation if we assume a uniform deposition rate in a sedimentary sequence and have depth information relating to the dated events. This situation is dealt with using the U_Sequence() function and assigning depth information as in the following example:</p><script type="text/javascript">
+startCode("U_Sequence");
+</script>
+    <pre>
+  U_Sequence()
+  {
+   Boundary();
+   R_Date("A",2023,20){ z=70; };
+   R_Date("B",1961,20){ z=60; };
+   R_Date("C",1999,20){ z=50; };
+   R_Date("D",1966,20){ z=40; };
+   R_Date("E",1954,20){ z=30; };
+   R_Date("F",1936,20){ z=20; };
+   R_Date("G",1948,20){ z=10; };
+   R_Date("H",1925,20){ z=0;  };
+   Boundary();
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>If you view the results of this analysis as a plot against depth you will see the age-depth model generated.</p>
+    <h3>Poisson-process deposition models</h3>
+    <p>In practice, of course an assumption of absolutely uniform deposition is not realistic. Neither is assuming that all we know is that the dated events occur in a specific order (as we get from the Sequence() algorithm). We need to allow for fluctuations in the deposition rate. Such a model can be generated using the Sequence algorithm by introducing an undated event at regular intervals in the sequence. The more finely spaced these events are the more rigidly uniform the deposition will be. In practice such an approach is very cumbersome as a model covering a depth of 1m with events every 1mm would have a thousand parameters. However, OxCal provides a function which emulates this - the P_Sequence function. This takes as a argument (k) the number of postulated events per unit length. For sedimentary sequences the 'event scale' is typically in the 1mm-1cm range. In order to generate an age-depth model the dated events can be interpolated automatically by specifying a second argument for the function. The following code gives two examples based on depths in centimetres; the first has an event spacing of 0.1cm (10 cm<sup>-1</sup>) and the second an event spacing of 1cm; the latter allows more major fluctuations in the deposition rate; in practice in this case the outputs are indistinguishable:</p><script type="text/javascript">
+startCode("P_Sequence");
+</script>
+    <pre>
+  P_Sequence(10)
+  {
+   Boundary();
+   R_Date("A1",2023,20){ z=70; };
+   R_Date("B1",1961,20){ z=60; };
+   R_Date("C1",1999,20){ z=50; };
+   R_Date("D1",1966,20){ z=40; };
+   R_Date("E1",1954,20){ z=30; };
+   R_Date("F1",1936,20){ z=20; };
+   R_Date("G1",1948,20){ z=10; };
+   R_Date("H1",1925,20){ z=0;  };
+   Boundary();
+  };
+  P_Sequence(1)
+  {
+   Boundary();
+   R_Date("A2",2023,20){ z=70; };
+   R_Date("B2",1961,20){ z=60; };
+   R_Date("C2",1999,20){ z=50; };
+   R_Date("D2",1966,20){ z=40; };
+   R_Date("E2",1954,20){ z=30; };
+   R_Date("F2",1936,20){ z=20; };
+   R_Date("G2",1948,20){ z=10; };
+   R_Date("H2",1925,20){ z=0;  };
+   Boundary();
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The P_Sequence() function in principle allows you to provide models of any level of rigidity - if the parameter k is made high enough the model will become very similar the the U_Sequence and if it is made very low it will become similar to the plain Sequence(). 
+    <h3>Interpolation</h3>
+    <p>It is often useful to get ages distributions for points in a deposition sequence that are not directly dated.  This can be done in two different ways: you can either use the Date() command with a specified depth.  For example if you had no dating information at depth z=40 in the U_Sequence() example above you could replace the radiocarbon date with:</p>
+    <pre>
+ Date("D"){ z=40; };
+    </pre>
+    <p>OxCal also allows you to interpolate automatically at regular intervals using the optional Interpolation parameter in:</p><script type="text/javascript">
+    specList(document,"interpolate","P_Sequence,U_Sequence");
+</script>
+    <p>The interpolation parameter is in events per unit length (the same as k for the P_Sequence) so if your depth is in m and you want an output every 5cm you would set the Interpolation parameter to 20.  If the depth is in cm the same could be achieved with a value of 0.2.  So on the U_Sequence example above you would replace the first command with:</p>
+    <pre>
+ U_Sequence(0.2)
+    </pre>
+    <p>You can also extract the age depth model from the results of the analysis very easily.  You just click on the raw view icon (&equiv;) in the output table which is next the the U_Sequence or P_Sequence line.  This will present you with a comma delimited list of all depths with their associated age measures.  This can be saved in csv format to be openned in a spreadsheet.</p>
+    <h3>Variable k values</h3>
+    <p>In many cases it is hard to decide what the right value of the parameter k should be for a particular model.  This is allowed for by allowing the model to average over different values of k.  Because the possible values vary by many orders of magnitude the variation is defined by setting a nominal k value k<sub>0</sub> (typically 1 for cm or 100 for m) and then defining a prior for log<sub>10</sub>(k/k<sub>0</sub>) which might allow variation by two orders of magnitude in either direction.  Thus for the example above, allowing for interpolation twice per cm we could have:</p></p><script type="text/javascript">
+startCode("P_Sequence (variable k)");
+</script>
+    <pre>
+  P_Sequence("variable",1,2,U(-2,2))
+  {
+   Boundary();
+   R_Date("A",2553,20){ z=70; };
+   R_Date("B",2541,20){ z=60; };
+   R_Date("C",2499,20){ z=50; };
+   R_Date("D",2366,20){ z=40; };
+   R_Date("E",2254,20){ z=30; };
+   R_Date("F",2136,20){ z=20; };
+   R_Date("G",2048,20){ z=10; };
+   R_Date("H",1925,20){ z=0;  };
+   Boundary();
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>This approach allows the model to find the most appropriate value of k, and so you don't have to make any arbitrary assumptions.  Of course there may be cases where there is specific information that defines the most appropriate value for k in which case specifying it, or narrowing the range is the right thing to do.  Also keep in mind that you can use cross referencing to ensure that the same value of k is used for more than one P_Sequence.</p>
+    <h3>Schematic of deposition processes</h3>
+    <p>The diagram below illustrates the underlying processes for a:</p>
+    <ul>
+        <li>D_Sequence - defined gaps between events</li>
+        <li>Sequence - only the order of the dated events is known</li>
+        <li>P_Sequence - the underlying deposition is mediated by a Poisson process (random) with a given granularity or step size - the finer this granularity the more uniform the deposition will be</li>
+        <li>U_Sequence - where the deposition is assumed to be perfectly uniform</li>
+    </ul>
+    <p>Click on any of the cores to simulate the deposition scenario.</p>
+    <table style="border-collapse: collapse; color:#ffffff;width:90%" summary="Deposition models">
+        <tbody>
+            <tr>
+                <th style="background-color:#006699">D_Sequence</th>
+                <th style="background-color:#0099cc">Sequence</th>
+                <th style="background-color:#0066CC">P_Sequence(1)</th>
+                <th style="background-color:#0033cc">P_Sequence(2)</th>
+                <th style="background-color:#003399">U_Sequence</th>
+            </tr>
+            <tr>
+                <td style="vertical-align: bottom; height: 400px; line-height:0px;text-align: center; background-color:#006699">
+                    <div id="coreD" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+                <td style="vertical-align: bottom; line-height:0px;text-align: center; background-color:#0099cc">
+                    <div id="coreS" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+                <td style="vertical-align: bottom; line-height:0px;text-align: center; background-color:#0066cc">
+                    <div id="coreP1" onclick="nextStep(this.id,120)"></div><br>
+                </td>
+                <td style="vertical-align: bottom; line-height:0px;text-align: center; background-color:#0033cc">
+                    <div id="coreP2" onclick="nextStep(this.id,60)"></div><br>
+                </td>
+                <td style="vertical-align: bottom; line-height:0px;text-align: center; background-color:#003399">
+                    <div id="coreU" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+            </tr>
+        </tbody>
+    </table><br>
+    <table style="background-color:#006699;line-height:0px;color:#ffffff" summary="Key">
+        <tbody>
+            <tr>
+                <th colspan="2" style="line-height:8pt">Key</th>
+            </tr>
+            <tr>
+                <td>
+                    <div id="keySample" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+                <td>Sample level</td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="keyKnown" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+                <td>Known age gap</td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="keyGranularity" onclick="nextStep(this.id,300)"></div><br>
+                </td>
+                <td>Assumed step size</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+    <p>The mathematical details for the deposition models are given in <a href="javascript:go_bib('bronkramsey2008dmc')">Bronk Ramsey  2008</a> (<a href="http://c14.arch.ox.ac.uk/getPreprint.php?File=BronkRamsey2007.pdf">pre-print available</a>)</p>
+    </div>
+    <hr>
+    <h2><a name="query" id="query">Queries</a></h2>
+    <p>So far the commands considered have been primarily for adding information to a model. Other commands are also available for extracting information.</p>
+    <p>One way to extract information is simply to calculate new dependent parameters. For example in the <a href="#exp">exponential example above</a> the statement:</p>
+    <pre>
+    Tau=(E-T);
+    
+</pre>
+    <p>allows a probability distribution for the difference between E and T to be generated. The same thing can be achieved using the Difference() query:</p>
+    <pre>
+    Difference("Tau","E","T");
+    
+</pre>
+    <p>There are several commands specifically intended for queries:</p><script type="text/javascript">
+    specList(document,"query","Sum,KDE_Plot,Order,MCMC_Sample,First,Last,Span,Interval,Difference,Shift,Correlation,Covar_Matrix,Correl_Matrix,Outlier");
+</script>
+    <p>Sum can also be used directly as function as described in the section about <a href="#oper">operations on probability distributions</a> where you can also see a <em>caveat</em> about its use. However if applied without any arguments the sum of the distributions will be found for the enclosing group. The same is true for the KDE_Plot() function which will provide a kernel density distribution for the samples from the MCMC and Order() function which finds the probabilities of pairs of elements being in a particular order.  The MCMC_Sample() function acts like the Order() function but writes a file with all, or a selection, of the MCMC samples for the group.  This enables you to study the details of the MCMC analyis.</p>
+    <p>The three function First(), Last() and Span() can also be used in two ways. If they are given more than one parameter the operate as function, otherwise (as in normal use) they interrogate the surrounding group. These three commands can be given an additional argument which provides a prior for the quantity. Thus the command:</p>
+    <pre>
+	First("First in phase",Date(U(AD(1066),AD(1100))));
+	
+</pre>
+    <p>would constrain the first item in the group to lie somewhere between AD1066 and AD1100. The following piece of code uses all of these first five queries to find out about the phase:</p><script type="text/javascript">
+startCode("Queries");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary();
+     Phase()
+     {
+      R_Date("A",2145,25);
+      R_Date("B",2235,26);
+      R_Date("C",2112,23);
+      R_Date("D",2083,23);
+      Sum();
+      Order();
+      First();
+      Last();
+      Span();
+     };
+     Boundary();
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The Interval() finds the gap between events or groups of events in a sequence. A prior probability can also be applied as can be seen in the <a href="#interv">deposition example</a> above.</p>
+    <p>Difference() and Shift() carried over from previous version of OxCal allow you to find the probability distributions for the difference between two parameters or for one parameter added to another. See the section on <a href="#oper">operations on probability distributions</a>.</p>
+    <p>The Correlation() function simply allows you to plot one distribution against another to see the extend to which the parameters are correlated.  The Correl_Matrix() and Covar_Matrix() functions on the other hand generate quantitative correlation and covariance matrices respectively.  The following example shows their use in a simple example:</p><script type="text/javascript">
+startCode("Correlation");
+</script>
+    <pre>
+  P_Sequence(1)
+  {
+   Boundary("Start");
+   R_Date("A",2023,20){ z=70; };
+   R_Date("B",1961,20){ z=60; };
+   R_Date("C",1999,20){ z=50; };
+   R_Date("D",1966,20){ z=40; };
+   R_Date("E",1954,20){ z=30; };
+   R_Date("F",1936,20){ z=20; };
+   R_Date("G",1948,20){ z=10; };
+   R_Date("H",1925,20){ z=0;  };
+   Boundary("End");
+   Correlation("Correl","D","E");
+   Correl_Matrix();
+   Covar_Matrix();
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The Outlier() command, tags an element as an outlier and takes it out of the model and in some cases (such as a sequence) the program will calculate the probability that a sample is at a particular point in the sequence. The following simple code fragment shows the syntax to be used.</p><script type="text/javascript">
+startCode("Tagged outlier");
+</script>
+    <pre>
+    Sequence()
+    {
+     Boundary("S");
+     Phase()
+     {
+      R_Date("A",3050,25);
+      R_Date("B",3010,25){Outlier();};
+      R_Date("C",3020,25);
+      R_Date("D",3000,25);
+     };
+     Boundary("E");
+    };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>Using the input utility individual items can be questioned in this way by selecting them and then inserting the Outlier() command.  See the next section for more complex <a href="#outlier">outlier analysis</a>.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+    <p>Most of the query commands here simply provide marginal densities for dependent parameters.  In the following cases we will assume that the queries are applied to a group of events t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>,...:</p>
+    <center><table>
+    <tr><th>Function</th><th>Definition</th></tr>
+    <tr>
+     <td>R=Sum()</td>
+     <td>See Sum() function and | (OR) operator in <a href="#oper">operations on probability distributions</a></td>
+    </tr>
+    <tr>
+     <td>Order()</td>
+     <td>Uses MCMC to find probability t<sub>a</sub>&lt;t<sub>b</sub>, t<sub>a</sub>&lt;t<sub>c</sub>... etc.</td>
+    </tr>
+    <tr>
+     <td>R=First()</td>
+     <td>t<sub>r</sub>=min(t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>,...)</td>
+    </tr>
+    <tr>
+     <td>R=Last()</td>
+     <td>t<sub>r</sub>=max(t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>,...)</td>
+    </tr>
+    <tr>
+     <td>R=Span()</td>
+     <td>t<sub>r</sub>=max(t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>,...) - min(t<sub>a</sub>, t<sub>b</sub>, t<sub>c</sub>,...)</td>
+    </tr>
+    <tr><th colspan=2>The following require specific arguments</th></tr>
+    <tr>
+     <td>Difference("R","A","B")</td>
+     <td>t<sub>r</sub>=t<sub>a</sub>-t<sub>b</sub></td>
+    </tr>
+    <tr>
+     <td>Shift("R","A","B")</td>
+     <td>t<sub>r</sub>=t<sub>a</sub>+t<sub>b</sub></td>
+    </tr>
+    <tr>
+     <td>Correlation("R","A","B")</td>
+     <td>Provides a probability density plot of t<sub>b</sub> against t<sub>a</sub></td>
+    </tr>
+    </table></center>
+    <p>The Interval() query depends on its place in the sequence.  The function returns the difference between the maximum of the preceding elements and the minimum of the elements following the query.<p>
+    <p>When there are observations pertaining directly to one of the queried parameters, a likelihood distribution p(y<sub>r</sub>|t<sub>r</sub>) can be defined.  This will be used in calculation of the global posterior.</p>
+    <p>When an item has the Outlier() function applied, the prior is for that parameter is reduced to the simple uniform prior.  Thus:</p>
+    <center>p(t<sub>r</sub>|y<sub>r</sub>) &prop; p(y<sub>r</sub>|t<sub>r</sub>) p(t<sub>r</sub>) &prop; p(y<sub>r</sub>|t<sub>r</sub>)</center>
+    <p>the prior and posterior probability densities are the same.  In addition if the parameter would otherwise have been subject to a constraint, the probability of the constraint being true is calculated (during MCMC analysis) and reported (in column P of the output table).  In the case of parameters questioned in this way in a Combine() group, or D_Sequence(), the same parameter can be estimated from all of the other information in the model.  We will denote all of the information in the model except for y<sub>r</sub> as <b>y</b><sub>(r)</sub>.  We can then compare the likelihood of these distributions:</p>
+    <center>L<sub>i</sub>=p(y<sub>r</sub>|t<sub>r</sub>) p(t<sub>r</sub>|<b>y</b><sub>(r)</sub>)/(p(y<sub>r</sub>|t<sub>r</sub>) p(t<sub>r</sub>|y<sub>r</sub>))</center>
+    <p>This value is presented in column L of the output table.</p>
+    </div>
+    <hr>
+    <h2><a name="outlier" id="query">Outlier analysis</a></h2>
+    <p>The oultlier analysis methods included in OxCal are a development of those worked out by Andres Christen (<a href="javascript:go_bib('christen1994srd')">Christen  1994</a>) and are fully explained in <a href="javascript:go_bib('bronkramsey2009doo')">Bronk Ramsey  2009</a>.</p>
+    <p>The two commands which are used to invoke outlier analysis are:</p><script type="text/javascript">
+    specList(document,"outliercomms","Outlier_Model,Outlier");
+</script>
+    <p>The Outlier_Model() command sets up the outlier model and the Outlier() command is used to apply it to an individual radiocarbon date or other measurement.  In order to set up the model we need to know the following things:</p>
+    <ul>
+    	<li>An optional name for the model - used to reference a model if more than one is used</li>
+    	<li>The distribution used for the outliers - typically a student T distribution or a Normal distribution</li>
+    	<li>The magnitude of the outliers (given in powers of 10) - can be zero or can allow for a range of possible scales</li>
+    	<li>Outlier type - three types are catered for: t - outliers in time, r - outliers in radiocarbon date, s - outliers in the error estimate of the date.</li>
+    </ul>
+    <p>There are four example outlier model definitions built into the <a href="hlp_input.html#tools">Model tool</a> in OxCal these are:</p>
+    <pre>
+  Outlier_Model("General",T(5),U(0,4),"t");
+  Outlier_Model("SSimple",N(0,2),0,"s");
+  Outlier_Model("RSimple",N(0,100),0,"r");
+  Outlier_Model("TSimple",N(0,100),0,"t");
+  Outlier_Model("RScaled",T(5),U(0,4),"r");
+  Outlier_Model("Charcoal",Exp(1,-10,0),U(0,3),"t");
+    </pre>
+    <p>All of these are described in detail in <a href="javascript:go_bib('bronkramsey2009doo')">Bronk Ramsey  2009</a> but here it is worth describing two of them as examples.</p>
+    <ul>
+    	<li>General: this assumes that the outliers are in the time dimension (for example samples deposited at a time other than that of their formation), and are assumed to be distributed according to a student T distribution with 5 degrees of freedom (a long tailed distribution more suitable than a Normal distribution for outliers - see <a href="javascript:go_bib('venables2002mas')">Venables  and Ripley  2002, p121</a>); the scale is allowed to lie anywhere between 10<sup>0</sup> to 10<sup>4</sup> years.</li>
+    	<li>SSimple: this is closely based on the model of <a href="javascript:go_bib('christen1994srd')">Christen  1994</a>; if a sample is an outlier it is assumed that the radiocarbon error is twice that which is quoted.</li>
+    </ul>
+    <p>For each sample that is to be included in the outlier analysis we must give a prior probability for the measurement being an outlier - this is included in the Outlier command.  The following example shows how this is used in practice.</p>
+
+<script type="text/javascript">
+startCode("Outlier");
+</script>
+    <pre>
+ Plot()
+ {
+  Outlier_Model("General",T(5),U(0,4),"t");
+  Sequence()
+  {
+   Boundary("");
+   Sequence("")
+   {
+    R_Date(3095,25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(3028, 25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(2951, 25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(2888, 25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(3134, 25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(2759, 25)
+    {
+     Outlier(0.05);
+    };
+    R_Date(2590, 25)
+    {
+     Outlier(0.05);
+    };
+   };
+   Boundary("");
+  };
+ };
+</pre><script type="text/javascript">
+endCode();
+</script> 
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+    <p>The mathematical details for outlier analysis are given in <a href="javascript:go_bib('bronkramsey2009doo')">Bronk Ramsey  2009</a></p>
+    </div>
+    <hr>
+</body>
+</html>

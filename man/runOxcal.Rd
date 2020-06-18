@@ -4,7 +4,7 @@
 \alias{runOxcal}
 \title{Generate an oxcal Age Model and add it into a LiPD object}
 \usage{
-runOxcal(L, which.chron = NA, which.mt = NA, oxcalPath = NA,
+runOxcal(L, which.chron = NA, which.mt = NA, oxcalPath = "~/OxCal/",
   modelNum = NA, remove.rejected = TRUE, overwrite = TRUE,
   maxEns = 1000, staticReservoirAge = NA, staticReservoirAgeUnc = NA,
   surfaceAge = NA, surfaceAgeUnc = NA, surfaceAgeDepth = 0,

@@ -373,7 +373,7 @@ loadOxcalOutput <- function(L,
 runOxcal <-  function(L,
                       which.chron=NA,
                       which.mt = NA,
-                      oxcalPath=NA,
+                      oxcalPath="~/OxCal/",
                       modelNum=NA,
                       remove.rejected=TRUE,
                       overwrite=TRUE,
@@ -394,9 +394,7 @@ runOxcal <-  function(L,
   
   
   #get oxcal directory
-  oxcalPath <- getOxcalPath(oxcalPath)
-  oxcAAR::setOxcalExecutablePath(oxcalPath)
-  
+  oxcAAR::quickSetupOxcal(path = "oxcalPath")
   
   #initialize which.chron
   if(is.na(which.chron)){
