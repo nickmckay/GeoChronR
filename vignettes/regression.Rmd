@@ -60,7 +60,7 @@ K <- runBacon(K,
               baconAccMean = 10,
               baconThick = 7,
               ask = FALSE,
-              baconDir = "~/Dropbox/MacBacon/Cores",
+              baconDir = "~/Cores",
               suggest = FALSE)
 ```
 
