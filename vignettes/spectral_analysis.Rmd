@@ -23,7 +23,9 @@ We first load the data using the LiPD utilities.
 ```{r load data, message=FALSE}
 library(lipdR)
 library(geoChronR)
-I = readLipd("ODP846.Lawrence.2006.lpd")
+I <- readLipd("http://lipdverse.org/geoChronR-examples/ODP846.Lawrence.2006.lpd")
+
+#I = readLipd("ODP846.Lawrence.2006.lpd")
 d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
 t.med <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
 L <- geoChronR::mapAgeEnsembleToPaleoData(I,which.pmt = 1)
