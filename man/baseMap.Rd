@@ -6,7 +6,7 @@
 \usage{
 baseMap(lon, lat, map.type = "line", f = 0.1, restrict.map.range = TRUE,
   projection = "mollweide", boundcirc = FALSE, global = FALSE,
-  extend.range = 10)
+  extend.range = 5)
 }
 \arguments{
 \item{lon}{longitude(s) range to map}
