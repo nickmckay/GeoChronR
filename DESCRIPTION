@@ -35,7 +35,8 @@ Imports:
     matrixStats,
     pcaMethods,
     pbapply,
-    oxcAAR
+    oxcAAR,
+    Hmisc
 Suggests: knitr,
     rmarkdown,
     testthat,

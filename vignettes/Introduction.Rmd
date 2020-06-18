@@ -37,7 +37,7 @@ In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a
 If you don't have lipdR yet, then we can use the preloaded version of the dataset included in the package
 
 ```{r}
-hulu <- lipdR::readLipd("http://lipdverse.org/geochronr-examples/Hulucave.Wang.2001.lpd")
+hulu <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd")
 ```
 
 Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don't have that for this record. For this example we're going to use the original U/Th dates to create a new a model using BChron.
@@ -126,7 +126,7 @@ hulu.ts.plot
 Let's compare these data to the GISP2 ice core.
 
 ```{r, message=FALSE}
-gisp2 <- readLipd(system.file("extdata", "GISP2.Ally.2000.lpd", package = "geoChronR"))
+gisp2 <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd")
 ```
 
 
@@ -134,7 +134,19 @@ gisp2 <- readLipd(system.file("extdata", "GISP2.Ally.2000.lpd", package = "geoCh
 This is an ice core, so the chronology is not based on radiometric tie points. Let's use BAM (Banded Age Model) to estimate a 2% counting uncertainty on this. Here we specify all the parameters so it runs in non-interactive mode. 
 
 ```{r}
-gisp2 = runBam(gisp2,which.paleo = 1, which.pmt = 1,which.chron = 1,which.model = 1,ens.number = 1, makeNew = T,nens = 1000,model = list(name = "poisson",param = 0.02, resize = 0, ns = 1000))
+gisp2 = runBam(gisp2,
+               which.paleo = 1, 
+               which.pmt = 1,
+               which.chron = 1,
+               which.model = 1,
+               ens.number = 1, 
+               makeNew = T,
+               nens = 1000,
+               model = list(name = "poisson",
+                            param = 0.02, 
+                            resize = 0, 
+                            ns = 1000)
+               )
 ```
 
 Because BAM runs off of the data in the paleo measurementTable, it puts the ageEnsemble straight into the paleoData, and we don't need to run `mapAgeEnsembleToPaleoData()'.
