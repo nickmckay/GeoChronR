@@ -49,46 +49,72 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 
 #' @export
 #' @title Plot ensemble spectra output
-#' @description Plot the output of computeSpectraEns() as a ribbon plot of distributions, plus analytical or Monte-Carlo-based confidence levels
+#' @description Plot the output of `computeSpectraEns` as a ribbon plot of distributions, with specified confidence levels
+#' @details `plotSpectraEns` re-uses `plotTimeseriesRibbons` and therefore the same graphical conventions. Spectra are plotted on a log-log scale, with the x-axis labeled by periods instead of frequencies, for improved intelligibility. 
 #' @family plot
 #' @family spectra
-#' @param spec.ens Output from computeSpectraEns()
-#' @return ggplot object of spectrum plot
-plotSpectraEns = function (spec.ens,cl.df = NULL,period_range=NULL,period_ticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL, colour.main="orange", colour.cl = "white"){
-  period <- 1/spec.ens$freqs
-  if (is.null(period_range)) {
-    period_range = c(min(period),max(period))
+#' @param spec.ens list or dataframe containing frequency (freq) and power (pwr); typically output of`computeSpectraEns`
+#' @param cl.df list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)#' @param xlims 2-element vector defining the range of periods (x-axis)
+#' @param xticks n-element vector of the periods labeled
+#' @param ylims 2-element vectordefining the range of spectral power (y-axis)
+#' @param color.low colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)
+#' @param color.high colour for central quantiles of the distribution (high probability); see `plotTimeseriesRibbons`)
+#' @param color.line color used for the median spectrum (see `plotTimeseriesRibbons`)
+#' @param alp alpha (transparency) parameter for the ribbons
+#' @param color.cl color of the lines representing the confidence limits (90, 95, 99%)
+#' @return SpecPlot, a ggplot object
+#' @author Julien Emile-Geay
+#' @import ggplot2
+#' @import reshape2
+plotSpectraEns = function (spec.ens,
+                           cl.df = NULL,
+                           xlims = NULL,
+                           xticks = c(10, 20, 50, 100, 200, 500, 1000),
+                           ylims = NULL,
+                           color.low="white",
+                           color.high="grey70",
+                           color.line="Black",
+                           color.cl="red",
+                           alp=0.5){
+  period <- 1 / spec.ens$freqs
+  if (is.null(xlims)) {
+    xlims = c(min(period), max(period))
   } else {
-    f.low = 1/period_range[2]
-    f.high = 1/period_range[1]
+    f.low = 1 / xlims[2]
+    f.high = 1 / xlims[1]
   }
-  freq_range = which(spec.ens$freq>= f.low & spec.ens$freq<=f.high)
+  freq_range = which(spec.ens$freq >= f.low & spec.ens$freq <= f.high)
   
   if (is.null(ylims)) {
-    m <- floor(log10(min(spec.ens$power[freq_range]))) 
-    M <- ceiling(log10(max(spec.ens$power[freq_range]))) 
+    m <- floor(log10(min(spec.ens$power[freq_range])))
+    M <- ceiling(log10(max(spec.ens$power[freq_range])))
   }
   else {
     m <- log10(ylims[1])
     M <- log10(ylims[2])
   }
   
-   specPlot = plotTimeseriesEnsRibbons(X = period,Y = spec.ens$power) +
+  specPlot = plotTimeseriesEnsRibbons(X = period,
+                                      Y = spec.ens$power,
+                                      color.low = color.low,
+                                      color.high = color.high,
+                                      color.line = color.line,
+                                      alp = alp) +
     scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
                   labels = scales::trans_format("log10", scales::math_format(10^.x)),
                   limits = c(10^m,10^M)) + 
-    scale_x_continuous(breaks=period_ticks, minor_breaks = NULL, trans=reverselog10_trans(), limits = rev(period_range)) +
-    xlab("Period") + ylab("Power")
+    scale_x_continuous(breaks=xticks, minor_breaks = NULL, trans=reverselog10_trans(), limits = rev(xlims)) +
+    xlab("Period") + ylab("PSD")
   
   if (!is.null(cl.df)) {# if data about confidence limit are provided, plot them
     cl.df = reshape2::melt(cl.df,id = 1) # reshape to facilitate on-line plotting call
-    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour="white")
+    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour=color.cl)
   }
   
   if(!is.na(spec.ens$powerSyn)){
-  specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs, Y = spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),colorHigh = "red",alp = .5)
+    specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs, Y = spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),color.high = "red",alp = .5)
   }
-
+  
   # Other option: https://stackoverflow.com/questions/37326686/ggplot2-geom-ribbon-with-alpha-dependent-on-data-density-along-y-axis-for-each
   
   return(specPlot)
@@ -101,8 +127,8 @@ plotSpectraEns = function (spec.ens,cl.df = NULL,period_range=NULL,period_ticks=
 #' @family spectra
 #' @param spec.df list or dataframe containing frequency (freq) and power (pwr)
 #' @param cl.df list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)
-#' @param period_range range of plotted periodicities
-#' @param period_ticks ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)
+#' @param xlims range of plotted periodicities
+#' @param xticks ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)
 #' @param ylims 2-vector for the y-axis. If NULL, computed from range(pwr)
 #' @param color.main color of the line representing the spectrum
 #' @param color.cl color of the lines representing the confidence limits (90, 95, 99%)
@@ -110,15 +136,15 @@ plotSpectraEns = function (spec.ens,cl.df = NULL,period_range=NULL,period_ticks=
 #' @author Julien Emile-Geay
 #' @import ggplot2
 #' @import reshape2
-plotSpectrum = function (spec.df,cl.df = NULL,period_range=NULL,period_ticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL, colour.main="orange", colour.cl = "white"){
+plotSpectrum = function (spec.df,cl.df = NULL,xlims=NULL,xticks= c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL, color.line="black", color.cl = "red"){
   # TO DO: general handling of colors (theme)
   
   period <- 1/spec.df$freq
-  if (is.null(period_range)) {
-    period_range = c(min(period),max(period))
+  if (is.null(xlims)) {
+    xlims = c(min(period),max(period))
   } else {
-    f.low = 1/period_range[2]
-    f.high = 1/period_range[1]
+    f.low = 1/xlims[2]
+    f.high = 1/xlims[1]
   }
   freq_range = (spec.df$freq>= f.low & spec.df$freq<=f.high)
   
@@ -131,16 +157,16 @@ plotSpectrum = function (spec.df,cl.df = NULL,period_range=NULL,period_ticks= c(
     M <- log10(ylims[2])
   }
 
-  specPlot <- ggplot() + geom_line(aes(x=period,y=spec.df$pwr),colour=colour.main) + 
+  specPlot <- ggplot() + geom_line(aes(x=period,y=spec.df$pwr),colour=color.line) + 
     scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
                   labels = scales::trans_format("log10", scales::math_format(10^.x)),
                   limits = c(10^m,10^M)) + 
-    scale_x_continuous(breaks=period_ticks, minor_breaks = NULL, trans=reverselog10_trans(), limits = rev(period_range)) +
+    scale_x_continuous(breaks=xticks, minor_breaks = NULL, trans=reverselog10_trans(), limits = rev(xlims)) +
     xlab("Period") + ylab("Power")
   
   if (!is.null(cl.df)) {# if data about confidence limit are provided, plot them
     cl.df = reshape2::melt(cl.df,id = 1) # reshape to facilitate one-line plotting call
-    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour=colour.cl)
+    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),colour=color.cl)
   }
   
   return(specPlot)
@@ -591,9 +617,9 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
 #' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
-#' @param colorLow Band color of the outer most band.
-#' @param colorHigh Band color of the inner most band.
-#' @param lineColor Line color (following ggplot rules)
+#' @param color.low Band color of the outer most band.
+#' @param color.high Band color of the inner most band.
+#' @param color.line Line color (following ggplot rules)
 #' @param lineWidth Width of the line
 #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
 #' @param x.bin vector of bin edges over which to bin.
@@ -603,7 +629,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
 #' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 #' @examples 
-plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,colorLow="white",colorHigh="grey70",lineColor="Black",lineWidth=1,export.quantiles = FALSE,...){
+plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,color.low="white",color.high="grey70",color.line="Black",lineWidth=1,export.quantiles = FALSE,...){
   #check to see if time and values are "column lists"
   oX = X
   oY = Y
@@ -617,7 +643,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
   if(ncol(X)==1 & ncol(Y)==1){
     #then just plot a line
     df = data.frame(x=X,y=Y)
-    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=lineColor)+geoChronRPlotTheme()
+    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=color.line)+geoChronRPlotTheme()
     
   }else{
     
@@ -680,8 +706,8 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
     }
     
     #deal with colors
-    fillCol=colorRampPalette(c(colorLow,colorHigh))( ncol(bandMat)/2+1 )[-1]
-    #lineColor="black"
+    fillCol=colorRampPalette(c(color.low,color.high))( ncol(bandMat)/2+1 )[-1]
+    #color.line="black"
     
     
     for(b in 1:(ncol(bandMat)/2)){
@@ -695,7 +721,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
     
     if(!all(is.na(center))){
       bandPlot = bandPlot+
-        geom_line(data=center,aes(x=x,y=y),colour=lineColor,size=lineWidth)
+        geom_line(data=center,aes(x=x,y=y),colour=color.line,size=lineWidth)
     }
     
   }
@@ -1294,18 +1320,18 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
   #' @param x.bin vector of bin edges over which to bin.
   #' @param y.bin vector of bin edges over which to bin.
-  #' @param bandColorLow Band color of the outer most band.
-  #' @param bandColorHigh Band color of the inner most band.
+  #' @param bandcolor.low Band color of the outer most band.
+  #' @param bandcolor.high Band color of the inner most band.
   #' @param bandAlpha Transparency of the band plot
-  #' @param lineColor Line color (following ggplot rules)
+  #' @param color.line Line color (following ggplot rules)
   #' @param lineWidth Width of the line
   #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
   #' @param nEnsLines Number of ensemble members to plot
-  #' @param ensLineColor color of the ensemble lines
+  #' @param enscolor.line color of the ensemble lines
   #' @param ensLineAlp transparency of the lines
   #' @return A ggplot object
   #' @examples 
-  plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",ageVar = "age",depthVar = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7){
+  plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",ageVar = "age",depthVar = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandcolor.low="white",bandcolor.high="grey70",bandAlp=1,color.line="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, enscolor.line = "red",ensLineAlp = 0.7){
     
     
     L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,depth.var = depthVar,which.paleo = which.paleo, which.chron = which.chron, which.model = which.model,which.pmt = which.pmt, which.ens = which.ens)
@@ -1339,10 +1365,10 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     }
      
     
-    diffPlot <- plotTimeseriesEnsRibbons(X = depth ,Y = ageDiff,,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
+    diffPlot <- plotTimeseriesEnsRibbons(X = depth ,Y = ageDiff,,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, color.low = bandcolor.low,color.high = bandcolor.high,color.line = color.line,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
     #add some traces
-    diffPlot <- plotTimeseriesEnsLines(add.to.plot = diffPlot,X = depth ,Y = ageDiff,alp = ensLineAlp,color = ensLineColor,maxPlotN = nEnsLines)
+    diffPlot <- plotTimeseriesEnsLines(add.to.plot = diffPlot,X = depth ,Y = ageDiff,alp = ensLineAlp,color = enscolor.line,maxPlotN = nEnsLines)
     
     return(diffPlot)
     
@@ -1462,14 +1488,14 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
   #' @param x.bin vector of bin edges over which to bin.
   #' @param y.bin vector of bin edges over which to bin.
-  #' @param bandColorLow Band color of the outer most band.
-  #' @param bandColorHigh Band color of the inner most band.
+  #' @param bandcolor.low Band color of the outer most band.
+  #' @param bandcolor.high Band color of the inner most band.
   #' @param bandAlpha Transparency of the band plot
-  #' @param lineColor Line color (following ggplot rules)
+  #' @param color.line Line color (following ggplot rules)
   #' @param lineWidth Width of the line
   #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
   #' @param nEnsLines Number of ensemble members to plot
-  #' @param ensLineColor color of the ensemble lines
+  #' @param enscolor.line color of the ensemble lines
   #' @param ensLineAlp transparency of the lines
   #' @param distColor distribution color (following ggplot rules)
   #' @param distType "violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down
@@ -1482,7 +1508,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @param paleoColor line color of the paleoData age-depth (following ggplot rules)
   #' @return A ggplot object
   #' @examples 
-  plotChronEns = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandColorLow="white",bandColorHigh="grey70",bandAlp=1,lineColor="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, ensLineColor = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA,addPaleoAgeDepth = FALSE, paleo.number = NA, meas.num = NA,paleoColor = "cyan"){
+  plotChronEns = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandcolor.low="white",bandcolor.high="grey70",bandAlp=1,color.line="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, enscolor.line = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA,addPaleoAgeDepth = FALSE, paleo.number = NA, meas.num = NA,paleoColor = "cyan"){
     
     C = L$chronData
     if(is.na(chron.number)){
@@ -1557,12 +1583,12 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     print("plotting your chron ensemble. This make take a few seconds...")
     
     #Ribbons first
-    chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, colorLow = bandColorLow,colorHigh = bandColorHigh,lineColor = lineColor,lineWidth = lineWidth,add.to.plot = add.to.plot)
+    chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, color.low = bandcolor.low,color.high = bandcolor.high,color.line = color.line,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
 
     
     #A few traces second
-    chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = ensLineColor,add.to.plot = chronPlot,maxPlotN = nEnsLines)
+    chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = enscolor.line,add.to.plot = chronPlot,maxPlotN = nEnsLines)
     
     
     #distributions last
@@ -1705,7 +1731,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     
     #plot timeseries of regression and target over interval
     regPlot$XPlot = plotTimeseriesEnsRibbons(X = regEnsList$yearX,Y = regEnsList$binX,nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(regEnsList$timeX))+ylab(axisLabel(regEnsList$valuesX))
-    regPlot$YPlot = plotTimeseriesEnsRibbons(X = regEnsList$yearX,Y = regEnsList$binY,colorHigh = "red",nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
+    regPlot$YPlot = plotTimeseriesEnsRibbons(X = regEnsList$yearX,Y = regEnsList$binY,color.high = "red",nbins = length(regEnsList$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(regEnsList$timeY))+ylab(axisLabel(regEnsList$valuesY))
     
     
     
