@@ -106,7 +106,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   m=mean(vals_used,na.rm=TRUE)
   s=sd(vals_used,na.rm=TRUE)
   if (method=='redfit') {
-    redf.dat <- redfit(vals_used, time, nsim = 21) # 21 is minimum number you can get away with
+    redf.dat <- redfit(vals_used, time, nsim = 50) # 21 is minimum number you can get away with
     g = redf.dat$rho
   } else {
     fit = arima(x = vals_used, order = c(1, 0, 0)) # assumes evenly-spaced data
@@ -138,7 +138,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param max.ens Maximum number of ensemble members to analyze
-#' @param ofac oversampling factor for lomb::lsp
+#' @param ofac oversampling factor for lomb::lsp and dplR::redfit
 #' @param tbw time-bandwidth product for astrochron::mtm___ functions
 #' @param padfac padding factor for astrochron::mtm___ functions
 #' @param wgtrad radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)
@@ -149,10 +149,10 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' \item power: vector of spectral powers
 #' \item powerSyn: matrix of synthetic spectral power results
 #' }
-#' @import lomb
+#' @import dplR
 #' @import astrochron
 #' @suggest nuspectral
-computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=1,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
+computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -173,8 +173,9 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
   if(!is.na(max.ens)){
     if(max.ens<nensPoss){
       nens=max.ens
+      nsim = max.ens
     }
-  }
+  } else {nsim = 200}
   
   # random sampling of columns in case of very large ensembles
   tind = sample.int(ncol(time),size = min(nens,ncol(time)))
@@ -184,36 +185,96 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
   
   # Now apply various spectral methods
   if (method=='lomb-scargle') {
-    # find first time axis without duplicates 
-    noutrow = length(lsp(vals[,1],times=time[,1],ofac=ofac,plot = F)$power)
+    t = time[, 1]
+    v = vals[, 1]
+    lomb.out = lsp(v,
+                   times = t,
+                   ofac = ofac,
+                   plot = F)
+    
+    if (nens == 1) {
+      fMat = lomb.out$scanned
+      pMat = lomb.out$power
+      #  Simulate AR(1) spectra: this part to be replaced by uAR1 as soon as it's available
+      syn = ar1Surrogates(time = t,
+                          vals = v,
+                          nens = nsim) #create matrix of synthetic timeseries
+      pMatSyn =  matrix(NA, ncol = nsim, nrow = length(pMat))
+      #pb = txtProgressBar(min = 1, max = nsim, style = 3)
+      for (k in 1:nsim) {
+        # compute spectra
+        pMatSyn[1:length(pMat), k] =  lsp(syn[, k],
+                                          times = t,
+                                          ofac = ofac,
+                                          plot = F)$power
+        #if (k %% round(nsim / 10) == 0) {setTxtProgressBar(pb, k)}
+      }
+      #close(pb)
+    } else if (nens > 1){
+      #preallocate matrices
+      fMat = matrix(NA,ncol=nens,nrow=length(lomb.out$power))
+      pMat = fMat
+      pMatSyn = fMat
+      
+      #declare progress bar
+      pb = txtProgressBar(min=1,max = nens,style = 3)
+      
+      for(k in 1:nens){  # loop over ensemble members
+        t = jitter(time[,tind[k]])   # add jitter
+        v = vals[,vind[k]] 
+        out = lsp(v,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
+        syn = ar1Surrogates(time=t,vals = v) #create matrix of synthetic timeseries  
+        synOut = lsp(syn,times=t,ofac=ofac,plot = F) # apply to AR(1) surrogate [NoTE: need to do more than 1...]
+        pMatSyn[1:length(synOut$power),k] =  synOut$power # store for later  
+        # JEG: the frequency axis will be subtly different for each iteration.  I think it would be better to interpolate to a common frequency axis if we are to compare them all. Or does quantile2d already take care of that?
+        fMat[,k]=out$scanned
+        pMat[,k]=out$power
+        if(k%%round(nens/50)==0){
+          setTxtProgressBar(pb,k)
+        }
+      }
+      close(pb)
+    } else if (nens < 1){
+      stop('My dear! You need a LOT more ensemble members. One would be a start.')
+    }
+    # allocate output  
+    spec.ens = list(freqs = fMat,power = pMat, powerSyn = pMatSyn)
+  }
   
+  else if (method=='redfit') {
+    # make sure the time axis is increasing
+    dt = diff(time[,1])
+    if(median(dt) < 0){time <- rev(time, 1) }
+      
+    # blank run on the first ensemble member to obtain matrix dimensions
+    redfit.out = redfit(vals[,1], time[,1], tType = "time", mctest = FALSE,ofac=ofac)
+    noutrow = length(out.red$freq)
+    
     #preallocate matrices
     fMat = matrix(NA,ncol=nens,nrow=noutrow)
     pMat = fMat
     pMatSyn = fMat
-
+    
     pb = txtProgressBar(min=1,max = nens,style = 3)
     for(k in 1:nens){
       t = jitter(time[,tind[k]])   # add jitter
-      #tu = unique(t) # avoid duplicates 
       v = vals[,vind[k]] 
-      out = lsp(v,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
-      syn = ar1Surrogates(time=t,vals = v) #create matrix of synthetic timeseries  
-      #NM: tu & vu doesn't seem to exist, perhaps t & v?
-      synOut = lsp(syn,times=t,ofac=ofac,plot = F) # apply to AR(1) surrogate 
-      pMatSyn[1:length(synOut$power),k] =  synOut$power # store for later  
-      # JEG: the frequency axis will be subtly different for each iteration.  I think it would be better to interpolate to a common frequency axis if we are to compare them all. Or does quantile2d already take care of that?
-      fMat[,k]=out$scanned
-      pMat[,k]=out$power
+      redfit.out = redfit(v, t, tType = "time", mctest = TRUE,ofac=ofac,nsim=100)
+      
+      pMatSyn[,k] = redfit.out$gredth # 95% limit
+      fMat[,k]=out.red$freq
+      pMat[,k]=out.red$gxx
       if(k%%round(nens/50)==0){
         setTxtProgressBar(pb,k)
       }
     }
     close(pb)
     
+    
     # allocate output  
     spec.ens = list(freqs = fMat,power = pMat, powerSyn = pMatSyn)
   }
+  
   else if ( method=='mtm') {    # need to make a choice on null : AR(1) or power law?
     if ( mtm_null=='AR(1)') {
       mtm.func = astrochron::mtm
@@ -226,8 +287,8 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',gauss=FALSE,ofa
     }
     
     #  apply workflow to first member
-    t = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
-    dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
+    t  = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
+    dti = modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
     dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
     ti = dfi$t  # interpolatedtimescale
     mtm.main    <- mtm.func(dfi,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)

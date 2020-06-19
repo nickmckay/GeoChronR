@@ -40,7 +40,6 @@ Now let us take a first look at the median age model:
 
 ```{r}
 library(ggplot2)
-#ggplot(df) + geom_line(aes(x=t/1000,y=d18O),colour="orange") + ggtitle("IODP 846 aligment to ProbStack, median age model") + ylab("d18O") + scale_x_continuous(breaks=seq(0,5)) + xlab("Age (Ma)") + scale_y_reverse() + theme_hc(style = "darkunica")
 plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,colorLow="orchid",colorHigh="darkorange3",lineColor="orange",lineWidth=0.5,alp=0.3) + scale_x_reverse() + theme_hc(style = "darkunica")
 ```
 
@@ -63,25 +62,23 @@ X <- X - mean(X)
 #dfs = dplyr::filter(df,t<=1000)
 dt = diff(t)
 ggplot() + xlim(c(0,10)) + 
-  geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(style = "darkunica") + xlab(axisLabel(X))
+  geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(style = "darkunica") + xlab(expression(Delta*"t"))
 ```
 
-We see that over the past 1 Ma, the time increments (dt) are sharply peaked around 2 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, albeit uneven, is well-known (no uncertainty). 
-
+We see that over the past 1 Ma, the time increments ($\Delta t$) are sharply peaked around 2 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, albeit uneven, is well-known (no uncertainty). 
 ## Time-certain spectral analysis 
 From here there are two ways to proceed: 1) use methods that explictly deal with unevenly-spaced data, or 2) interpolate to a regular grid and apply standard methods. 
-For 1, we could use the *Lomb-Scargle periodogram* or the lesser-known *nuspectral* package. Let's see what each method brings to the table.
+In the first case, we could use the *Lomb-Scargle periodogram* or rather its version tailored for paleoclimate data, [REDFIT](https://www.nonlin-processes-geophys.net/16/43/2009/).
 
 ### Lomb-Scargle periodogram
-This is a very standard method implemented in many packages. For a review, [VanderPlas (2018)](https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta). There are several ways to implement Lomb-Scargle. GeoChronR does this via the [lomb](https://www.rdocumentation.org/packages/lomb) package.
+This is a very standard method implemented in many packages. For a review, see [VanderPlas (2018)](https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta). There are several ways to implement Lomb-Scargle. GeoChronR does this via the [lomb](https://www.rdocumentation.org/packages/lomb) package.
 
 To establish significance, we have a few choices. We re-use Stephen Meyer's excellent [astrochron](https://www.rdocumentation.org/packages/astrochron) package for this purpose, as it implements the methods described in [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307).  
 
 
 ```{r lomb-scargle}
-library(lomb)
-spec.ls <-  lomb::lsp(x=X,times=t,ofac=2,plot = F) 
-ls.df <- data.frame("freq" = spec.ls$scanned, "pwr" = spec.ls$power)
+spec.ls <- computeSpectraEns(t,X,method = 'lomb-scargle')
+ls.df <- data.frame("freq" = spec.ls$freqs, "pwr" = spec.ls$power)
 # estimate significance against a power-law fit
 f.low <-  1e-3; f.high <- 0.1
 plaw.ls <-  astrochron::pwrLawFit(ls.df, dof = 2, flow = f.low, fhigh = f.high, output = 1, genplot = F)
@@ -106,10 +103,42 @@ p.ls <- PeriodAnnotate(p.ls, periods = c(19,23,41,100), ylims =c(0.01,100))
 show(p.ls)
 ```
 
-Where it is clearly seen that the data appear to contain periodic signals near, but not exactly at, the Milankotich frequencies.  These frequencies (particularly the eccentricity and obliquity frequencies) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of Lomb-Scargle. Other methods smooth out that noise.  
+Where it is clearly seen that the data appear to contain significant enerngy (peaks) near, but not exactly at, the Milankovitch periodicities (100, 41, 23, and 19 kyr).  These periodicities (particularly the eccentricity (100kyr) and obliquity (40kyr)) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of Lomb-Scargle. Other methods smooth out that noise.   
+
+REDFIT does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%.
+
+```{r REDFIT}
+out.redfit <-  redfit(x=X,t=t,tType="age",mctest = FALSE,n50=2,nsim=200) 
+redfit.df <- data.frame("freq" = out.redfit$freq, "pwr" = out.redfit$gxx)
+# estimate significance against a power-law fit
+f.low <-  1e-3; f.high <- 0.1
+plaw.ls <-  astrochron::pwrLawFit(redfit.df, dof = 2, flow = f.low, fhigh = f.high, output = 1, genplot = F)
+
+cl.df <- data.frame(plaw.ls[,union(1,c(5:7))]) # extract confidence limits 
+# rename columns to be less silly
+names(cl.df)[1] <- "freq"
+names(cl.df)[2] <- "90% CL"
+names(cl.df)[3] <- "95% CL"
+names(cl.df)[4] <- "99% CL"
+
+# plot this 
+pticks = c(10, 20, 50, 100, 200, 500, 1000)
+prange = c(10,1000)
+yl = c(0.01,1000)
+p.ls <- plotSpectrum(redfit.df,cl.df,period_range=prange,period_ticks = pticks, ylims = yl) + 
+  ggtitle("IODP 846 d18O, REDFIT estimation") +
+  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
+
+# label periodicities of interest
+p.ls <- PeriodAnnotate(p.ls, periods = c(19,23,41,100), ylims =c(0.01,100))
+show(p.ls)
+```
+
+Now, this clearly  is smoother, perhaps a little too much. One could play with `n50`, the size of the window, or `iwin`, its shape, to reduce the smoothing. There are still peaks near the Milankovitch frequencies, but in many cases they do not stand out (cf 41 kyr) and only the eccentricity peaks pokes its head above a power-law background.  Perhaps that is because REDFIT assumes a red noise background, not a pink noise one?
+
 
 ### Multi-taper Method
-The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, i.e. one of the worst estimators known to humankind. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], which is consistent (the variance of each estimate goes to zero asymptotically, meaning that the more data you have, the better you know the spectrum). Formally, MTM optimizes the classic bias-variance tradeoff inherent to all kinds of statistical inference. It does so by minimizing leakage outside of a frequency band with half bandwidth equal to $pf_R$, where $f_R=1/(N \Delta t)$ is the Rayleigh frequency, $\Delta t$ is the sampling interval, $N$ the number  f measurements, and $p$ is the so-called time-bandwidth product. $p$ can only take a finite number of values, all multiples of 1/2 between 2 and 4. A larger $p$ means lower variance (i.e. less uncertainty about the power), but broader peaks (i.e. a lower spectral resolution), synonymous with more uncerainty about the exact location of the harmonic. So while MTM might not distinguish between closely-spaced harmonics, it is much less likely to identify spurious peaks, especially at high frequencies.  In addition, a battery of formal tests have been devised with MTM, allowing under reasonably broad assumptions to ascertain the significance of spectral peaks. We show how to use this "hamornic F-test below"
+The Lomb-Scargle periodogram is a decent way to deal with unevenly-spaced timeseries, but it is still a periodogram, which has several problems. In particular, it is inconsistent: the variance of each estimate goes to infinity as the number of observations increases. A much better estimator is Thomson's Multi-Taper Method [Thomson, 1982], which is consistent (the variance of each estimate goes to zero asymptotically, meaning that the more data you have, the better you know the spectrum). Formally, MTM optimizes the classic bias-variance tradeoff inherent to all kinds of statistical inference. It does so by minimizing leakage outside of a frequency band with half bandwidth equal to $pf_R$, where $f_R=1/(N \Delta t)$ is the Rayleigh frequency, $\Delta t$ is the sampling interval, $N$ the number  f measurements, and $p$ is the so-called time-bandwidth product. $p$ can only take a finite number of values, all multiples of 1/2 between 2 and 4. A larger $p$ means lower variance (i.e. less uncertainty about the power), but broader peaks (i.e. a lower spectral resolution), synonymous with more uncerainty about the exact location of the harmonic. So while MTM might not distinguish between closely-spaced harmonics, it is much less likely to identify spurious peaks, especially at high frequencies.  In addition, a battery of formal tests have been devised with MTM, allowing under reasonably broad assumptions to ascertain the significance of spectral peaks. We show how to use this "hamornic F-test below"
  
 A notable downside of MTM is that it only handles evenly-spaced data. Small potatoes! As we saw above, the data are not that far from evenly-spaced, so let's interpolate and see what we get. Conveniently, both the interpolation routine and MTM are available within the [astrochron](https://www.rdocumentation.org/packages/astrochron) package. 
 
@@ -226,7 +255,7 @@ show(p.nus)
 Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the $\sigma$ parameter ; the default (0.05) would have overly damped the peaks. We note, by the way, that this default value is not backed by good theoretical arguments or Monte Carlo simulations. That is undoubtedly a weakness of this method. 
 Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming `dof = 2` at each frequency, which is most likely violated with wavelets. Internally, `nuwavelet_psd` does use variable DOFs, but this is not easy to export. You can tweak the range over which this power law is fit and it will not change much.
 
-Readers interested in a more robust implementation of WWZ should consider [Python](http://linkedearth.github.io/Pyleoclim_util/Spectral.html) implementation, available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package.  Note that this can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
+Readers interested in a more robust implementation of WWZ may want to consider a [Python](http://linkedearth.github.io/Pyleoclim_util/Spectral.html) implementation, available from the [Pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html) package.  Note that this can be done in R via the [Reticulate](https://rstudio.github.io/reticulate/) package. 
 
 ## Time-uncertain spectral analysis 
 Now let's consider age uncertainties. 
