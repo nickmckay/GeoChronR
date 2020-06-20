@@ -111,18 +111,10 @@ Where it is clearly seen that the data appear to contain significant enerngy (pe
 [REDFIT](https://boris.unibe.ch/id/eprint/38577) does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. GeoChronR uses its [dplR](https://cran.r-project.org/web/packages/dplR/index.html) implementation, which differs slightly from the published algorithm (see `?dplR::redfit` for details).
 
 ```{r REDFIT}
-out.redfit <-  redfit(x=X,t=t,tType="age",mctest = FALSE,n50=2,nsim=200) 
-redfit.df <- data.frame("freq" = out.redfit$freq, "pwr" = out.redfit$gxx)
-# estimate significance against a power-law fit
-f.low <-  1e-3; f.high <- 0.1
-plaw.ls <-  astrochron::pwrLawFit(redfit.df, dof = 2, flow = f.low, fhigh = f.high, output = 1, genplot = F)
-
-cl.df <- data.frame(plaw.ls[,union(1,c(5:7))]) # extract confidence limits 
-# rename columns to be less silly
-names(cl.df)[1] <- "freq"
-names(cl.df)[2] <- "90% CL"
-names(cl.df)[3] <- "95% CL"
-names(cl.df)[4] <- "99% CL"
+spec.redfit <- computeSpectraEns(t,X,method = 'redfit')
+redfit.df <- data.frame("freq" = spec.redfit$freq, "pwr" = spec.redfit$power)
+cl.df <- data.frame("freq" = spec.redfit$freq, "95% CL" = spec.redfit$power.CL)
+names(cl.df)[2] <- "95% CL"
 
 # plot this 
 pticks = c(10, 20, 50, 100, 200, 500, 1000)
@@ -303,6 +295,34 @@ show(p.mtm.ens)
 BUG: Period Annotate does not appear here. 
 
 Consistent with previous investigations (e.g. [Mudelsee et al 2009](https://npg.copernicus.org/articles/16/43/2009/)), the effect of age uncertainties is more felt at high frequencies, with the effect of broadening peaks, or lumping them together. The only two peaks that rise above the power-law background are the ~100kyr and ~40kyr peaks, which is not surprising. No doubt a different core with higher-resolution would show a sharper precessonal peak (perhaps even two). 
+
+
+```{r ensemble-mode REDFIT}
+spec.redfit <- computeSpectraEns(time,values,max.ens = 100, method = 'redfit')
+redfit.ens.df <- data.frame("freq" = spec.redfit$freq, "pwr" = spec.redfit$power)
+cl.ens.df <- data.frame("freq" = spec.redfit$freq, "95% CL" = spec.redfit$power.CL)
+names(cl.ens.df)[2] <- "95% CL"
+```
+
+again, it took a bit of time. let's compare the 
+
+```{r ensemble-mode REDFIT plot}
+p.redfit.ens <- plotSpectraEns(spec.ens = redfit.ens.df, cl.df = cl.ens.df, 
+                               xlims = c(10,150), ylims = c(1e-5,1e-1),
+                               color.line='darkorange',
+                               color.low='darkorange2',
+                               color.high='coral4',color.cl = 'white') + 
+  ggtitle("IODP 846 age ensemble, MTM") + theme_hc(style = "darkunica") + 
+  theme(axis.ticks.x = element_line(color = "gray"))
+
+# label periodicities of interest
+p.redfit.ens <- PeriodAnnotate(p.redfit.ens, periods = c(19,23,41,100), ylims =c(0.01,10))
+show(p.mtm.ens)
+```
+
+
+
+
 
 # Conclusion
 To conclude, we must emphasize that hunting for astronomical (or other) frequencies in paleoclimate timeseries takes extreme care, and cannot be answered in one function call. In this particular example where the data are nearly evenly spaced, and interpolation has a negligible impact, the best choice is MTM for two reasons: (1) because its minimizes spectral leakage, and (2) because the implementation used here (derived from *astrochron*) allows to flexibly apply different tests of significance. Not such luxury is afforded by the other methods  at present, and _nuspectral_ is desperately slow on this dataset. 
