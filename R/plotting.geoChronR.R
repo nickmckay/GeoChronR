@@ -53,15 +53,16 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @details `plotSpectraEns` re-uses `plotTimeseriesRibbons` and therefore the same graphical conventions. Spectra are plotted on a log-log scale, with the x-axis labeled by periods instead of frequencies, for improved intelligibility. 
 #' @family plot
 #' @family spectra
-#' @param spec.ens list or dataframe containing frequency (freq) and power (pwr); typically output of`computeSpectraEns`
-#' @param cl.df list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)#' @param xlims 2-element vector defining the range of periods (x-axis)
+#' @param spec.ens list or dataframe containing frequency (freq) and power (pwr); typically output of computeSpectraEns
+#' @param cl.df list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)
+#' @param xlims 2-element vector defining the range of periods (x-axis)
 #' @param xticks n-element vector of the periods labeled
 #' @param ylims 2-element vectordefining the range of spectral power (y-axis)
 #' @param color.low colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)
 #' @param color.high colour for central quantiles of the distribution (high probability); see `plotTimeseriesRibbons`)
 #' @param color.line color used for the median spectrum (see `plotTimeseriesRibbons`)
 #' @param alp alpha (transparency) parameter for the ribbons
-#' @param color.cl color of the lines representing the confidence limits (90, 95, 99%)
+#' @param color.cl color of the lines representing the confidence limits (90, 95, 99\%)
 #' @return SpecPlot, a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2
@@ -127,16 +128,16 @@ plotSpectraEns = function (spec.ens,
 
 #' @export
 #' @title Plot spectrum with confidence limits
-#' @description Plota a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
+#' @description Plot a a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
 #' @family plot
 #' @family spectra
 #' @param spec.df list or dataframe containing frequency (freq) and power (pwr)
-#' @param cl.df list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)
+#' @param cl.df list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)
 #' @param xlims range of plotted periodicities
 #' @param xticks ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)
 #' @param ylims 2-vector for the y-axis. If NULL, computed from range(pwr)
 #' @param color.main color of the line representing the spectrum
-#' @param color.cl color of the lines representing the confidence limits (90, 95, 99%)
+#' @param color.cl color of the lines representing the confidence limits (90, 95, 99\%)
 #' @return SpecPlot, a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2

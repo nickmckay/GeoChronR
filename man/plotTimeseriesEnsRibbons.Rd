@@ -13,9 +13,9 @@ plotTimeseriesEnsRibbons(
   x.bin = NA,
   y.bin = NA,
   nbins = 200,
-  colorLow = "white",
-  colorHigh = "grey70",
-  lineColor = "Black",
+  color.low = "white",
+  color.high = "grey70",
+  color.line = "Black",
   lineWidth = 1,
   export.quantiles = FALSE,
   ...
@@ -38,11 +38,11 @@ plotTimeseriesEnsRibbons(
 
 \item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{colorLow}{Band color of the outer most band.}
+\item{color.low}{Band color of the outer most band.}
 
-\item{colorHigh}{Band color of the inner most band.}
+\item{color.high}{Band color of the inner most band.}
 
-\item{lineColor}{Line color (following ggplot rules)}
+\item{color.line}{Line color (following ggplot rules)}
 
 \item{lineWidth}{Width of the line}
 

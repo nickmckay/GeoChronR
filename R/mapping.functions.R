@@ -6,11 +6,9 @@
 #' @param sortVar What variable in the TS should the map and histogram be organized by? (default = "archiveType)
 #' @param ageRange a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
 #' @param ageVar What age variable should be used (default = "age)
-#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)
+#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)
 #' @param ... variables to pass to mapTs()
-#' @inheritParams mapTs
 #' @importFrom gridExtra grid.arrange
-#' 
 #' @return a gridExtra ggplot output
 #' @export
 summaryPlotTs <- function(TS,sortVar = "archiveType", ageRange = NA, ageVar = "age", step = NA,... ){
@@ -35,13 +33,13 @@ out <- gridExtra::grid.arrange(grobs = list(tsMap,ta),
 return(out)
 }
 
-#' Create a Time availability plot. 
-#'
+#' 
+#' @title Create a Time availability plot
 #' @param TS a lipd TS object. This should probably be filtered to show just records you're interested in, as all we counted
 #' @param ageRange a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
-#' @param ageVar What age variable should be used (default = "age)
-#' @param groupVar What variable Should be used to Group the counts? (default = "archiveType)
-#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)
+#' @param ageVar What age variable should be used (default = "age")
+#' @param groupVar What variable Should be used to Group the counts? (default = "archiveType")
+#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)
 #' @import ggplot2 tidyr
 #' @importFrom purrr map_dbl map_dfc map_chr
 #' @return a ggplot object

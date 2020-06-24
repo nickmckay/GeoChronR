@@ -14,14 +14,14 @@ plotChronEns(
   x.bin = NA,
   y.bin = NA,
   nbins = 100,
-  bandColorLow = "white",
-  bandColorHigh = "grey70",
+  bandcolor.low = "white",
+  bandcolor.high = "grey70",
   bandAlp = 1,
-  lineColor = "Black",
+  color.line = "Black",
   lineWidth = 1,
   add.to.plot = ggplot2::ggplot(),
   nEnsLines = 5,
-  ensLineColor = "red",
+  enscolor.line = "red",
   ensLineAlp = 0.7,
   distAlp = 0.3,
   distType = "violin",
@@ -54,11 +54,11 @@ plotChronEns(
 
 \item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{bandColorLow}{Band color of the outer most band.}
+\item{bandcolor.low}{Band color of the outer most band.}
 
-\item{bandColorHigh}{Band color of the inner most band.}
+\item{bandcolor.high}{Band color of the inner most band.}
 
-\item{lineColor}{Line color (following ggplot rules)}
+\item{color.line}{Line color (following ggplot rules)}
 
 \item{lineWidth}{Width of the line}
 
@@ -66,7 +66,7 @@ plotChronEns(
 
 \item{nEnsLines}{Number of ensemble members to plot}
 
-\item{ensLineColor}{color of the ensemble lines}
+\item{enscolor.line}{color of the ensemble lines}
 
 \item{ensLineAlp}{transparency of the lines}
 

@@ -1,4 +1,5 @@
 #' @export
+#' @name createSyntheticTimeseries
 #' @family spectra
 #' @family pca
 #' @title Create a synthetic timeseries that emulates the characteristics of a variable
@@ -7,8 +8,7 @@
 #' @param values LiPD "variable list" or vector of values
 #' @param nens Number of ensemble members to simulate
 #' @return a vector or matrix of synthetic values
-createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.model = NA){
-  
+createSyntheticTimeseries <- function(time,values,nens=1,sameTrend=TRUE,index.to.model = NA){
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -41,7 +41,7 @@ createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.
   ar=max(0,as.numeric(unlist(a[1])[1]))
   
   fit = arima(x = notrend, order = c(1, 0, 0)) #AR1 only
-
+  
   synValues = matrix(NA,nrow=length(orig.time),ncol=nens)
   #go through ensemble members
   for(jj in 1:nens){
@@ -49,17 +49,17 @@ createSyntheticTimeseries = function(time,values,nens=1,sameTrend=TRUE,index.to.
     rdata = arima.sim(model=list("ar"=ar),n=length(orig.time)) #More conservative
     #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
     if(sameTrend){
-    #remove any trend
-    rtrend=predict(lm(rdata~orig.time))
-    rdata=rdata-rtrend
-    #scale the same as data
-    rdata=scale(rdata)*s+m
-    #add the data trend in
-   
-    
-    withTrend=rdata+longtrend
-    withTrend[vnai]=NA
-    synValues[,jj]=withTrend
+      #remove any trend
+      rtrend=predict(lm(rdata~orig.time))
+      rdata=rdata-rtrend
+      #scale the same as data
+      rdata=scale(rdata)*s+m
+      #add the data trend in
+      
+      
+      withTrend=rdata+longtrend
+      withTrend[vnai]=NA
+      synValues[,jj]=withTrend
     }else{
       synValues[,jj] = rdata
     }
@@ -101,7 +101,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
     #remove the linear trend
     vals_used=vals-trend
   } else {vals_used=vals}
-    
+  
   #extract low-order moments
   m=mean(vals_used,na.rm=TRUE)
   s=sd(vals_used,na.rm=TRUE)
@@ -114,7 +114,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   }
   
   vals_syn = matrix(NA,nrow=nrow(time),ncol=nens)
- 
+  
   for(jj in 1:nens){  #go through ensemble members
     #generate a random series with fitted model parameters
     ar1=arima.sim(model=list(g),n=length(vals_used))
@@ -130,10 +130,10 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   return(vals_syn)
 }
 
- 
-#' @export
-#' @family spectra
+
+#' Calculate ensemble power spectra
 #' @title Calculate ensemble power spectra
+#' @name computeSpectraEns
 #' @description Calculate ensemble power spectra using 4 spectral methods: 
 #' \enumerate{
 #' \item Lomb-Scargle periodogram
@@ -161,10 +161,12 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' }
 #' @import dplR
 #' @importFrom astrochron mtm mtmPL mtmML96
+#' @importFrom matrixStats rowMedians
 #' @references Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
 #' @references Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
 #' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
-
+#' @export
+#' @family spectra
 computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gauss=TRUE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
@@ -281,10 +283,10 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     
     # blank run on the first ensemble member to obtain matrix dimensions
     redfit.out <- redfit(v,
-                        t,
-                        tType = "time",
-                        mctest = mcflag,
-                        ofac = ofac)
+                         t,
+                         tType = "time",
+                         mctest = mcflag,
+                         ofac = ofac)
     noutrow = length(redfit.out$freq)
     # frequency axis (in tests, ends up being very close between ensemble members, 1e-4 to 1e-6)
     freq <-  redfit.out$freq
@@ -369,7 +371,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
       }
     }
     close(pb)
-   
+    
     # prepare significance assessment
     freqs.prob <- rowMeans(ens.mtm.sigfreq,na.rm = TRUE)
     pCL <- rowMedians(ens.mtm.cl,na.rm = TRUE)
@@ -377,7 +379,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     
     # allocate output
     spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
-    }
+  }
   else if ( method=='nuspectral') {
     nt = length(time)
     tau = seq(min(time),max(time),length = max(nt %/% 5,10))

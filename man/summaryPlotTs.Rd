@@ -22,7 +22,7 @@ summaryPlotTs(
 
 \item{ageVar}{What age variable should be used (default = "age)}
 
-\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)}
+\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)}
 
 \item{...}{variables to pass to mapTs()}
 }

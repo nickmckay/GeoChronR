@@ -7,21 +7,45 @@
 plotSpectraEns(
   spec.ens,
   cl.df = NULL,
-  period_range = NULL,
-  period_ticks = c(10, 20, 50, 100, 200, 500, 1000),
+  xlims = NULL,
+  xticks = c(10, 20, 50, 100, 200, 500, 1000),
   ylims = NULL,
-  colour.main = "orange",
-  colour.cl = "white"
+  color.low = "white",
+  color.high = "grey70",
+  color.line = "Black",
+  color.cl = "red",
+  alp = 0.5
 )
 }
 \arguments{
-\item{spec.ens}{Output from computeSpectraEns()}
+\item{spec.ens}{list or dataframe containing frequency (freq) and power (pwr); typically output of computeSpectraEns}
+
+\item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)}
+
+\item{xlims}{2-element vector defining the range of periods (x-axis)}
+
+\item{xticks}{n-element vector of the periods labeled}
+
+\item{ylims}{2-element vectordefining the range of spectral power (y-axis)}
+
+\item{color.low}{colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)}
+
+\item{color.high}{colour for central quantiles of the distribution (high probability); see `plotTimeseriesRibbons`)}
+
+\item{color.line}{color used for the median spectrum (see `plotTimeseriesRibbons`)}
+
+\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
+
+\item{alp}{alpha (transparency) parameter for the ribbons}
 }
 \value{
-ggplot object of spectrum plot
+SpecPlot, a ggplot object
 }
 \description{
-Plot the output of computeSpectraEns() as a ribbon plot of distributions, plus analytical or Monte-Carlo-based confidence levels
+Plot the output of `computeSpectraEns` as a ribbon plot of distributions, with specified confidence levels
+}
+\details{
+`plotSpectraEns` re-uses `plotTimeseriesRibbons` and therefore the same graphical conventions. Spectra are plotted on a log-log scale, with the x-axis labeled by periods instead of frequencies, for improved intelligibility.
 }
 \seealso{
 Other plot: 
@@ -58,6 +82,9 @@ Other spectra:
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
+}
+\author{
+Julien Emile-Geay
 }
 \concept{plot}
 \concept{spectra}

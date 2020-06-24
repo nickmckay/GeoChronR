@@ -9,8 +9,9 @@ computeSpectraEns(
   values,
   max.ens = NA,
   method = "mtm",
-  gauss = FALSE,
-  ofac = 1,
+  probs = 0.95,
+  gauss = TRUE,
+  ofac = 4,
   padfac = 2,
   tbw = 3,
   wgtrad = 1,
@@ -25,7 +26,9 @@ computeSpectraEns(
 
 \item{max.ens}{Maximum number of ensemble members to analyze}
 
-\item{ofac}{oversampling factor for lomb::lsp}
+\item{probs}{vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.}
+
+\item{ofac}{oversampling factor for lomb::lsp and dplR::redfit}
 
 \item{padfac}{padding factor for astrochron::mtm___ functions}
 
@@ -40,11 +43,30 @@ a list of ensemble spectra results
 \itemize{
 \item freqs: vector of frequencies
 \item power: vector of spectral powers
-\item powerSyn: matrix of synthetic spectral power results
+\item power.CL: matrix of confidence limits for spectral power
 }
 }
 \description{
-Calculate ensemble power spectra using a variety of spectral methods: Lomb-Scargle, Multi-Taper, and Weighted Wavelet Z-transform
+Calculate ensemble power spectra using 4 spectral methods: 
+\enumerate{
+\item Lomb-Scargle periodogram
+\item REDFIT (Mudelsee et al, 2009) 
+\item Multitaper Method (Thomson et al. 1982)
+\item nuspectral (Mathias et al 2004)  (no confidence estimation)
+}
+For REDFIT and MTM, only the 95% confidence limit is computed. The estimation thereof is as described in Mudelsee et al 2009 for a single ensemble member.
+For multiple ensemble members, the median that 95% quantile is taken (a conservative choice).  
+For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted sa confidence limits.
+}
+\details{
+Calculate ensemble power spectra
+}
+\references{
+Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
+
+Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
+
+Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
 }
 \seealso{
 Other spectra: 

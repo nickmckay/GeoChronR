@@ -7,33 +7,33 @@
 plotSpectrum(
   spec.df,
   cl.df = NULL,
-  period_range = NULL,
-  period_ticks = c(10, 20, 50, 100, 200, 500, 1000),
+  xlims = NULL,
+  xticks = c(10, 20, 50, 100, 200, 500, 1000),
   ylims = NULL,
-  colour.main = "orange",
-  colour.cl = "white"
+  color.line = "black",
+  color.cl = "red"
 )
 }
 \arguments{
 \item{spec.df}{list or dataframe containing frequency (freq) and power (pwr)}
 
-\item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99%) as well as frequency (freq)}
+\item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)}
 
-\item{period_range}{range of plotted periodicities}
+\item{xlims}{range of plotted periodicities}
 
-\item{period_ticks}{ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)}
+\item{xticks}{ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)}
 
 \item{ylims}{2-vector for the y-axis. If NULL, computed from range(pwr)}
 
-\item{color.main}{color of the line representing the spectrum}
+\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
 
-\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99%)}
+\item{color.main}{color of the line representing the spectrum}
 }
 \value{
 SpecPlot, a ggplot object
 }
 \description{
-Plota a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
+Plot a a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
 }
 \seealso{
 Other plot: 

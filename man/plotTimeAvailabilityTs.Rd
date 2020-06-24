@@ -2,7 +2,7 @@
 % Please edit documentation in R/mapping.functions.R
 \name{plotTimeAvailabilityTs}
 \alias{plotTimeAvailabilityTs}
-\title{Create a Time availability plot.}
+\title{Create a Time availability plot}
 \usage{
 plotTimeAvailabilityTs(
   TS,
@@ -17,15 +17,15 @@ plotTimeAvailabilityTs(
 
 \item{ageRange}{a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)}
 
-\item{ageVar}{What age variable should be used (default = "age)}
+\item{ageVar}{What age variable should be used (default = "age")}
 
-\item{groupVar}{What variable Should be used to Group the counts? (default = "archiveType)}
+\item{groupVar}{What variable Should be used to Group the counts? (default = "archiveType")}
 
-\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)}
+\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)}
 }
 \value{
 a ggplot object
 }
 \description{
-Create a Time availability plot.
+Create a Time availability plot
 }
