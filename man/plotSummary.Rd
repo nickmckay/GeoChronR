@@ -4,11 +4,21 @@
 \alias{plotSummary}
 \title{Plot a summary figure}
 \usage{
-plotSummary(L, paleo.age.var = "age", paleo.data.var = NA,
-  chron.number = NA, paleo.meas.num = NA, chron.meas.num = NA,
-  chron.depth.var = "depth", chron.age.var = "age", dotSize = 5,
-  summary.font.size = 10, text.width = 400/summary.font.size,
-  legend.position = c(0.7, 0.3), ...)
+plotSummary(
+  L,
+  paleo.age.var = "age",
+  paleo.data.var = NA,
+  chron.number = NA,
+  paleo.meas.num = NA,
+  chron.meas.num = NA,
+  chron.depth.var = "depth",
+  chron.age.var = "age",
+  dotSize = 5,
+  summary.font.size = 10,
+  text.width = 400/summary.font.size,
+  legend.position = c(0.7, 0.3),
+  ...
+)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -42,26 +52,34 @@ myPlot = summaryPlot(L)
 
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 }
 \author{
 Nick McKay
 }
+\concept{plot}

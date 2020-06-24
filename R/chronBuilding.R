@@ -23,7 +23,7 @@ stringifyVariables <- function(varName,usedValue){
 #' askUser
 #' @description Helper function to consistently get user input
 #' @param query 
-#'
+#' @importFrom crayon bold
 #' @return user input
 #' @export
 askUser <- function(query){
@@ -50,9 +50,8 @@ askUser <- function(query){
 #' @param reservoirAge14CUncertaintyVar 
 #' @param rejectedAgesVar 
 #' @param splitAges if there's an age_type column, and only one age column, intelligently split between age and age14C
-
-#'
-#' @import purrr crayon 
+#' @importFrom purrr map_dbl map_lgl map_chr
+#' @importFrom crayon bold yellow cyan red green blue 
 #' @return a standardized dataframe of chron measurements
 #' @export
 createChronMeasInputDf <- function(L,

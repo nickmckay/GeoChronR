@@ -4,8 +4,13 @@
 \alias{fdr}
 \title{False Discovery Testing of p-values from multiple testing}
 \usage{
-fdr(pvals, qlevel = 0.05, method = "original", adjustment.method = NULL,
-  adjustment.args = NULL)
+fdr(
+  pvals,
+  qlevel = 0.05,
+  method = "original",
+  adjustment.method = NULL,
+  adjustment.args = NULL
+)
 }
 \arguments{
 \item{pvals}{a vector of pvals on which to conduct the multiple testing}
@@ -33,10 +38,13 @@ iThis is the main function designed for general usage for determining significan
  signif <- fdr(pvals,method="original",adjustment.method="mean")
 }
 \seealso{
-Other FDR: \code{\link{fdr.master}},
-  \code{\link{fdrBasic}}, \code{\link{propAlt}},
-  \code{\link{storey}}
+Other FDR: 
+\code{\link{fdr.master}()},
+\code{\link{fdrBasic}()},
+\code{\link{propAlt}()},
+\code{\link{storey}()}
 }
 \author{
 Chris Paciorek
 }
+\concept{FDR}

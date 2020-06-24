@@ -109,8 +109,9 @@ return(dateExp)
 #' @param seqType 
 #' @param topBoundary 
 #' @param bottomBoundary 
-#' @import magrittr dplyr tidyr
-#'
+#' @import dplyr tidyr
+#' @importFrom magrittr %>% 
+#' @importFrom purrr pmap_chr
 #' @return
 #' @export
 createOxcalModel <- function(cdf,
@@ -356,6 +357,7 @@ loadOxcalOutput <- function(L,
 #' @author Nick McKay
 #' @family oxcal
 #' @import oxcAAR
+#' @importFrom crayon bold yellow cyan red green blue 
 #' @title Generate an oxcal Age Model and add it into a LiPD object
 #' @description This is a high-level function that uses oxcal to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Bronk Ramsey et al. 2008 doi:10.1016/j.quascirev.2007.01.019
 #' @inheritParams writeBacon

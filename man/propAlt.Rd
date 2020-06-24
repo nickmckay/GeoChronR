@@ -4,8 +4,11 @@
 \alias{propAlt}
 \title{Proportion of alternate hypotheses}
 \usage{
-propAlt(pvals, adjustment.method = "mean", adjustment.args = list(edf.lower
-  = 0.8, num.steps = 20))
+propAlt(
+  pvals,
+  adjustment.method = "mean",
+  adjustment.args = list(edf.lower = 0.8, num.steps = 20)
+)
 }
 \arguments{
 \item{pvals}{a vector of pvals on which to conduct the multiple testing}
@@ -26,10 +29,13 @@ This is an internal function that calculates an estimate of a, the proportion of
 a <- propAlt(pvals,adjustment.method="mean")
 }
 \seealso{
-Other FDR: \code{\link{fdr.master}},
-  \code{\link{fdrBasic}}, \code{\link{fdr}},
-  \code{\link{storey}}
+Other FDR: 
+\code{\link{fdr.master}()},
+\code{\link{fdrBasic}()},
+\code{\link{fdr}()},
+\code{\link{storey}()}
 }
 \author{
 Chris Paciorek
 }
+\concept{FDR}

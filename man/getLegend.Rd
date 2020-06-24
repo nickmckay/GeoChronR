@@ -12,32 +12,45 @@ getLegend(a.gplot)
 \value{
 a legend grob
 }
+\description{
+get a ggplot legend object
+}
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{pcaEns}}, \code{\link{plotPcaEns}}
+Other pca: 
+\code{\link{ar1Surrogates}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{pcaEns}()},
+\code{\link{plotPcaEns}()}
 }
 \author{
 Nick McKay
 }
+\concept{pca}
+\concept{plot}

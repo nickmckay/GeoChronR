@@ -4,8 +4,14 @@
 \alias{summaryPlotTs}
 \title{TS overview plot}
 \usage{
-summaryPlotTs(TS, sortVar = "archiveType", ageRange = NA, ageVar = "age",
-  step = NA, ...)
+summaryPlotTs(
+  TS,
+  sortVar = "archiveType",
+  ageRange = NA,
+  ageVar = "age",
+  step = NA,
+  ...
+)
 }
 \arguments{
 \item{TS}{}

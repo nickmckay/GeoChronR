@@ -4,13 +4,20 @@
 \alias{oxCalDateExpression}
 \title{write oxcal expression for each date.}
 \usage{
-oxCalDateExpression(..., defaultOutlierProb = 0.05, calCurve = "intcal13",
-  unknownDeltaR = FALSE)
+oxCalDateExpression(
+  ...,
+  defaultOutlierProb = 0.05,
+  calCurve = "intcal13",
+  unknownDeltaR = FALSE
+)
 }
 \arguments{
 \item{...}{}
 
 \item{defaultOutlierProb}{}
+}
+\value{
+
 }
 \description{
 write oxcal expression for each date.

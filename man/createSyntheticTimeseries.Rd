@@ -4,8 +4,13 @@
 \alias{createSyntheticTimeseries}
 \title{Create a synthetic timeseries that emulates the characteristics of a variable}
 \usage{
-createSyntheticTimeseries(time, values, nens = 1, sameTrend = TRUE,
-  index.to.model = NA)
+createSyntheticTimeseries(
+  time,
+  values,
+  nens = 1,
+  sameTrend = TRUE,
+  index.to.model = NA
+)
 }
 \arguments{
 \item{time}{LiPD "variable list" or vector of year/age values}
@@ -21,13 +26,19 @@ a vector or matrix of synthetic values
 create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 }
 \seealso{
-Other spectra: \code{\link{PeriodAnnotate}},
-  \code{\link{ar1Surrogates}},
-  \code{\link{computeSpectraEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{reverselog10_trans}}
+Other spectra: 
+\code{\link{PeriodAnnotate}()},
+\code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{reverselog10_trans}()}
 
-Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{getLegend}}, \code{\link{pcaEns}},
-  \code{\link{plotPcaEns}}
+Other pca: 
+\code{\link{ar1Surrogates}()},
+\code{\link{getLegend}()},
+\code{\link{pcaEns}()},
+\code{\link{plotPcaEns}()}
 }
+\concept{pca}
+\concept{spectra}

@@ -4,8 +4,15 @@
 \alias{bin2d}
 \title{Two dimensional binning}
 \usage{
-bin2d(x, y, nbins = 100, x.bin = NA, y.bin = NA, filterFrac = NA,
-  interpolate = TRUE)
+bin2d(
+  x,
+  y,
+  nbins = 100,
+  x.bin = NA,
+  y.bin = NA,
+  filterFrac = NA,
+  interpolate = TRUE
+)
 }
 \arguments{
 \item{x}{n by m matrix where n is the number of observations and m is >= 1}
@@ -29,6 +36,8 @@ A list with a matrix of density, x.bin and y.bin
 Calculate the density of samples along a 2-dimensional grid
 }
 \seealso{
-Other gridding: \code{\link{kde_2d}},
-  \code{\link{quantile2d}}
+Other gridding: 
+\code{\link{kde_2d}()},
+\code{\link{quantile2d}()}
 }
+\concept{gridding}

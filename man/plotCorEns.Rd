@@ -4,9 +4,14 @@
 \alias{plotCorEns}
 \title{Plot the results of an ensemble correlation}
 \usage{
-plotCorEns(corEns, bins = 40, lineLabels = rownames(corStats),
-  add.to.plot = ggplot(), legendPosition = c(0.2, 0.8),
-  significanceOption = "autocor")
+plotCorEns(
+  corEns,
+  bins = 40,
+  lineLabels = rownames(corStats),
+  add.to.plot = ggplot(),
+  legendPosition = c(0.2, 0.8),
+  significanceOption = "autocor"
+)
 }
 \arguments{
 \item{bins}{Number of bins in the histogram}
@@ -35,28 +40,36 @@ A ggplot object
 Plots the output of an ensemble correlation analysis.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 }
 \author{
 Julien Emile-Geay
 
 Nick McKay
 }
+\concept{plot}

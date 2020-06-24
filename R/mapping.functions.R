@@ -9,7 +9,7 @@
 #' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)
 #' @param ... variables to pass to mapTs()
 #' @inheritParams mapTs
-#' @import gridExtra
+#' @importFrom gridExtra grid.arrange
 #' 
 #' @return a gridExtra ggplot output
 #' @export
@@ -42,7 +42,8 @@ return(out)
 #' @param ageVar What age variable should be used (default = "age)
 #' @param groupVar What variable Should be used to Group the counts? (default = "archiveType)
 #' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the ageRange)
-#' @import ggplot2 tidyr purrr
+#' @import ggplot2 tidyr
+#' @importFrom purrr map_dbl map_dfc map_chr
 #' @return a ggplot object
 #' @export
 plotTimeAvailabilityTs <- function(TS,
@@ -235,7 +236,7 @@ mapLipd <- function(D,
 #' @import ggmap
 #' @import ggplot2
 #' @import mapproj
-#' @import maps
+#' @importFrom maps map
 #' @param lat latitude(s) range to map
 #' @param lon longitude(s) range to map
 #' @param map.type "stamen" or "line" 

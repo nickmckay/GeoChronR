@@ -9,6 +9,9 @@ stringifyVariables(varName, usedValue)
 \arguments{
 \item{varName}{}
 }
+\value{
+
+}
 \description{
 Convert variable names to strings
 }

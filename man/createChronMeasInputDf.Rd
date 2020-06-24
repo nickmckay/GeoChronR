@@ -4,13 +4,21 @@
 \alias{createChronMeasInputDf}
 \title{Create a data frame for chron measurement data}
 \usage{
-createChronMeasInputDf(L, which.chron = NA, which.mt = NA,
-  labIDVar = "labID", age14CVar = "age14C",
-  age14CuncertaintyVar = "age14CUnc", ageVar = "age",
-  ageUncertaintyVar = "ageUnc", depthVar = "depth",
+createChronMeasInputDf(
+  L,
+  which.chron = NA,
+  which.mt = NA,
+  labIDVar = "labID",
+  age14CVar = "age14C",
+  age14CuncertaintyVar = "age14CUnc",
+  ageVar = "age",
+  ageUncertaintyVar = "ageUnc",
+  depthVar = "depth",
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected", splitAges = TRUE)
+  rejectedAgesVar = "rejected",
+  splitAges = TRUE
+)
 }
 \arguments{
 \item{L}{}

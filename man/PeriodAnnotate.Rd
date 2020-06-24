@@ -4,8 +4,14 @@
 \alias{PeriodAnnotate}
 \title{Annotate plot of spectra with given periodicities}
 \usage{
-PeriodAnnotate(specPlot, periods, colour = "orange", log10scale = T,
-  ylims = NULL, size = 4)
+PeriodAnnotate(
+  specPlot,
+  periods,
+  colour = "orange",
+  log10scale = T,
+  ylims = NULL,
+  size = 4
+)
 }
 \arguments{
 \item{specPlot}{ggplot handle to figure containing spectrum}
@@ -21,32 +27,43 @@ ggplot object of spectrum plot
 Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other spectra: \code{\link{ar1Surrogates}},
-  \code{\link{computeSpectraEns}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{reverselog10_trans}}
+Other spectra: 
+\code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{reverselog10_trans}()}
 }
 \author{
 Julien Emile-Geay
 }
+\concept{plot}
+\concept{spectra}

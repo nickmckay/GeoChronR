@@ -4,8 +4,16 @@
 \alias{loadBaconOutput}
 \title{Load the ensemble, summary and distribution data from a Bacon simulation}
 \usage{
-loadBaconOutput(L, site.name = L$dataSetName, K = NA, which.chron = NA,
-  baconDir = NA, modelNum = NA, makeNew = NA, maxEns = 1000)
+loadBaconOutput(
+  L,
+  site.name = L$dataSetName,
+  K = NA,
+  which.chron = NA,
+  baconDir = NA,
+  modelNum = NA,
+  makeNew = NA,
+  maxEns = 1000
+)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -31,9 +39,12 @@ loadBaconOutput(L)
 #Run in interactive mode
 }
 \seealso{
-Other Bacon: \code{\link{runBacon}},
-  \code{\link{sampleBaconAges}}, \code{\link{writeBacon}}
+Other Bacon: 
+\code{\link{runBacon}()},
+\code{\link{sampleBaconAges}()},
+\code{\link{writeBacon}()}
 }
 \author{
 Nick McKay
 }
+\concept{Bacon}

@@ -4,9 +4,17 @@
 \alias{runBam}
 \title{Generate a Banded Age Model (BAM) and add it into a LiPD object}
 \usage{
-runBam(L, which.paleo = NA, which.pmt = NA, which.chron = 1,
-  which.model = NA, ens.number = NA, makeNew = FALSE, nens = 1000,
-  model = NA)
+runBam(
+  L,
+  which.paleo = NA,
+  which.pmt = NA,
+  which.chron = 1,
+  which.model = NA,
+  ens.number = NA,
+  makeNew = FALSE,
+  nens = 1000,
+  model = NA
+)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -56,11 +64,13 @@ L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
 nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
 }
 \seealso{
-Other BAM: \code{\link{bamCorrect}},
-  \code{\link{simulateBam}}
+Other BAM: 
+\code{\link{bamCorrect}()},
+\code{\link{simulateBam}()}
 }
 \author{
 Nick McKay
 
 Maud Comboul (BAM)
 }
+\concept{BAM}

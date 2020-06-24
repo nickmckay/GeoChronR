@@ -4,11 +4,19 @@
 \alias{plotTimeseriesStack}
 \title{Plot a bunch of timeseries in a vertical stack}
 \usage{
-plotTimeseriesStack(plot.df, timeVar = "year", colorVar = "paleoData_TSid",
-  fillAlpha = 0.2, lineSize = 0.5, scaleFactor = 1/3,
-  scaleHeight = 0.75, labBuff = 0.02, labSize = 3, labSpace = 2,
-  colorRamp = function(nColors) {     RColorBrewer::brewer.pal(nColors,
-  "Dark2") })
+plotTimeseriesStack(
+  plot.df,
+  timeVar = "year",
+  colorVar = "paleoData_TSid",
+  fillAlpha = 0.2,
+  lineSize = 0.5,
+  scaleFactor = 1/3,
+  scaleHeight = 0.75,
+  labBuff = 0.02,
+  labSize = 3,
+  labSpace = 2,
+  colorRamp = function(nColors) {     RColorBrewer::brewer.pal(nColors, "Dark2") }
+)
 }
 \arguments{
 \item{plot.df}{A tidy data.frame, typically the output of tidyTs()}
@@ -38,26 +46,34 @@ A ggplot object of the plot
 Creates a suite of plots to characterize the results of an ensemble regression.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 }
 \author{
 Nick McKay
 }
+\concept{plot}

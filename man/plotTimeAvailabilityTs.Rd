@@ -4,8 +4,13 @@
 \alias{plotTimeAvailabilityTs}
 \title{Create a Time availability plot.}
 \usage{
-plotTimeAvailabilityTs(TS, ageRange = NA, ageVar = "age",
-  groupVar = "archiveType", step = NA)
+plotTimeAvailabilityTs(
+  TS,
+  ageRange = NA,
+  ageVar = "age",
+  groupVar = "archiveType",
+  step = NA
+)
 }
 \arguments{
 \item{TS}{a lipd TS object. This should probably be filtered to show just records you're interested in, as all we counted}

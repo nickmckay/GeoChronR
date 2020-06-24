@@ -51,8 +51,11 @@ res <- bamCorrect(X,t,model)
 #the model structure
 }
 \seealso{
-Other BAM: \code{\link{runBam}}, \code{\link{simulateBam}}
+Other BAM: 
+\code{\link{runBam}()},
+\code{\link{simulateBam}()}
 }
 \author{
 Maud Comboul
 }
+\concept{BAM}

@@ -4,9 +4,15 @@
 \alias{estimateUncertaintyFromRange}
 \title{Estimate uncertainty estimates from high/low range}
 \usage{
-estimateUncertaintyFromRange(L, range1 = NA, range2 = NA,
-  chronPaleo = "chronData", sigmaRange = 2, which.mt = 1,
-  which.data = 1)
+estimateUncertaintyFromRange(
+  L,
+  range1 = NA,
+  range2 = NA,
+  chronPaleo = "chronData",
+  sigmaRange = 2,
+  which.mt = 1,
+  which.data = 1
+)
 }
 \arguments{
 \item{L}{A lipd dataset}
@@ -30,7 +36,9 @@ MT: a LiPD measurementTable with a new unc.estimate variable
 Estimate uncertainty (plus/minus values) from a range of values
 }
 \seealso{
-Other LiPD manipulation: \code{\link{getVariableIndex}},
-  \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{selectData}}
+Other LiPD manipulation: 
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{selectData}()}
 }
+\concept{LiPD manipulation}

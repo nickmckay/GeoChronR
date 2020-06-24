@@ -4,10 +4,23 @@
 \alias{plotModelDistributions}
 \title{Plot probability distributions}
 \usage{
-plotModelDistributions(L, dist.var = "age", y.var = "depth",
-  mode = "chron", which.data = 1, model.num = 1, add.to.plot = ggplot(),
-  alp = 0.5, color = "purple", scaleFrac = 0.02, equalArea = TRUE,
-  dist.plot = NA, distType = "violin", thick = 0.1, truncateDist = NA)
+plotModelDistributions(
+  L,
+  dist.var = "age",
+  y.var = "depth",
+  mode = "chron",
+  which.data = 1,
+  model.num = 1,
+  add.to.plot = ggplot(),
+  alp = 0.5,
+  color = "purple",
+  scaleFrac = 0.02,
+  equalArea = TRUE,
+  dist.plot = NA,
+  distType = "violin",
+  thick = 0.1,
+  truncateDist = NA
+)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -43,29 +56,40 @@ A ggplot object
 Plot or add probability distributions from a paleo or chron model to a plot.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}}, \code{\link{plotPcaEns}},
-  \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other chron: \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}}
+Other chron: 
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()}
 }
 \author{
 Nick McKay
 }
+\concept{chron}
+\concept{plot}

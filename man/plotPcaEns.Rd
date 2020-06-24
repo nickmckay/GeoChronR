@@ -4,11 +4,22 @@
 \alias{plotPcaEns}
 \title{Map ensemble pca loadings and plot PC timeseries}
 \usage{
-plotPcaEns(ens.PC.out, TS, map.type = "line", which.PCs = c(1, 2),
-  f = 0.2, color = "temp", dotsize = 5, restrict.map.range = TRUE,
-  shape.by.archive = TRUE, projection = "mollweide", boundcirc = TRUE,
-  probs = c(0.025, 0.25, 0.5, 0.75, 0.975), which.leg = 1,
-  legendPosition = c(0.5, 0.5))
+plotPcaEns(
+  ens.PC.out,
+  TS,
+  map.type = "line",
+  which.PCs = c(1, 2),
+  f = 0.2,
+  color = "temp",
+  dotsize = 5,
+  restrict.map.range = TRUE,
+  shape.by.archive = TRUE,
+  projection = "mollweide",
+  boundcirc = TRUE,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
+  which.leg = 1,
+  legendPosition = c(0.5, 0.5)
+)
 }
 \arguments{
 \item{ens.PC.out}{results of pcaEns()}
@@ -48,31 +59,41 @@ A gridExtra ggplot object
 Map ensemble pca loadings and plot PC timeseries
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{getLegend}}, \code{\link{pcaEns}}
+Other pca: 
+\code{\link{ar1Surrogates}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{getLegend}()},
+\code{\link{pcaEns}()}
 }
 \author{
 Nick McKay
 }
+\concept{pca}
+\concept{plot}

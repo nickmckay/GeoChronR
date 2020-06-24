@@ -18,10 +18,13 @@ estimate of a, the number of alternative hypotheses
 This is an internal function that calculates the basic Storey (2002) estimator of a, the proportion of alternative hypotheses.
 }
 \seealso{
-Other FDR: \code{\link{fdr.master}},
-  \code{\link{fdrBasic}}, \code{\link{fdr}},
-  \code{\link{propAlt}}
+Other FDR: 
+\code{\link{fdr.master}()},
+\code{\link{fdrBasic}()},
+\code{\link{fdr}()},
+\code{\link{propAlt}()}
 }
 \author{
 Chris Paciorek
 }
+\concept{FDR}

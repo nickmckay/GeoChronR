@@ -4,9 +4,15 @@
 \alias{plotSpectraEns}
 \title{Plot ensemble spectra output}
 \usage{
-plotSpectraEns(spec.ens, cl.df = NULL, period_range = NULL,
-  period_ticks = c(10, 20, 50, 100, 200, 500, 1000), ylims = NULL,
-  colour.main = "orange", colour.cl = "white")
+plotSpectraEns(
+  spec.ens,
+  cl.df = NULL,
+  period_range = NULL,
+  period_ticks = c(10, 20, 50, 100, 200, 500, 1000),
+  ylims = NULL,
+  colour.main = "orange",
+  colour.cl = "white"
+)
 }
 \arguments{
 \item{spec.ens}{Output from computeSpectraEns()}
@@ -18,30 +24,40 @@ ggplot object of spectrum plot
 Plot the output of computeSpectraEns() as a ribbon plot of distributions, plus analytical or Monte-Carlo-based confidence levels
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other spectra: \code{\link{PeriodAnnotate}},
-  \code{\link{ar1Surrogates}},
-  \code{\link{computeSpectraEns}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{plotSpectrum}},
-  \code{\link{reverselog10_trans}}
+Other spectra: 
+\code{\link{PeriodAnnotate}()},
+\code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{plotSpectrum}()},
+\code{\link{reverselog10_trans}()}
 }
+\concept{plot}
+\concept{spectra}

@@ -10,6 +10,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+```{r}
+library(geoChronR)
+library(astrochron)
+library(ggplot2)
+library(ggthemes)
+```
+
+
+
 ```{r astronomical forcing, warning=FALSE, message=FALSE}
 L = astrochron::getLaskar()
 forc.df = data.frame("t" = L$Time_ka, "prec" = L$prec_LA04, "obl" = L$tilt_LA04, "ecc" = L$ecc_LA04) 

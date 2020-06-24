@@ -22,9 +22,12 @@ ggmap object
 Create a stamen or line map of the location of a list of LiPD objects
 }
 \seealso{
-Other mapping: \code{\link{assignColors}},
-  \code{\link{baseMap}}, \code{\link{mapLipd}}
+Other mapping: 
+\code{\link{assignColors}()},
+\code{\link{baseMap}()},
+\code{\link{mapLipd}()}
 }
 \author{
 Nick McKay
 }
+\concept{mapping}

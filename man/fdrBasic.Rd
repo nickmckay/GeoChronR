@@ -18,9 +18,13 @@ NULL if no significant tests, or a vector of the indices of the significant test
 This is an internal function that performs the basic FDR of Benjamini & Hochberg (1995).
 }
 \seealso{
-Other FDR: \code{\link{fdr.master}}, \code{\link{fdr}},
-  \code{\link{propAlt}}, \code{\link{storey}}
+Other FDR: 
+\code{\link{fdr.master}()},
+\code{\link{fdr}()},
+\code{\link{propAlt}()},
+\code{\link{storey}()}
 }
 \author{
 Chris Paciorek
 }
+\concept{FDR}

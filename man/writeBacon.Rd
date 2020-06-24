@@ -4,9 +4,19 @@
 \alias{writeBacon}
 \title{Create the input file for a Bacon model from a LiPD object}
 \usage{
-writeBacon(L, baconDir = NA, which.chron = 1, remove.rejected = TRUE,
-  overwrite = TRUE, cc = NA, site.name = L$dataSetName, modelNum = NA,
-  useMarine = NULL, askReservoir = TRUE, ...)
+writeBacon(
+  L,
+  baconDir = NA,
+  which.chron = 1,
+  remove.rejected = TRUE,
+  overwrite = TRUE,
+  cc = NA,
+  site.name = L$dataSetName,
+  modelNum = NA,
+  useMarine = NULL,
+  askReservoir = TRUE,
+  ...
+)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -45,9 +55,12 @@ writeBacon(L)
 writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
 }
 \seealso{
-Other Bacon: \code{\link{loadBaconOutput}},
-  \code{\link{runBacon}}, \code{\link{sampleBaconAges}}
+Other Bacon: 
+\code{\link{loadBaconOutput}()},
+\code{\link{runBacon}()},
+\code{\link{sampleBaconAges}()}
 }
 \author{
 Nick McKay
 }
+\concept{Bacon}

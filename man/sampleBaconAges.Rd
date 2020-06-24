@@ -26,11 +26,14 @@ ensTable = sampleBaconAges("MSB2K",maxEns = 1000)
 
 }
 \seealso{
-Other Bacon: \code{\link{loadBaconOutput}},
-  \code{\link{runBacon}}, \code{\link{writeBacon}}
+Other Bacon: 
+\code{\link{loadBaconOutput}()},
+\code{\link{runBacon}()},
+\code{\link{writeBacon}()}
 }
 \author{
 Simon Goring
 
 Nick McKay
 }
+\concept{Bacon}

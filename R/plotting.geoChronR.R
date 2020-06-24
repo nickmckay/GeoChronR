@@ -657,7 +657,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
     lineLabels=as.character(probs)
     
     #make labels better
-    goodName= c("-2σ","-1σ","Median","1σ","2σ")
+    goodName= c("-2 sigma","-1 sigma","Median","1  sigma","2  sigma")
     realProb= c(pnorm(-2:2))
     for(i in 1:length(lineLabels)){
       p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
@@ -833,7 +833,7 @@ plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot
   
   sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
   # Now the plotting begins
-  lbf = c("p ≥ 0.05","p < 0.05")
+  lbf = c("p >= 0.05","p < 0.05")
   
   #artificially introduce at least 1 sig/nonsig for plotting
   if(sum(issig) == 0){
@@ -1119,7 +1119,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
     medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
     sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
-    varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"±",as.character(signif(sdVarExp*100,1)))
+    varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"+/-",as.character(signif(sdVarExp*100,1)))
     
     plotlist[[i]] = plotlist[[i]]+ggtitle(paste("Variance explained =",varExpStr,"%"))
     
@@ -1324,7 +1324,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     
     #calculate the difference
     ageDiff <- list()
-    ageDiff$variableName <- paste0("Δ",pAge$variableName)
+    ageDiff$variableName <- paste0("Delta ",pAge$variableName)
     ageDiff$units <- pAge$units
     ageDiff$values <- pAge$values - cAgeEns$values
     axisLabel(ageDiff)
@@ -1853,7 +1853,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     }else if(timeVar == "depth"){
       xlabName <- paste0("Depth (",plot.df$depthUnits[1],")")
     }else{
-      xlabName <- "¯\\_(ツ)_/¯"
+      xlabName <- "Unknown"
     }
     spag <- spag+annotate(geom = "segment", colour = axisStats$colors , x = xpos, xend = xpos, y = ylow, yend  = yhigh)+
       annotate(geom = "segment", colour = axisStats$colors , x = xpos, xend = xposTick, y = ylow, yend  = ylow)+

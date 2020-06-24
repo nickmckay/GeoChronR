@@ -4,15 +4,36 @@
 \alias{plotChronEns}
 \title{Plot chron ensemble}
 \usage{
-plotChronEns(L, ageVar = "ageEnsemble", depthVar = "depth",
-  chron.number = NA, model.num = NA, probs = c(0.025, 0.25, 0.5, 0.75,
-  0.975), x.bin = NA, y.bin = NA, nbins = 100, bandColorLow = "white",
-  bandColorHigh = "grey70", bandAlp = 1, lineColor = "Black",
-  lineWidth = 1, add.to.plot = ggplot2::ggplot(), nEnsLines = 5,
-  ensLineColor = "red", ensLineAlp = 0.7, distAlp = 0.3,
-  distType = "violin", distColor = "purple", distThick = 0.1,
-  distScale = 0.02, truncateDist = NA, addPaleoAgeDepth = FALSE,
-  paleo.number = NA, meas.num = NA, paleoColor = "cyan")
+plotChronEns(
+  L,
+  ageVar = "ageEnsemble",
+  depthVar = "depth",
+  chron.number = NA,
+  model.num = NA,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
+  x.bin = NA,
+  y.bin = NA,
+  nbins = 100,
+  bandColorLow = "white",
+  bandColorHigh = "grey70",
+  bandAlp = 1,
+  lineColor = "Black",
+  lineWidth = 1,
+  add.to.plot = ggplot2::ggplot(),
+  nEnsLines = 5,
+  ensLineColor = "red",
+  ensLineAlp = 0.7,
+  distAlp = 0.3,
+  distType = "violin",
+  distColor = "purple",
+  distThick = 0.1,
+  distScale = 0.02,
+  truncateDist = NA,
+  addPaleoAgeDepth = FALSE,
+  paleo.number = NA,
+  meas.num = NA,
+  paleoColor = "cyan"
+)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -76,30 +97,40 @@ A ggplot object
 Plot creates an age model plot with all the bells and whistles, including a spread of ensemble members, probability distributions, and a few example ensemble members.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other chron: \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChron}},
-  \code{\link{plotModelDistributions}}
+Other chron: 
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChron}()},
+\code{\link{plotModelDistributions}()}
 }
 \author{
 Nick McKay
 }
+\concept{chron}
+\concept{plot}

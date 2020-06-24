@@ -4,13 +4,27 @@
 \alias{runOxcal}
 \title{Generate an oxcal Age Model and add it into a LiPD object}
 \usage{
-runOxcal(L, which.chron = NA, which.mt = NA, oxcalPath = "~/OxCal/",
-  modelNum = NA, remove.rejected = TRUE, overwrite = TRUE,
-  maxEns = 1000, staticReservoirAge = NA, staticReservoirAgeUnc = NA,
-  surfaceAge = NA, surfaceAgeUnc = NA, surfaceAgeDepth = 0,
-  depthInterval = NA, eventsPerUnitLength = NA,
-  eventsPerUnitLengthUncertainty = 0, outlierProb = 0.05,
-  calCurve = "IntCal13", ...)
+runOxcal(
+  L,
+  which.chron = NA,
+  which.mt = NA,
+  oxcalPath = "~/OxCal/",
+  modelNum = NA,
+  remove.rejected = TRUE,
+  overwrite = TRUE,
+  maxEns = 1000,
+  staticReservoirAge = NA,
+  staticReservoirAgeUnc = NA,
+  surfaceAge = NA,
+  surfaceAgeUnc = NA,
+  surfaceAgeDepth = 0,
+  depthInterval = NA,
+  eventsPerUnitLength = NA,
+  eventsPerUnitLengthUncertainty = 0,
+  outlierProb = 0.05,
+  calCurve = "IntCal13",
+  ...
+)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -49,3 +63,4 @@ L = runOxcal(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/
 \author{
 Nick McKay
 }
+\concept{oxcal}

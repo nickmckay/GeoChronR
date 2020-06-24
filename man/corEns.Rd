@@ -4,9 +4,18 @@
 \alias{corEns}
 \title{Ensemble correlation}
 \usage{
-corEns(time1, values1, time2, values2, binvec = NA, binstep = NA,
-  binfun = mean, max.ens = NA, percentiles = c(0.025, 0.25, 0.5, 0.75,
-  0.975), minObs = 10)
+corEns(
+  time1,
+  values1,
+  time2,
+  values2,
+  binvec = NA,
+  binstep = NA,
+  binfun = mean,
+  max.ens = NA,
+  percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
+  minObs = 10
+)
 }
 \arguments{
 \item{time1}{matrix of age/time ensembles, or single column}

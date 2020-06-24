@@ -4,11 +4,20 @@
 \alias{createOxcalModel}
 \title{Create the oxcal model script}
 \usage{
-createOxcalModel(cdf, depthsToModel = NA, depthInterval = 10, thin = 50,
-  nIt = 10000, eventsPerUnitLength = 1,
-  eventsPerUnitLengthUncertainty = 2, seqType = "P_Sequence",
-  topBoundary = "Boundary", bottomBoundary = "Boundary",
-  outlierProb = 0.05, calCurve = "intcal13")
+createOxcalModel(
+  cdf,
+  depthsToModel = NA,
+  depthInterval = 10,
+  thin = 50,
+  nIt = 10000,
+  eventsPerUnitLength = 1,
+  eventsPerUnitLengthUncertainty = 2,
+  seqType = "P_Sequence",
+  topBoundary = "Boundary",
+  bottomBoundary = "Boundary",
+  outlierProb = 0.05,
+  calCurve = "intcal13"
+)
 }
 \arguments{
 \item{cdf}{}
@@ -30,6 +39,9 @@ createOxcalModel(cdf, depthsToModel = NA, depthInterval = 10, thin = 50,
 \item{topBoundary}{}
 
 \item{bottomBoundary}{}
+}
+\value{
+
 }
 \description{
 Create the oxcal model script

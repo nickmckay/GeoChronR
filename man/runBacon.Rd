@@ -4,15 +4,31 @@
 \alias{runBacon}
 \title{Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object}
 \usage{
-runBacon(L, which.chron = NA, which.mt = NA, baconDir = NA,
-  site.name = L$dataSetName, modelNum = NA, remove.rejected = TRUE,
-  overwrite = TRUE, cc = NA, maxEns = 1000, useMarine = NULL,
-  labIDVar = "labID", age14CVar = "age14C",
-  age14CuncertaintyVar = "age14CUnc", ageVar = "age",
-  ageUncertaintyVar = "ageUnc", depthVar = "depth",
+runBacon(
+  L,
+  which.chron = NA,
+  which.mt = NA,
+  baconDir = NA,
+  site.name = L$dataSetName,
+  modelNum = NA,
+  remove.rejected = TRUE,
+  overwrite = TRUE,
+  cc = NA,
+  maxEns = 1000,
+  useMarine = NULL,
+  labIDVar = "labID",
+  age14CVar = "age14C",
+  age14CuncertaintyVar = "age14CUnc",
+  ageVar = "age",
+  ageUncertaintyVar = "ageUnc",
+  depthVar = "depth",
   reservoirAge14CVar = "reservoirAge",
   reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected", baconThick = NA, baconAccMean = NA, ...)
+  rejectedAgesVar = "rejected",
+  baconThick = NA,
+  baconAccMean = NA,
+  ...
+)
 }
 \arguments{
 \item{L}{a single LiPD object}
@@ -56,11 +72,14 @@ Run in noninteractive mode, describing everything:
 L = runBacon(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 }
 \seealso{
-Other Bacon: \code{\link{loadBaconOutput}},
-  \code{\link{sampleBaconAges}}, \code{\link{writeBacon}}
+Other Bacon: 
+\code{\link{loadBaconOutput}()},
+\code{\link{sampleBaconAges}()},
+\code{\link{writeBacon}()}
 }
 \author{
 Nick McKay
 
 Maarten Blaauw (Bacon)
 }
+\concept{Bacon}

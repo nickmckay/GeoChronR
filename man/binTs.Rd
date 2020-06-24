@@ -4,8 +4,14 @@
 \alias{binTs}
 \title{Bin every entry in a Timeseries object}
 \usage{
-binTs(TS, timeVar = "ageEnsemble", binvec, binfun = mean, max.ens = 1000,
-  na.col.rm = TRUE)
+binTs(
+  TS,
+  timeVar = "ageEnsemble",
+  binvec,
+  binfun = mean,
+  max.ens = 1000,
+  na.col.rm = TRUE
+)
 }
 \arguments{
 \item{TS}{LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}}

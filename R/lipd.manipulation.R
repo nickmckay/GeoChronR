@@ -2,8 +2,8 @@
 #' @family LiPD manipulation
 #' @title Estimate uncertainty estimates from high/low range
 #' @description Estimate uncertainty (plus/minus values) from a range of values
-#' @import matrixStats
-#'
+#' @importFrom crayon bold yellow cyan red green blue 
+#' @importFrom matrixStats rowDiffs
 #' @param range1 name of one of the range variables
 #' @param range2 name of the other range variable
 #' @param L A lipd dataset 
@@ -13,7 +13,6 @@
 #' @param which.data which chron or paleoData?
 #'
 #' @return MT: a LiPD measurementTable with a new unc.estimate variable
-#' @importFrom matrixStats rowDiffs
 #'
 estimateUncertaintyFromRange = function(L,
                                         range1=NA,

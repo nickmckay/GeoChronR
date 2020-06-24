@@ -4,9 +4,17 @@
 \alias{plotChron}
 \title{High-level chron plotting}
 \usage{
-plotChron(L, chron.number = NA, meas.num = NA, depth.var = "depth",
-  age.var = "age", age14C.var = "age14C", dotSize = 5,
-  legend.position = c(0.7, 0.3), ...)
+plotChron(
+  L,
+  chron.number = NA,
+  meas.num = NA,
+  depth.var = "depth",
+  age.var = "age",
+  age14C.var = "age14C",
+  dotSize = 5,
+  legend.position = c(0.7, 0.3),
+  ...
+)
 }
 \arguments{
 \item{L}{A LiPD object}
@@ -34,30 +42,40 @@ a ggplot object, or NA if there's chronData to plot
 Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotCorEns}},
-  \code{\link{plotHistEns}}, \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 
-Other chron: \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}},
-  \code{\link{plotModelDistributions}}
+Other chron: 
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotModelDistributions}()}
 }
 \author{
 Nick McKay
 }
+\concept{chron}
+\concept{plot}

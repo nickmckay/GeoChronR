@@ -4,8 +4,17 @@
 \alias{alignTimeseriesBin}
 \title{Align and bin two timeseries into comparable bins}
 \usage{
-alignTimeseriesBin(timeX, valuesX, timeY, valuesY, binvec = NA,
-  binstep = NA, binfun = mean, max.ens = NA, minObs = 10)
+alignTimeseriesBin(
+  timeX,
+  valuesX,
+  timeY,
+  valuesY,
+  binvec = NA,
+  binstep = NA,
+  binfun = mean,
+  max.ens = NA,
+  minObs = 10
+)
 }
 \arguments{
 \item{timeX}{matrix of age/time ensembles, or single column}

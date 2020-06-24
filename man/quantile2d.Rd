@@ -4,9 +4,16 @@
 \alias{quantile2d}
 \title{Find quantiles across an ensemble}
 \usage{
-quantile2d(x, y, nbins = 500, x.bin = NA, probs = c(0.025, 0.25, 0.5,
-  0.75, 0.975), nens = max(c(ncol(x), ncol(y))), seed = 111,
-  limitOutliersX = 0.025)
+quantile2d(
+  x,
+  y,
+  nbins = 500,
+  x.bin = NA,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
+  nens = max(c(ncol(x), ncol(y))),
+  seed = 111,
+  limitOutliersX = 0.025
+)
 }
 \arguments{
 \item{x}{n by m matrix where n is the number of observations and m is >= 1}
@@ -32,8 +39,11 @@ Determine quantiles across ensembles of x and/or y, as a function of x, using in
 
 }
 \seealso{
-Other gridding: \code{\link{bin2d}}, \code{\link{kde_2d}}
+Other gridding: 
+\code{\link{bin2d}()},
+\code{\link{kde_2d}()}
 }
 \author{
 Nick McKay
 }
+\concept{gridding}

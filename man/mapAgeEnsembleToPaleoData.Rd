@@ -4,9 +4,18 @@
 \alias{mapAgeEnsembleToPaleoData}
 \title{Map an ageEnsemble variable from a chron model to a paleoMeasurement Table}
 \usage{
-mapAgeEnsembleToPaleoData(L, age.var = "age", depth.var = "depth",
-  which.paleo = NA, which.pmt = NA, which.chron = NA, which.model = NA,
-  which.ens = NA, max.ensemble.members = NA, strictSearch = FALSE)
+mapAgeEnsembleToPaleoData(
+  L,
+  age.var = "age",
+  depth.var = "depth",
+  which.paleo = NA,
+  which.pmt = NA,
+  which.chron = NA,
+  which.model = NA,
+  which.ens = NA,
+  max.ensemble.members = NA,
+  strictSearch = FALSE
+)
 }
 \arguments{
 \item{L}{a lipd object}
@@ -36,6 +45,9 @@ L a lipd object
 Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 }
 \seealso{
-Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
-  \code{\link{getVariableIndex}}, \code{\link{selectData}}
+Other LiPD manipulation: 
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{selectData}()}
 }
+\concept{LiPD manipulation}

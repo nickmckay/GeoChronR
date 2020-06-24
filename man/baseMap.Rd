@@ -4,9 +4,17 @@
 \alias{baseMap}
 \title{Make a base map}
 \usage{
-baseMap(lon, lat, map.type = "line", f = 0.1, restrict.map.range = TRUE,
-  projection = "mollweide", boundcirc = FALSE, global = FALSE,
-  extend.range = 5)
+baseMap(
+  lon,
+  lat,
+  map.type = "line",
+  f = 0.1,
+  restrict.map.range = TRUE,
+  projection = "mollweide",
+  boundcirc = FALSE,
+  global = FALSE,
+  extend.range = 5
+)
 }
 \arguments{
 \item{lon}{longitude(s) range to map}
@@ -34,9 +42,12 @@ ggmap base map
 Create a stamen or line map of the location of a list of LiPD objects
 }
 \seealso{
-Other mapping: \code{\link{assignColors}},
-  \code{\link{mapLipd}}, \code{\link{mapTs}}
+Other mapping: 
+\code{\link{assignColors}()},
+\code{\link{mapLipd}()},
+\code{\link{mapTs}()}
 }
 \author{
 Nick McKay
 }
+\concept{mapping}

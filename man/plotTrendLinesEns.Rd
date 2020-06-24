@@ -4,8 +4,14 @@
 \alias{plotTrendLinesEns}
 \title{Plot an ensemble of trendlines}
 \usage{
-plotTrendLinesEns(mb.df, xrange, pXY = 1:nrow(mb.df), alp = 0.2,
-  color = "red", add.to.plot = ggplot())
+plotTrendLinesEns(
+  mb.df,
+  xrange,
+  pXY = 1:nrow(mb.df),
+  alp = 0.2,
+  color = "red",
+  add.to.plot = ggplot()
+)
 }
 \arguments{
 \item{mb.df}{A data.frame of slopes (column 1) and intercepts (column 2)}
@@ -25,29 +31,40 @@ A ggplot object
 Plot an ensemble of trendlines based on slope and intercept.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesEnsRibbons}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{reverselog10_trans}()}
 
-Other regress: \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}}, \code{\link{regressEns}}
+Other regress: 
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{regressEns}()}
 }
 \author{
 Nick McKay
 }
+\concept{plot}
+\concept{regress}

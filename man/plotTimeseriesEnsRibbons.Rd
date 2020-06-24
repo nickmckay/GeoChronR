@@ -4,10 +4,22 @@
 \alias{plotTimeseriesEnsRibbons}
 \title{Plot an ensemble timeseries as ribbons of probabilities}
 \usage{
-plotTimeseriesEnsRibbons(add.to.plot = ggplot(), X, Y, alp = 1,
-  probs = c(0.025, 0.25, 0.5, 0.75, 0.975), x.bin = NA, y.bin = NA,
-  nbins = 200, colorLow = "white", colorHigh = "grey70",
-  lineColor = "Black", lineWidth = 1, export.quantiles = FALSE, ...)
+plotTimeseriesEnsRibbons(
+  add.to.plot = ggplot(),
+  X,
+  Y,
+  alp = 1,
+  probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
+  x.bin = NA,
+  y.bin = NA,
+  nbins = 200,
+  colorLow = "white",
+  colorHigh = "grey70",
+  lineColor = "Black",
+  lineWidth = 1,
+  export.quantiles = FALSE,
+  ...
+)
 }
 \arguments{
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
@@ -43,26 +55,34 @@ A ggplot object OR list of plotted quantiles, depending on export.quantiles
 Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
 }
 \seealso{
-Other plot: \code{\link{AD2BP_trans}},
-  \code{\link{BP2AD_trans}}, \code{\link{PeriodAnnotate}},
-  \code{\link{axisLabel}},
-  \code{\link{geoChronRPlotTheme}},
-  \code{\link{getLegend}}, \code{\link{getPlotRanges}},
-  \code{\link{plotChronEnsDiff}},
-  \code{\link{plotChronEns}}, \code{\link{plotChron}},
-  \code{\link{plotCorEns}}, \code{\link{plotHistEns}},
-  \code{\link{plotLine}},
-  \code{\link{plotModelDistributions}},
-  \code{\link{plotPcaEns}}, \code{\link{plotPvalsEnsFdr}},
-  \code{\link{plotRegressEns}},
-  \code{\link{plotScatterEns}},
-  \code{\link{plotSpectraEns}}, \code{\link{plotSpectrum}},
-  \code{\link{plotSummary}},
-  \code{\link{plotTimeseriesEnsLines}},
-  \code{\link{plotTimeseriesStack}},
-  \code{\link{plotTrendLinesEns}},
-  \code{\link{reverselog10_trans}}
+Other plot: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{PeriodAnnotate}()},
+\code{\link{axisLabel}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{reverselog10_trans}()}
 }
 \author{
 Nick McKay
 }
+\concept{plot}

@@ -4,8 +4,14 @@
 \alias{getVariableIndex}
 \title{Get the index of variable list}
 \usage{
-getVariableIndex(table, varName = NA, altNames = varName, ignore = NA,
-  always.choose = FALSE, strictSearch = FALSE)
+getVariableIndex(
+  table,
+  varName = NA,
+  altNames = varName,
+  ignore = NA,
+  always.choose = FALSE,
+  strictSearch = FALSE
+)
 }
 \arguments{
 \item{table}{a LiPD measurement, ensemble or summary Table}
@@ -27,7 +33,9 @@ An integer index
 Gets the index for a LiPD "variable list"
 }
 \seealso{
-Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
-  \code{\link{mapAgeEnsembleToPaleoData}},
-  \code{\link{selectData}}
+Other LiPD manipulation: 
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{selectData}()}
 }
+\concept{LiPD manipulation}

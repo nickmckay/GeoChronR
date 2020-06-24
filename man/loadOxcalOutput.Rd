@@ -4,8 +4,16 @@
 \alias{loadOxcalOutput}
 \title{Load oxcal output}
 \usage{
-loadOxcalOutput(L, oxcalResultFilePath, modelParameters, depthUnits = "cm",
-  which.chron = NA, modelNum = NA, makeNew = NA, maxEns = 1000)
+loadOxcalOutput(
+  L,
+  oxcalResultFilePath,
+  modelParameters,
+  depthUnits = "cm",
+  which.chron = NA,
+  modelNum = NA,
+  makeNew = NA,
+  maxEns = 1000
+)
 }
 \arguments{
 \item{L}{}
@@ -23,6 +31,9 @@ loadOxcalOutput(L, oxcalResultFilePath, modelParameters, depthUnits = "cm",
 \item{makeNew}{}
 
 \item{maxEns}{}
+}
+\value{
+
 }
 \description{
 Load oxcal output

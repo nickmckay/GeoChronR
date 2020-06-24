@@ -24,6 +24,8 @@ A list with a matrix of density, x.bin and y.bin
 Use a kernel density estimator to model the density of samples along a 2-dimensional grid
 }
 \seealso{
-Other gridding: \code{\link{bin2d}},
-  \code{\link{quantile2d}}
+Other gridding: 
+\code{\link{bin2d}()},
+\code{\link{quantile2d}()}
 }
+\concept{gridding}

@@ -4,8 +4,14 @@
 \alias{pcaEns}
 \title{Perform principle components analysis (PCA) across an ensemble}
 \usage{
-pcaEns(bin.list, method = "ppca", weights = NA, PCAtype = "corr",
-  nPCs = 4, nEns = 1000)
+pcaEns(
+  bin.list,
+  method = "ppca",
+  weights = NA,
+  PCAtype = "corr",
+  nPCs = 4,
+  nEns = 1000
+)
 }
 \arguments{
 \item{bin.list}{A list of binned data, the output of binTs()}
@@ -24,7 +30,10 @@ pcaEns(bin.list, method = "ppca", weights = NA, PCAtype = "corr",
 Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
 }
 \seealso{
-Other pca: \code{\link{ar1Surrogates}},
-  \code{\link{createSyntheticTimeseries}},
-  \code{\link{getLegend}}, \code{\link{plotPcaEns}}
+Other pca: 
+\code{\link{ar1Surrogates}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{getLegend}()},
+\code{\link{plotPcaEns}()}
 }
+\concept{pca}

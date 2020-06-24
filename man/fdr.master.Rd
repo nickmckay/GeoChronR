@@ -20,9 +20,13 @@ NULL if no significant tests, or a vector of the indices of the significant test
 This is an internal function that performs various versions of the FDR procedure, but without the modification described in section 4 of our J of Climate paper.
 }
 \seealso{
-Other FDR: \code{\link{fdrBasic}}, \code{\link{fdr}},
-  \code{\link{propAlt}}, \code{\link{storey}}
+Other FDR: 
+\code{\link{fdrBasic}()},
+\code{\link{fdr}()},
+\code{\link{propAlt}()},
+\code{\link{storey}()}
 }
 \author{
 Chris Paciorek
 }
+\concept{FDR}

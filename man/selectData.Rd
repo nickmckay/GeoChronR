@@ -4,10 +4,20 @@
 \alias{selectData}
 \title{Select a LiPD "variable list"}
 \usage{
-selectData(L, varName = NA, where = "paleoData", which.data = NA,
-  tableType = "measurement", which.mt = NA, always.choose = FALSE,
-  altNames = NA, model.num = 1, which.ens = 1, which.sum = 1,
-  strictSearch = FALSE)
+selectData(
+  L,
+  varName = NA,
+  where = "paleoData",
+  which.data = NA,
+  tableType = "measurement",
+  which.mt = NA,
+  always.choose = FALSE,
+  altNames = NA,
+  model.num = 1,
+  which.ens = 1,
+  which.sum = 1,
+  strictSearch = FALSE
+)
 }
 \arguments{
 \item{L}{a lipd object}
@@ -41,7 +51,9 @@ A LiPD "variable list" object
 Selects and extracts a LiPD "variable list"
 }
 \seealso{
-Other LiPD manipulation: \code{\link{estimateUncertaintyFromRange}},
-  \code{\link{getVariableIndex}},
-  \code{\link{mapAgeEnsembleToPaleoData}}
+Other LiPD manipulation: 
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()}
 }
+\concept{LiPD manipulation}
