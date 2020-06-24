@@ -141,8 +141,9 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' \item Multitaper Method (Thomson et al. 1982)
 #' \item nuspectral (Mathias et al 2004)  (no confidence estimation)
 #' }
-#' For REDFIT only the 95% confidence limit is computed. The estimation thereof is as described in Mudelsee et al 2009 for a single ensemble member.
-#' For multiple ensemble members, the upper 95% quantile of that 95% quantile is taken (a conservative choice).  
+#' For REDFIT and MTM, only the 95% confidence limit is computed. The estimation thereof is as described in Mudelsee et al 2009 for a single ensemble member.
+#' For multiple ensemble members, the median that 95% quantile is taken (a conservative choice).  
+#' For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted sa confidence limits.
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param max.ens Maximum number of ensemble members to analyze
@@ -164,7 +165,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' @references Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
 #' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
 
-computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gauss=FALSE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
+computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gauss=TRUE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -268,14 +269,13 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
   
   else if (method=='redfit') {
     # make sure the time axis is increasing
-    dt = diff(time[, 1])
-    if (median(dt) < 0) {
-      time <- rev(time, 1)
-    }
+    # dt = diff(time[, 1])
+    # if (median(dt) < 0) {
+    #   time <- rev(time, 1)
+    # }
     
     t = time[, 1]
     v = vals[, 1]
-    
     
     mcflag = !is.na(probs) # only activate Monte Carlo test if probs is not NA
     
@@ -286,16 +286,18 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
                         mctest = mcflag,
                         ofac = ofac)
     noutrow = length(redfit.out$freq)
+    # frequency axis (in tests, ends up being very close between ensemble members, 1e-4 to 1e-6)
+    freq <-  redfit.out$freq
     
     if (nens == 1) {
-      freq <-  redfit.out$freq
       pMat <-  redfit.out$gxx
-      pCL <- redfit.out$ci95
+      if(mcflag){pCL <- redfit.out$ci95}
+      else {pCL = NA}
     }
     else if (nens > 1) {
       #preallocate matrices
       pMat = matrix(NA, ncol = nens, nrow = noutrow)
-      pMatSyn = fMat
+      pMatSyn = pMat
       
       pb = txtProgressBar(min = 1, max = nens, style = 3)
       for (k in 1:nens) {
@@ -309,17 +311,14 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         }
       }
       close(pb)
+      # establish confidence limits
+      if(mcflag) {
+        pCL <- rowMedians(pMatSyn)
+      } else {pCL = NA}
     } 
     
-    # establish confidence limits
-    if(!is.na(probs)) {
-      pCL = matrix(NA,ncol = 1,nrow = noutrow)
-      for(i in 1:noutrow){
-        pCL[i,] = quantile(pMatSyn[i,],probs = 0.95,na.rm  = T)
-      } 
-      # allocate output  
-      spec.ens = list(freqs = freq, power = pMat, power.CL = pCL)
-    } else {spec.ens = list(freqs = freq,power = pMat, power.CL = NA)}
+    # allocate output  
+    spec.ens = list(freqs = freq, power = pMat, power.CL = pCL)
     
   } else if ( method=='mtm') {    # need to make a choice on null : AR(1) or power law?
     if ( mtm_null=='AR(1)') {
@@ -340,41 +339,44 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     mtm.main    <- mtm.func(dfi,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
     mtm.sigfreq <- mtm.func(dfi,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
     # define output matrices
-    ens.mtm.power   <-  matrix(NA,ncol=nens,nrow=length(mtm.main$Frequency))
-    ens.mtm.sigfreq <-  matrix(0,ncol=nens,nrow=length(mtm.main$Frequency))
-    # store output for first member
-    ens.mtm.power[,1] <- mtm.main$Power
-    ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),1] <- 1
+    f <- mtm.main$Frequency
+    nout = length(f)
+    ens.mtm.power  <-  matrix(NA,ncol=nens,nrow=nout)
+    ens.mtm.cl     <-  matrix(NA,ncol=nens,nrow=nout)
+    ens.mtm.sigfreq <-  matrix(0,ncol=nens,nrow=nout)
     
     pb = txtProgressBar(min = 2, max = nens, style = 3)
     # rinse, repeat
-    for (k in 2:nens){
+    for (k in 1:nens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
-      dfl = data.frame(approx(t,v,ti,rule = 2)) 
+      dfl = data.frame(approx(t,v,ti,rule = 2)) # interpolate onto new timescale
       #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
       #dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
       #dfl = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
       mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
       mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
       ens.mtm.power[,k] <- mtm.main$Power
+      if (mtm_null=='AR(1)') {
+        ens.mtm.cl[,k] <- mtm.main$AR1_95_power
+      } else if ( mtm_null=='power_law') {
+        ens.mtm.cl[,k] <- mtm.main$PowerLaw_95_power        
+      } else if ( mtm_null=='ML96') {
+        ens.mtm.cl[,k] <- astrochron::mtm.main$AR1_95_power
+      } 
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
       if(k%%round(nens/50)==0){
         setTxtProgressBar(pb,k)
       }
     }
     close(pb)
-    #freqs.prob = rowMeans(ens.mtm.sigfreq)
-    f = mtm.main$Frequency
-    
-    # establish confidence limits
-    pCL = matrix(NA, ncol = length(probs),nrow = noutrow)
-    
-    for(i in 1:noutrow){
-      pCL[i,] = quantile(pMatSyn[i,],probs = probs,na.rm  = T)
-    } 
+   
+    # prepare significance assessment
+    freqs.prob <- rowMeans(ens.mtm.sigfreq,na.rm = TRUE)
+    pCL <- rowMedians(ens.mtm.cl,na.rm = TRUE)
+    #fMat <- matrix(f,nrow=length(f),ncol=nens,byrow=F)
     
     # allocate output
-    spec.ens = list(freqs = matrix(f,nrow=length(f),ncol=nens,byrow=F), power = ens.mtm.power, power.CL=pCL)
+    spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
     }
   else if ( method=='nuspectral') {
     nt = length(time)
