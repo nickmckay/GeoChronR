@@ -4,10 +4,8 @@
 #'
 #' @param varName 
 #'
-#' @return
+#' @return the variable name as a string
 #' @export
-#'
-#' @examples
 stringifyVariables <- function(varName,usedValue){
   if(is.null(usedValue)){
     so <- paste0(varName," = NULL")

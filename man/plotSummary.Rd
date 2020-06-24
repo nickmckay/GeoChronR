@@ -48,8 +48,9 @@ A gridArrange of ggplot grobs
 shows a map, timeseries, and age model diagram, and basic simple metadata
 }
 \examples{
+\dontrun{
 myPlot = summaryPlot(L)
-
+}
 }
 \seealso{
 Other plot: 

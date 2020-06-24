@@ -10,7 +10,7 @@ stringifyVariables(varName, usedValue)
 \item{varName}{}
 }
 \value{
-
+the variable name as a string
 }
 \description{
 Convert variable names to strings

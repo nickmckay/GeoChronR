@@ -26,6 +26,11 @@ getBaconDir <- function(baconDir = NA){
       }
     }
   }
+  #create the directory if it doesn't exist
+  if(!dir.exists(baconDir)){
+    dir.create(baconDir)
+  }
+  
   return(baconDir)
 }
 

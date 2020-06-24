@@ -33,11 +33,10 @@ FD <- readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip")
 ```
 
 ##Make a map
-yeah, the google maps don't work well at the poles. Try a line map.
+
 
 ```{r,results="hide",fig.keep="all"}
 mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
-
 ```
 
 More map projections are available too. A list is available here:

@@ -162,6 +162,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' @import dplR
 #' @importFrom astrochron mtm mtmPL mtmML96
 #' @importFrom matrixStats rowMedians
+#' @importFrom lomb lsp
 #' @references Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
 #' @references Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
 #' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
@@ -202,7 +203,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
   if (method=='lomb-scargle') {
     t = time[, 1]
     v = vals[, 1]
-    lomb.out = lsp(v,
+    lomb.out = lomb::lsp(v,
                    times = t,
                    ofac = ofac,
                    plot = F)

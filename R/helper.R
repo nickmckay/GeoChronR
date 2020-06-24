@@ -64,9 +64,6 @@ convertBP2AD = function(X){
       return(X)
     }
 
-    
-    
-    
     if(!is.numeric(X$values)){
       print("non-numeric dates, aborting...")
       return(X)
@@ -140,7 +137,7 @@ convertAD2BP = function(X){
 #' @param jitter boolean variable ; if TRUE, add jitter to data to prevent ties
 #' @return gaussianized data matrix
 #' @description Transforms each column of data matrix X to normality using the inverse Rosenblatt transform
-#' @references Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp- 12-31-2016.
+#' @references Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp-12-31-2016.
 #' @references Van Albada, S.J., Robinson P.A. (2006), Transformation of arbitrary distributions to the normal distribution with application to EEG test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004 
 #' @export
 gaussianize <- function(X,jitter=FALSE){ 

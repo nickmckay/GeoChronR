@@ -27,6 +27,10 @@ quantile2d(
 \item{probs}{quantiles to calculate}
 
 \item{nens}{number of ensemble members to derive quantiles for}
+
+\item{seed}{set a seed for reproducibility}
+
+\item{limitOutliersX}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
 }
 \value{
 list of quantiles and x.bin
@@ -35,7 +39,9 @@ list of quantiles and x.bin
 Determine quantiles across ensembles of x and/or y, as a function of x, using interpolation
 }
 \examples{
-
+\dontrun{
+quantiles <- quantile2d(ageEnsemble,paleoEnsemble)
+}
 
 }
 \seealso{

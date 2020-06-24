@@ -225,19 +225,32 @@ reverselog10_trans <- function(){
 #' @title Find quantiles across an ensemble
 #' @family gridding
 #' @description Determine quantiles across ensembles of x and/or y, as a function of x, using interpolation
+#'
 #' @param x n by m matrix where n is the number of observations and m is >= 1
 #' @param y n by j matrix where n is the number of observations and j is >= 1 
 #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
 #' @param x.bin vector of bin edges over which to bin.
 #' @param probs quantiles to calculate
+#' @param seed set a seed for reproducibility
+#' @param limitOutliersX limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)
 #' @param nens number of ensemble members to derive quantiles for
+#'
 #' @return list of quantiles and x.bin
 #' @author Nick McKay
-#' @examples
+#' @examples 
+#' \dontrun{
+#' quantiles <- quantile2d(ageEnsemble,paleoEnsemble)
+#' }
 #' 
-#' 
-quantile2d = function(x,y,nbins=500,x.bin = NA,probs = c(0.025,0.25,0.5,0.75, 0.975),nens = max(c(ncol(x),ncol(y))), seed = 111, limitOutliersX = .025){
-  #interpolates then finds
+quantile2d = function(x,
+                      y,
+                      nbins=500,
+                      x.bin = NA,
+                      probs = c(0.025,0.25,0.5,0.75, 0.975),
+                      nens = max(c(ncol(x),ncol(y))), 
+                      seed = 111, 
+                      limitOutliersX = .025){
+#error checking
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
@@ -436,8 +449,9 @@ kde_2d = function(x,y,nbins=100,x.bin=NA,y.bin=NA){
 #' @param ... arguments to pass on to plotChronEns()
 #' @return A gridArrange of ggplot grobs
 #' @examples 
+#' \dontrun{
 #' myPlot = summaryPlot(L)
-#' 
+#' }
 plotSummary = function(L,
                        paleo.age.var = "age",
                        paleo.data.var = NA,
@@ -537,7 +551,6 @@ plotSummary = function(L,
 #' @param alp Line transparency
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
-#' @examples 
 plotLine = function(add.to.plot=ggplot(),X,Y,color="black",alp = 1){
   
   #X and Y and are LiPD variable list, including values, units, names, etc...
@@ -568,7 +581,6 @@ plotLine = function(add.to.plot=ggplot(),X,Y,color="black",alp = 1){
 #' @param alp Line transparency
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
-#' @examples 
 plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue",maxPlotN=100){
   #check to see if time and values are "column lists"
   
@@ -634,7 +646,6 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
 #' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
-#' @examples 
 plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,color.low="white",color.high="grey70",color.line="Black",lineWidth=1,export.quantiles = FALSE,...){
   #check to see if time and values are "column lists"
   oX = X
@@ -745,11 +756,6 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
   
 }
 
-
-
-
-
-
 #' @export
 #' @family plot
 #' @family regress
@@ -763,7 +769,6 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025
 #' @param maxPlotN Whats the maximum number of lines to plot?
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
 #' @return A ggplot object
-#' @examples 
 plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000,add.to.plot = ggplot()){
   X=as.matrix(X)
   Y=as.matrix(Y)
@@ -799,7 +804,6 @@ plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000,add.to.plot = ggplot()){
 #' @param xrange range of x values (min and max)
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
-#' @examples 
 plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
   xvec = c(xrange,NA)
   yall = c()
@@ -841,7 +845,6 @@ plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "re
 #'  \item "FDR" for autocorrelation and False-discovery-rate corrected p-values
 #'  }
 #' @return A ggplot object
-#' @examples 
 plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot(),legendPosition = c(0.2, 0.8),significanceOption = "autocor"){
   
   #pull data frames out of the list
@@ -913,10 +916,6 @@ plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot
 }
 
 
-
-
-
-
 #' @export
 #' @family plot
 #' @author Julien Emile-Geay
@@ -926,9 +925,8 @@ plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot
 #' @param cor.df A data.frame correlation r and p-values. Output from corEns()
 #' @param alpha probability threshold
 #' @return A ggplot object
-#' @examples 
 plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
-  m=dim(cor.df)[1] # number of hypotheses being tested
+  m = dim(cor.df)[1] # number of hypotheses being tested
   rk = seq(m)
   fdr_thresh = rk/m*alpha
   lvl_thresh = rep(alpha,m)
@@ -971,7 +969,6 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
 #' @param fill fill color of the histogram, following ggplot rules
 #' @return A ggplot object
-#' @examples 
 plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
   #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
   plotData = data.frame("r"=c(ensData))
@@ -1040,7 +1037,6 @@ getLegend<-function(a.gplot){
 #' @param which.leg which map legend to include in the summary plot?
 #' @param legendPosition Where to put the map legend?
 #' @return A gridExtra ggplot object
-#' @examples 
 plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975),which.leg = 1,legendPosition = c(0.5,0.5)){
   #get data out of the TS
   lat = sapply(TS,"[[","geo_latitude")
@@ -1224,7 +1220,6 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param scaleFrac controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
   #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
   #' @return A ggplot object
-  #' @examples 
   plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",which.data = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scaleFrac = 0.02,equalArea = TRUE,dist.plot = NA,distType = "violin",thick = 0.1,truncateDist = NA){
     
     
@@ -1336,7 +1331,6 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param enscolor.line color of the ensemble lines
   #' @param ensLineAlp transparency of the lines
   #' @return A ggplot object
-  #' @examples 
   plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",ageVar = "age",depthVar = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandcolor.low="white",bandcolor.high="grey70",bandAlp=1,color.line="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, enscolor.line = "red",ensLineAlp = 0.7){
     
     
@@ -1513,7 +1507,6 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @param meas.num which measurement Table for the paleoData age-depth
   #' @param paleoColor line color of the paleoData age-depth (following ggplot rules)
   #' @return A ggplot object
-  #' @examples 
   plotChronEns = function(L,ageVar = "ageEnsemble",depthVar = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=100,bandcolor.low="white",bandcolor.high="grey70",bandAlp=1,color.line="Black",lineWidth=1,add.to.plot=ggplot2::ggplot(),nEnsLines = 5, enscolor.line = "red",ensLineAlp = 0.7,distAlp = 0.3,distType = "violin",distColor = "purple",distThick = 0.1,distScale = 0.02,truncateDist = NA,addPaleoAgeDepth = FALSE, paleo.number = NA, meas.num = NA,paleoColor = "cyan"){
     
     C = L$chronData
@@ -1705,7 +1698,6 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' \item modeledYPlot - ribbon plot of values modeled by the ensemble regression, incorporating age uncertainty in both the regression and the predictor timeseries
   #' \item summaryPlot - grid.arrange object of all the regression plots
   #' }
-  #' @examples 
   plotRegressEns = function(regEnsList,alp=0.2,quantiles = c(0.025, .5, .975)){
     regPlot = list()
     #scatter plot
