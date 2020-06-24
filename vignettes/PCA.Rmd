@@ -26,7 +26,7 @@ library(dplyr)
 library(purrr)
 ```
   
-load in all of the files in the "Arctic2kLipds" folder
+This vignetee showcases the ability to perform principal component analysis (PCA, also known as empirical orthogonal function (EOF) analysis. Data are from the [Arctic 2k](https://www.nature.com/articles/sdata201426) compilation, which we load here:    
 
 ```{r}
 FD <- readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
@@ -88,7 +88,7 @@ binned.TS = binTs(TS.filtered,binvec = seq(1400,2000,by=5),timeVar = "ageEnsembl
 ```
 
 
-and calculate the MCEOF
+and calculate PCA on each ensemble member:
 ```{r,results="hide",warning=FALSE}
 pcout = pcaEns(binned.TS)
 ```
