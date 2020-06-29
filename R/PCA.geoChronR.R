@@ -13,6 +13,7 @@
 
 pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
   
+  #this may not be needed anymore now that we're using biocview in the description
   #check for the pcaMethods package
   if (!requireNamespace("pcaMethods", quietly = TRUE)){
     print("pcaMethods package needed for this function. Would you like to install it?")

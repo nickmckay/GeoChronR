@@ -43,7 +43,6 @@ Create a stamen or line map of the location of a list of LiPD objects
 }
 \seealso{
 Other mapping: 
-\code{\link{assignColors}()},
 \code{\link{mapLipd}()},
 \code{\link{mapTs}()}
 }

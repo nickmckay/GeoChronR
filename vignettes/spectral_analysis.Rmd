@@ -212,10 +212,18 @@ The WWZ method has one adjustable parameter, a decay constant that balances the 
 
 We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the *nuspectral* method of [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) based on a similar idea. However, it is not equivalent to WWZ. The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. For now, it is incorporated into GeoChronR to encourage further development. 
 
+First, you'll need to make sure you have nuspectral installed, as it's not yet automatically installed with GeoChronR
+```{r}
+if(!requireNamespace("nuspectral",quietly = TRUE)){#see if nuspectral is already installed
+  remotes::install_github("nickmckay/nuspectral") #install nuspectral if needed
+}
+```
+
+
 Let us see how it performs in on IODP846. 
 
 ```{r nuspectral estimation}
-library(nuspectral)
+requireNamespace("nuspectral", quietly = TRUE)
 nt = length(t)
 tau = seq(min(t),max(t),length = max(nt %/% 2,5))
 nuspec <-  nuspectral:::nuwavelet_psd(t,X,sigma=0.01,taus = tau)

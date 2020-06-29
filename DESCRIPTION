@@ -9,6 +9,7 @@ Description: Time uncertain analysis, including correlation, regression, spectra
 License: GNU Public License
 LazyData: TRUE
 RoxygenNote: 7.1.0
+Encoding: UTF-8
 biocViews: 
 Imports:
     Bchron,
@@ -40,5 +41,6 @@ Imports:
 Suggests: knitr,
     rmarkdown,
     testthat,
-    lipdR
+    lipdR,
+    nuspectral
 VignetteBuilder: knitr

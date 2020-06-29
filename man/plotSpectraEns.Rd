@@ -26,7 +26,7 @@ plotSpectraEns(
 
 \item{xticks}{n-element vector of the periods labeled}
 
-\item{ylims}{2-element vectordefining the range of spectral power (y-axis)}
+\item{ylims}{2-element vector defining the range of spectral power (y-axis)}
 
 \item{color.low}{colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)}
 
@@ -39,7 +39,7 @@ plotSpectraEns(
 \item{alp}{alpha (transparency) parameter for the ribbons}
 }
 \value{
-SpecPlot, a ggplot object
+a ggplot object
 }
 \description{
 Plot the output of `computeSpectraEns` as a ribbon plot of distributions, with specified confidence levels

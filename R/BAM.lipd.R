@@ -140,18 +140,18 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   
   CM=L$chronData[[which.chron]]$model[[which.model]]
   #get BAM parameters
-  if(is.na(CM)){
+  if(all(is.na(CM))){
     CM=list()
   }
-  if(is.null(CM$methods)){
+  if(all(is.null(CM$methods))){
     CM$methods=list()
   }
   CM$methods$algorithm = "BAM"
   
-  if(is.na(model)){
+  if(all(is.na(model))){
     
     #specify model type
-    if(is.null( CM$methods$parameters$modelType)){
+    if(all(is.null( CM$methods$parameters$modelType))){
       print("Which type of model do you want to use for BAM?")
       print("1 - Poisson (default)")
       print("2 - Bernoulli")
@@ -164,19 +164,19 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
     }
     
     #specify undercounting rate
-    if(is.null( CM$methods$parameters$undercountingProbability)){
+    if(all(is.null( CM$methods$parameters$undercountingProbability))){
       print("What's the probability of undercounting")
       CM$methods$parameters$undercountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
     }
     #specify overcounting rate
-    if(is.null( CM$methods$parameters$overcountingProbability)){
+    if(all(is.null( CM$methods$parameters$overcountingProbability))){
       print("What's the probability of overcounting")
       CM$methods$parameters$overcountingProbability = as.numeric(readline(prompt = "Enter a number between 0 and 1: "))
     }
   }
   
   #ensemble members
-  if(is.null( CM$methods$parameters$nEns)){
+  if(all(is.null( CM$methods$parameters$nEns))){
     if(!is.na(nens)){
       CM$methods$parameters$nEns=nens
     }else{
@@ -187,7 +187,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   #this shouldn't change I think
   CM$methods$parameters$resize = 0
   
-  if(is.na(model)){
+  if(all(is.na(model))){
     #create model
     model <- list(name= CM$methods$parameters$modelType,param=c(CM$methods$parameters$undercountingProbability,CM$methods$parameters$overcountingProbability)
                   ,ns=CM$methods$parameters$nEns,resize=CM$methods$parameters$resize)	
@@ -207,7 +207,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   if(nenstables==0){#create 1
     #store output appropriately in model
     ens.number = 1
-  }else if(is.na(ens.number)){
+  }else if(all(is.na(ens.number))){
     print(paste("You already have", nenstables, "ensemble table(s) in this model"))
     ens.number=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
   }

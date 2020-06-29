@@ -22,7 +22,7 @@ plotTimeseriesEnsLines(
 
 \item{alp}{Line transparency}
 
-\item{color}{Line color (following ggplot rules)}
+\item{color}{Either 1) A line color (following ggplot rules) to use for all lines (e.g., "blue"), 2) An RColorBrewer pallette to repeat over the lines (e.g. "Blues") or 3) a vector specifying the color for all lines (e.g., c("red","white","blue"))}
 
 \item{maxPlotN}{Whats the maximum number of lines to plot?}
 }

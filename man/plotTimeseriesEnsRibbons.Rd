@@ -16,6 +16,7 @@ plotTimeseriesEnsRibbons(
   color.low = "white",
   color.high = "grey70",
   color.line = "Black",
+  color.vector = NA,
   lineWidth = 1,
   export.quantiles = FALSE,
   ...
@@ -38,11 +39,13 @@ plotTimeseriesEnsRibbons(
 
 \item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{color.low}{Band color of the outer most band.}
+\item{color.low}{Band color of the outermost band.}
 
-\item{color.high}{Band color of the inner most band.}
+\item{color.high}{Band color of the innermost band.}
 
 \item{color.line}{Line color (following ggplot rules)}
+
+\item{color.vector}{A vector (of length equal to the number of bands) that specifies the colors for the ribbons from the outermost band in (default = NA). Colors specified as string according to ggplot2 conventions. If present, this overrules color.high and color.low}
 
 \item{lineWidth}{Width of the line}
 

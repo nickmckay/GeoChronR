@@ -10,7 +10,8 @@ plotPcaEns(
   map.type = "line",
   which.PCs = c(1, 2),
   f = 0.2,
-  color = "temp",
+  highColor = "red",
+  lowColor = "blue",
   dotsize = 5,
   restrict.map.range = TRUE,
   shape.by.archive = TRUE,
@@ -32,7 +33,9 @@ plotPcaEns(
 
 \item{f}{zoom buffer for plotting}
 
-\item{color}{color scale option. See assignColors()}
+\item{highColor}{color for the high end of the scale}
+
+\item{lowColor}{color for the low end of the scale}
 
 \item{dotsize}{How big are the dots on the map}
 

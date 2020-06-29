@@ -57,13 +57,13 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @param cl.df list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)
 #' @param xlims 2-element vector defining the range of periods (x-axis)
 #' @param xticks n-element vector of the periods labeled
-#' @param ylims 2-element vectordefining the range of spectral power (y-axis)
+#' @param ylims 2-element vector defining the range of spectral power (y-axis)
 #' @param color.low colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)
 #' @param color.high colour for central quantiles of the distribution (high probability); see `plotTimeseriesRibbons`)
 #' @param color.line color used for the median spectrum (see `plotTimeseriesRibbons`)
 #' @param alp alpha (transparency) parameter for the ribbons
 #' @param color.cl color of the lines representing the confidence limits (90, 95, 99\%)
-#' @return SpecPlot, a ggplot object
+#' @return a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2
 #' @import reshape2
@@ -162,7 +162,7 @@ plotSpectrum = function (spec.df,cl.df = NULL,xlims=NULL,xticks= c(10, 20, 50, 1
     m <- log10(ylims[1])
     M <- log10(ylims[2])
   }
-
+  
   specPlot <- ggplot() + geom_line(aes(x=period,y=spec.df$pwr),colour=color.line) + 
     scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
                   labels = scales::trans_format("log10", scales::math_format(10^.x)),
@@ -198,9 +198,9 @@ PeriodAnnotate = function (specPlot, periods, colour = "orange",log10scale = T, 
   }
   
   for(per in periods){
-      specPlot <- specPlot + annotate("segment", x = per, xend = per, y = ylims[1], yend = ylims[2],
-                                      colour = colour, alpha = 0.3, linetype = "dotdash")
-      specPlot <- specPlot +  annotate("text", x = 1.03*per, y = 1.2*ylims[2], label = format(per,digits=2, nsmall=0), colour = colour, size = size)
+    specPlot <- specPlot + annotate("segment", x = per, xend = per, y = ylims[1], yend = ylims[2],
+                                    colour = colour, alpha = 0.3, linetype = "dotdash")
+    specPlot <- specPlot +  annotate("text", x = 1.03*per, y = 1.2*ylims[2], label = format(per,digits=2, nsmall=0), colour = colour, size = size)
   }
   return(specPlot)  
 }
@@ -250,7 +250,7 @@ quantile2d = function(x,
                       nens = max(c(ncol(x),ncol(y))), 
                       seed = 111, 
                       limitOutliersX = .025){
-#error checking
+  #error checking
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
@@ -480,31 +480,31 @@ plotSummary = function(L,
   #plot paleoData
   
   if(is.na(paleo.age.var)){
-  print("What should we plot on the X-axis?")
-  print("We'll look for age or year...")
+    print("What should we plot on the X-axis?")
+    print("We'll look for age or year...")
     age=selectData(L,varName = "age",altNames = "year",which.mt = paleo.meas.num)
   }else{
     age=selectData(L,varName = paleo.age.var, which.mt = paleo.meas.num)
   }
-
+  
   if(is.na(paleo.data.var)){
     print("What should we plot on the Y-axis?")
     variable=selectData(L,which.mt = paleo.meas.num)
   }else{
     variable=selectData(L,varName = paleo.data.var,which.mt = paleo.meas.num)
   }
-
+  
   paleoPlot = plotLine(X = age,Y = variable)
   paleoPlot = paleoPlot + ggtitle(paste("PaleoData:",variable$variableName))
   
   #do chron.
- chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize,legend.position = legend.position, ...)
-    
+  chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize,legend.position = legend.position, ...)
+  
   if(is.na(chronPlot)){
     chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
   }
- 
- 
+  
+  
   
   lay = rbind(c(1,1,2,2),
               c(3,3,2,2),
@@ -525,7 +525,7 @@ plotSummary = function(L,
     }
     title <- L$pub[[1]]$title
     journal <- L$pub[[1]]$journal
-      volume <- L$pub[[1]]$volume
+    volume <- L$pub[[1]]$volume
     pages <- L$pub[[1]]$pages
     
     citation <- paste0(authors," (",as.character(year),"). ",title,". ",journal, " ", as.character(volume),", ",pages,".")
@@ -573,15 +573,21 @@ plotLine = function(add.to.plot=ggplot(),X,Y,color="black",alp = 1){
 #' @author Nick McKay
 #' @title Plot an ensemble timeseries as a set of lines
 #' @description Plot an ensemble timeseries as a set of lines. Useful for displaying a handful of ensemble members to characterize individual paths. 
-#' @import ggplot2
+#' @import ggplot2 dplyr RColorBrewer
+#' @importFrom tidyr pivot_longer
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
-#' @param color Line color (following ggplot rules)
+#' @param color Either 1) A line color (following ggplot rules) to use for all lines (e.g., "blue"), 2) An RColorBrewer pallette to repeat over the lines (e.g. "Blues") or 3) a vector specifying the color for all lines (e.g., c("red","white","blue"))
 #' @param maxPlotN Whats the maximum number of lines to plot?
 #' @param alp Line transparency
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
 #' @return A ggplot object
-plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue",maxPlotN=100){
+plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
+                                  X,
+                                  Y,
+                                  alp=.2,
+                                  color = "blue",
+                                  maxPlotN=100){
   #check to see if time and values are "column lists"
   
   oX = X
@@ -591,8 +597,8 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
   
   
   
-  X=as.matrix(X)
-  Y=as.matrix(Y)
+  X=as.data.frame(X)
+  Y=as.data.frame(Y)
   
   if(nrow(X)!=nrow(Y)){
     stop("X and Y must have the same number of observations")
@@ -603,586 +609,675 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),X,Y,alp=.2,color = "blue"
   pX = sample.int(ncol(X),size = np,replace = TRUE)
   pY = sample.int(ncol(Y),size = np,replace = TRUE)
   
-  #create data frame of uncertain X, Y data
-  Xplot = c(rbind(X[,pX],matrix(NA,ncol=np)))
-  Yplot = c(rbind(Y[,pY],matrix(NA,ncol=np)))
-  dfXY = data.frame("x"=Xplot,"y"=Yplot)
+  # #add a row of NAs for plotting
+  # X[nrow(X)+1,] <- NA
+  # Y[nrow(Y)+1,] <- NA
   
+  Xplot <- tidyr::pivot_longer(X[,pX],cols = everything())
+  Yplot <- tidyr::pivot_longer(Y[,pY],cols = everything())
   
-  linePlot = add.to.plot+
-    geom_path(data=dfXY,aes(x=x,y=y),colour = color,alpha=alp)+
-    geoChronRPlotTheme()
+  dfXY <- dplyr::bind_cols(Xplot,Yplot)
   
-  #add labels
-  linePlot = linePlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
+  names(dfXY) <- c("xEns","x","yEns","y")
+  dfXY <- dplyr::arrange(dfXY,xEns)
   
-  #reverse the xaxis if the units are BP
-  if(any(grepl(pattern = "BP",x = axisLabel(oX))) | (grepl(pattern = "ka",x = axisLabel(oX))) | (grepl(pattern = "B2k",x = axisLabel(oX))) | (grepl(pattern = "kyr",x = axisLabel(oX)))){
-    linePlot = linePlot + scale_x_reverse(axisLabel(oX))
+  #deal with colors
+  if(color %in% rownames(RColorBrewer::brewer.pal.info)){#
+    #then it's an RColorBrewer pallette
+    colorScale <- rep_len(suppressWarnings(RColorBrewer::brewer.pal(n = np,name = color)),length.out = np)
+  }else{#it's not
+    if(length(color) == 1){#apply one color to all
+      colorScale <- rep(color,times = np)
+    }else{
+      if(length(color) == np){
+        colorScale <- color
+      }else{
+        stop("color must be either 1) a single color to repeated, 2) an RColorBrewer palette or 3) a string the same length of the number of lines to be plotted")
+      }
+    }
+  }
+    
+    linePlot = add.to.plot+
+      geom_path(data=dfXY,
+                aes(x=x,y=y,colour = xEns),
+                alpha=alp)+
+      scale_colour_manual(values = colorScale)+
+      geoChronRPlotTheme()+
+      theme(legend.position = "none")
+    
+    #add labels
+    linePlot = linePlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
+    
+    #reverse the xaxis if the units are BP
+    if(any(grepl(pattern = "BP",x = axisLabel(oX))) | (grepl(pattern = "ka",x = axisLabel(oX))) | (grepl(pattern = "B2k",x = axisLabel(oX))) | (grepl(pattern = "kyr",x = axisLabel(oX)))){
+      linePlot = linePlot + scale_x_reverse(axisLabel(oX))
+    }
+    
+    
+    
+    return(linePlot)
+    
+  }
+  #' @export
+  #' @family plot
+  #' @author Nick McKay
+  #' @title Plot an ensemble timeseries as ribbons of probabilities
+  #' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
+  #' @import ggplot2
+  #' @param X A LiPD variable list to plot, including values, units, names, and more
+  #' @param Y A LiPD variable list to plot, including values, units, names, and more
+  #' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
+  #' @param color.low Band color of the outermost band.
+  #' @param color.high Band color of the innermost band.
+  #' @param color.line Line color (following ggplot rules)
+  #' @param color.vector A vector (of length equal to the number of bands) that specifies the colors for the ribbons from the outermost band in (default = NA). Colors specified as string according to ggplot2 conventions. If present, this overrules color.high and color.low
+  #' @param lineWidth Width of the line
+  #' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
+  #' @param x.bin vector of bin edges over which to bin.
+  #' @param y.bin vector of bin edges over which to bin.
+  #' @param alp Line transparency
+  #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+  #' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
+  #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
+  plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
+                                      X,
+                                      Y,
+                                      alp=1,
+                                      probs=c(0.025,.25,.5,.75,.975),
+                                      x.bin=NA,
+                                      y.bin=NA,
+                                      nbins=200,
+                                      color.low="white",
+                                      color.high="grey70",
+                                      color.line="Black",
+                                      color.vector = NA,
+                                      lineWidth=1,
+                                      export.quantiles = FALSE,
+                                      ...){
+    
+    
+    #check to see if time and values are "column lists"
+    oX = X
+    oY = Y
+    if(is.list(X)){X=as.data.frame(X$values)}
+    if(is.list(Y)){Y=as.data.frame(Y$values)}
+    
+    X=as.matrix(X)
+    Y=as.matrix(Y)
+    
+    #check to make sure that at least one is a matrix
+    if(ncol(X)==1 & ncol(Y)==1){
+      #then just plot a line
+      df = data.frame(x=X,y=Y)
+      bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=color.line)+geoChronRPlotTheme()
+      
+    }else{
+      
+      if(nrow(X)!=nrow(Y)){
+        stop("X and Y must have the same number of observations")
+      }
+      
+      ###DEPRECATED - old method.
+      # binned = bin2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+      # binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
+      # find cum sum probabilities  
+      
+      
+      # #nbox = prod(dim(binned$density))
+      # colSums = apply(binned$density,2,sum)
+      # colCount = colSums*nbox
+      # good.cols = which(colCount>nrow(binned$density))
+      # sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
+      # bmcs = apply(binned$density/sumMat,2,cumsum)
+      # good.cols = which(!apply(is.na(bmcs),2,all) & scale(colSums)>-3)
+      
+      # probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+      
+      # for(p in 1:length(probs)){
+      #   probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p],method = "constant")$y)
+      # }
+      ###END DEPRECATED - old method.
+      
+      probMatList = quantile2d(X,
+                               Y,
+                               nbins = nbins,
+                               x.bin = x.bin,
+                               probs = probs,
+                               ...)
+      
+      if(export.quantiles){
+        return(probMatList)
+      }
+      
+      
+      
+      probMat = probMatList$quants
+      
+      probMat=as.data.frame(probMat)
+      
+      #Line labels are deprecated
+      
+      # lineLabels=as.character(probs)
+      
+      
+      # #make labels better
+      # goodName= c("-2 sigma","-1 sigma","Median","1  sigma","2  sigma")
+      # realProb= c(pnorm(-2:2))
+      # for(i in 1:length(lineLabels)){
+      #   p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
+      #   if(length(p)==1){
+      #     lineLabels[i]=goodName[p]
+      #   }
+      # }
+      # names(probMat) = lineLabels
+      
+      #plot it!
+      #make pairs of bands moving in 
+      
+      #if probs is odd, the center one is just a line
+      if(ncol(probMat)%%2==1){
+        center = data.frame(x=probMatList$x.bin,y=probMat[,median(1:length(probs))])
+        
+        bandMat =  probMat[,-median(1:length(probs))]
+      }else{
+        center =NA
+        bandMat =  probMat
+      }
+      
+      #if the colors are specified, use the that
+      if(!all(is.na(color.vector))){
+        if(length(color.vector) != ncol(bandMat)/2){
+          stop("The number of colors provided in color.vector does not match the number of bands")
+        }
+        fillCol <- color.vector
+      }else{ #use a ramp
+        fillCol=colorRampPalette(c(color.low,color.high))( ncol(bandMat)/2+1 )[-1]
+      }
+      
+      for(b in 1:(ncol(bandMat)/2)){
+        if(b==1){
+          bandPlot = add.to.plot+geoChronRPlotTheme()
+        }
+        bands=data.frame(x=probMatList$x.bin,
+                         ymin = bandMat[,b],
+                         ymax = bandMat[,ncol(bandMat)-b+1])
+        
+        bandPlot = bandPlot+
+          geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
+      }
+      
+      if(!all(is.na(center))){
+        bandPlot <- bandPlot +
+          geom_line(data=center,aes(x=x,y=y),colour=color.line,size=lineWidth)
+      }
+      
+    }
+    
+    #add labels
+    bandPlot = bandPlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
+    
+    #reverse the xaxis if the units are BP
+    if(any(grepl(pattern = "BP",x = axisLabel(oX))) | (grepl(pattern = "ka",x = axisLabel(oX))) | (grepl(pattern = "B2k",x = axisLabel(oX))) | (grepl(pattern = "kyr",x = axisLabel(oX)))){
+      bandPlot = bandPlot + scale_x_reverse(axisLabel(oX))
+    }
+    
+    
+    return(bandPlot)
+    
   }
   
-  
-  
-  return(linePlot)
-  
-}
-#' @export
-#' @family plot
-#' @author Nick McKay
-#' @title Plot an ensemble timeseries as ribbons of probabilities
-#' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
-#' @import ggplot2
-#' @param X A LiPD variable list to plot, including values, units, names, and more
-#' @param Y A LiPD variable list to plot, including values, units, names, and more
-#' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
-#' @param color.low Band color of the outer most band.
-#' @param color.high Band color of the inner most band.
-#' @param color.line Line color (following ggplot rules)
-#' @param lineWidth Width of the line
-#' @param nbins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
-#' @param x.bin vector of bin edges over which to bin.
-#' @param y.bin vector of bin edges over which to bin.
-#' @param alp Line transparency
-#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
-#' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
-#' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
-plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),X,Y,alp=1,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,nbins=200,color.low="white",color.high="grey70",color.line="Black",lineWidth=1,export.quantiles = FALSE,...){
-  #check to see if time and values are "column lists"
-  oX = X
-  oY = Y
-  if(is.list(X)){X=as.data.frame(X$values)}
-  if(is.list(Y)){Y=as.data.frame(Y$values)}
-  
-  X=as.matrix(X)
-  Y=as.matrix(Y)
-  
-  #check to make sure that at least one is a matrix
-  if(ncol(X)==1 & ncol(Y)==1){
-    #then just plot a line
-    df = data.frame(x=X,y=Y)
-    bandPlot=add.to.plot+geom_line(data=df,aes(x=X,y=Y),colour=color.line)+geoChronRPlotTheme()
-    
-  }else{
+  #' @export
+  #' @family plot
+  #' @family regress
+  #' @author Nick McKay
+  #' @title Plot an ensemble of data as a scatterplot
+  #' @description Plot an ensemble timeseries as a scatter plot. Useful in showing the general impact of uncertainty on a bivariate relationship.
+  #' @import ggplot2
+  #' @param X A LiPD variable list to plot, including values, units, names, and more
+  #' @param Y A LiPD variable list to plot, including values, units, names, and more
+  #' @param alp Marker transparency
+  #' @param maxPlotN Whats the maximum number of lines to plot?
+  #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+  #' @return A ggplot object
+  plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000,add.to.plot = ggplot()){
+    X=as.matrix(X)
+    Y=as.matrix(Y)
     
     if(nrow(X)!=nrow(Y)){
       stop("X and Y must have the same number of observations")
     }
     
-    ###DEPRECATED - old method.
-    # binned = bin2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
-    # binned = kde_2d(X,Y,x.bin=x.bin,y.bin = y.bin,nbins=nbins)
-    # find cum sum probabilities  
+    np = min(maxPlotN,ncol(X)*ncol(Y))
+    #sample randomly what to plot
+    pX = sample.int(ncol(X),size = np,replace = TRUE)
+    pY = sample.int(ncol(Y),size = np,replace = TRUE)
+    #create data frame of uncertain X, Y data
+    Xplot = c(X[,pX])
+    Yplot = c(Y[,pY])
+    dfXY = data.frame("x"=Xplot,"y"=Yplot)
+    
+    scatterplot = add.to.plot+
+      geom_point(data = dfXY,aes(x = x,y=y),alpha=alp)+
+      geoChronRPlotTheme()  
+    return(scatterplot)
+  }
+  
+  #' @export
+  #' @family plot
+  #' @family regress
+  #' @author Nick McKay
+  #' @title Plot an ensemble of trendlines
+  #' @description Plot an ensemble of trendlines based on slope and intercept. 
+  #' @param mb.df A data.frame of slopes (column 1) and intercepts (column 2)
+  #' @param alp Line transparency
+  #' @param pXY index of which observations to use
+  #' @param xrange range of x values (min and max)
+  #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+  #' @return A ggplot object
+  plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
+    xvec = c(xrange,NA)
+    yall = c()
+    xall = c()
+    df = data.frame(m=mb.df[pXY,1],b=mb.df[pXY,2])
+    for(p in 1:length(pXY)){
+      yvec = c(df$m[p]*xrange + df$b[p],NA)
+      yall = c(yall,yvec)
+      xall = c(xall,xvec)
+    }
+    dfi = data.frame(x=xall,y=yall)
+    
+    trendlines = add.to.plot+
+      geom_path(data=dfi,aes(x=x,y=y),colour = color,alpha=alp)+
+      geoChronRPlotTheme()+
+      xlim(xrange)
     
     
-    # #nbox = prod(dim(binned$density))
-    # colSums = apply(binned$density,2,sum)
-    # colCount = colSums*nbox
-    # good.cols = which(colCount>nrow(binned$density))
-    # sumMat= t(matrix(colSums, nrow=length(colSums),ncol=nrow(binned$density)))
-    # bmcs = apply(binned$density/sumMat,2,cumsum)
-    # good.cols = which(!apply(is.na(bmcs),2,all) & scale(colSums)>-3)
+    return(trendlines)
+  }
+  
+  #' @export
+  #' @family plot
+  #' @author Julien Emile-Geay
+  #' @author Nick McKay
+  #' @title Plot the results of an ensemble correlation
+  #' @description Plots the output of an ensemble correlation analysis.
+  #' @import ggplot2
+  #' @param cor.df A data.frame correlation r and p-values. Output from corEns()
+  #' @param corStats A data.frame of correlation quantiles. Output from corEns()
+  #' @param bins Number of bins in the histogram
+  #' @param lineLabels Labels for the quantiles lines
+  #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
+  #' @param legendPosition Where to put the map legend?
+  #' @param significanceOption Choose how handle significance. Options are:
+  #'  \itemize{
+  #'  \item "autocor" (default) for serial-autocorrelation corrected p-values
+  #'  \item "raw" for uncorrected p-values
+  #'  \item "FDR" for autocorrelation and False-discovery-rate corrected p-values
+  #'  }
+  #' @return A ggplot object
+  plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot(),legendPosition = c(0.2, 0.8),significanceOption = "autocor"){
     
-    # probMat = matrix(data = NA,nrow=length(good.cols),ncol=length(probs))
+    #pull data frames out of the list
+    cor.df <- corEns$cor.df
+    corStats <- corEns$corStats
     
-    # for(p in 1:length(probs)){
-    #   probMat[,p]=apply(bmcs[,good.cols],MARGIN=2,function(x) approx(x,binned$y.bin,probs[p],method = "constant")$y)
-    # }
-    ###END DEPRECATED - old method.
     
-    probMatList = quantile2d(X,Y,nbins = nbins,x.bin = x.bin,probs = probs,...)
-    if(export.quantiles){
-      return(probMatList)
+    # evaluate preliminary quantities
+    rng <- range(cor.df$r)
+    bw = (rng[2]-rng[1])/bins
+    
+    if(significanceOption == "raw"){
+      issig <- cor.df$pRaw<0.05
+    }else if(grepl("raw",significanceOption,ignore.case = T)){
+      issig <- cor.df$sig_fdr
+    }else{#serial autocorrelation
+      issig <- cor.df$pSerial<0.05
     }
     
-    probMat = probMatList$quants
+    sig_frac <- sum(issig/dim(cor.df)[1]*100)
     
-    probMat=as.data.frame(probMat)
-    lineLabels=as.character(probs)
+    sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
+    # Now the plotting begins
+    lbf = c("p >= 0.05","p < 0.05")
     
-    #make labels better
-    goodName= c("-2 sigma","-1 sigma","Median","1  sigma","2  sigma")
-    realProb= c(pnorm(-2:2))
-    for(i in 1:length(lineLabels)){
-      p=which(abs(as.numeric(lineLabels[i])-realProb)<.001)
-      if(length(p)==1){
-        lineLabels[i]=goodName[p]
-      }
+    #artificially introduce at least 1 sig/nonsig for plotting
+    if(sum(issig) == 0){
+      issig[which(abs(cor.df$pSerial)==max(abs(cor.df$pSerial)))[1]] <- TRUE
     }
-    names(probMat) = lineLabels
+    if(sum(issig) == dim(cor.df)[1]){
+      issig[which(abs(cor.df$pSerial)==min(abs(cor.df$pSerial)))[1]] <- FALSE
+    }
     
-    #plot it!
-    #make pairs of bands moving in 
-    #if probs is odd, the center one is just a line
-    if(ncol(probMat)%%2==1){
-      center = data.frame(x=probMatList$x.bin,y=probMat[,median(1:length(probs))])
+    
+    h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
+      geom_histogram(data=cor.df,aes(x=r,y=..count..,fill = factor(issig)), position = 'stack', colour = "white", binwidth = bw) +
+      scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
+    
+    
+    ranges <- getPlotRanges(h)
+    
+    xlims <- ranges$xlims
+    ylims <- ranges$ylims
+    
+    #how many lines?
+    lineType= rep("dashed",times = nrow(corStats))
+    lineType[corStats$percentiles==.5]="solid"
+    lineType[corStats$percentiles==.975 | corStats$percentiles==.025]="dotted"
+    
+    
+    
+    # add vertical lines at the quantiles specified in corStats. 
+    h = h + geom_vline(data = corStats, aes(xintercept = values), color="red", size = 1,
+                       linetype=lineType, show.legend = FALSE) +
+      ylim(c(ylims[1],ylims[2]*1.1)) # expand vertical range
+    ymax = max(ylims)
+    # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
+    h = h + geom_text(data = corStats, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
+      annotate("text",x = 0.7*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
+    #customize legend
+    h = h + theme(legend.position = legendPosition,
+                  legend.title = element_text(size=10, face="bold"),
+                  legend.text = element_text(size=8),
+                  legend.key = element_rect(fill = "transparent",
+                                            colour = "transparent"),
+                  legend.background = element_rect(fill=alpha('white', 0.3)))
+    
+    return(h)
+  }
+  
+  
+  #' @export
+  #' @family plot
+  #' @author Julien Emile-Geay
+  #' @title Plot the the p-values of an ensemble correlation analysis in a rank-pvalue plot
+  #' @description Plots the output of an ensemble correlation analysis as a rank-pvalue plot
+  #' @import ggplot2
+  #' @param cor.df A data.frame correlation r and p-values. Output from corEns()
+  #' @param alpha probability threshold
+  #' @return A ggplot object
+  plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
+    m = dim(cor.df)[1] # number of hypotheses being tested
+    rk = seq(m)
+    fdr_thresh = rk/m*alpha
+    lvl_thresh = rep(alpha,m)
+    pvals = sort(cor.df$pRaw)
+    pvalsA = sort(cor.df$pSerial)
+    # Implement this strategy: https://stackoverflow.com/questions/38962700/ggplot-legend-order-mismatch
+    df <- data.frame(pvals, pvalsA, FDR = fdr_thresh, level = lvl_thresh, x = rk)
+    mm <- reshape2::melt(df,id.var="x")
+    lbl <- c("p-value, IID","p-value, Serial","FDR", bquote(alpha==.(alpha)))
+    pvalPlot <- ggplot(data = mm, aes(x,value,colour=variable,linetype=variable)) + geom_line()
+    pvalPlot <- pvalPlot + scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                                         labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                                         limits = c(1e-20,1))
+    pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
+    pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
+                                              values=c("Chocolate1",'Chartreuse4',"black","black"),
+                                              labels=lbl)+geoChronRPlotTheme()
+    pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
+                                  legend.title = element_text(size=10, face="bold"),
+                                  legend.text = element_text(size=8),
+                                  legend.key = element_rect(fill = "transparent",
+                                                            colour = "transparent"),
+                                  legend.background = element_rect(fill=alpha('white', 0.5)))
+    # fix labels  
+    pvalPlot <- pvalPlot +ylab("p-value") + xlab("rank") 
+    
+    return(pvalPlot)
+  }
+  
+  #' @export
+  #' @family plot
+  #' @author Nick McKay
+  #' @title Plot an ensemble dataset as a histogram
+  #' @description Plots ensemble data as a histogram
+  #' @import ggplot2
+  #' @param ensData A data.frame of values to plot as a histogram
+  #' @param probs quantiles to calculate and plot
+  #' @param bins Number of bins in the histogram
+  #' @param lineLabels Labels for the quantiles lines
+  #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
+  #' @param fill fill color of the histogram, following ggplot rules
+  #' @return A ggplot object
+  plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
+    #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
+    plotData = data.frame("r"=c(ensData))
+    
+    
+    
+    histPlot = add.to.plot+
+      geom_histogram(data=plotData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
+      geoChronRPlotTheme()+
+      ylab("Probability density")
+    if(!all(is.na(quantiles))){
+      #make labels better
       
-      bandMat =  probMat[,-median(1:length(probs))]
-    }else{
-      center =NA
-      bandMat =  probMat
+      quants = quantile(ensData,quantiles)
+      quantdf = data.frame(ll = names(quants),quants = quants)
+      histPlot = histPlot + geom_vline(data=quantdf,aes(xintercept = quants),colour="red") +
+        geom_label(data = quantdf, aes(x = quants, y=0,label=ll))+
+        xlab(axisLabel(ensData))
+      
+    }
+    return(histPlot)
+  }
+  
+  
+  #' @export
+  #' @title get a ggplot legend object
+  #' @family plot
+  #' @family pca
+  #' @author Nick McKay
+  #' @import ggplot2
+  #' @param a.gplot ggplot object
+  #' @return a legend grob
+  #' 
+  getLegend<-function(a.gplot){
+    tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)
+  }
+  
+  
+  
+  #' @export
+  #' @family plot
+  #' @family pca
+  #' @author Nick McKay
+  #' @title Map ensemble pca loadings and plot PC timeseries
+  #' @description Map ensemble pca loadings and plot PC timeseries
+  #' @import ggplot2
+  #' @import ggmap
+  #' @importFrom gridExtra grid.arrange
+  #' @import mapproj
+  #' @param ens.PC.out results of pcaEns()
+  #' @param TS Timeseries object \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series} used in the pcaEns() analysis
+  #' @param map.type "google" or "line"
+  #' @param f zoom buffer for plotting
+  #' @param which.PCs vector of PCs to plot. Choose two. c(1,2) is default.
+  #' @param high.color color for the high end of the scale
+  #' @param low.color color for the low end of the scale
+  #' @param color deprecated. Use high.color and low.color instead
+  #' @param dotsize How big are the dots on the map
+  #' @param restrict.map.range TRUE or FALSE. Trim the size of the map to the points, for "line" map type
+  #' @param shape.by.archive TRUE or FALSE. Use archiveType to assign shapes.
+  #' @param projection Map project. All options on: ?mapproject
+  #' @param lineLabels Labels for the quantiles lines
+  #' @param boundcirc For polar projects, draw a boundary circle? TRUE or FALSE
+  #' @param probs quantiles to calculate and plot in the PC timeseries
+  #' @param which.leg which map legend to include in the summary plot?
+  #' @param legendPosition Where to put the map legend?
+  #' @return A gridExtra ggplot object
+  plotPcaEns = function(ens.PC.out,
+                        TS,
+                        map.type="line",
+                        which.PCs=c(1,2),
+                        f=.2,
+                        high.color = "red",
+                        low.color = "blue",
+                        dotsize=5,
+                        restrict.map.range=TRUE,
+                        shape.by.archive=TRUE,
+                        projection="mollweide",
+                        boundcirc=TRUE,
+                        probs=c(.025, .25, .5, .75, .975),
+                        which.leg = 1,
+                        legendPosition = c(0.5,0.5),
+                        color){#now deprecated
+                        
+
+    #Deprecation check
+    if(!missing(color)){
+      stop("argument `color` is deprecated; please use `high.color` and `low.color` instead.")
     }
     
-    #deal with colors
-    fillCol=colorRampPalette(c(color.low,color.high))( ncol(bandMat)/2+1 )[-1]
-    #color.line="black"
     
+    #get data out of the TS
+    lat <- lipdR::pullTsVariable(TS,"geo_latitude")
+    lon <- lipdR::pullTsVariable(TS,"geo_longitude")
+    archive <- lipdR::pullTsVariable(TS,"archiveType")
+    ageUnits <- lipdR::pullTsVariable(TS,"ageEnsembleUnits")
     
-    for(b in 1:(ncol(bandMat)/2)){
-      if(b==1){
-        bandPlot = add.to.plot+geoChronRPlotTheme()
-      }
-      bands=data.frame(x=probMatList$x.bin,ymin = bandMat[,b],ymax = bandMat[,ncol(bandMat)-b+1])
-      bandPlot = bandPlot+
-        geom_ribbon(data=bands,aes(x=x,ymin=ymin,ymax=ymax),fill=fillCol[b],alpha=alp)
+    if(length(unique(ageUnits))>1){
+      warning("uh oh, looks like you have multiple units for your age ensemble.")
     }
     
-    if(!all(is.na(center))){
-      bandPlot = bandPlot+
-        geom_line(data=center,aes(x=x,y=y),colour=color.line,size=lineWidth)
+    ageUnits <- ageUnits[1]
+    
+    #shape by archive!###
+    arch.shape=c()
+    for(i in 1:length(archive)){
+      if(shape.by.archive){
+        if (grepl(x=tolower(archive[i]),"lake")){arch.shape[i]="lake"}
+        else if (grepl(x=tolower(archive[i]),"marine")){arch.shape[i]="marine"}
+        else if (grepl(x=tolower(archive[i]),"speleothem")){arch.shape[i]="speleothem"}
+        else if (grepl(x=archive[i],"ice",ignore.case = T)){arch.shape[i]="glacier ice"}
+        else {arch.shape[i]="unknown"}
+      }else{arch.shape[i]=21} #make them all circles if not shape.by.archive
     }
     
-  }
-  
-  #add labels
-  bandPlot = bandPlot+xlab(axisLabel(oX))+ylab(axisLabel(oY))
-  
-  #reverse the xaxis if the units are BP
-  if(any(grepl(pattern = "BP",x = axisLabel(oX))) | (grepl(pattern = "ka",x = axisLabel(oX))) | (grepl(pattern = "B2k",x = axisLabel(oX))) | (grepl(pattern = "kyr",x = axisLabel(oX)))){
-    bandPlot = bandPlot + scale_x_reverse(axisLabel(oX))
-  }
-  
-  
-  return(bandPlot)
-  
-}
-
-#' @export
-#' @family plot
-#' @family regress
-#' @author Nick McKay
-#' @title Plot an ensemble of data as a scatterplot
-#' @description Plot an ensemble timeseries as a scatter plot. Useful in showing the general impact of uncertainty on a bivariate relationship.
-#' @import ggplot2
-#' @param X A LiPD variable list to plot, including values, units, names, and more
-#' @param Y A LiPD variable list to plot, including values, units, names, and more
-#' @param alp Marker transparency
-#' @param maxPlotN Whats the maximum number of lines to plot?
-#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
-#' @return A ggplot object
-plotScatterEns = function(X,Y,alp=.2,maxPlotN=1000,add.to.plot = ggplot()){
-  X=as.matrix(X)
-  Y=as.matrix(Y)
-  
-  if(nrow(X)!=nrow(Y)){
-    stop("X and Y must have the same number of observations")
-  }
-  
-  np = min(maxPlotN,ncol(X)*ncol(Y))
-  #sample randomly what to plot
-  pX = sample.int(ncol(X),size = np,replace = TRUE)
-  pY = sample.int(ncol(Y),size = np,replace = TRUE)
-  #create data frame of uncertain X, Y data
-  Xplot = c(X[,pX])
-  Yplot = c(Y[,pY])
-  dfXY = data.frame("x"=Xplot,"y"=Yplot)
-  
-  scatterplot = add.to.plot+
-    geom_point(data = dfXY,aes(x = x,y=y),alpha=alp)+
-    geoChronRPlotTheme()  
-  return(scatterplot)
-}
-
-#' @export
-#' @family plot
-#' @family regress
-#' @author Nick McKay
-#' @title Plot an ensemble of trendlines
-#' @description Plot an ensemble of trendlines based on slope and intercept. 
-#' @param mb.df A data.frame of slopes (column 1) and intercepts (column 2)
-#' @param alp Line transparency
-#' @param pXY index of which observations to use
-#' @param xrange range of x values (min and max)
-#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
-#' @return A ggplot object
-plotTrendLinesEns = function(mb.df,xrange,pXY=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
-  xvec = c(xrange,NA)
-  yall = c()
-  xall = c()
-  df = data.frame(m=mb.df[pXY,1],b=mb.df[pXY,2])
-  for(p in 1:length(pXY)){
-    yvec = c(df$m[p]*xrange + df$b[p],NA)
-    yall = c(yall,yvec)
-    xall = c(xall,xvec)
-  }
-  dfi = data.frame(x=xall,y=yall)
-  
-  trendlines = add.to.plot+
-    geom_path(data=dfi,aes(x=x,y=y),colour = color,alpha=alp)+
-    geoChronRPlotTheme()+
-    xlim(xrange)
-  
-  
-  return(trendlines)
-}
-
-#' @export
-#' @family plot
-#' @author Julien Emile-Geay
-#' @author Nick McKay
-#' @title Plot the results of an ensemble correlation
-#' @description Plots the output of an ensemble correlation analysis.
-#' @import ggplot2
-#' @param cor.df A data.frame correlation r and p-values. Output from corEns()
-#' @param corStats A data.frame of correlation quantiles. Output from corEns()
-#' @param bins Number of bins in the histogram
-#' @param lineLabels Labels for the quantiles lines
-#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
-#' @param legendPosition Where to put the map legend?
-#' @param significanceOption Choose how handle significance. Options are:
-#'  \itemize{
-#'  \item "autocor" (default) for serial-autocorrelation corrected p-values
-#'  \item "raw" for uncorrected p-values
-#'  \item "FDR" for autocorrelation and False-discovery-rate corrected p-values
-#'  }
-#' @return A ggplot object
-plotCorEns = function(corEns,bins=40,lineLabels = rownames(corStats),add.to.plot=ggplot(),legendPosition = c(0.2, 0.8),significanceOption = "autocor"){
-  
-  #pull data frames out of the list
-  cor.df <- corEns$cor.df
-  corStats <- corEns$corStats
-  
-  
-  # evaluate preliminary quantities
-  rng <- range(cor.df$r)
-  bw = (rng[2]-rng[1])/bins
-  
-  if(significanceOption == "raw"){
-    issig <- cor.df$pRaw<0.05
-  }else if(grepl("raw",significanceOption,ignore.case = T)){
-    issig <- cor.df$sig_fdr
-  }else{#serial autocorrelation
-    issig <- cor.df$pSerial<0.05
-  }
-  
-  sig_frac <- sum(issig/dim(cor.df)[1]*100)
-  
-  sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
-  # Now the plotting begins
-  lbf = c("p >= 0.05","p < 0.05")
-  
-  #artificially introduce at least 1 sig/nonsig for plotting
-  if(sum(issig) == 0){
-    issig[which(abs(cor.df$pSerial)==max(abs(cor.df$pSerial)))[1]] <- TRUE
-  }
-  if(sum(issig) == dim(cor.df)[1]){
-    issig[which(abs(cor.df$pSerial)==min(abs(cor.df$pSerial)))[1]] <- FALSE
-  }
-  
-  
-  h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
-    geom_histogram(data=cor.df,aes(x=r,y=..count..,fill = factor(issig)), position = 'stack', colour = "white", binwidth = bw) +
-    scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
-  
-  
-  ranges <- getPlotRanges(h)
-
-  xlims <- ranges$xlims
-  ylims <- ranges$ylims
-  
-  #how many lines?
-  lineType= rep("dashed",times = nrow(corStats))
-  lineType[corStats$percentiles==.5]="solid"
-  lineType[corStats$percentiles==.975 | corStats$percentiles==.025]="dotted"
-  
-  
-  
-  # add vertical lines at the quantiles specified in corStats. 
-  h = h + geom_vline(data = corStats, aes(xintercept = values), color="red", size = 1,
-                     linetype=lineType, show.legend = FALSE) +
-    ylim(c(ylims[1],ylims[2]*1.1)) # expand vertical range
-  ymax = max(ylims)
-  # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
-  h = h + geom_text(data = corStats, mapping = aes(x=values, y=.90*ymax, label=lineLabels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = 0.7*xlims[2],y=0.4*ylims[2], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
-  #customize legend
-  h = h + theme(legend.position = legendPosition,
-                legend.title = element_text(size=10, face="bold"),
-                legend.text = element_text(size=8),
-                legend.key = element_rect(fill = "transparent",
-                                          colour = "transparent"),
-                legend.background = element_rect(fill=alpha('white', 0.3)))
-  
-  return(h)
-}
-
-
-#' @export
-#' @family plot
-#' @author Julien Emile-Geay
-#' @title Plot the the p-values of an ensemble correlation analysis in a rank-pvalue plot
-#' @description Plots the output of an ensemble correlation analysis as a rank-pvalue plot
-#' @import ggplot2
-#' @param cor.df A data.frame correlation r and p-values. Output from corEns()
-#' @param alpha probability threshold
-#' @return A ggplot object
-plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
-  m = dim(cor.df)[1] # number of hypotheses being tested
-  rk = seq(m)
-  fdr_thresh = rk/m*alpha
-  lvl_thresh = rep(alpha,m)
-  pvals = sort(cor.df$pRaw)
-  pvalsA = sort(cor.df$pSerial)
-  # Implement this strategy: https://stackoverflow.com/questions/38962700/ggplot-legend-order-mismatch
-  df <- data.frame(pvals, pvalsA, FDR = fdr_thresh, level = lvl_thresh, x = rk)
-  mm <- reshape2::melt(df,id.var="x")
-  lbl <- c("p-value, IID","p-value, Serial","FDR", bquote(alpha==.(alpha)))
-  pvalPlot <- ggplot(data = mm, aes(x,value,colour=variable,linetype=variable)) + geom_line()
-  pvalPlot <- pvalPlot + scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
-                                       labels = scales::trans_format("log10", scales::math_format(10^.x)),
-                                       limits = c(1e-20,1))
-  pvalPlot <- pvalPlot + scale_linetype_manual(name="Significance",values=c(1,1,2,3), labels=lbl)
-  pvalPlot <- pvalPlot + scale_color_manual(name = "Significance",
-                                            values=c("Chocolate1",'Chartreuse4',"black","black"),
-                                            labels=lbl)+geoChronRPlotTheme()
-  pvalPlot <- pvalPlot +  theme(legend.position = c(0.7, 0.4),
-                                legend.title = element_text(size=10, face="bold"),
-                                legend.text = element_text(size=8),
-                                legend.key = element_rect(fill = "transparent",
-                                                          colour = "transparent"),
-                                legend.background = element_rect(fill=alpha('white', 0.5)))
-  # fix labels  
-  pvalPlot <- pvalPlot +ylab("p-value") + xlab("rank") 
-  
-  return(pvalPlot)
-}
-
-#' @export
-#' @family plot
-#' @author Nick McKay
-#' @title Plot an ensemble dataset as a histogram
-#' @description Plots ensemble data as a histogram
-#' @import ggplot2
-#' @param ensData A data.frame of values to plot as a histogram
-#' @param probs quantiles to calculate and plot
-#' @param bins Number of bins in the histogram
-#' @param lineLabels Labels for the quantiles lines
-#' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
-#' @param fill fill color of the histogram, following ggplot rules
-#' @return A ggplot object
-plotHistEns = function(ensData,quantiles=c(.025, .25, .5, .75, .975),bins=50,lineLabels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
-  #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
-  plotData = data.frame("r"=c(ensData))
-  
-  
-  
-  histPlot = add.to.plot+
-    geom_histogram(data=plotData,aes(x=r,y=..density..),colour="white",bins=bins,fill=fill,alpha=alp)+
-    geoChronRPlotTheme()+
-    ylab("Probability density")
-  if(!all(is.na(quantiles))){
-    #make labels better
+    arch.shape=factor(arch.shape)
+    archiveShapes=c(21,22,24,23)
+    if(!any(grepl(pattern="ice",arch.shape))){archiveShapes = archiveShapes[-4] }
+    if(!any(grepl(pattern="speleothem",arch.shape))){archiveShapes = archiveShapes[-3] }
+    if(!any(grepl(pattern="marine",arch.shape))){archiveShapes = archiveShapes[-2] }
+    if(!any(grepl(pattern="lake",arch.shape))){archiveShapes = archiveShapes[-1] }
     
-    quants = quantile(ensData,quantiles)
-    quantdf = data.frame(ll = names(quants),quants = quants)
-    histPlot = histPlot + geom_vline(data=quantdf,aes(xintercept = quants),colour="red") +
-      geom_label(data = quantdf, aes(x = quants, y=0,label=ll))+
-      xlab(axisLabel(ensData))
-    
-  }
-  return(histPlot)
-}
-
-
-#' @export
-#' @title get a ggplot legend object
-#' @family plot
-#' @family pca
-#' @author Nick McKay
-#' @import ggplot2
-#' @param a.gplot ggplot object
-#' @return a legend grob
-#' 
-getLegend<-function(a.gplot){
-  tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(a.gplot))
-  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
-  legend <- tmp$grobs[[leg]]
-  return(legend)
-}
-
-
-
-#' @export
-#' @family plot
-#' @family pca
-#' @author Nick McKay
-#' @title Map ensemble pca loadings and plot PC timeseries
-#' @description Map ensemble pca loadings and plot PC timeseries
-#' @import ggplot2
-#' @import ggmap
-#' @importFrom gridExtra grid.arrange
-#' @import mapproj
-#' @param ens.PC.out results of pcaEns()
-#' @param TS Timeseries object \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series} used in the pcaEns() analysis
-#' @param map.type "google" or "line"
-#' @param f zoom buffer for plotting
-#' @param which.PCs vector of PCs to plot. Choose two. c(1,2) is default.
-#' @param color color scale option. See assignColors()
-#' @param dotsize How big are the dots on the map
-#' @param restrict.map.range TRUE or FALSE. Trim the size of the map to the points, for "line" map type
-#' @param shape.by.archive TRUE or FALSE. Use archiveType to assign shapes.
-#' @param projection Map project. All options on: ?mapproject
-#' @param lineLabels Labels for the quantiles lines
-#' @param boundcirc For polar projects, draw a boundary circle? TRUE or FALSE
-#' @param probs quantiles to calculate and plot in the PC timeseries
-#' @param which.leg which map legend to include in the summary plot?
-#' @param legendPosition Where to put the map legend?
-#' @return A gridExtra ggplot object
-plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color="temp",dotsize=5,restrict.map.range=TRUE,shape.by.archive=TRUE,projection="mollweide",boundcirc=TRUE,probs=c(.025, .25, .5, .75, .975),which.leg = 1,legendPosition = c(0.5,0.5)){
-  #get data out of the TS
-  lat = sapply(TS,"[[","geo_latitude")
-  lon = sapply(TS,"[[","geo_longitude")
-  archive = sapply(TS,"[[","archiveType")
-  ageUnits <- pullTsVariable(TS,"ageEnsembleUnits")
-  
-  if(length(unique(ageUnits))>1){
-    warning("uh oh, looks like you have multiple units for your age ensemble.")
-  }
-  ageUnits <- ageUnits[1]
-  #shape by archive!###
-  arch.shape=c()
-  for(i in 1:length(archive)){
-    if(shape.by.archive){
-      if (grepl(x=tolower(archive[i]),"lake")){arch.shape[i]="lake"}
-      else if (grepl(x=tolower(archive[i]),"marine")){arch.shape[i]="marine"}
-      else if (grepl(x=tolower(archive[i]),"speleothem")){arch.shape[i]="speleothem"}
-      else if (grepl(x=archive[i],"ice",ignore.case = T)){arch.shape[i]="glacier ice"}
-      else {arch.shape[i]="unknown"}
-    }else{arch.shape[i]=21} #make them all circles if not shape.by.archive
-  }
-  
-  arch.shape=factor(arch.shape)
-  archiveShapes=c(21,22,24,23)
-  if(!any(grepl(pattern="ice",arch.shape))){archiveShapes = archiveShapes[-4] }
-  if(!any(grepl(pattern="speleothem",arch.shape))){archiveShapes = archiveShapes[-3] }
-  if(!any(grepl(pattern="marine",arch.shape))){archiveShapes = archiveShapes[-2] }
-  if(!any(grepl(pattern="lake",arch.shape))){archiveShapes = archiveShapes[-1] }
-  
-  if(length(archiveShapes) == 0){
-    archiveShapes=c(21)
-  }
-  #end shape by archive
-  
-  
-  
-  plotlist=list()
-  maplist=list()
-  leglist <- list()
-  
-  
-  #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
-  medianPCs = apply(ens.PC.out$PCs,MARGIN = c(1,2),median,na.rm=TRUE)
-  loadingSDs = apply(ens.PC.out$loadings,MARGIN = c(1,2),sd,na.rm=TRUE)
-  medianLoadings = apply(ens.PC.out$loadings,MARGIN = c(1,2),median,na.rm=TRUE)
-  
-  #get a base map
-  map = baseMap(lon,lat,map.type = map.type,f=f,projection = projection,restrict.map.range = restrict.map.range)
-  
- 
-  
-  for (i in 1:length(which.PCs)){
-    #figure out dotsize
-    sdRange = range(loadingSDs[,which.PCs[i]])
-    medianRange = abs(diff(range(medianLoadings[,which.PCs[i]])))
-    sdPct = 2*loadingSDs[,which.PCs[i]]/medianRange
-    sdDots = sdPct
-    
-    
-    #make a data.frame to plot
-    dd=data.frame(lon=lon,lat=lat,medLoad=medianLoadings[,which.PCs[i]],sdDots=sdDots,shape=factor(arch.shape))
-    #sort by dot size
-    # print(order(sdDots))
-    dd = dd[order(sdDots),]
-    row.names(dd)=1:nrow(dd)
+    if(length(archiveShapes) == 0){
+      archiveShapes=c(21)
+    }
+    #end shape by archive
     
     
     
-    #infer colors
-    scaleColors = assignColors(color)
+    plotlist=list()
+    maplist=list()
+    leglist <- list()
+    
+    
+    #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
+    medianPCs = apply(ens.PC.out$PCs,MARGIN = c(1,2),median,na.rm=TRUE)
+    loadingSDs = apply(ens.PC.out$loadings,MARGIN = c(1,2),sd,na.rm=TRUE)
+    medianLoadings = apply(ens.PC.out$loadings,MARGIN = c(1,2),median,na.rm=TRUE)
+    
+    #get a base map
+    map = baseMap(lon,lat,map.type = map.type,f=f,projection = projection,restrict.map.range = restrict.map.range)
     
     
     
-    
-    maplist[[i]] = map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+theme(legend.box = "horizontal",legend.position=legendPosition)
-    
-    
-    testMap <- map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+
-      theme(legend.box = "horizontal",legend.position=legendPosition) + 
-      scale_shape_manual(name = "Archive Type",values = archiveShapes) +
-      scale_size(name = "Loading uncertainty",range = c(dotsize,1)) +
-      scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colourbar")
-    
-    
-    leglist[[i]] <- getLegend(testMap)
-    
-    
-    
-    #if(i>1 & !repeatMapLegend){#Don't repeat all the legend components
-    if(TRUE){
-      maplist[[i]] <- maplist[[i]] +
-        scale_shape_manual(values = archiveShapes,guide="none") +
-        scale_size(name = "Loading uncertainty",range = c(dotsize,1),guide="none") +
-        scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="none")
-    }else{#plot the map legends
-      maplist[[i]] <- maplist[[i]] +
+    for (i in 1:length(which.PCs)){
+      #figure out dotsize
+      sdRange = range(loadingSDs[,which.PCs[i]])
+      medianRange = abs(diff(range(medianLoadings[,which.PCs[i]])))
+      sdPct = 2*loadingSDs[,which.PCs[i]]/medianRange
+      sdDots = sdPct
+      
+      
+      #make a data.frame to plot
+      dd=data.frame(lon=lon,lat=lat,medLoad=medianLoadings[,which.PCs[i]],sdDots=sdDots,shape=factor(arch.shape))
+      #sort by dot size
+      # print(order(sdDots))
+      dd = dd[order(sdDots),]
+      row.names(dd)=1:nrow(dd)
+      
+      #assign colors
+      scaleColors <- c(low.color,high.color)
+      
+      
+      
+      
+      maplist[[i]] = map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+theme(legend.box = "horizontal",legend.position=legendPosition)
+      
+      
+      testMap <- map +  geom_point(aes(x=lon,y=lat,fill=medLoad,size=sdDots,shape = shape), data=dd)+
+        theme(legend.box = "horizontal",legend.position=legendPosition) + 
         scale_shape_manual(name = "Archive Type",values = archiveShapes) +
         scale_size(name = "Loading uncertainty",range = c(dotsize,1)) +
         scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colourbar")
+      
+      
+      leglist[[i]] <- getLegend(testMap)
+      
+      
+      
+      #if(i>1 & !repeatMapLegend){#Don't repeat all the legend components
+      if(TRUE){
+        maplist[[i]] <- maplist[[i]] +
+          scale_shape_manual(values = archiveShapes,guide="none") +
+          scale_size(name = "Loading uncertainty",range = c(dotsize,1),guide="none") +
+          scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="none")
+      }else{#plot the map legends
+        maplist[[i]] <- maplist[[i]] +
+          scale_shape_manual(name = "Archive Type",values = archiveShapes) +
+          scale_size(name = "Loading uncertainty",range = c(dotsize,1)) +
+          scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colourbar")
+      }
+      
+      
+      
+      
+      
+      
+      plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
+      medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
+      sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
+      varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"+/-",as.character(signif(sdVarExp*100,1)))
+      
+      plotlist[[i]] = plotlist[[i]]+ggtitle(paste("Variance explained =",varExpStr,"%"))
+      
+      if(grepl(pattern = "AD",ageUnits) | grepl(pattern = "CE",ageUnits) ){
+        plotlist[[i]] = plotlist[[i]] + labs(y=paste0("PC",which.PCs[i]),x="Year (AD)")
+      }else{
+        plotlist[[i]] = plotlist[[i]] +
+          scale_x_reverse()+
+          labs(y=paste0("PC",which.PCs[i]),x="Age (yr BP)")
+      }
     }
     
+    #plot sample depth
     
+    bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity*100,age = ens.PC.out$age)
     
-
-    
-
-    plotlist[[i]] = plotTimeseriesEnsRibbons(X=ens.PC.out$age,Y=ens.PC.out$PCs[,which.PCs[i],],x.bin =ens.PC.out$age,nbins = 10000 ,probs = probs) 
-    medianVarExp = median(ens.PC.out$variance[which.PCs[i],])
-    sdVarExp = sd(ens.PC.out$variance[which.PCs[i],])
-    varExpStr  = paste(as.character(signif(medianVarExp*100,2)),"+/-",as.character(signif(sdVarExp*100,1)))
-    
-    plotlist[[i]] = plotlist[[i]]+ggtitle(paste("Variance explained =",varExpStr,"%"))
+    plot_sample.depth = ggplot(data=bddf)+geom_area(aes(x=age,y=sampleDepth),fill="gray20")+
+      ylab("Data coverage (%)")+
+      geoChronRPlotTheme()
     
     if(grepl(pattern = "AD",ageUnits) | grepl(pattern = "CE",ageUnits) ){
-      plotlist[[i]] = plotlist[[i]] + labs(y=paste0("PC",which.PCs[i]),x="Year (AD)")
+      plot_sample.depth  <- plot_sample.depth  + labs(x="Year (AD)")
     }else{
-      plotlist[[i]] = plotlist[[i]] +
-        scale_x_reverse()+
-        labs(y=paste0("PC",which.PCs[i]),x="Age (yr BP)")
+      plot_sample.depth  <- plot_sample.depth  +
+        scale_x_reverse("Age (yr BP)")
     }
-  }
-    
-  #plot sample depth
-  
-  bddf = data.frame(sampleDepth = ens.PC.out$meanDataDensity*100,age = ens.PC.out$age)
-  
-  plot_sample.depth = ggplot(data=bddf)+geom_area(aes(x=age,y=sampleDepth),fill="gray20")+
-    ylab("Data coverage (%)")+
-    geoChronRPlotTheme()
-  
-  if(grepl(pattern = "AD",ageUnits) | grepl(pattern = "CE",ageUnits) ){
-    plot_sample.depth  <- plot_sample.depth  + labs(x="Year (AD)")
-  }else{
-    plot_sample.depth  <- plot_sample.depth  +
-      scale_x_reverse("Age (yr BP)")
-  }
-  alllist = vector(mode = "list",length = length(maplist)*2)
-  for(aa in 1:(length(maplist)*2)){
-    if(aa%%2==1){#if odd
-      alllist[[aa]] <- maplist[[ceiling(aa/2)]]
-    }else{
-      alllist[[aa]] <- plotlist[[aa/2]]
+    alllist = vector(mode = "list",length = length(maplist)*2)
+    for(aa in 1:(length(maplist)*2)){
+      if(aa%%2==1){#if odd
+        alllist[[aa]] <- maplist[[ceiling(aa/2)]]
+      }else{
+        alllist[[aa]] <- plotlist[[aa/2]]
+      }
     }
-  }
-  #alllist = append(maplist,plotlist)
+    #alllist = append(maplist,plotlist)
     # tt=1:length(alllist)
     # alllist = alllist[c(tt[tt%%2==1],tt[tt%%2==0])]
     #append on the legend
@@ -1278,7 +1373,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     }
     
     
-  #loop through individual ages...
+    #loop through individual ages...
     for(y in dist.plot){
       this.dist = dist[[y]]
       if(!is.na(truncateDist)){
@@ -1335,7 +1430,7 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     
     
     L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,depth.var = depthVar,which.paleo = which.paleo, which.chron = which.chron, which.model = which.model,which.pmt = which.pmt, which.ens = which.ens)
-      
+    
     
     #get the paleo and chron Ensemble ages
     pAge <- selectData(L,varName = ageVar,which.data = which.paleo,which.mt = which.pmt)
@@ -1354,16 +1449,16 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
     ageDiff$units <- pAge$units
     ageDiff$values <- pAge$values - cAgeEns$values
     axisLabel(ageDiff)
-     
-     
-     #see if there's depth
+    
+    
+    #see if there's depth
     depth <- selectData(L,varName = depthVar,which.data = which.paleo,which.mt = which.pmt)
     
     #if no depth then use age
     if(is.null(depth)){
       depth <- pAge
     }
-     
+    
     
     diffPlot <- plotTimeseriesEnsRibbons(X = depth ,Y = ageDiff,,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, color.low = bandcolor.low,color.high = bandcolor.high,color.line = color.line,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
@@ -1394,84 +1489,84 @@ plotPcaEns = function(ens.PC.out,TS,map.type="line",which.PCs=c(1,2),f=.2,color=
   #' @param legend.position where to put the legend on the chron plot?
   #' @param ... arguments to pass on to plotChronEns()
   #' @return a ggplot object, or NA if there's chronData to plot
-plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", age14C.var = "age14C", dotSize = 5, legend.position = c(0.7,0.3), ...){
-  #grab the chronData 
-  C = L$chronData
-  
-  #there must be a chronData to proceed
-  if(is.null(C)){
-    warning("Must have chronData to proceed. Exiting...")
-    return(NA)
-  }
-  
-  #figure out a chron.number
-  if(is.na(chron.number)){
-    if(length(C)==1){
-      chron.number = 1
-    }else{
-      print(paste0("There are ", as.character(length(C)), " chronData objects. Which do you want to plot?"))
-      chron.number=as.integer(readline(prompt = "Which chronData do you want to plot? Enter an integer "))
-    }
-  }
-  
-  #is there a model?
-  if(!is.null({C[[chron.number]]$model[[1]]$ensembleTable})){#then use plotChronEns!
-    chronPlot <- plotChronEns(L,chron.number = chron.number, depthVar = depth.var, ageVar = age.var, ...)
-  }else{#make a simpler plot from the measurementTable
-    #look for the measurementTable
-    if(is.null(C[[chron.number]]$measurementTable)){
-      warning("No chron model, or measurementTable. Exiting...")
+  plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", age14C.var = "age14C", dotSize = 5, legend.position = c(0.7,0.3), ...){
+    #grab the chronData 
+    C = L$chronData
+    
+    #there must be a chronData to proceed
+    if(is.null(C)){
+      warning("Must have chronData to proceed. Exiting...")
       return(NA)
     }
     
-    #figure out a measurementTable number
-    if(is.na(meas.num)){
-      if(length(C[[chron.number]]$measurementTable)==1){
-        meas.num = 1
+    #figure out a chron.number
+    if(is.na(chron.number)){
+      if(length(C)==1){
+        chron.number = 1
       }else{
-        print(paste0("There are ", as.character(length(C[[chron.number]]$measurementTable)), " chron measurement tables. Which do you want to plot?"))
-        meas.num=as.integer(readline(prompt = "Which model do you want to plot? Enter an integer "))
+        print(paste0("There are ", as.character(length(C)), " chronData objects. Which do you want to plot?"))
+        chron.number=as.integer(readline(prompt = "Which chronData do you want to plot? Enter an integer "))
       }
     }
     
-    #get depth
-    depth <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = depth.var)
-    
-    #get age
-    age <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age.var)
-    #get 14Cage
-    age14C <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age14C.var)
-    
-    if(!is.null(age) & is.null(age14C)){
-    ageDf <- data.frame(age = age$values, ageType = "calibratedAge")
-    }else if(is.null(age) & !is.null(age14C)){
-      ageDf <- data.frame(age = age14C$values, ageType = "14C Age")
-    }else if(!is.null(age) & !is.null(age14C)){
-      ageDf14C <- data.frame(age = age14C$values, ageType = "14C Age",stringsAsFactors = FALSE)
-      ageDf <- data.frame(age = age$values, ageType = "calibrated age",stringsAsFactors = FALSE)
-      naCal <- which(is.na(ageDf$age))
-      ageDf[naCal, ] <- ageDf14C[naCal, ] 
-    }else{
-      stop("couldn't find any age data in chron measurement table")
+    #is there a model?
+    if(!is.null({C[[chron.number]]$model[[1]]$ensembleTable})){#then use plotChronEns!
+      chronPlot <- plotChronEns(L,chron.number = chron.number, depthVar = depth.var, ageVar = age.var, ...)
+    }else{#make a simpler plot from the measurementTable
+      #look for the measurementTable
+      if(is.null(C[[chron.number]]$measurementTable)){
+        warning("No chron model, or measurementTable. Exiting...")
+        return(NA)
+      }
+      
+      #figure out a measurementTable number
+      if(is.na(meas.num)){
+        if(length(C[[chron.number]]$measurementTable)==1){
+          meas.num = 1
+        }else{
+          print(paste0("There are ", as.character(length(C[[chron.number]]$measurementTable)), " chron measurement tables. Which do you want to plot?"))
+          meas.num=as.integer(readline(prompt = "Which model do you want to plot? Enter an integer "))
+        }
+      }
+      
+      #get depth
+      depth <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = depth.var)
+      
+      #get age
+      age <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age.var)
+      #get 14Cage
+      age14C <- selectData(L,where = "chronData",which.data = chron.number, which.mt = meas.num, varName = age14C.var)
+      
+      if(!is.null(age) & is.null(age14C)){
+        ageDf <- data.frame(age = age$values, ageType = "calibratedAge")
+      }else if(is.null(age) & !is.null(age14C)){
+        ageDf <- data.frame(age = age14C$values, ageType = "14C Age")
+      }else if(!is.null(age) & !is.null(age14C)){
+        ageDf14C <- data.frame(age = age14C$values, ageType = "14C Age",stringsAsFactors = FALSE)
+        ageDf <- data.frame(age = age$values, ageType = "calibrated age",stringsAsFactors = FALSE)
+        naCal <- which(is.na(ageDf$age))
+        ageDf[naCal, ] <- ageDf14C[naCal, ] 
+      }else{
+        stop("couldn't find any age data in chron measurement table")
+      }
+      
+      ageDf$depth <- depth$values
+      chronPlot <- ggplot(ageDf)+geom_point(aes(x = age, y = depth, color = ageType), size = dotSize)+
+        scale_y_reverse(name = axisLabel(depth))+
+        geoChronRPlotTheme() +  theme(legend.position = legend.position) +
+        ggtitle(paste0(L$dataSetName,": chronData ", as.character(chron.number), " - measurementTable ", as.character(meas.num)))
+      
+      if(any(grepl("AD",age$units)) | any(grepl("CE",age$units))){
+        chronPlot <- chronPlot + scale_x_continuous(name = axisLabel(age))
+      }else{
+        chronPlot <- chronPlot + scale_x_reverse(name = axisLabel(age))
+      }
     }
     
-    ageDf$depth <- depth$values
-    chronPlot <- ggplot(ageDf)+geom_point(aes(x = age, y = depth, color = ageType), size = dotSize)+
-      scale_y_reverse(name = axisLabel(depth))+
-      geoChronRPlotTheme() +  theme(legend.position = legend.position) +
-      ggtitle(paste0(L$dataSetName,": chronData ", as.character(chron.number), " - measurementTable ", as.character(meas.num)))
+    return(chronPlot)
     
-    if(any(grepl("AD",age$units)) | any(grepl("CE",age$units))){
-      chronPlot <- chronPlot + scale_x_continuous(name = axisLabel(age))
-    }else{
-      chronPlot <- chronPlot + scale_x_reverse(name = axisLabel(age))
-    }
   }
   
-  return(chronPlot)
-  
-}
- 
   #' @export
   #' @family plot
   #' @family chron
@@ -1534,7 +1629,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     }
     
     if(addPaleoAgeDepth){#then add a line that shows depth vs age in the paleoTable
-        P <- L$paleoData
+      P <- L$paleoData
       if(is.na(paleo.number)){
         if(length(P)==1){
           paleo.number = 1
@@ -1584,7 +1679,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     #Ribbons first
     chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = bandAlp,probs = probs,x.bin = x.bin,y.bin = y.bin, nbins = nbins, color.low = bandcolor.low,color.high = bandcolor.high,color.line = color.line,lineWidth = lineWidth,add.to.plot = add.to.plot)
     
-
+    
     
     #A few traces second
     chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = ensLineAlp,color = enscolor.line,add.to.plot = chronPlot,maxPlotN = nEnsLines)
@@ -1601,7 +1696,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
       chronPlot <- chronPlot+geom_line(aes(x = pAge$values, y = pDepth$value), color = paleoColor)
     }
     
-  
+    
     
     #Tidy up...
     chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName)) + geoChronRPlotTheme()
@@ -1782,7 +1877,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
   #' @param colorFun A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))
   #' @return A ggplot object of the plot 
   plotTimeseriesStack <- function(plot.df,timeVar = "year", colorVar = "paleoData_TSid", fillAlpha = 0.2, lineSize = 0.5,scaleFactor = 1/3,scaleHeight = .75, labBuff = 0.02, labSize = 3,  labSpace= 2,colorRamp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
- 
+    
     
     #force grouping by TSid
     plot.df <- dplyr::group_by(plot.df,paleoData_TSid)
@@ -1820,13 +1915,13 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     
     axisStats <- plot.df %>%
       dplyr::summarize(variableName = unique(paleoData_variableName),
-                units = unique(paleoData_units),
-                dataSetName = unique(dataSetName),
-                archiveType = unique(archiveType),
-                mean = mean(paleoData_values,na.rm = T),
-                sdhigh = sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
-                sdlow = -sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
-                colorVar = unique(cv)) %>%
+                       units = unique(paleoData_units),
+                       dataSetName = unique(dataSetName),
+                       archiveType = unique(archiveType),
+                       mean = mean(paleoData_values,na.rm = T),
+                       sdhigh = sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
+                       sdlow = -sd(paleoData_values,na.rm = T)/scaleFactor*scaleHeight+mean(paleoData_values,na.rm = T),
+                       colorVar = unique(cv)) %>%
       dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
       dplyr::mutate(axisMin = as.character(signif(sdlow,3))) %>%
       dplyr::mutate(axisMax = as.character(signif(sdhigh,3)))

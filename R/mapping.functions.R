@@ -392,37 +392,6 @@ baseMap = function(lon,
   }
   
   return(baseMap )
-  
-  
-}
 
-#' @family mapping
-#' @export
-#' @title Assign colors for map color scale
-#' @author Nick McKay
-#' @description Quick look up for color scale pairs for mapping
-#' @param colors string to define color scale. Options are "temp", "precip" and "drought"
-#' @return a pair of high/low colors
-assignColors = function(colors="temp"){
-  
-  if(length(colors==1)){
-    #make point map
-    if(grepl(pattern = "temp",colors)){
-      lowcolor="blue"
-      hicolor="red"
-    }else if(grepl(pattern = "precip",colors)){
-      lowcolor="saddlebrown"
-      hicolor="blue"
-    }else if(grepl(pattern = "drought",colors)){
-      hicolor="saddlebrown"
-      lowcolor="green"
-    }else{
-      warning("dont recognize color scale, useing blue-red")
-      lowcolor="blue"
-      hicolor="red"
-    }
-    colors = c(lowcolor,hicolor)
-  }
-  
-  return(colors)
+
 }
