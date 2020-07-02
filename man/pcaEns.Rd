@@ -8,8 +8,8 @@ pcaEns(
   bin.list,
   method = "ppca",
   weights = NA,
-  PCAtype = "corr",
-  nPCs = 4,
+  pca.type = "corr",
+  n.pcs = 4,
   nEns = 1000
 )
 }
@@ -20,11 +20,11 @@ pcaEns(
 
 \item{weights}{Vector of weights to apply to timeseries in the bin.list}
 
-\item{PCAtype}{Correlation ("corr" - default) or Covariance ("cov"), matrix}
+\item{pca.type}{Correlation ("corr" - default) or Covariance ("cov"), matrix}
 
-\item{nPCs}{number of PCs/EOFs to calculate}
+\item{n.pcs}{number of PCs/EOFs to calculate}
 
-\item{nens}{how many ensemble members?}
+\item{n.ens}{how many ensemble members?}
 }
 \description{
 Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.

@@ -8,13 +8,13 @@ mapAgeEnsembleToPaleoData(
   L,
   age.var = "age",
   depth.var = "depth",
-  which.paleo = NA,
-  which.pmt = NA,
-  which.chron = NA,
-  which.model = NA,
-  which.ens = NA,
-  max.ensemble.members = NA,
-  strictSearch = FALSE
+  paleo.num = NA,
+  paleo.meas.table.num = NA,
+  chron.num = NA,
+  model.num = NA,
+  ens.table.num = NA,
+  max.ens = NA,
+  strict.search = FALSE
 )
 }
 \arguments{
@@ -24,19 +24,19 @@ mapAgeEnsembleToPaleoData(
 
 \item{depth.var}{name of the depth variable to search for}
 
-\item{which.paleo}{an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify}
+\item{paleo.num}{an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify}
 
-\item{which.pmt}{an integer that corresponds to which paleo measurementTable you want to add the ensemble to?}
+\item{paleo.meas.table.num}{an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?}
 
-\item{which.chron}{an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
+\item{chron.num}{an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
 
-\item{which.model}{an integer that corresponds to which chron model you want to get the ensemble from?}
+\item{model.num}{an integer that corresponds to chron.num model you want to get the ensemble from?}
 
-\item{which.ens}{an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?}
+\item{ens.table.num}{an integer that corresponds to ensembleTable you want to get the variable from?}
 
-\item{max.ensemble.members}{Maximum number of ensemble members to map}
+\item{max.ens}{Maximum number of ensemble members to map}
 
-\item{strictSearch}{Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
+\item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }
 \value{
 L a lipd object
@@ -48,6 +48,7 @@ Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by
 Other LiPD manipulation: 
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
+\code{\link{pullTsVariable}()},
 \code{\link{selectData}()}
 }
 \concept{LiPD manipulation}

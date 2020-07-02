@@ -27,7 +27,7 @@ Let's start by loading the packages we'll need.
 ```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR) #to read and write LiPD files
 library(geoChronR) #of course
-library(readr) #to load in the instrumetnal data we need
+library(readr) #to load in the instrumental data we need
 library(ggplot2) #for plotting
 ``` 
 
@@ -48,26 +48,26 @@ print(sp)
 
 ```{r,results="hide",fig.keep="all"}
 K <- runBacon(K,
-              labIDVar = 'labID', 
-              age14CVar = 'age14C', 
-              age14CuncertaintyVar = 'age14CUncertainty',
-              ageVar = 'age', 
-              ageUncertaintyVar = 'ageUncertainty', 
-              depthVar = 'depth', 
-              reservoirAge14CVar = NULL, 
-              reservoirAge14CUncertaintyVar = NULL, 
-              rejectedAgesVar = NULL,
-              baconAccMean = 10,
-              baconThick = 7,
+              lab.id.var = 'labID', 
+              age.14c.var = 'age14C', 
+              age.14c.uncertainty.var = 'age14CUncertainty',
+              age.var = 'age', 
+              age.uncertainty.var = 'ageUncertainty', 
+              depth.var = 'depth', 
+              reservoir.age.14c.var = NULL, 
+              reservoir.age.14c.uncertainty.var = NULL, 
+              rejected.ages.var = NULL,
+              bacon.acc.mean = 10,
+              bacon.thick = 7,
               ask = FALSE,
-              baconDir = "~/Cores",
+              bacon.dir = "~/Cores",
               suggest = FALSE)
 ```
 
 ## And plot the ensemble output
 
 ```{r}
-plotChron(K,age.var = "ageEnsemble",distScale = 0.2)
+plotChron(K,age.var = "ageEnsemble",dist.scale = 0.2)
 ```
 
 
@@ -121,7 +121,7 @@ kinst$units = "deg (C)"
 
 ## Calculate an ensmeble correlation between the RABD and local summer temperature data
 ```{r,results="hide",fig.keep="all"}
-corout = corEns(kae,rabd,kyear,kinst,binstep=2,percentiles = c(.05,.5,.95 ))
+corout = corEns(kae,rabd,kyear,kinst,bin.step=2,percentiles = c(.05,.5,.95 ))
 ```
 
 ## And plot the output
@@ -135,7 +135,7 @@ Mixed results. But encouraging enough to move forward.
 ## Perform ensemble regression
 OK, you've convinced yourself that you want to use RABD to model temperature back through time. We can do this simply (perhaps naively) with regession, and lets do it with age uncertainty, both in the building of the model, and the reconstructing
 ```{r,results="hide",fig.keep="all"}
-regout = regressEns(kae,rabd,timeY =kyear,valuesY =kinst,binstep=3,recon.binvec = seq(-4010,2010,by=20),percentiles = c(5,50,95))
+regout = regressEns(time.x = kae,values.x = rabd,time.y =kyear,values.y =kinst,bin.step=3,recon.bin.vec = seq(-4010,2010,by=20),percentiles = c(5,50,95))
 ```
 
 ## And plot the output

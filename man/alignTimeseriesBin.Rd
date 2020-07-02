@@ -5,42 +5,42 @@
 \title{Align and bin two timeseries into comparable bins}
 \usage{
 alignTimeseriesBin(
-  timeX,
-  valuesX,
-  timeY,
-  valuesY,
-  binvec = NA,
-  binstep = NA,
-  binfun = mean,
+  time.1,
+  values.1,
+  time.2,
+  values.2,
+  bin.vec = NA,
+  bin.step = NA,
+  bin.fun = mean,
   max.ens = NA,
-  minObs = 10
+  min.obs = 10
 )
 }
 \arguments{
-\item{timeX}{matrix of age/time ensembles, or single column}
+\item{time.1}{matrix of age/time ensembles, or single column}
 
-\item{valuesX}{matrix of values ensembles, or single column}
+\item{values.1}{matrix of values ensembles, or single column}
 
-\item{timeY}{matrix of age/time ensembles, or single column}
+\item{time.2}{matrix of age/time ensembles, or single column}
 
-\item{valuesY}{matrix of values ensembles, or single column}
+\item{values.2}{matrix of values ensembles, or single column}
 
-\item{binvec}{vector of bin edges for binning step}
+\item{bin.vec}{vector of bin edges for binning step}
 
-\item{binstep}{spacing of bins, used to build bin step}
+\item{bin.step}{spacing of bins, used to build bin step}
 
-\item{binfun}{function to use during binning (mean, sd, and sum all work)}
+\item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
 \item{max.ens}{maximum number of ensemble members to regress}
 
-\item{minObs}{minimum number of points required to calculate regression}
+\item{min.obs}{minimum number of points required to calculate regression}
 }
 \value{
 list of binned data output:
 \itemize{
 \item binX: binned values from X
 \item binY: binned values from Y
-\item binstep: interval of the binning
+\item bin.step: interval of the binning
 \item yearBins: bins along time
 }
 }

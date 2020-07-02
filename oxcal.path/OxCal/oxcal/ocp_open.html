@@ -1,0 +1,41 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<script type="text/javascript">
+ function tryLoad()
+ {
+  if(!parent.onAServer())
+  {
+   if(document.getElementById("filename").value.indexOf(".js")==-1)
+   {
+    parent.viewFile(document.getElementById("filename").value);
+   }
+   else
+   {
+    parent.source="file://"+ document.getElementById("filename").value;
+   };
+   parent.plotOptions.viewType="table";
+   parent.reload();
+  };
+ };
+</script>
+</head>
+
+<body>
+<h1> 
+<img onclick="parent.updateView()" onmouseover="this.src='../img/BackOver.gif'" onmouseout="this.src='../img/Back.gif'" src="../img/Back.gif" width="25" height="20"/> 
+OxCal Output:</h1>
+<hr/>
+  <table class="menuWide">
+  <tr><th class="menu">Open (*.js, *.txt, *.log):</th></tr>
+  <tr><td><input type="hidden" name="MAX_FILE_SIZE" value="1000000"/>
+  <input id="filename" type="file" name="upload" size="60"></td></tr>
+  <tr><td><input type="button" value="Ok" name="B4" onclick="tryLoad()" />
+  <input type="submit" value="Ok" name="B5" style="display:none"/>
+  <input type="button" value="Cancel" name="B5" onclick="parent.updateView()"></td></tr>
+  </table>
+
+</body>
+
+</html>

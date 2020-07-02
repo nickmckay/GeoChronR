@@ -38,22 +38,22 @@ The `oxcAAR` package provides efficient access from R to the oxCal executables, 
 ```{r}
 
 L <- runOxcal(L,
-              labIDVar = 'id', 
-              age14CVar = 'age14c', 
-              age14CuncertaintyVar = 'age14cuncertainty', 
-              ageVar = 'calendarage', 
-              ageUncertaintyVar = 'calendarageuncertainty', 
-              depthVar = 'depth', 
-              reservoirAge14CVar = NULL, 
-              reservoirAge14CUncertaintyVar = NULL, 
-              rejectedAgesVar = NULL,
-              staticReservoirAge = 70,
-              staticReservoirAgeUnc = 50,
-              oxcalPath = "~/newOxCal",
-              surfaceAge = 0,
-              surfaceAgeUnc = 25,
-              depthInterval = 10,
-              eventsPerUnitLength = .1)
+              lab.id.var = 'id', 
+              age.14c.var = 'age14c', 
+              age.14c.uncertainty.var = 'age14cuncertainty', 
+              age.var = 'calendarage', 
+              age.uncertainty.var = 'calendarageuncertainty', 
+              depth.var = 'depth', 
+              reservoir.age.14c.var = NULL, 
+              reservoir.age.14c.uncertainty.var = NULL, 
+              rejected.ages.var = NULL,
+              static.reservoir.age = 70,
+              static.reservoir.age.unc = 50,
+              oxcal.path = "~/newOxCal",
+              surface.age = 0,
+              surface.age.unc = 25,
+              depth.interval = 10,
+              events.per.unit.length = .1)
               
                 
                 
@@ -71,11 +71,11 @@ L <- mapAgeEnsembleToPaleoData(L,age.var = "ageEnsemble")
 
 
 ```{r}
-ageEns <- selectData(L,varName = "ageEnsemble")
-SST <- selectData(L,varName = "SST")
+ageEns <- selectData(L,var.name = "ageEnsemble")
+SST <- selectData(L,var.name = "SST")
 
 
 plotTimeseriesEnsRibbons(X = ageEns, Y = SST) %>% 
-  plotTimeseriesEnsLines(X = ageEns, Y = SST,maxPlotN = 2)
+  plotTimeseriesEnsLines(X = ageEns, Y = SST,n.ens.plot = 10)
 ```
 

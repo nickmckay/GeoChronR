@@ -7,12 +7,12 @@
 quantile2d(
   x,
   y,
-  nbins = 500,
+  n.bins = 500,
   x.bin = NA,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
-  nens = max(c(ncol(x), ncol(y))),
+  n.ens = max(c(ncol(x), ncol(y))),
   seed = 111,
-  limitOutliersX = 0.025
+  limit.outliers.x = 0.025
 )
 }
 \arguments{
@@ -20,17 +20,17 @@ quantile2d(
 
 \item{y}{n by j matrix where n is the number of observations and j is >= 1}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{n.bins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
 \item{x.bin}{vector of bin edges over which to bin.}
 
 \item{probs}{quantiles to calculate}
 
-\item{nens}{number of ensemble members to derive quantiles for}
-
 \item{seed}{set a seed for reproducibility}
 
-\item{limitOutliersX}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
+\item{limit.outliers.x}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
+
+\item{n.ens.table.number}{of ensemble members to derive quantiles for}
 }
 \value{
 list of quantiles and x.bin
@@ -47,7 +47,7 @@ quantiles <- quantile2d(ageEnsemble,paleoEnsemble)
 \seealso{
 Other gridding: 
 \code{\link{bin2d}()},
-\code{\link{kde_2d}()}
+\code{\link{kde2d}()}
 }
 \author{
 Nick McKay

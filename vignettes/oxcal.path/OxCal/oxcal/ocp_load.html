@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="">
+  <title>OxCal Run/Load</title>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<script type="text/javascript">
+  var ocd=new Array;
+  var calib=new Array;  
+  var model=new Object;
+  var nan="NaN";
+  ocd[0]=new Object;
+  ocd[0].likelihood=new Object;
+  ocd[0].posterior=new Object;
+  function localLoad()
+  {
+   if(parent.source=="ocp_null.js"){return;};
+   parent.localOpenOxCal(parent.source.replace(".oxcal",".js"),"js");
+  };
+  function initialise()
+  {
+   parent.calib=calib;
+   parent.ocd=ocd;
+   parent.model=model;
+   parent.loaderLoaded=true;
+   parent.initialise();
+   if(!parent.onAServer())
+   {
+    window.setTimeout("localLoad()",100);
+   };
+  };
+</script>
+<script type="text/javascript">
+  if(parent.onAServer())
+  {
+   document.writeln('<script type="text\/javascript" src="'+'ocp_open_server.php?filename='+parent.source.replace(".oxcal",".js")+'"><\/script>');
+  };
+</script>
+</head>
+<body class="clear" onload="initialise()">
+ <table class="menubar" style="width:100%">
+  <tr>
+   <td>&nbsp;</td>
+  </tr>
+  <tr><td style='height:1px'> </td></tr> 
+  </table>
+<form name="runFile" id="runFile" method="POST" action="oci_run.php">
+ <table class="menu">
+  <tbody>
+   <tr><th class="menu">Command</th></tr>
+   <tr><td><textarea name="command" id="runFileCommand" rows=5 cols=30 class='code'></textarea></td></tr>
+   <tr><td><input type="button" value="Submit" onclick="parent.runOxCal(this.value)"/> <input type="reset" value="Cancel"/> <input type="hidden" name="filename" id="runFileFilename" value="/Quick.oxcal" size="20" /></td></tr>
+  </tbody>
+ </table>
+</form>
+</body>
+</html>

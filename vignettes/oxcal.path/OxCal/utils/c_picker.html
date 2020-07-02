@@ -1,0 +1,332 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Color Picker</title>
+  <link rel="stylesheet" type="text/css" href="../style/db.css">
+  <style>
+   th { vertical-align: middle;height:25px;text-align:center; }
+  </style>
+  <script type="text/javascript">
+   var s_org=30,v_org=271,h_org=271,o_org=271,marker_offs=5;
+   var updating=false;
+   var firstTime=true;
+   var color;
+   function decimalToHex(d, padding) 
+   {
+    var hex = Number(Math.round(d)).toString(16);
+    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+    while (hex.length < padding)
+    {
+     hex = "0" + hex;
+    };
+    return hex;
+   }
+   function setSwatches(r,g,b,a)
+   {
+    if(a==1)
+    {
+//     color="#"+decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
+     color="rgb("+r+","+g+","+b+")"
+    }
+    else
+    {
+     color="rgba("+r+","+g+","+b+","+a+")";
+    };
+    document.getElementById("Color").value=color;
+    document.getElementById("new_swatch").style.backgroundColor=color;
+    if(firstTime)
+    {
+     document.getElementById("old_swatch").style.backgroundColor=color;     
+     firstTime=false;
+    };
+   };
+   function fromHSV()
+   {
+    var h,s,v,r,g,b,a;
+    if(updating){return;};
+    updating=true;
+    h=document.getElementById("H").value;
+    s=document.getElementById("S").value;
+    v=document.getElementById("V").value;
+    set_h(h);set_sv(s,v);
+    h=document.getElementById("H").value;
+    s=document.getElementById("S").value;
+    v=document.getElementById("V").value;
+    a=document.getElementById("A").value;
+    if((0<=h) && (h<=60))
+    {
+     r=255;
+     g=(255*h/60);
+     b=0;
+    };
+    if((60<h) && (h<=120))
+    {
+     r=(255-255*(h-60)/60);
+     g=255;
+     b=0;
+    };
+    if((120<h) && (h<=180))
+    {
+     r=0;
+     g=255;
+     b=(255*(h-120)/60);
+    };
+    if((180<h) && (h<=240))
+    {
+     r=0;
+     g=(255-255*(h-180)/60);
+     b=255;
+    };
+    if((240<h) && (h<=300))
+    {
+     r=(255*(h-240)/60);
+     g=0;
+     b=255;
+    };
+    if((300<h) && (h<=360))
+    {
+     r=255;
+     g=0;
+     b=(255-255*(h-300)/60);
+    }; 
+    document.getElementById("sv_map").style.backgroundColor="#"+decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
+    r=255-(s*(255-r)/100);
+    g=255-(s*(255-g)/100);
+    b=255-(s*(255-b)/100);
+    r=Math.round(v*r/100);
+    g=Math.round(v*g/100);
+    b=Math.round(v*b/100);
+    document.getElementById("R").value=r;
+    document.getElementById("G").value=g;
+    document.getElementById("B").value=b;
+    document.getElementById("A").value=a;
+    document.getElementById("Hex").value=decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
+    setSwatches(r,g,b,a);
+    updating=false;
+    if(document.getElementById("Safe").checked)
+    {
+     fromRGB();
+    };
+   };
+   function fromRGB()
+   {
+    var h,s,v,r,g,b,a,max,min,safe;
+    if(updating){return;};
+    updating=true;
+    r=Math.round(document.getElementById("R").value) % 256;
+    g=Math.round(document.getElementById("G").value) % 256;
+    b=Math.round(document.getElementById("B").value) % 256;
+    a=Math.round(document.getElementById("A").value*100)/100;
+    if(a>1){a=1;};if(a<0){a=0;};
+    safe=document.getElementById("Safe").checked;
+    if(safe)
+    {
+     r=51*Math.round(r/51);
+     g=51*Math.round(g/51);
+     b=51*Math.round(b/51);
+    };
+    document.getElementById("R").value=r;
+    document.getElementById("G").value=g;
+    document.getElementById("B").value=b;
+    document.getElementById("A").value=a;
+    document.getElementById("Hex").value=decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
+    setSwatches(r,g,b,a);
+    set_o(a*100);
+    max=0;min=255;
+    if(r<min){min=r;};if(r>max){max=r;};
+    if(g<min){min=g;};if(g>max){max=g;};
+    if(b<min){min=b;};if(b>max){max=b;};
+    if(max==min)
+    {
+     h=0;
+     s=0;
+     v=100*(max/255);
+     set_sv(s,v);
+     set_h(h);
+     document.getElementById("sv_map").style.backgroundColor="#FF0000";
+    }
+    else
+    {
+     r=Math.round(255*((r-min)/(max-min)));
+     g=Math.round(255*((g-min)/(max-min)));
+     b=Math.round(255*((b-min)/(max-min)));
+     document.getElementById("sv_map").style.backgroundColor="#"+decimalToHex(r,2)+decimalToHex(g,2)+decimalToHex(b,2);
+     if((b==0) && (r==255))
+     {
+      h=Math.round(60*g/255);
+     };
+     if((b==0) && (g==255))
+     {
+      h=Math.round(120-60*r/255);
+     };
+     if((r==0) && (g==255))
+     {
+      h=Math.round(120+60*b/255);
+     };
+     if((r==0) && (b==255))
+     {
+      h=Math.round(240-60*g/255);
+     };
+     if((g==0) && (b==255))
+     {
+      h=Math.round(240+60*r/255);
+     };
+     if((g==0) && (r==255))
+     {
+      h=Math.round(360-60*b/255);
+     };
+     if(h==360){h=0;};
+     v=100*(max/255);
+     s=100*((max-min)/max);
+     set_sv(s,v);
+     set_h(h);
+    };
+    updating=false;
+   };
+   function fromHex()
+   {
+    var r,g,b,hex;
+    if(updating){return;};
+    updating=true;
+    hex=document.getElementById("Hex").value;
+    r=Math.round(parseInt(hex.substring(0,2),16));
+    g=Math.round(parseInt(hex.substring(2,4),16));
+    b=Math.round(parseInt(hex.substring(4,6),16));
+    document.getElementById("R").value=r;
+    document.getElementById("G").value=g;
+    document.getElementById("B").value=b;    
+    updating=false;
+    fromRGB();
+   };
+   function fromColor()
+   {
+    var arr;
+    color=document.getElementById("Color").value;
+    if(color.indexOf("#")!=-1)
+    {
+     document.getElementById("Hex").value=color.substr(color.indexOf("#")+1,6);
+     fromHex();
+    }
+    else
+    {
+     if((color.indexOf("(")!=-1)&&(color.indexOf(")")!=-1))
+     {
+      arr=color.slice(color.indexOf("(")+1,color.indexOf(")")).split(",");
+      document.getElementById("R").value=arr[0];
+      document.getElementById("G").value=arr[1];
+      document.getElementById("B").value=arr[2];
+      if(arr.length>3)
+      {
+       document.getElementById("A").value=arr[3];
+      };
+     };
+     fromRGB();
+    };
+   };
+   function set_h(h)
+   {
+    h=h % 360;
+    document.getElementById("h_marker").style.top=Math.round(h_org-256*h/360-marker_offs)+"px";
+    document.getElementById("h_marker").focus();
+    document.getElementById("H").value=Math.round(h);
+   };
+   function set_o(o)
+   {
+    document.getElementById("o_marker").style.top=Math.round(o_org-256*o/100-marker_offs)+"px";     
+    document.getElementById("o_marker").focus();
+    document.getElementById("A").value=o/100.0;
+   };
+   var move_h_switch=false;
+   function move_h(event)
+   {
+    if(event.preventDefault){event.preventDefault();};
+    switch(event.type)
+    {
+    case "mousedown": move_h_switch=true;break;
+    case "mouseout": move_h_switch=false;return;
+    case "mouseup": move_h_switch=false;break;
+    case "mousemove":if(!move_h_switch){return;};break;
+    };
+    document.getElementById("h_marker").focus();
+    set_h(360*(h_org-event.clientY)/256);
+    fromHSV();
+   };
+   var move_o_switch=false;
+   function move_o(event)
+   {
+    if(event.preventDefault){event.preventDefault();};
+    switch(event.type)
+    {
+    case "mousedown": move_o_switch=true;break;
+    case "mouseout": move_o_switch=false;return;
+    case "mouseup": move_o_switch=false;break;
+    case "mousemove":if(!move_o_switch){return;};break;
+    };
+    set_o(Math.round(100*(o_org-event.clientY)/256));
+    fromRGB();
+   };
+   function set_sv(s,v)
+   {
+    if(s>100){s=100;};if(s<0){s=0;};
+    if(v>100){v=100;};if(v<0){v=0;};
+    document.getElementById("sv_marker").style.left=Math.round(s_org+256*s/100-marker_offs)+"px";
+    document.getElementById("S").value=Math.round(s);
+    document.getElementById("sv_marker").style.top=Math.round(v_org-256*v/100-marker_offs)+"px";
+    document.getElementById("V").value=Math.round(v);
+    fromHSV();
+   };
+   var move_sv_switch=false;
+   function move_sv(event)
+   {
+    if(event.preventDefault){event.preventDefault();};
+    switch(event.type)
+    {
+    case "mousedown": move_sv_switch=true;break;
+    case "mouseout": move_sv_switch=false;return;
+    case "mouseup": move_sv_switch=false;break;
+    case "mousemove":if(!move_sv_switch){return;};break;
+    };
+    set_sv(100*(event.clientX-s_org)/256,100*(v_org-event.clientY)/256);
+   };
+   function cancel()
+   {
+    parent.cancelColor();
+   };
+   function ok()
+   {
+    parent.setColor();
+   };
+  </script>
+</head>
+<body class="tool">
+ <table>
+  <tr><th rowspan=10>V</th>
+  <td rowspan=10><div style="width:260px;height:256px"></div></td>
+  <th rowspan=10>H</th><td rowspan=10><div style="width:30px;height:256px"></div></td>
+  <th></th><td><div style="background-image:url('../img/Check.png');width:40px;height:20px"><div  id="old_swatch" style="background-color:#FFFFFF;width:40px;height:20px;border-width:1px;border-style:inset"></div></div></td>
+  <th rowspan=10></th><td rowspan=10><div style="width:30px;height:256px"></div></td>
+  </tr>
+  <tr><th></th><td><div style="background-image:url('../img/Check.png');width:40px;height:20px"><div id="new_swatch" style="background-color:#FF0000;width:40px;height:20px;border-width:1px;border-style:inset"></div></div></td></tr>
+  <tr><th>H</th><td><input name="H" id="H" type="text" value="0" size="4" onchange="fromHSV()">&deg;</td></tr>
+  <tr><th>S</th><td><input name="S" id="S" type="text" value="100" size="4" onchange="fromHSV()">%</td></tr>
+  <tr><th>V</th><td><input name="V" id="V" type="text" value="100" size="4" onchange="fromHSV()">%</td></tr>
+  <tr><th>R</th><td><input name="R" id="R" type="text" value="255" size="4" onchange="fromRGB()"></td></tr>
+  <tr><th>G</th><td><input name="G" id="G" type="text" value="0" size="4" onchange="fromRGB()"></td></tr>
+  <tr><th>B</th><td><input name="B" id="B" type="text" value="0" size="4" onchange="fromRGB()"></td></tr>
+  <tr><th>A</th><td><input name="A" id="A" type="text" value="1" size="4" onchange="fromRGB()"></td></tr>
+  <tr><td></td><td></td></tr>
+  <tr><td></td><th>S</th><td></td><td></td><td><input name="Safe" id="Safe" type="checkbox" onchange="fromRGB()" name="false"></td><td>WebSafe</td></tr>
+  <tr><td></td><td><input name="Color" id="Color" type="text" value="#FF0000" size="20" onchange="fromHex()"> <input type="button" onclick="parent.setColor()" value="Ok"><input type="button" onclick="parent.cancelColor()" value="Cancel"></td><td></td><td></td><td></td><td><input name="Hex" id="Hex" type="text" value="FF0000" size="6" onchange="fromHex()"></td></tr>
+ </table>
+ <img id="sv_map" style="position:absolute;left:29px;top:15px;border-width:1px;border-style:inset;background-color:#FF0000" src="../img/map_b_s.png"/>
+ <img style="position:absolute;left:309px;top:15px;border-width:1px;border-style:inset" src="../img/map_h.png"/>
+ <img style="position:absolute;left:439px;top:15px;border-width:1px;border-style:inset" src="../img/map_o.png"/>
+ <img id="sv_marker" style="position:absolute;left:281px;top:11px" src="../img/drop.png"  onmousedown="move_sv(event)"/>
+ <img  id="h_marker" style="position:absolute;left:305px;top:266px" src="../img/bar.png" onmousedown="move_h(event)"/>
+ <img  id="o_marker" style="position:absolute;left:435px;top:11px" src="../img/bar.png" onmousedown="move_o(event)"/>
+ <img  style="position:absolute;left:30px;top:16px" src="../img/map_tr_sqr.png" onmouseup="move_sv(event)" onmousemove="move_sv(event)" onmousedown="move_sv(event)" onmouseout="move_sv(event)"/>
+ <img style="position:absolute;left:310px;top:16px" src="../img/map_tr_bar.png" onmouseup="move_h(event)" onmousemove="move_h(event)" onmousedown="move_h(event)" onmouseout="move_h(event)"/>
+ <img style="position:absolute;left:440px;top:16px" src="../img/map_tr_bar.png" onmouseup="move_o(event)" onmousemove="move_o(event)" onmousedown="move_o(event)" onmouseout="move_o(event)"/>
+</body>
+</html>

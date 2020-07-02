@@ -6,54 +6,52 @@
 \usage{
 createChronMeasInputDf(
   L,
-  which.chron = NA,
-  which.mt = NA,
-  labIDVar = "labID",
-  age14CVar = "age14C",
-  age14CuncertaintyVar = "age14CUnc",
-  ageVar = "age",
-  ageUncertaintyVar = "ageUnc",
-  depthVar = "depth",
-  reservoirAge14CVar = "reservoirAge",
-  reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected",
-  splitAges = TRUE
+  chron.num = NA,
+  meas.table.num = NA,
+  lab.id.var = "labID",
+  age.14c.var = "age14C",
+  age.14c.uncertainty.var = "age14CUnc",
+  age.var = "age",
+  age.uncertainty.var = "ageUnc",
+  depth.var = "depth",
+  reservoir.age.14C.var = "reservoirAge",
+  reservoir.age.14c.uncertainty.var = "reservoirAge14C",
+  rejected.ages.var = "rejected",
+  split.ages = TRUE
 )
 }
 \arguments{
-\item{L}{}
+\item{L}{a lipd object}
 
-\item{which.chron}{}
+\item{chron.num}{}
 
-\item{which.mt}{}
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
 
-\item{labIDVar}{}
+\item{lab.id.var}{}
 
-\item{age14CVar}{}
+\item{age.14c.var}{}
 
-\item{age14CuncertaintyVar}{}
+\item{age.14c.uncertainty.var}{}
 
-\item{ageVar}{}
+\item{age.var}{}
 
-\item{ageUncertaintyVar}{}
+\item{age.uncertainty.var}{}
 
-\item{depthVar}{}
+\item{depth.var}{}
 
-\item{reservoirAge14CVar}{}
+\item{reservoir.age.14C.var}{}
 
-\item{reservoirAge14CUncertaintyVar}{}
+\item{reservoir.age.14c.uncertainty.var}{}
 
-\item{rejectedAgesVar}{}
+\item{rejected.ages.var}{}
 
-\item{splitAges}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
+\item{split.ages}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
 
 \item{overwrite}{}
 
 \item{site.name}{}
 
-\item{modelNum}{}
-
-\item{useMarine}{}
+\item{use.marine}{}
 }
 \value{
 a standardized dataframe of chron measurements

@@ -1,18 +1,18 @@
 
 
-#' Convert variable names to strings
+#' Convert var.names to strings
 #'
-#' @param varName 
-#'
-#' @return the variable name as a string
+#' @inheritParams selectData 
+#' @param used.value 
+#' @return the var.name as a string
 #' @export
-stringifyVariables <- function(varName,usedValue){
-  if(is.null(usedValue)){
-    so <- paste0(varName," = NULL")
-  }else if(isTRUE(usedValue == "NULL")){
-    so <- paste0(varName," = ", usedValue)
+stringifyVariables <- function(var.name,used.value){
+  if(is.null(used.value)){
+    so <- paste0(var.name," = NULL")
+  }else if(isTRUE(used.value == "NULL")){
+    so <- paste0(var.name," = ", used.value)
   }else{
-    so <- paste0(varName," = '", usedValue, "'")
+    so <- paste0(var.name," = '", used.value, "'")
   }
   return(so)
 }
@@ -30,83 +30,80 @@ askUser <- function(query){
 
 
 #' Create a data frame for chron measurement data
-#'
-#' @param L 
-#' @param which.chron 
-#' @param which.mt 
+#' @inheritParams selectData
+#' @param chron.num 
 #' @param overwrite 
 #' @param site.name 
-#' @param modelNum 
-#' @param useMarine 
-#' @param labIDVar 
-#' @param age14CVar 
-#' @param age14CuncertaintyVar 
-#' @param ageVar 
-#' @param ageUncertaintyVar 
-#' @param depthVar 
-#' @param reservoirAge14CVar 
-#' @param reservoirAge14CUncertaintyVar 
-#' @param rejectedAgesVar 
-#' @param splitAges if there's an age_type column, and only one age column, intelligently split between age and age14C
+#' @param use.marine 
+#' @param lab.id.var 
+#' @param age.14c.var 
+#' @param age.14c.uncertainty.var 
+#' @param age.var 
+#' @param age.uncertainty.var 
+#' @param depth.var 
+#' @param reservoir.age.14c.var 
+#' @param reservoir.age.14c.uncertainty.var 
+#' @param rejected.ages.var 
+#' @param split.ages if there's an age_type column, and only one age column, intelligently split between age and age14C
 #' @importFrom purrr map_dbl map_lgl map_chr
 #' @importFrom crayon bold yellow cyan red green blue 
 #' @return a standardized dataframe of chron measurements
 #' @export
 createChronMeasInputDf <- function(L,
-                                   which.chron=NA,
-                                   which.mt = NA,
-                                   labIDVar="labID",
-                                   age14CVar = "age14C", 
-                                   age14CuncertaintyVar = "age14CUnc", 
-                                   ageVar = "age", 
-                                   ageUncertaintyVar = "ageUnc", 
-                                   depthVar = "depth", 
-                                   reservoirAge14CVar = "reservoirAge",
-                                   reservoirAge14CUncertaintyVar = "reservoirAge14C",
-                                   rejectedAgesVar="rejected",
-                                   splitAges = TRUE){
+                                   chron.num=NA,
+                                   meas.table.num = NA,
+                                   lab.id.var="labID",
+                                   age.14c.var = "age14C", 
+                                   age.14c.uncertainty.var = "age14CUnc", 
+                                   age.var = "age", 
+                                   age.uncertainty.var = "ageUnc", 
+                                   depth.var = "depth", 
+                                   reservoir.age.14c.var = "reservoirAge",
+                                   reservoir.age.14c.uncertainty.var = "reservoirAge14C",
+                                   rejected.ages.var="rejected",
+                                   split.ages = TRUE){
   
   
-  #initialize which.chron
-  if(is.na(which.chron)){
+  #initialize chron.num
+  if(is.na(chron.num)){
     if(length(L$chronData)==1){
-      which.chron=1
+      chron.num=1
     }else{
-      which.chron=as.integer()
+      chron.num=as.integer()
     }
   }
   
   #We no longer get this
-  # if(is.na(modelNum)){
-  #   if(is.null(L$chronData[[which.chron]]$model[[1]])){
+  # if(is.na(model.num)){
+  #   if(is.null(L$chronData[[chron.num]]$model[[1]])){
   #     #no models, this is first
-  #     modelNum=1
+  #     model.num=1
   #   }else{
-  #     print(cat(crayon::yellow(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))))
-  #     modelNum=as.integer(askUser("Enter the number for this model- will overwrite if necessary "))
+  #     print(cat(crayon::yellow(paste("You already have", length(L$chronData[[chron.num]]$model), "chron model(s) in chronData" ,chron.num))))
+  #     model.num=as.integer(askUser("Enter the number for this model- will overwrite if necessary "))
   #   }
   # }
   # 
   # 
   #pull out chronology
-  C=L$chronData[[which.chron]]
+  C=L$chronData[[chron.num]]
   
   #check for measurementTables
-  if(is.na(which.mt)){
+  if(is.na(meas.table.num)){
     if(length(C$measurementTable)==1){
-      which.mt = 1  
+      meas.table.num = 1  
     }else{
-      print(paste("There are", length(L$chronData[[which.chron]]$measurementTable), "measurement tables in chronData " ,which.chron))
-      which.mt=as.integer(askUser("Which do you want to use here? (Enter an integer)"))
+      print(paste("There are", length(L$chronData[[chron.num]]$measurementTable), "measurement tables in chronData " ,chron.num))
+      meas.table.num=as.integer(askUser("Which do you want to use here? (Enter an integer)"))
     }
   }
   
-  MT=C$measurementTable[[which.mt]]
+  MT=C$measurementTable[[meas.table.num]]
   
   #NM: move this to google speadsheet import?
   
-  ageVars <- c(2,3,4,5,7,8)
-  depthVars <- 6
+  age.vars <- c(2,3,4,5,7,8)
+  depth.vars <- 6
   
   #go through required fields for bacon
   v2go <- c("labID",
@@ -119,51 +116,51 @@ createChronMeasInputDf <- function(L,
             "reservoirAgeUnc",
             "rejected")
   
-  #user input variable names
+  #user input var.names
   v2gu <- c(
-    ifelse(is.null(labIDVar),"NULL",labIDVar),
-    ifelse(is.null(age14CVar),"NULL",age14CVar),
-    ifelse(is.null(age14CuncertaintyVar),"NULL",age14CuncertaintyVar),
-    ifelse(is.null(ageVar),"NULL",ageVar),
-    ifelse(is.null(ageUncertaintyVar),"NULL",ageUncertaintyVar),
-    ifelse(is.null(depthVar),"NULL",depthVar),
-    ifelse(is.null(reservoirAge14CVar),"NULL",reservoirAge14CVar),
-    ifelse(is.null(reservoirAge14CUncertaintyVar),"NULL",reservoirAge14CUncertaintyVar),
-    ifelse(is.null(rejectedAgesVar),"NULL",rejectedAgesVar)
+    ifelse(is.null(lab.id.var),"NULL",lab.id.var),
+    ifelse(is.null(age.14c.var),"NULL",age.14c.var),
+    ifelse(is.null(age.14c.uncertainty.var),"NULL",age.14c.uncertainty.var),
+    ifelse(is.null(age.var),"NULL",age.var),
+    ifelse(is.null(age.uncertainty.var),"NULL",age.uncertainty.var),
+    ifelse(is.null(depth.var),"NULL",depth.var),
+    ifelse(is.null(reservoir.age.14c.var),"NULL",reservoir.age.14c.var),
+    ifelse(is.null(reservoir.age.14c.uncertainty.var),"NULL",reservoir.age.14c.uncertainty.var),
+    ifelse(is.null(rejected.ages.var),"NULL",rejected.ages.var)
   )
   
-  #input variable names
-  v2gus <-  c("labIDVar",
-              "age14CVar",
-              "age14CuncertaintyVar",
-              "ageVar",
-              "ageUncertaintyVar",
-              "depthVar",
-              "reservoirAge14CVar",
-              "reservoirAge14CUncertaintyVar",
-              "rejectedAgesVar")
+  #input var.names
+  v2gus <-  c("lab.id.var",
+              "age.14c.var",
+              "age.14c.uncertainty.var",
+              "age.var",
+              "age.uncertainty.var",
+              "depth.var",
+              "reservoir.age.14c.var",
+              "reservoir.age.14c.uncertainty.var",
+              "rejected.ages.var")
   
   #alt names
   v2ga <- c("id",#labIDvar,
-            "age",#age14CVar,
-            "unc",#age14CuncertaintyVar,
-            "age",#ageVar,
-            "unc",#ageUncertaintyVar,
-            "depth",#depthVar,
-            "reservoir",#reservoirAge14CVar,
-            reservoirAge14CUncertaintyVar,#reservoirAge14CUncertaintyVar no good alt name here
-            "reject")#rejectedAgesVar)
+            "age",#age.14c.var,
+            "unc",#age.14c.uncertainty.var,
+            "age",#age.var,
+            "unc",#age.uncertainty.var,
+            "depth",#depth.var,
+            "reservoir",#reservoir.age.14c.var,
+            reservoir.age.14c.uncertainty.var,#reservoir.age.14c.uncertainty.var no good alt name here
+            "reject")#rejected.ages.var)
   
   #verbose names
   v2gv <-   c("laboratory ID",  #labIDvar,
-              "radiocarbon ages",   #age14CVar,
-              "1-sigma radiocarbon age uncertainty (+/-)",  #age14CuncertaintyVar,
-              "calibrated/calendar ages",  #ageVar
-              "2-sigma calibrated age uncertainty (+/-)", #ageUncertaintyVar,
-              "depth or position",   #depthVar,
-              "radiocarbon reservoir age offsets (deltaR)",  #reservoirAge14CVar,
-              "radiocarbon reservoir age offsets (deltaR) uncertainties", #reservoirAge14CUncertaintyVar,
-              "rejected ages")  #rejectedAgesVar))
+              "radiocarbon ages",   #age.14c.var,
+              "1-sigma radiocarbon age uncertainty (+/-)",  #age.14c.uncertainty.var,
+              "calibrated/calendar ages",  #age.var
+              "2-sigma calibrated age uncertainty (+/-)", #age.uncertainty.var,
+              "depth or position",   #depth.var,
+              "radiocarbon reservoir age offsets (deltaR)",  #reservoir.age.14c.var,
+              "radiocarbon reservoir age offsets (deltaR) uncertainties", #reservoir.age.14c.uncertainty.var,
+              "rejected ages")  #rejected.ages.var))
   
   #set up used string
   v2gUsed <- rep("empty string",times = length(v2gu))
@@ -182,7 +179,7 @@ createChronMeasInputDf <- function(L,
   names(chronDf) <- v2go
   for(tv in 1:length(v2go)){#loop through the variables
     cat(crayon::cyan(paste("Looking for",crayon::bold(v2gv[tv]),"\n")))
-    ci <- getVariableIndex(MT,v2gu[tv],altNames = v2ga[tv])
+    ci <- getVariableIndex(MT,v2gu[tv],alt.names = v2ga[tv])
     if(!is.na(ci)){
       if(MT[[ci]]$variableName %in% v2gUsed){
         cont <- askUser(paste0("The variable ",crayon::red(MT[[ci]]$variableName)," has already been used\n Do you want to continue?\n If not you can select a different variable, or specify in function input"))
@@ -193,7 +190,7 @@ createChronMeasInputDf <- function(L,
       }
     }
     if(!is.na(ci)){  
-      if(tv %in% ageVars){
+      if(tv %in% age.vars){
         unitConversionFactor <- 1
         
         #check units
@@ -232,12 +229,12 @@ createChronMeasInputDf <- function(L,
   
   #split if possible
   il <- purrr::map_lgl(MT,is.list)
-  varNames <- purrr::map_chr(MT[il],function(x) x$variableName)
+  var.names <- purrr::map_chr(MT[il],function(x) x$variableName)
   
-  if(splitAges & "age_type" %in% varNames){#check for age type
+  if(split.ages & "age_type" %in% var.names){#check for age type
     #see if only one age column was used
-    a14v <- v2gUsed[v2gus == "age14CVar"]
-    av <- v2gUsed[v2gus == "ageVar"]
+    a14v <- v2gUsed[v2gus == "age.14c.var"]
+    av <- v2gUsed[v2gus == "age.var"]
     
     if(a14v == "NULL"){#only cal was used
       is14 <- grepl(MT$age_type$values,pattern = "14")

@@ -6,15 +6,19 @@
 \usage{
 oxCalDateExpression(
   ...,
-  defaultOutlierProb = 0.05,
-  calCurve = "intcal13",
-  unknownDeltaR = FALSE
+  default.outlier.prob = 0.05,
+  cal.curve = "intcal13",
+  unknown.delta.r = FALSE
 )
 }
 \arguments{
 \item{...}{}
 
-\item{defaultOutlierProb}{}
+\item{default.outlier.prob}{Outlier Probability}
+
+\item{cal.curve}{Calibration curve}
+
+\item{unknown.delta.r}{Use an unknown delta R (T/f)}
 }
 \value{
 

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>OxCal Installation</title>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; Installation</p>
+    <h1>Installation</h1>
+    <hr>
+    <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#access">Accessing the site</a></li>
+        <li><a href="#browser">Browser requirements for remote access</a></li>
+        <li><a href="#local">Use on your own computer</a></li>
+        <li><a href="#browsers">Summary of browser capabilities</a></li>
+        <li><a href="#server">Installation on a Server</a></li>
+    </ul>
+    <hr>
+    <h2><a name="intro" id="intro">Introduction</a></h2>
+    <p>This version of OxCal can be used in a number of different ways depending on how frequent and intensive your use of the program is likely to be:</p>
+    <ul>
+        <li>Web access to OxCal - this is the easiest to set up and use and is suitable for most people; for this you only need a suitable <a href="#browser">browser</a> and SVG Viewer (unless the browser has inbuilt SVG support).</li>
+        <li>Use on your own computer - this is suitable for those analysing large models or many dates or where access over the internet is not possible or too slow; see section on <a href="#local">use on your own computer</a>.</li>
+        <li>OxCal server - this is suitable for radiocarbon labs, workgroups, teaching or those who wish to use the program a great deal; see <a href="#server">installation on a server</a>.</li>
+    </ul>
+    <p>The program has three main components:</p>
+    <ul>
+        <li>Input module - web based (runs in a browser).</li>
+        <li>Analysis program (OxCalWin/OxCalMac/OxCalLinux) - a command line utility which runs either on a server, or on your own computer.</li>
+        <li>Output module - web based (runs in a browser).</li>
+    </ul>
+    <p>If you are accessing a server all you will need to deal with is the input and output modules which are integrated, the analysis module runs on the server once you have defined the inputs for the program.</p>
+    <hr>
+    <h2><a name="access" id="access">Accessing the site</a></h2>
+    <p>To access the server, you need a username and password. To get this you click on [New user] and enter your initials, surname and Email address.</p>
+    <p>A password will then be emailed to you which you can use to enter the site. It is a good idea as you log on to click on [Change password/email] and enter a password that you can remember. You will also have to re-enter your initials, name and email address.</p>
+    <p>Once you are logged on you have access to your own working area on the server for storing your OxCal data. This data can also be saved locally which is a good idea as the data on the server will not be kept indefinitely.</p>
+    <p>See <a href="hlp_input.html">Input of data</a> for the next stage once you are sure that your web browser is suitable.</p>
+    <hr>
+    <h2><a name="browser" id="browser">Browser requirements for remote access</a></h2>
+    <p>The input and output modules perform a lot of operations themselves and so require an up-to-date browser that is set to allow cookies, javascript and pop-up windows. In addition the graphical output is generated within the OxCalPlot module and so if you want graphs you will need to use a browser capable of displaying SVG output. As this is a fairly new standard this limits the choice of browsers.</p>
+    <p>SVG capabilities are currently provided by all the major browsers Safari, Google Chrome, Opera, Firefox and Internet Explorer (OxCal works with v11 or later).</p>
+    <p>The choice of browser will depend on your operating system.</p>
+    <h3>Windows</h3>
+    <p>The following setups work very satisfactorily under windows:</p>
+    <ul>
+        <li>Firefox v1.5 or later.</li>
+        <li>Opera 9 or later - you can copy the graph at screen resolution directly.</li>
+        <li>Google Chrome.</li>
+        <li>Internet Explorer 11 or later.</li>
+    </ul>
+    <h3>Mac OS X</h3>
+    <p>Here the choice is similar except that Internet Explorer is not available in a usable version. The recommended setups are:</p>
+    <ul>
+        <li>Safari 3 or later.</li>
+        <li>Firefox.</li>
+        <li>Opera 9 or later.</li>
+    </ul>
+    <h3>Others</h3>
+    <p>You may also have success with other operating systems. This is likely to depend on whether you can get Firefox or Opera to work properly on your system.</p>
+    <hr>
+    <h2><a name="local" id="local">Use on your own computer</a></h2>
+    <p>The program can also be run directly on your own computer using the nodejs package.</p>
+    <p>Download the <a href="http://c14.arch.ox.ac.uk/OxCalDistribution.zip">distribution package</a> from the <a href="http://c14.arch.ox.ac.uk/oxcal.html">OxCal website</a> and unzip the package.</p>
+    <h3>Install the correct version of NodeJs</h3>
+    <p>The latest version for your computer can be found at:<p>
+    <p><a href="https://nodejs.org/">https://nodejs.org/</a>
+    <p>You may get some warnings which tell you that your firewall will only allow local access which is fine because that is all that is required.</p>
+    <h3>Installation on a PC</h3>
+    <p>Copy the OxCal directory from the package to a suitable directory such as:</p>
+    <p>C:\Program Files\</p>
+    <p><b>Note:</b> you will need write permission to this directory - see below.</p>
+    <h3>Installation on a Mac</h3>
+    <p>Copy the OxCal directory from the package to the directory:</p>
+    <p><b>Note:</b> you will need write permission to this directory - see below.</p>
+    <p>/Applications/</p>
+    <h3>Installation on Linux</h3>
+    <p>This is essentially the same as for Mac but uses a different executable which has been compiled under Ubuntu.</p>
+    <h3>Running the program using NodeJs</h3>
+    <p>Use a command line terminal and change to the oxcal directory.  From there run the node software using the NodeServer script by typing:</p>
+    <pre>node NodeServer.js</pre>
+	<p>on the command line.  If you prefer you can set this up in a startup batch file or script.  This will start the server on which OxCal will now run.</p>
+	<p><b>Note:</b> NodeJs will need to be able to access both the program and the user files so you should either run NodeJs using administrator priviledges or install the program in your own user area.</p>
+	<p>In your browser you then need to enter the url:</p>
+    <p><a href="http://localhost:8080/">http://localhost:8080/</a>
+    <p>Normally this will take you straight to OxCal but the first time you do this you will be taken to a page which allows you to set up the directory area for files and also the location of the oxcal web files.  You can also change the port on which the server runs.  As a default it will run on a localhost port not accessible to other computers.</p>
+    <p>If you ever wish to reset these values you can either navigate to:</p>
+    <p><a href="http://localhost:8080/setup.html">http://localhost:8080/setup.html</a>
+    <p>or press [File > Reset] from within OxCal.</p>
+    <hr>
+    <h2><a name="browsers" id="browsers">Summary of browser capabilities</a></h2>
+    <table border>
+    <tr><th rowspan=3>Browser</th><th colspan=8>Capabilities</th></tr>
+    <tr><th colspan=4>Server version</th><th colspan=4>Local installation</th></tr>
+    <tr><th>Text</th><th>Graphics</th><th>Save SVG</th><th>Save as PDF/PNG</th>
+        <th>Text</th><th>Graphics</th><th>Save SVG</th><th>Save as PDF/PNG</th></tr>
+    <tr><th>Camino</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>Firefox</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>Google Chrome</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>Internet Explorer 11 or later</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>Opera</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>SeaMonkey</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    <tr><th>Safari</th>
+     <td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Tick.gif"></img></td><td><img src="../img/Cross.gif"></img></td></tr>
+    </table>
+    
+    <hr>
+    <h2><a name="server" id="server">Installation on a server</a></h2>
+    <p>If you wish you could set this up on a group server rather than your own computer this would give the group all access to the same user area.  In this case you may with to use port 80 but make sure your firewall prevents access from outside your institution.  Alternatively you should be able to set it up on different computers as above and share a drive for your files - this will enable you to use more different computers for processing.</p>
+    <h3>Directory structure</h3>
+    <p>OxCal uses three different directories:</p>
+    <ul>
+        <li>The web pages - stored in the Webserver document area</li>
+        <li>The OxCal binary and associated files - which might (or might not) be stored in another directory (eg '/Applications/OxCal' on a Mac or 'C:\Program Files\OxCal' on a Windows machine; this directory needs to read, write and execute permissions for the NodeJs program as it will store a setup.json file there on setup.  It could then be set to be readonly after that if you don't want users to be able to change this.</li>
+        <li>The OxCal user area - stored in another directory (eg '/Users/oxcal' on a Mac or 'C:/Users/OxCal' on a Windows machine; this directory needs to be set to have read and write permissions for NodeJs.</li>
+    </ul>
+</body>
+</html>

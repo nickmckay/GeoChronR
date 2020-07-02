@@ -6,14 +6,14 @@
 \usage{
 writeBacon(
   L,
-  baconDir = NA,
-  which.chron = 1,
+  bacon.dir = NA,
+  chron.num = 1,
   remove.rejected = TRUE,
   overwrite = TRUE,
   cc = NA,
   site.name = L$dataSetName,
-  modelNum = NA,
-  useMarine = NULL,
+  model.num = NA,
+  use.marine = NULL,
   askReservoir = TRUE,
   ...
 )
@@ -21,9 +21,9 @@ writeBacon(
 \arguments{
 \item{L}{a single LiPD object}
 
-\item{baconDir}{the directory where Bacon is installed on this computer.}
+\item{bacon.dir}{the directory where Bacon is installed on this computer.}
 
-\item{which.chron}{the number of the chronData object that you'll be working in}
+\item{chron.num}{the number of the chronData object that you'll be working in}
 
 \item{remove.rejected}{don't write out dates that are marked as rejected}
 
@@ -38,9 +38,9 @@ writeBacon(
 
 \item{site.name}{the name used for the bacon model (and directories)}
 
-\item{modelNum}{which chronModel do you want to use?}
+\item{model.num}{chron.numModel do you want to use?}
 
-\item{which.mt}{the number of the measurementTable you'll be working in}
+\item{meas.table.num}{the number of the measurementTable you'll be working in}
 }
 \value{
 L the input LiPD file with methods added to the chronModel.
@@ -52,7 +52,7 @@ This generates the csv file that is used for input to Bacon. Will be run in inte
 writeBacon(L)
 #Run in interactive mode
 
-writeBacon(L,which.chron=1,which.mt = 1,baconDir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,modelNum=NA)
+writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
 }
 \seealso{
 Other Bacon: 

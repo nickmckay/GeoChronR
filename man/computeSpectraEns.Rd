@@ -70,9 +70,9 @@ Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70
 }
 \seealso{
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{ar1Surrogates}()},
 \code{\link{createSyntheticTimeseries}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}

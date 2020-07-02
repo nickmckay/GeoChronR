@@ -4,16 +4,16 @@
 \alias{setBaconDir}
 \title{Set the name of bacon core directory}
 \usage{
-setBaconDir(baconDir)
+setBaconDir(bacon.dir)
 }
 \arguments{
-\item{baconDir}{if you already have it}
+\item{bacon.dir}{if you already have it}
 }
 \value{
-baconDir the bacon core directory
+bacon.dir the bacon core directory
 }
 \description{
-Use this to programmatically set the baconDir
+Use this to programmatically set the bacon.dir
 }
 \author{
 Nick McKay

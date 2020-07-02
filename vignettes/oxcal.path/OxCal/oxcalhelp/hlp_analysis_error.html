@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Error Messages</title>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; <a href="hlp_analysis.html">Analysis</a> &gt; Errors</p>
+    <h1>Errors</h1>
+    <hr>
+    Error messages come with four levels of severity.
+    <p>The lowest level is simply information you may wish to know (such as which calibration curve you are using) these are prefixed with the label <kbd>INFORM</kbd>. The next level up are warning error messages which may give rise to misleading or incorrect results these are given a label <kbd>WARN</kbd>. Error messages at the next level up <kbd>FATAL</kbd> will result in the program finishing.</p>
+    <p>The following is an exhaustive list of the error messages produced by the program during the analysis phase in alphabetical order.</p>
+    <ul>
+        <li><strong>X-Test fails at 5%</strong> - chi squared test has failed with a less than 5% chance of this being a good combination</li>
+        <li><strong>X-Test value estimated</strong> - For very large number of items an estimate is used for the test level - check with tables if you want</li>
+        <li><strong>Assignment conflict</strong> - You have tried to define the same parameter twice (e.g. x=a+b and x=c+d)</li>
+        <li><strong>Cannot apply constraint</strong> - In an MCMC analysis an imposed constraint cannot be imposed; this normally means that the order cannot be resolved</li>
+        <li><strong>Cannot be sure of range</strong> - A distribution is to be generated in a MCMC sample for which it may not be possible to predict the limits</li>
+		<li><strong>Cannot determine value</strong> - In an MCMC analysis the value for a parameter cannot be determined</li>
+        <li><strong>Cannot extract numerical data</strong> - The program cannot understand an attempt to enter numerical data in a command</li>
+        <li><strong>Cannot find range</strong> - A distribution is to be generated in a MCMC sample for which it is not possible to predict the limits</li>
+        <li><strong>Cannot find relationship</strong> - Relationship cannot be found for a MCMC sample</li>
+        <li><strong>Cannot make array</strong> - Either a memory problem or program attempted to make a very large array - reduce resolution if working on very long time scales</li>
+        <li><strong>Cannot resolve order</strong> - While MCMC sampling - indicates that an order which obeys all the constraints has not been found - if this persists for a long time reconsider constraints</li>
+        <li><strong>Command line active</strong> - You are trying to compile two command files at once or do so while a command line is active - not really relevant to this version</li>
+        <li><strong>Conflicting gaps used with a reference</strong> - References have been made to a file with a gap associated with it - the same gap will be assumed for the second occurrence</li>
+        <li><strong>Confused boundary set-up</strong> - It is not clear which groups of dates this boundary is supposed to be at the edge of</li>
+        <li><strong>Curve already defined - cannot set Delta_R or Reservoir</strong> - If no filename is defined the program will read back in the previously defined version of this curve; Delta_R and Reservoir should not be set again</li>
+        <li><strong>Date may extend out of range</strong> - Radiocarbon date that may extend beyond the calibration curve</li>
+        <li><strong>Date out of range</strong> - Radiocarbon date well beyond range of calibration curve</li>
+        <li><strong>Date probably out of range</strong> - Radiocarbon date near but probably beyond end of calibration curve</li>
+        <li><strong>Duplicate names</strong> - While preparing for calculation names have been found which will give rise to identical file names - make first three or last four characters unique for each name</li>
+        <li><strong>Extensive use of cross referenced boundaries can cause problems</strong> - If you cross reference too many boundaries this can put unexpected biases on the data; try to reformulate the model with fewer cross references</li>
+        <li><strong>File not found</strong> - A file cannot be found in your working directory</li>
+        <li><strong>Files not found</strong> - While performing a MCMC sample files were not found</li>
+        <li><strong>Improbable value</strong> - While MCMC sampling indicates that the sampler has been forced to choose a very unlikely value - this will slow the sampling down - if it continues throughout the sampling reconsider the constraints</li>
+        <li><strong>Inappropriate command</strong> - An inappropriate command has been issued - consult the command summary for syntax details</li>
+        <li><strong>Inappropriate gap error</strong> - Gaps are only allowed errors in some types of group and must have them in others - refer to command summary</li>
+        <li><strong>Inappropriate nesting</strong> - An attempt has been made to use a command within a group in which it is inappropriate</li>
+        <li><strong>Incompatible non-linear resolution</strong> - When using inverse-square modelling on a 1/t time-scale the resolution of the data files must be the same for all items</li>
+        <li><strong>MCMC sample aborted</strong> - The MCMC sample was stopped before results could be obtained</li>
+        <li><strong>MCMC sample completed</strong> - The MCMC sample was allowed to finish completely</li>
+        <li><strong>MCMC sample failed</strong> - The MCMC sample failed to produce meaningful results</li>
+        <li><strong>MCMC sample terminated</strong> - The MCMC sample was stopped by the user but results were produced</li>
+        <li><strong>Model not supported in this context</strong> - Your input file specifies a model that OxCal does not know how to interpret</li>
+        <li><strong>Negative value</strong> - Some values (such as errors) must be positive</li>
+        <li><strong>No boundaries used - check manual</strong> - No boundaries have been used in this model; this could lead to unrealistically scattered results; see <a href="hlp_analysis_oper.html#group">groupings</a></li>
+        <li><strong>No data found</strong> - No probability data found in what should have been a data file</li>
+        <li><strong>No outlier model specified - use Outlier_Model()</strong> - you have tried to use outlier analysis (Outlier with a probability) without specifying an outlier model; use the Tools to put the default outlier model at the top of your code.</li>
+        <li><strong>Not a calendar date</strong> - You have tried to combine a non-calendar date with the calendar date combination function</li>
+        <li><strong>Not a date</strong> - The value given was not a date</li>
+        <li><strong>Not a radiocarbon date</strong> - You have tried to combine a non-radiocarbon date with the radiocarbon date combination function</li>
+        <li><strong>Not calculating range</strong> - Due to form of distribution the range cannot be calculated</li>
+        <li><strong>Not enough memory</strong> - Either a problem with memory or your option files have been altered - re-install program</li>
+        <li><strong>NULL distribution</strong> - The program failed to produce a distribution - probably due to inappropriate values</li>
+        <li><strong>Number out of range</strong> - A number has been entered or calculated which is beyond the range of the program - increase the system resolution</li>
+        <li><strong>Numbers not found</strong> - While reading in relationship file inconsistencies were found in the numbering</li>
+        <li><strong>Only possible for linear modelling</strong> - If you are using the inverse square modelling on a 1/t time-scale, spans, differences and intervals etc. cannot be used.</li>
+        <li><strong>Options can only be set globally</strong> - The Options() command must be the first command in a run file</li>
+        <li><strong>Parameters not found</strong> - A command which requires parameters has not been given them</li>
+        <li><strong>Poor agreement</strong> - Poor agreement detected (roughly equivalent to chi squared test failure at 5%) - may be due to chance but re-evaluate evidence for constraints</li>
+        <li><strong>Poor convergence</strong> - Poor convergence detected - convergence values (see mathematical methods) are normally above 95% - see <a href="hlp_analysis_detail.html#diag">diagnostic tools</a></li>
+        <li><strong>Program active</strong> - You are trying to perform an action which is not allowed during calculation or printing - wait until it has finished</li>
+        <li><strong>References</strong> - Information on the calibration curve and program option references</li>
+        <li><strong>Self referential relationship</strong> - A relationship has been defined such as t_1 &gt; t_1</li>
+        <li><strong>Too many distributions</strong> - Too many distributions have been entered for a MCMC sample</li>
+        <li><strong>Unable to open</strong> - A file could not be opened - check protection</li>
+        <li><strong>Values undefined</strong> - At start of MCMC sampling indicates that constraints cannot be applied - should clear fairly quickly</li>
+        <li><strong>ZERO distribution</strong> - A distribution has been produced with zero probability</li>
+    </ul>
+    <hr>
+</body>
+</html>

@@ -6,9 +6,9 @@
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
-#' @param nens Number of ensemble members to simulate
+#' @param n.ens Number of ensemble members to simulate
 #' @return a vector or matrix of synthetic values
-createSyntheticTimeseries <- function(time,values,nens=1,sameTrend=TRUE,index.to.model = NA){
+createSyntheticTimeseries <- function(time,values,n.ens=1,sameTrend=TRUE,index.to.model = NA){
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
   if(is.list(values)){values=values$values}
@@ -42,9 +42,9 @@ createSyntheticTimeseries <- function(time,values,nens=1,sameTrend=TRUE,index.to
   
   fit = arima(x = notrend, order = c(1, 0, 0)) #AR1 only
   
-  synValues = matrix(NA,nrow=length(orig.time),ncol=nens)
+  synValues = matrix(NA,nrow=length(orig.time),ncol=n.ens)
   #go through ensemble members
-  for(jj in 1:nens){
+  for(jj in 1:n.ens){
     #generate a random series with ar=ar
     rdata = arima.sim(model=list("ar"=ar),n=length(orig.time)) #More conservative
     #rdata=arima.sim(model=fit,n=length(notrend)) AR1 only 
@@ -77,11 +77,11 @@ createSyntheticTimeseries <- function(time,values,nens=1,sameTrend=TRUE,index.to
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param vals LiPD "variable list" or vector of values
-#' @param detrend_bool boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries
+#' @param detrend boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries
 #' @param method Method used for estimation. Possible values are "even" or "redfit"
-#' @param nens Number of ensemble members to simulate
+#' @param n.ens Number of ensemble members to simulate
 #' @return a vector or matrix of AR(1) surrogates for series X
-ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
+ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -97,7 +97,7 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
   
   trend=predict(lm(vals~time))     #fit a linear trend
   # if detrend option is passed, use detrended values; otherwise, unchanged.
-  if(detrend_bool){
+  if(detrend){
     #remove the linear trend
     vals_used=vals-trend
   } else {vals_used=vals}
@@ -113,10 +113,10 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
     g = as.numeric(fit$coef[1])
   }
   
-  vals_syn = matrix(NA,nrow=nrow(time),ncol=nens)
+  vals_syn = matrix(NA,nrow=nrow(time),ncol=n.ens)
   
-  for(jj in 1:nens){  #go through ensemble members
-    #generate a random series with fitted model parameters
+  for(jj in 1:n.ens){  #go through ensemble members
+    #generate a random series with fitted model.parameters
     ar1=arima.sim(model=list(g),n=length(vals_used))
     
     ar1=scale(ar1)*s+m   #scale the same as original values
@@ -124,8 +124,8 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
     vals_syn[,jj]=ar1 
   }
   # if trend needs to stay in, add it back in
-  if(!detrend_bool){
-    vals_syn = vals_syn + replicate(nens,trend)
+  if(!detrend){
+    vals_syn = vals_syn + replicate(n.ens,trend)
   }
   return(vals_syn)
 }
@@ -184,20 +184,20 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
   if(nrow(time) != nrow(values)){stop("time and values must have the same number of rows (observations)")}
   
   #how many ensemble members?
-  nensPoss = ncol(time)*ncol(vals)
-  nens=nensPoss
+  n.ensPoss = ncol(time)*ncol(vals)
+  n.ens=n.ensPoss
   if(!is.na(max.ens)){
-    if(max.ens<nensPoss){
-      nens=max.ens
+    if(max.ens<n.ensPoss){
+      n.ens=max.ens
       nsim = max.ens
     }
   } else {nsim = 200}
   
   # random sampling of columns in case of very large ensembles
-  tind = sample.int(ncol(time),size = min(nens,ncol(time)))
-  vind = sample.int(ncol(vals),size = min(nens,ncol(vals)))
-  if (ncol(time) < nens){tind = rep_len(tind,nens)}
-  if (ncol(vals) < nens){vind = rep_len(vind,nens)} 
+  tind = sample.int(ncol(time),size = min(n.ens,ncol(time)))
+  vind = sample.int(ncol(vals),size = min(n.ens,ncol(vals)))
+  if (ncol(time) < n.ens){tind = rep_len(tind,n.ens)}
+  if (ncol(vals) < n.ens){vind = rep_len(vind,n.ens)} 
   
   # Now apply various spectral methods
   if (method=='lomb-scargle') {
@@ -209,13 +209,13 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
                    plot = F)
     noutrow = length(lomb.out$power)
     
-    if (nens == 1) {
+    if (n.ens == 1) {
       fMat = lomb.out$scanned
       pMat = lomb.out$power
       #  Simulate AR(1) spectra: this part to be replaced by uAR1 as soon as it's available
       syn = ar1Surrogates(time = t,
                           vals = v,
-                          nens = nsim) #create matrix of synthetic timeseries
+                          n.ens = nsim) #create matrix of synthetic timeseries
       pMatSyn =  matrix(NA, ncol = nsim, nrow = length(pMat))
       #pb = txtProgressBar(min = 1, max = nsim, style = 3)
       for (k in 1:nsim) {
@@ -227,16 +227,16 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         #if (k %% round(nsim / 10) == 0) {setTxtProgressBar(pb, k)}
       }
       #close(pb)
-    } else if (nens > 1){
+    } else if (n.ens > 1){
       #preallocate matrices
-      fMat = matrix(NA,ncol=nens,nrow=length(lomb.out$power))
+      fMat = matrix(NA,ncol=n.ens,nrow=length(lomb.out$power))
       pMat = fMat
       pMatSyn = fMat
       
       #declare progress bar
-      pb = txtProgressBar(min=1,max = nens,style = 3)
+      pb = txtProgressBar(min=1,max = n.ens,style = 3)
       
-      for(k in 1:nens){  # loop over ensemble members
+      for(k in 1:n.ens){  # loop over ensemble members
         t = jitter(time[,tind[k]])   # add jitter
         v = vals[,vind[k]] 
         out = lsp(v,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
@@ -251,7 +251,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         # JEG: the frequency axis will be subtly different for each iteration.  I think it would be better to interpolate to a common frequency axis if we are to compare them all. Or does quantile2d already take care of that?
         fMat[,k]=out$scanned
         pMat[,k]=out$power
-        if(k%%round(nens/50)==0){
+        if(k%%round(n.ens/50)==0){
           setTxtProgressBar(pb,k)
         }
       }
@@ -292,24 +292,24 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # frequency axis (in tests, ends up being very close between ensemble members, 1e-4 to 1e-6)
     freq <-  redfit.out$freq
     
-    if (nens == 1) {
+    if (n.ens == 1) {
       pMat <-  redfit.out$gxx
       if(mcflag){pCL <- redfit.out$ci95}
       else {pCL = NA}
     }
-    else if (nens > 1) {
+    else if (n.ens > 1) {
       #preallocate matrices
-      pMat = matrix(NA, ncol = nens, nrow = noutrow)
+      pMat = matrix(NA, ncol = n.ens, nrow = noutrow)
       pMatSyn = pMat
       
-      pb = txtProgressBar(min = 1, max = nens, style = 3)
-      for (k in 1:nens) {
+      pb = txtProgressBar(min = 1, max = n.ens, style = 3)
+      for (k in 1:n.ens) {
         t <- jitter(time[, tind[k]])   # add jitter
         v <- vals[, vind[k]]
         redfit.out <- redfit(v,t,tType = "time", mctest = mcflag, ofac = ofac, nsim=200)
         pMatSyn[, k] <- redfit.out$ci95 # 95% limit
         pMat[, k] <- redfit.out$gxx
-        if (k %% round(nens / 50) == 0) {
+        if (k %% round(n.ens / 50) == 0) {
           setTxtProgressBar(pb, k)
         }
       }
@@ -344,13 +344,13 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # define output matrices
     f <- mtm.main$Frequency
     nout = length(f)
-    ens.mtm.power  <-  matrix(NA,ncol=nens,nrow=nout)
-    ens.mtm.cl     <-  matrix(NA,ncol=nens,nrow=nout)
-    ens.mtm.sigfreq <-  matrix(0,ncol=nens,nrow=nout)
+    ens.mtm.power  <-  matrix(NA,ncol=n.ens,nrow=nout)
+    ens.mtm.cl     <-  matrix(NA,ncol=n.ens,nrow=nout)
+    ens.mtm.sigfreq <-  matrix(0,ncol=n.ens,nrow=nout)
     
-    pb = txtProgressBar(min = 2, max = nens, style = 3)
+    pb = txtProgressBar(min = 2, max = n.ens, style = 3)
     # rinse, repeat
-    for (k in 1:nens){
+    for (k in 1:n.ens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
       dfl = data.frame(approx(t,v,ti,rule = 2)) # interpolate onto new timescale
       #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
@@ -367,7 +367,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         ens.mtm.cl[,k] <- astrochron::mtm.main$AR1_95_power
       } 
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
-      if(k%%round(nens/50)==0){
+      if(k%%round(n.ens/50)==0){
         setTxtProgressBar(pb,k)
       }
     }
@@ -376,7 +376,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # prepare significance assessment
     freqs.prob <- rowMeans(ens.mtm.sigfreq,na.rm = TRUE)
     pCL <- rowMedians(ens.mtm.cl,na.rm = TRUE)
-    #fMat <- matrix(f,nrow=length(f),ncol=nens,byrow=F)
+    #fMat <- matrix(f,nrow=length(f),ncol=n.ens,byrow=F)
     
     # allocate output
     spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
@@ -391,7 +391,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     noutrow <- length(nuspec$Frequency)
     
     #preallocate matrices
-    #fMat = matrix(NA,ncol=nens,nrow=noutrow)
+    #fMat = matrix(NA,ncol=n.ens,nrow=noutrow)
     #pMat = fMat
     #pMatSyn = fMat
     
@@ -399,15 +399,15 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     pMat <- nuspec$Power
     freq <- nuspec$Frequency
     
-    if (nens > 1){stop("Ensemble mode not supported with nuspectral")}
-    # pb = txtProgressBar(min=1,max = nens,style = 3)  # run the loop with progress bar
-    # for (k in 2:nens){
+    if (n.ens > 1){stop("Ensemble mode not supported with nuspectral")}
+    # pb = txtProgressBar(min=1,max = n.ens,style = 3)  # run the loop with progress bar
+    # for (k in 2:n.ens){
     #   t = time[,tind[k]]; v = vals[,vind[k]] 
     #   nuspec   <-  nuspectral:::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     #   pMat[,k] <- nuspec$Power
     #   fMat[,k] <- nuspec$Frequency
     # 
-    #   if(k%%round(nens/10)==0){
+    #   if(k%%round(n.ens/10)==0){
     #     setTxtProgressBar(pb,k)
     #   }
     # }

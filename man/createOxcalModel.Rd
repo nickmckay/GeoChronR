@@ -6,39 +6,43 @@
 \usage{
 createOxcalModel(
   cdf,
-  depthsToModel = NA,
-  depthInterval = 10,
+  depths.to.model = NA,
+  depth.interval = 10,
   thin = 50,
-  nIt = 10000,
-  eventsPerUnitLength = 1,
-  eventsPerUnitLengthUncertainty = 2,
-  seqType = "P_Sequence",
-  topBoundary = "Boundary",
-  bottomBoundary = "Boundary",
-  outlierProb = 0.05,
-  calCurve = "intcal13"
+  n.it = 10000,
+  events.per.unit.length = 1,
+  events.per.unit.length.uncertainty = NA,
+  seq.type = "P_Sequence",
+  top.boundary = "Boundary",
+  bottom.boundary = "Boundary",
+  outlier.prob = 0.05,
+  cal.curve = "intcal13"
 )
 }
 \arguments{
-\item{cdf}{}
+\item{cdf}{A data.frame of chron measurement data (output from createChronMeasInputDf())}
 
-\item{depthsToModel}{}
+\item{depths.to.model}{A vector of depths to model (default = create a sequence using depth.interval)}
 
-\item{depthInterval}{}
+\item{depth.interval}{Depth interval to use to create depths.to.model (default = 10)}
 
-\item{thin}{}
+\item{thin}{Thinning parameter for OxCal (default = 50)}
 
-\item{nIt}{}
+\item{n.it}{Number of iteration in model (default = 10000)}
 
-\item{eventsPerUnitLength}{}
+\item{events.per.unit.length}{How many events per unit length for the Poisson model? This controls the flexibility on the model, the lower the number the more flexibile.}
 
-\item{eventsPerUnitLengthUncertainty}{In orders of magnitude}
+\item{events.per.unit.length.uncertainty}{Uncertainty on events.per.unit.length in orders of magnitude. This makes for better models but *greatly* increases the run time. If NA or < 0 it runs without uncertainty (default = NA)}
 
-\item{seqType}{}
+\item{seq.type}{What type of Oxcal sequence to use? (default = "P_Sequence")}
 
-\item{topBoundary}{}
+\item{top.boundary}{What type of Oxcal boundary to use for the top (default = "Boundary")}
 
-\item{bottomBoundary}{}
+\item{bottom.boundary}{What type of Oxcal boundary to use for the bottom (default = "Boundary")}
+
+\item{outlier.prob}{What's the probability of a date being an outlier if not otherwise specified (default= 0.05)}
+
+\item{cal.curve}{What calibration curve to use? (default = "intcal13")}
 }
 \value{
 

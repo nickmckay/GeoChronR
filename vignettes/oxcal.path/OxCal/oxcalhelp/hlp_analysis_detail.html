@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Analysis Details</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; <a href="hlp_analysis.html">Analysis</a> &gt; Details</p>
+    <h1>Analysis Details<br></h1>
+    <hr>
+    <ul>
+        <li><a href="#MCMC">MCMC Analysis</a></li>
+        <li><a href="#diag">Diagnostic tools</a></li>
+        <li><a href="#opt">Options</a></li>
+        <li><a href="#pre">Pre-processor calculations</a></li>
+    </ul>
+    <hr>
+    <h2><a name="MCMC" id="MCMC">MCMC Analysis</a></h2>
+    <p>MCMC analysis is used for almost all multi-parameter Bayesian analysis performed by OxCal. The exceptions are the functions Combine() and D_Sequence() which can be reduced to problems with only one independent parameter and therefore can be solved analytically.</p>
+    <h3>Bayes theorem</h3>
+    <p>The Bayesian analysis is based on Bayes theorem (<a href="javascript:go_bib('bayes1763ets')">Bayes  1763</a>) which can be summarised as:</p>
+    <center>
+        posterior = likelihood &times; prior / constant
+    </center>
+    <p>Here we define the parameters of interest <strong>t</strong> for which we have observations <strong>y</strong>. In general Bayes theorem then becomes:</p>
+    <center>
+        p(<strong>t</strong>|<strong>y</strong>) = p(<strong>y</strong>|<strong>t</strong>) p(<strong>t</strong>) / p(<strong>y</strong>)
+    </center>
+    <center>
+        p(<strong>t</strong>|<strong>y</strong>) &prop; p(<strong>y</strong>|<strong>t</strong>) p(<strong>t</strong>)
+    </center>
+    <p>The posterior p(<strong>t</strong>|<strong>y</strong>) is usually what we are interested in (the probability given all of the observations). The likelihood p(<strong>y</strong>|<strong>t</strong>) is defined by the observations and the prior p(<strong>t</strong>) by the model.</p>
+    <p>The problem with calculating probabilities of this form is that they are multidimensional, often to a high degree. For this reason Markov chain Monte-Carlo (MCMC) is used. The idea is to build up a representative sample of possible solutions for <strong>t</strong>.</p>
+    <h3>Ranges</h3>
+    <p>The results from any analysis are generated as marginal posterior densities (probability distributions) for each of the parameters. Ranges are also calculated, incorporating 68.2, 95.4 and 99.7% of the total area of the distributions, with the highest probability density. Such a range is often referred to as a highest posterior density (hpd) range. You can, as an option, select a floruit instead (see <a href="#opt">options</a> below).</p>
+    <p>In addition to the reported ranges, summary statistics are calculated for the probability distributions: mean, standard deviation, and median.  These are most useful for quasi-Normal distributions and are not a substitute for the hpd ranges, especially in the case of simple radiocarbon calibrations and other multi-modal distributions.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <h4>The Metropolis-Hastings Algorithm</h4>
+        <p>In this program the particular algorithm used is the Metropolis-Hastings Algorithm.</p>
+        <p>The way this works is if you have a particular solution <strong>t</strong><sup>(j)</sup> and you wish to find the next solution <strong>t</strong><sup>(j+1)</sup> then you choose a trial move to <strong>t</strong>' and calculate the ratio:</p>
+        <center>
+            a = |&part;<strong>t</strong>'/&part;<strong>t</strong><sup>(j)</sup>| p(<strong>t</strong>'|<strong>y</strong>) / p(<strong>t</strong><sup>(j)</sup>|<strong>y</strong>)
+        </center>
+        <p>If a &gt; 1 then <strong>t</strong><sup>(j+1)</sup> = <strong>t</strong>'<br>
+        else with probability a set <strong>t</strong><sup>(j+1)</sup> = <strong>t</strong>'<br>
+        and otherwise set <strong>t</strong><sup>(j+1)</sup> = <strong>t</strong><sup>(j)</sup></p>
+        <p>In many cases of simple move the Jacobean |&part;<strong>t</strong>'/&part;<strong>t</strong><sup>(j)</sup>| is 1, but in some multiple-parameter moves it is not.</p>
+        <h4>MCMC trial moves</h4>
+        <p>There are three types of trial move used in the MCMC analysis. The first of these is where a single parameter is updated (order of parameter updating is randomised). Such a parameter will be given a trial value which lies somewhere in the range of possibilities provided by the constraints. To present these moves visually we will use a "." to represent a normal parameter and a "|" to denote a parameter which is a boundary of a group. The following series of representations shows single parameter updating in progress.</p>
+        <pre>
+    |   .  .  ..  .   .   |  . .  .|  .    .    .  |
+    |   ..    ..  .   .   |  . .  .|  .    .    .  |
+    |   ..    ..  .   .   |  .   ..|  .    .    .  |
+    |   ..    ..  .   .   |  .   ..  |.    .    .  |
+    
+</pre>
+        <p>The second form of move is where a group of events is moved together as in:</p>
+        <pre>
+    |   ..    ..  .   .   |  .   ..  |.    .    .  |
+    |   ..    ..  .   .|  .   ..  |   .    .    .  |
+    |   ..    ..  .   .  |  .   ..  | .    .    .  |
+    |   ..    ..  .   . |  .   ..  |  .    .    .  |
+    
+</pre>
+        <p>A third move is where a group of events is expanded or contracted by moving one of the boundaries as in:</p>
+        <pre>
+    |   ..    ..  .   . |  .   ..  |  .    .    .  |
+    |   ..    ..  .   . |  .   ..  |...|
+    |   ..    ..  .   . |  .   ..  | .  .  . |
+    |   ..    ..  .   . |  .   ..  |  .   .   .  |
+    
+</pre>
+        <p>A fourth move is where a group of events is expanded or contracted by moving one of the events within the group and everything in proportion as in:</p>
+        <pre>
+    |  .  .  .  .  .  .  . |  .   ..  |  .    .    .  |
+    | . . . .   .   .   .  |  .   ..  |  .    .    .  |
+    |   .   .   .   . . . .|  .   ..  |  .    .    .  |
+    |  .  .  .  .  .  .  . |  .   ..  |  .    .    .  |
+    
+</pre>
+        <p>These latter three moves are designed to improve mixing between states and convergence. These two moves are also sometimes combined where one boundary affects more than one group of events.</p>
+        <p>All but the first of these moves has a Jacobean which is not 1. If t<sub>a</sub> and t<sub>b</sub> are the parameters for the two boundaries in question and there are n events being expanded or contracted then:</p>
+        <center>
+            |&part;<strong>t</strong>'/&part;<strong>t</strong><sup>(j)</sup>| = [(t<sub>b</sub>'-t<sub>a</sub>')/(t<sub>b</sub><sup>(j)</sup>-<sub>a</sub><sup>(j)</sup>)]<sup>n</sup>
+        </center>
+        <h4>Passes and burn-in</h4>
+        <p>The program is set up to perform at least 10 groups of MCMC trials. In each of these groups we:</p>
+        <ul>
+            <li>Initialise the variables (the order of initialisation is randomised)</li>
+            <li>Sort the variables to find a solution compatible with the constraints</li>
+            <li>Burn in the MCMC (10% of the total group length)</li>
+            <li>Perform the main MCMC trials</li>
+            <li>Save the distributions</li>
+        </ul>
+        <p>The initial default settings are for a total number of 30,000 passes, that is 3,000 per group; each pass includes a trial of each variable and some multiple variable trials as discussed in the previous section. By comparing the results from each group of trials we decide if the trial number is high enough by looking at the convergence integrals (see below). If any of these are lower than 95% of the expected maximum, the number of passes is automatically increased by a factor of two.</p>
+    </div>
+    <hr>
+    <h2><a name="diag" id="diag">Diagnostic tools</a></h2>
+    <p>There are two main diagnostic measures used in OxCal:</p>
+    <ul>
+        <li>the agreement indices - a measure of the agreement between the model (prior) and the observational data (likelihood)</li>
+        <li>the convergence integral - a test of the effectiveness of the MCMC algorithm</li>
+    </ul>
+    <h3>Agreement indices</h3>
+    <p>The agreement indices, tells us something about how well the prior model agrees with the observations (expressed in terms of the likelihoods). This is important because it is very easy to construct a model which is clearly at variance with the observational data. There are four forms of the agreement index calculated by the program:</p>
+    <ul>
+        <li>Individual agreement indices: A
+            <ul>
+                <li>useful for identifying which samples do not agree with the model</li>
+                <li>reported in column A of the output table</li>
+                <li>should usually be over 60%</li>
+            </ul>
+        </li>
+        <li>Combination agreement indices: A<sub>comb</sub>
+            <ul>
+                <li>used to test if distributions can be combined</li>
+                <li>reported in column A<sub>comb</sub> of the output table</li>
+                <li>acceptable threshold is 1/&radic;(2n) and depends on the number of items n</li>
+            </ul>
+        </li>
+        <li>Model agreement index: A<sub>model</sub>
+            <ul>
+                <li>used to see if the model as a whole is not likely given the data</li>
+                <li>reported as A<sub>model</sub> in the header of the output table</li>
+                <li>should usually be over 60%</li>
+            </ul>
+        </li>
+        <li>Individual agreement index: A<sub>overall</sub>
+            <ul>
+                <li>similar to A<sub>model</sub>; it is a product of the individual agreement indices</li>
+                <li>reported as A<sub>overall</sub> in the header of the output table</li>
+                <li>should usually be over 60%</li>
+            </ul>
+        </li>
+    </ul>
+    <p>An alternative approach to using agreement indices is to use outlier analysis.  When outlier analysis is used, the agreement index is still calculated (see details below).
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>The agreement indices are based on the ratio of the likelihood under two different models.</p>
+        <p>In the most simple model is where each parameter has a uniform prior, or the prior is independent of <strong>t</strong>. In such cases we have:</p>
+        <center>
+            p(<strong>t</strong>|<strong>y</strong>) &prop; p(<strong>y</strong>|<strong>t</strong>)
+        </center>
+        <h4>Individual agreement indices</h4>
+        <p>Often an observation y<sub>i</sub> relates to a single parameter t<sub>i</sub> and under this simple model as there are no relationships between the parameters we have:</p>
+        <center>
+            p(t<sub>i</sub>|y<sub>i</sub>) &prop; p(y<sub>i</sub>|t<sub>i</sub>)
+        </center>
+        <p>Under our full model t<sub>i</sub> depends on all of the other parameters and observations through the equation:</p>
+        <center>
+            p(<strong>t</strong>|<strong>y</strong>) &prop; p(<strong>y</strong>|<strong>t</strong>) p(<strong>t</strong>)
+        </center>
+        <p>From this we can integrate over all other parameters to get the marginal probability density, p(t<sub>i</sub>|<strong>y</strong>).</p>
+        <p>We then define the agreement index to be:</p>
+        <center>
+            F<sub>i</sub> = &int;p(y<sub>i</sub>|t<sub>i</sub>) p(t<sub>i</sub>|<strong>y</strong>) dt<sub>i</sub> / &int;p(y<sub>i</sub>|t<sub>i</sub>) p(y<sub>i</sub>|t<sub>i</sub>) dt<sub>i</sub><br>
+            A<sub>i</sub> = 100 F<sub>i</sub>
+        </center>
+        <p>If the posterior and likelihood distributions are the same this ratio is 1 (or 100%), in some instances it can also rise to greater than 1 (&gt; 100%) where the posterior picks up the higher portions of the likelihood distribution.</p>
+        <p>In outlier analysis we have an associated parameter &phi;<sub>i</sub> which is 1 when the measurement is an outlier and 0 when it is not.  The prior for &phi;<sub>i</sub> being 1 is q<sub>i</sub> and for it to be zero is (1-q<sub>i</sub>).  When outlier analysis is in use the following factor is added into the value of F<sub>i</sub>:</p>
+        <center>
+          (q<sub>i</sub> &phi;<sub>i</sub> + (1-q<sub>i</sub>)(1-&phi;<sub>i</sub>))/(q<sub>i</sub><sup>2</sup> + (1-q<sub>i</sub>)<sup>2</sup>)
+        </center>
+        <p>This factor is on average one if the posterior for &phi;<sub>i</sub>=1 is q<sub>i</sub> but if the posterior outlier probablity is higher than the prior the factor is usually smaller (as long as q<sub>i</sub> < 0.5). This modification of the agreement index (introduced in v4.1.4 results in lower agreement indices where there are more outliers which helps with model comparison.  This factor makes no difference when outlier analysis is not used and in general if outliers are accepted as part of the model, the agreement indices are not needed (except for parameters which do not have outliers applied.</p>
+        <p>The individual agreement indices are reported in the A column of the results table.</p>
+        <h4>Overall measures of agreement</h4>
+        <p>We can expand on the treatment of single parameters, to look at the model as a whole. One way we can do this is to calculate the quantity:</p>
+        <center>
+            F<sub>model</sub> = &int;p(<strong>y</strong>|<strong>t</strong>) p(<strong>t</strong>|<strong>y</strong>) d<strong>t</strong> / &int;p(<strong>y</strong>|<strong>t</strong>) p(<strong>y</strong>|<strong>t</strong>) d<strong>t</strong>
+        </center>
+        <p>Which is a kind of pseudo Bayes factor. Alternatively we can calculate the product of the individual agreement indices (which generally gives approximately the same value unless the parameters are very highly correlated):</p>
+        <center>
+            F<sub>overall</sub> = &prod;<sub>i</sub> A<sub>i</sub>
+        </center>
+        <p>These ratios tend to get further and further from 1 for larger number of observations. For this reason we define two indices based on these ratios which depend on the number of likelihood distributions n:</p>
+        <center>
+            A<sub>model</sub> = 100 F<sub>model</sub><sup>1/&radic;n</sup><br>
+            A<sub>overall</sub> = 100 F<sub>overall</sub><sup>1/&radic;n</sup>
+        </center>
+        <p>In principle F<sub>model</sub> and A<sub>model</sub> are better measures. A<sub>overall</sub> is given for compatibility with previous versions of the program.</p>
+        <h4>Combinations and choice of threshold</h4>
+        <p>In the case of simple combinations generated from the function Combine(), D_Sequence or the &amp; operator, there is only one independent parameter. In such cases F<sub>overall</sub> will be equal to F<sub>model</sub>. Because in this case there is only one independent parameter in the comparison model, we give the agreement index in this case a special name:</p>
+        <center>
+            A<sub>comb</sub> = 100 F<sub>overall</sub><sup>1/&radic;n</sup>
+        </center>
+        <p>If we combine normal distributions in this way we can also do a &chi;<sup>2</sup> test and it turns out that the level at which this fails (95% null hypothesis) is when:</p>
+        <center>
+            A<sub>n</sub> = 100/&radic;(2n)
+        </center>
+        <p>We can also calculate the logarithmic average of the individual agreement indices that are required to fail the same test by calculating A'<sub>n</sub> where:</p>
+        <center>
+            A'<sub>n</sub> = 100 (A<sub>overall</sub>/100)<sup>1/&radic;n</sup> = 100 F<sub>overall</sub><sup>1/n</sup>
+        </center>
+        <p>If we do this for a range of values of n:</p>
+        <pre>
+  ________________________
+
+    n     An(%)    A'n(%)
+  ________________________
+    1     70.7     70.7
+    2     50.0     61.3 
+    3     40.8     59.6
+    4     35.4     59.5
+    5     31.6     59.8
+    6     28.9     60.2
+    7     26.7     60.7
+    8     25.0     61.3
+    9     23.6     61.8
+   10     22.4     62.3
+   15     18.3     64.5
+   20     15.8     66.2
+   25     14.1     67.6
+   30     12.9     68.8
+   40     11.2     70.7
+   50     10.0     72.2
+   60      9.1     73.4
+   80      7.9     75.3
+  100      7.1     76.7
+ ________________________
+    
+</pre>
+        <p>the value of A'<sub>n</sub> is around 60% for a wide range of values on n. This is the justification for taking 60% as the threshold for acceptability of individual agreement indices. The argument for the same threshold for A<sub>overall</sub> and A<sub>model</sub> is that we expect ln(F) to randomly walk from 0 as we increase the number of parameters.  This threshold is given the symbol:</p>
+        <center>A'<sub>c</sub> = 60%</center>
+        <p>The choice of threshold of acceptability for these indices is somewhat arbitrary - though no more so than the recommendations for Bayes factors. In practice, however, the levels suggested here have been found with experience to be about right in identifying models that are inconsistent with the observations, and individual samples that are clearly aberrant in their context.</p>
+    </div>
+    <h3>Convergence</h3>
+    <p>The extent to which the MCMC analysis provides a truly representative set of posterior probability distributions depends on a number of factors. To some extent, the effectiveness of the algorithm can be tested by seeing how similar different attempts to perform the analysis are. This is measured by calculating an overlap integral:</p>
+    <ul>
+        <li>Convergence integral: C
+            <ul>
+                <li>useful for seeing if a representative distribution has been found for a parameter</li>
+                <li>reported in column C of the output table</li>
+                <li>should usually be over 95%</li>
+            </ul>
+        </li>
+    </ul>
+    <p>The program will automatically check the convergence of all of the parameters and increase the number of MCMC passes if any fall below 95%.</p>
+    <p>If you choose the option to 'include convergence data' you can plot an example segment of the MCMC trial sequence on an individual plot. This can be useful in seeing what is going on in the MCMC algorithm.</p>
+    <p>Note that a good convergence does not guarantee a representative solution. If mixing is poor (if for example the probability distributions are very multi-modal) it is possible that some solutions might never been reached in any of the MCMC trials. In practice with this kind of application and with the MCMC kernel used in this program, such cases are rare.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>The overlap integral used to test for convergence is calculated in this way. The marginal posterior density distribution is built up in a series of MCMC trial groups, each starting from a different initial state. If p<sub>i</sub>(t<sub>i</sub>|<strong>y</strong>) is the density accumulated in all groups of trials so far and p'<sub>i</sub>(t<sub>i</sub>|<strong>y</strong>) is the density function estimated from a new group of trials, the quantity:</p>
+        <center>
+            C<sub>i</sub> = 100 [&int; p'<sub>i</sub>(t<sub>i</sub>|<strong>y</strong>) p<sub>i</sub>(t<sub>i</sub>|<strong>y</strong>) dt<sub>i</sub>]<sup>2</sup>/[(&int; p'<sub>i</sub><sup>2</sup>(t<sub>i</sub>|<strong>y</strong>) dt<sub>i</sub>)(&int; p<sub>i</sub><sup>2</sup>(t<sub>i</sub>|<strong>y</strong>) dt<sub>i</sub>)]
+        </center>
+        <p>is used as an estimate of convergence. This should be equal to 100% if both distributions are identical.</p>
+    </div>
+    <hr>
+    <h2><a name="opt" id="opt">Options</a></h2>
+    <p>There are a number of options that can be selected for the analysis. These are normally set by using the [Tools &gt; Options] dialogue in the input utility or the [Options &gt; Analysis] dialogue for single calibrations. These add an Options() command at the start of the command file which defines the defaults for the analysis as a whole. The Options() command is typically of this form:</p>
+    <p><tt>Options()<br>
+    {<br>
+    &nbsp;<em>option</em> = <em>value</em>;<br>
+    &nbsp;<em>option</em> = <em>value</em>;<br>
+    &nbsp;...<br>
+    };</tt></p>
+    <p>The following table gives all of the options, their possible values, the default value, and an explanation of their effect.</p>
+    <table style="margin:10px;padding:10px">
+        <tr>
+            <th>Option</th>
+            <th width="20%">Values</th>
+            <th>Default</th>
+            <th>Explanation</th>
+        </tr>
+        <tr>
+            <td>BCAD</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether BC/AD are used in the log file output</td>
+        </tr>
+        <tr>
+            <td>ConvergenceData</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether sample convergence data is included in the output data file</td>
+        </tr>
+        <tr>
+            <td>Curve</td>
+            <td><em>filename</em></td>
+            <td>intcal13.14c</td>
+            <td>The default calibration curve</td>
+        </tr>
+        <tr>
+            <td>Cubic</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether cubic (as opposed to linear) interpolation is used for calibration curves</td>
+        </tr>
+        <tr>
+            <td>Ensembles</td>
+            <td><em>number</em></td>
+            <td>30</td>
+            <td>The number of age-depth ensembles stored during the analysis</td>
+        </tr>
+        <tr>
+            <td>Floruit</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether quantile ranges are calculated instead of the default highest posterior density (hpd)</td>
+        </tr>
+        <tr>
+            <td>Intercept</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether the intercept method is used for radiocarbon calibration ranges</td>
+        </tr>
+        <tr>
+            <td>kIterations</td>
+            <td><em>number</em></td>
+            <td>30</td>
+            <td>The default number of MCMC passes</td>
+        </tr>
+        <tr>
+            <td>PlusMinus</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether + and - are used in place of BC and AD in log files</td>
+        </tr>
+        <tr>
+            <td>RawData</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether raw calibration curve data is included in the output data file</td>
+        </tr>
+        <tr>
+            <td>Resolution</td>
+            <td><em>number</em></td>
+            <td>5</td>
+            <td>The default bin size for probability distributions of Date and Interval type</td>
+        </tr>
+        <tr>
+            <td>Round</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether ranges are rounded off</td>
+        </tr>
+        <tr>
+            <td>RoundBy</td>
+            <td><em>number</em></td>
+            <td>0</td>
+            <td>Resolution of rounding (0 for automatic)</td>
+        </tr>
+        <tr>
+            <td>SD1</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether 68.2% (1 &sigma;) ranges are given in the log and tab delimited files</td>
+        </tr>
+        <tr>
+            <td>SD2</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether 95.4% (2 &sigma;) ranges are given in the log and tab delimited files</td>
+        </tr>
+        <tr>
+            <td>SD3</td>
+            <td>TRUE | FALSE</td>
+            <td>FALSE</td>
+            <td>Whether 99.7% (3 &sigma;) ranges are given in the log and tab delimited files</td>
+        </tr>
+        <tr>
+            <td>UniformSpanPrior</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether the two extra prior factors suggested by <a href="javascript:go_bib('nicholls2001rdt')">Nicholls  and Jones  2001</a> are used</td>
+        </tr>
+        <tr>
+            <td>UseF14C</td>
+            <td>TRUE | FALSE</td>
+            <td>TRUE</td>
+            <td>Whether all calibrations take place in F14C space (rather than BP space)</td>
+        </tr>
+        <tr>
+            <td>Year</td>
+            <td><em>number</em></td>
+            <td>1950.5</td>
+            <td>The datum point for ages - the default is mid AD 1950</td>
+        </tr>
+    </table>
+    <h4 class="maths" onclick="reveal('maths',this)">More &darr;</h4>
+    <div class="maths">
+      <h4>Options for adjusting details of the prior</h4>
+      <p>The exact form of the prior probabilities applied during trapezium and other phase models can be modified using extensions of the existing options.    The previous versions of OxCal had an option UniformSpanPrior that allowed the switching on or off of the elements of the prior model (equation 6 of Bronk Ramsey 2001 and equation 30 of Bronk Ramsey 2009a).  These, and the new elements of the trapezium prior, can now be adjusted if required for sensitivity testing.  The following commands can be added to the options block:</p>
+      <table style="margin:10px;padding:10px">
+      <tr>
+        <th>Option setting</th>
+        <th>Explanation</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>UniformSpanLimits=0;</td>
+        <td>No prior added for limits</td>
+      </tr>
+      <tr>
+        <td>UniformSpanLimits=1;</td>
+        <td>Limits as in Bronk Ramsey 2001 (equation 7)</td>
+      </tr>
+      <tr>
+        <td>UniformSpanLimits=2;</td>
+        <td>Limits prior as in Bronk Ramsey 2009a (equation 30)</td>
+      </tr>
+      <tr>
+        <td>UniformSpanGroups=0;</td>
+        <td>No prior added for group models</td>
+      </tr>
+      <tr>
+        <td>UniformSpanGroups=1;</td>
+        <td>Prior added as in Bronk Ramsey 2001 (equation 6)</td>
+      </tr>
+      <tr>
+        <td>UniformSpanGroups=2;</td>
+        <td>Also adds Lee and Bronk Ramsey 2012 pUTP prior</td>
+      </tr>
+      <tr>
+        <td>UniformSpanPrior=0;</td>
+        <td>Removes all additional prior factors</td>
+      </tr>
+      <tr>
+        <td>UniformSpanPrior=1;</td>
+        <td>Sets UniformSpanGroups and UniformSpanLimits to the maximum value (this is the default).</td>
+      </tr>
+    </table>
+
+        <h4>Command line options</h4>
+        <p>Options can also be set by command line options when calling the analysis program. Furthermore default options for an installation of the program are set in OxCal.dat file found in the same directory as the program files. The possible options are given below:</p>
+        <pre>
+-afilename   append log to a file*
+-b1          BP                     -b0     BC/AD
+-cfilename   use calibration data file
+-d1          plot distributions     -d0     no plot 
+-fn          default iterations for sampling in thousands
+-g1          +/-                    -g0     BC/AD/BP 
+-h1          whole ranges           -h0     split ranges 
+-in          resolution of n
+-ln      limit on number of data points in calibration curve (see Resolution)
+-m1          macro language         -m0     simplified entry
+-n1          round ranges           -n0     no rounding
+-o1          include converg info   -o0     do not include 
+-p1          probability method     -p0     intercept method 
+-q1          cubic interpolation    -q0     linear interpolation 
+-rfilename   read input from a file+
+-s11         1 sigma  ranges        -s10    range not found 
+-s21         2 sigma ranges         -s20    range not found
+-s31         3 sigma ranges         -s30    range not found
+-t1          terse mode             -t0     full prompts
+-u1          uniform span prior     -u0     as in OxCal v2.18 and previous
+-v1          reverse sequence order -v0     chronological order
+-wfilename   write log to a file*
+-yn          round by n years       -y0     automatic rounding
+
+    
+</pre>
+        <p>* Note that with either of these options the tabbed results will then be sent to the console output and can therefore be redirected to a file or a pipe; the standard redirection &gt; or &gt; &gt; can be used instead if only the log file needs redirecting.</p>
+        <p>+ Note that the standard redirection &lt; can also be used.</p>
+        <h4>Automatic range rounding</h4>
+        <p>If automatic range rounding is selected, the rounding is carried out depending on the overall range of the result.  The following table shows the degree of rounding selected.</p>
+        <pre>
+______________________________________________
+
+Total range        Round to the nearest
+______________________________________________
+
+   1 -   50          1 year
+  50 -  100          5 years
+ 100 -  500         10 years
+ 500 - 1000         50 years
+1000 - 5000        100 years
+...                ...
+______________________________________________        </pre>
+    </div>
+    <hr>
+    <h2><a name="pre" id="pre">Pre-processor calculations</a></h2>
+    <p>Unlike previous versions of OxCal, this version allows many of the the normal calculation functions you would expect in a programming language. The main operators ( + - / * ) can be used as can the functions: log, log10, exp, sin, cos, asin, acos, tan, atan, abs, sqrt. In addition four special functions are provided:</p>
+    <ul>
+    	<li>AD(<em>y</em>) - which returns the date for the middle of year AD <em>y</em> in OxCal's internal date format</li>
+    	<li>BC(<em>y</em>) - which returns the date for the middle of year <em>y</em> BC in OxCal's internal date format</li>
+    	<li>CE(<em>y</em>) - which returns the date for the middle of year <em>y</em> CE in OxCal's internal date format</li>
+    	<li>BCE(<em>y</em>) - which returns the date for the middle of year <em>y</em> BCE in OxCal's internal date format</li>
+    	<li>calBP(<em>y</em>) - which returns the date for the middle of year <em>y</em> calBP in OxCal's internal date format</li>
+        <li>BP(<em>c</em>) - which returns the bp value of the default calibration curve at the calendar date <em>c</em>, where <em>c</em> is in OxCal's internal date format.</li>
+        <li>sigmaBP(<em>c</em>) - which returns the uncertainty in the same curve</li>
+        <li>F14C(<em>c</em>) - which returns the F14C value of the default calibration curve at the calendar date <em>c</em>, where <em>c</em> is in OxCal's internal date format.</li>
+        <li>sigmaF14C(<em>c</em>) - which returns the uncertainty in the same curve</li>
+        <li>rand() - returns a random number in the range 0 to 1 (uniformly distributed)</li>
+        <li>randN() - returns a random number drawn from a Normal distribution of mean 0 and standard deviation 1</li>
+    </ul>
+    <p>These special functions are provided primarily for testing models. As an example of their use the following expression:</p>
+    <pre>
+ BP(AD(1800))+sigmaBP(AD(1800))*randN()
+</pre>
+    <p>would give a representative possible value for the radiocarbon concentration (expressed in BP) for the year AD1800.</p>
+    <p>The pre-processor also has three control functions that enable simple macros to be written these are:</p>
+    <ul>
+        <li>var(<em>name</em>); - introduces a pre-processor variable (NOT a model parameter)</li>
+        <li>if(<em>condition</em>){...}; - conditional commands</li>
+        <li>while(<em>condition</em>){..}; - allows repeating commands (exit with break statement)</li>
+    </ul>
+    <p>Together these functions allow macros to be written that perform a range of operations. As a simple example the following code will calibrate all radiocarbon dates between 1000 and 2000 in 10 year intervals.</p><script type="text/javascript">
+startCode("Macro");
+</script>
+    <pre>
+/* Example of a macro for calibrating all of
+the radiocarbon dates between 1000 and 2000 in
+increments of 10 */
+
+// define and initialise the variable
+var(a);a=1000; 
+while(a&lt;=2000) 
+{ 
+ // calibrate the date
+ R_Date(a,30); 
+ a=a+10; 
+}; 
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>Finally you should note that comments can be introduced into code, either using // for single lines or enclosed between /* and */ for longer comments.</p>
+    <hr>
+</body>
+</html>

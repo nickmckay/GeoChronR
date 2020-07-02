@@ -51,25 +51,25 @@ and it will prompt you for the details.
 
 ```{r, cache=TRUE, results = 'hide'}
 hulu <- runBchron(hulu,
-                  calCurves = "normal", 
+                  cal.curves = "normal", 
                   iter = 10000,
                   extractDate = 10000,
                   which.table = 2,
-                  labIDVar = NULL, 
-                  ageVar = 'age', 
-                  ageUncertaintyVar = 'ageUncertaintyHigh',
-                  age14CVar = NULL,
-                  age14CuncertaintyVar =  NULL, 
-                  depthVar = 'depth', 
-                  reservoirAge14CVar = NULL, 
-                  reservoirAge14CUncertaintyVar = NULL,
-                  rejectedAgesVar = NULL)
+                  lab.id.var = NULL, 
+                  age.var = 'age', 
+                  age.uncertainty.var = 'ageUncertaintyHigh',
+                  age.14c.var = NULL,
+                  age.14c.uncertainty.var =  NULL, 
+                  depth.var = 'depth', 
+                  reservoir.age.14c.var = NULL, 
+                  reservoir.age.14c.uncertainty.var = NULL,
+                  rejected.ages.var = NULL)
 ```
 
 ##Plotting the chronology
 OK, let's take a look at the model. 
 ```{r,warning=FALSE}
-plotChronEns(hulu,truncateDist = 1e-4)
+plotChronEns(hulu,truncate.dist = 1e-4)
 ```
 
 `plotChron()` is a wrapper for multiple plotting functions, and has a lot of options, which probably require tinkering to produce a nice plot. See all the options by running `?plotChron`
@@ -79,7 +79,7 @@ plotChronEns(hulu,truncateDist = 1e-4)
 The ensemble chronology in a chronModel may or may not have values corresponding to the paleoclimatic or paleoenvironmental measurements in paleoData. To map the model ensemble values to a measurement table in paleoData, use
 
 ```{r , results = 'hide'}
-hulu = mapAgeEnsembleToPaleoData(hulu,age.var = "ageEnsemble",which.pmt = 2)
+hulu = mapAgeEnsembleToPaleoData(hulu,age.var = "ageEnsemble",paleo.meas.table.num = 2)
 ```
 
 
@@ -89,8 +89,8 @@ Let's take a look at the this timeseries.
 First we're going to pull out the age ensemble and d18O data for future reference. The `selectData()` function makes this easy.
 
 ```{r}
-hulu.ae <- selectData(hulu,varName = "ageEnsemble",which.mt = 2)
-hulu.d18O<- selectData(hulu,varName = "d18O",which.mt = 2)
+hulu.ae <- selectData(hulu,var.name = "ageEnsemble",meas.table.num = 2)
+hulu.d18O<- selectData(hulu,var.name = "d18O",meas.table.num = 2)
 ```
 
 
@@ -100,7 +100,7 @@ This might be a good time to take a peak at the data, lets plot the ensemble of 
 
 Here we will just plot 50 the data with 50 of its ensemble members.   
 ```{r}
-hulu.ts.plot = plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.01,maxPlotN = 50,color = "blue")
+hulu.ts.plot = plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.05,n.ens.plot = 50,color = "blue")
 hulu.ts.plot
 ```
 
@@ -109,7 +109,7 @@ hulu.ts.plot
 We can also plot this as a ribbon plot of quantiles
 
 ```{r}
-hulu.ts.plot = plotTimeseriesEnsRibbons(X = hulu.ae,Y = hulu.d18O,nbins = 1000)+xlim(c(35000,75000))
+hulu.ts.plot = plotTimeseriesEnsRibbons(X = hulu.ae,Y = hulu.d18O,n.bins = 1000)+xlim(c(35000,75000))
 hulu.ts.plot
 ```
 
@@ -118,7 +118,7 @@ hulu.ts.plot
 Or a combination of the two with the "add.to.plot option"
 
 ```{r}
-hulu.ts.plot <- plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.1,maxPlotN = 10,color = "red",add.to.plot = hulu.ts.plot)+ggtitle("Hulu Cave d18O")
+hulu.ts.plot <- plotTimeseriesEnsLines(X = hulu.ae,Y = hulu.d18O,alp = 0.1,n.ens.plot = 10,color = "red",add.to.plot = hulu.ts.plot)+ggtitle("Hulu Cave d18O")
 hulu.ts.plot
 ```
 
@@ -135,13 +135,13 @@ This is an ice core, so the chronology is not based on radiometric tie points. L
 
 ```{r}
 gisp2 = runBam(gisp2,
-               which.paleo = 1, 
-               which.pmt = 1,
-               which.chron = 1,
-               which.model = 1,
-               ens.number = 1, 
-               makeNew = T,
-               nens = 1000,
+               paleo.num = 1, 
+               paleo.meas.table.num = 1,
+               chron.num = 1,
+               model.num = 1,
+               ens.table.number = 1, 
+               make.new = T,
+               n.ens = 1000,
                model = list(name = "poisson",
                             param = 0.02, 
                             resize = 0, 
@@ -156,9 +156,9 @@ You can also always use `selectData(gisp2)` in interactive mode, and it will lis
 ##Select the relevant variables
 
 ```{r}
-gisp2.d18O <- selectData(gisp2,varName = "temp")
+gisp2.d18O <- selectData(gisp2,var.name = "temp")
 
-gisp2.ens <- selectData(gisp2,varName = "yearEnsemble")
+gisp2.ens <- selectData(gisp2,var.name = "yearEnsemble")
 
 gisp2.ens$values[1:10,1:5]
 
@@ -184,8 +184,8 @@ gisp2.ens <- convertAD2BP(gisp2.ens)
 Let's make another ribbon and lines plot, this time useing the magrittr pipe to streamline the process
 
 ```{r}
-gisp2.ts.plot <- plotTimeseriesEnsRibbons(X = gisp2.ens,Y = gisp2.d18O,nbins = 500) %>% 
-  plotTimeseriesEnsLines(X = gisp2.ens,Y = gisp2.d18O,maxPlotN = 5,color = "red",alp = .1)+
+gisp2.ts.plot <- plotTimeseriesEnsRibbons(X = gisp2.ens,Y = gisp2.d18O,n.bins = 500) %>% 
+  plotTimeseriesEnsLines(X = gisp2.ens,Y = gisp2.d18O,n.ens.plot = 5,color = "Reds",alp = .2)+
   ggtitle("GISP2 temperature")
 
 print(gisp2.ts.plot)
@@ -207,13 +207,13 @@ Interesting. There's a hint of a negative correlation during this time interval.
 
 Here we specify the ensembles and data of each timeseries, and the width of the bins for correlation. More options are available in ?corEns
 ```{r, cache=TRUE,  results = 'hide'}
-corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,binstep = 500,max.ens = 100)
+corout <- corEns(gisp2.ens,gisp2.d18O,hulu.ae,hulu.d18O,bin.step = 500,max.ens = 100)
 ```
 
 ##Plot the ensemble correlation
 And now we summarize the results with plotCorEns(), illustrating significance after correcting for autocorrelation.
 ```{r}
-plotCorEns(corout,legendPosition = c(0.1, 0.8),significanceOption = "autocorr")
+plotCorEns(corout,legend.position = c(0.1, 0.8),significance.option = "autocorr")
 
 ```
 And here we see that, indeed, given the age constraints and data used here, there two timeseries are unlikely correlated. 

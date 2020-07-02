@@ -6,25 +6,25 @@
 \usage{
 getVariableIndex(
   table,
-  varName = NA,
-  altNames = varName,
+  var.name = NA,
+  alt.names = var.name,
   ignore = NA,
   always.choose = FALSE,
-  strictSearch = FALSE
+  strict.search = FALSE
 )
 }
 \arguments{
 \item{table}{a LiPD measurement, ensemble or summary Table}
 
-\item{varName}{string name of the variable to extract}
+\item{var.name}{string name of the variable to extract}
 
-\item{altNames}{A vector of strings for alternative names to search for}
+\item{alt.names}{A vector of strings for alternative names to search for}
 
 \item{ignore}{A vector of strings of variableNames to ignore}
 
 \item{always.choose}{Force selection of the variable from a list}
 
-\item{strictSearch}{Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
+\item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }
 \value{
 An integer index
@@ -36,6 +36,7 @@ Gets the index for a LiPD "variable list"
 Other LiPD manipulation: 
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
 \code{\link{selectData}()}
 }
 \concept{LiPD manipulation}

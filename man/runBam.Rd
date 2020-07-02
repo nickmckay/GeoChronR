@@ -6,30 +6,30 @@
 \usage{
 runBam(
   L,
-  which.paleo = NA,
-  which.pmt = NA,
-  which.chron = 1,
-  which.model = NA,
-  ens.number = NA,
-  makeNew = FALSE,
-  nens = 1000,
+  paleo.num = NA,
+  paleo.meas.table.num = NA,
+  chron.num = 1,
+  model.num = NA,
+  ens.table.number = NA,
+  make.new = FALSE,
+  n.ens = 1000,
   model = NA
 )
 }
 \arguments{
 \item{L}{a single LiPD object}
 
-\item{which.paleo}{the number of the paleoData object that you'll be working in}
+\item{paleo.num}{the number of the paleoData object that you'll be working in}
 
-\item{which.pmt}{the number of the measurementTable you'll be working in}
+\item{paleo.meas.table.num}{the number of the measurementTable you'll be working in}
 
-\item{which.model}{the number of the chronData model where you want to store the model information}
+\item{model.num}{the number of the chronData model where you want to store the model information}
 
-\item{ens.number}{the number of the ensembleTable you want to put the output into}
+\item{ens.table.number}{the number of the ensembleTable you want to put the output into}
 
-\item{makeNew}{Forces the creation of a new model (TRUE or FALSE{default})}
+\item{make.new}{Forces the creation of a new model (TRUE or FALSE{default})}
 
-\item{nens}{The number of members in the ensemble}
+\item{n.ens}{The number of members in the ensemble}
 
 \item{model}{a list that describes the model to use in BAM
 \itemize{
@@ -60,8 +60,8 @@ Run in interactive mode:
 L = runBam(L)
 
 Run in noninteractive mode, describing everything:
-L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
-nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
+L = runBam(L,paleo.num = 1, paleo.meas.table.num = 1, model.num = 3, make.new = TRUE,
+nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
 }
 \seealso{
 Other BAM: 

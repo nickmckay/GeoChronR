@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Help About</title>
+<script type="text/javascript">
+ function myWriteDate(dt,tm)
+ {
+  var d,m,y,h,n,s,str;
+  d=dt.getDate();
+  m=dt.getMonth()+1;
+  y=dt.getFullYear();
+  h=dt.getHours();
+  n=dt.getMinutes();
+  s=dt.getSeconds();
+  str=d+"/"+m+"/"+y;
+  if(tm)
+  str+=" "+h+":"+n+":"+s;
+  return str;
+ };
+ var header;
+</script>
+<script type="text/javascript" src="../oxcal/header.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; About</p>
+    <h1>About <script type="text/javascript">
+document.write(header.title)
+</script></h1>
+    <hr>
+    <p>Web interface build number: <script type="text/javascript">
+  document.write(header.version+ " <br\/>Last Updated: "+myWriteDate(new Date(header.issued)));
+</script><br>
+    (c) Christopher Bronk Ramsey <script type="text/javascript">
+document.write ((new Date(header.issued)).getFullYear());
+</script></p>
+</body>
+</html>

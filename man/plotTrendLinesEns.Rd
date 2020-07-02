@@ -6,8 +6,8 @@
 \usage{
 plotTrendLinesEns(
   mb.df,
-  xrange,
-  pXY = 1:nrow(mb.df),
+  x.range,
+  index.xy = 1:nrow(mb.df),
   alp = 0.2,
   color = "red",
   add.to.plot = ggplot()
@@ -16,9 +16,9 @@ plotTrendLinesEns(
 \arguments{
 \item{mb.df}{A data.frame of slopes (column 1) and intercepts (column 2)}
 
-\item{xrange}{range of x values (min and max)}
+\item{x.range}{range of x values (min and max)}
 
-\item{pXY}{index of which observations to use}
+\item{index.xy}{index of which observations to use}
 
 \item{alp}{Line transparency}
 
@@ -34,11 +34,11 @@ Plot an ensemble of trendlines based on slope and intercept.
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

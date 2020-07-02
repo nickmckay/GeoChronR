@@ -4,16 +4,16 @@
 \alias{bin}
 \title{Bin Data}
 \usage{
-bin(time, values, binvec, binfun = mean)
+bin(time, values, bin.vec, bin.fun = mean)
 }
 \arguments{
 \item{time}{vector of time}
 
 \item{values}{vector of values to bin}
 
-\item{binvec}{vector of bin edges for describing where to bin}
+\item{bin.vec}{vector of bin edges for describing where to bin}
 
-\item{binfun}{function to use during binning (mean, sd, and sum all work)}
+\item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 }
 \value{
 A data.frame of (x) binned time, and (y) binned values

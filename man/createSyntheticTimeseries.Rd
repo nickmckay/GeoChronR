@@ -7,7 +7,7 @@
 createSyntheticTimeseries(
   time,
   values,
-  nens = 1,
+  n.ens = 1,
   sameTrend = TRUE,
   index.to.model = NA
 )
@@ -17,7 +17,7 @@ createSyntheticTimeseries(
 
 \item{values}{LiPD "variable list" or vector of values}
 
-\item{nens}{Number of ensemble members to simulate}
+\item{n.ens}{Number of ensemble members to simulate}
 }
 \value{
 a vector or matrix of synthetic values
@@ -27,9 +27,9 @@ create synthetic timeseries based on a timeseries. Useful for null hypothesis te
 }
 \seealso{
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}

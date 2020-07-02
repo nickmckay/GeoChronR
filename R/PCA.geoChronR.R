@@ -5,13 +5,13 @@
 #' @param bin.list A list of binned data, the output of binTs()
 #' @param method What method to use for PCA? pcaMethods::listPcaMethods() for options. "ppca" is default. Other options may not work in GeoChronR.
 #' @param weights Vector of weights to apply to timeseries in the bin.list
-#' @param PCAtype Correlation ("corr" - default) or Covariance ("cov"), matrix
-#' @param nPCs number of PCs/EOFs to calculate
-#' @param nens how many ensemble members?
+#' @param pca.type Correlation ("corr" - default) or Covariance ("cov"), matrix
+#' @param n.pcs number of PCs/EOFs to calculate
+#' @param n.ens how many ensemble members?
 #' @import BiocManager
 #' 
 
-pcaEns <-  function(bin.list,method='ppca',weights=NA,PCAtype="corr",nPCs=4,nEns=1000){
+pcaEns <-  function(bin.list,method='ppca',weights=NA,pca.type="corr",n.pcs=4,nEns=1000){
   
   #this may not be needed anymore now that we're using biocview in the description
   #check for the pcaMethods package
@@ -37,9 +37,9 @@ nEnsSite = sapply(bin.list,function(x) ncol(x$matrix)) #how many ensembles at ea
 #dat.mat <- tmat2
 
 #setup output
-loads = array(data = NA,dim = c(nD,nPCs,nEns))
-PCs = array(data = NA,dim = c(length(time),nPCs,nEns))
-varExp = array(data = NA,dim = c(nPCs,nEns))
+loads = array(data = NA,dim = c(nD,n.pcs,nEns))
+PCs = array(data = NA,dim = c(length(time),n.pcs,nEns))
+varExp = array(data = NA,dim = c(n.pcs,nEns))
 dataDensity = matrix(data = NA, nrow = length(time),ncol=nEns)
 pb=txtProgressBar(min=1,max=nEns,style = 3)
 for(n in 1:nEns){#for each ensemble member
@@ -62,10 +62,10 @@ for(n in 1:nEns){#for each ensemble member
   goodRows = which(!apply(is.na(PCAMAT),1,all))
   PCAMAT = PCAMAT[goodRows,]
   #remove means, and scale if correlation matrix
-  if(PCAtype=="corr"){
-    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=nPCs)
-  }else if(PCAtype=="cov"){
-    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="none",nPcs=nPCs)
+  if(pca.type=="corr"){
+    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=n.pcs)
+  }else if(pca.type=="cov"){
+    pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="none",nPcs=n.pcs)
   }
   
   loads[,,n]=pcaMethods::loadings(pca.out)
@@ -95,7 +95,7 @@ for(n in 1:nEns){#for each ensemble member
 close(pb)
 
 #reorient any PCs that have a negative correlation with PC mean
-for (p in 1:nPCs){
+for (p in 1:n.pcs){
   meanPC=apply(PCs[,p,],c(1),median)
   ct = cor(meanPC,PCs[,p,])
   toflip = which(ct<0)
@@ -106,13 +106,13 @@ for (p in 1:nPCs){
 }
 
 if(any(!is.na(weights))){
-  ens.PC.out <- list(loads/weights,PCs,varExp,time,apply(dataDensity,1,mean))
-  ens.PC.out$weightedPCmat=PCAMAT
+  ens.pc.out <- list(loads/weights,PCs,varExp,time,apply(dataDensity,1,mean))
+  ens.pc.out$weightedPCmat=PCAMAT
 }else{
-  ens.PC.out <- list(loads,PCs,varExp,time,apply(dataDensity,1,mean))
+  ens.pc.out <- list(loads,PCs,varExp,time,apply(dataDensity,1,mean))
 }
-names(ens.PC.out) <- c("loadings","PCs","variance","age","meanDataDensity")
-return(ens.PC.out)
+names(ens.pc.out) <- c("loadings","PCs","variance","age","meanDataDensity")
+return(ens.pc.out)
 
 }
 

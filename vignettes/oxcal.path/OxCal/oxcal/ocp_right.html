@@ -1,0 +1,29 @@
+<html>
+
+<head>
+<script type="text/javascript" src="ocp_utils.js"></script>
+<script type="text/javascript" src="Labels.js"></script>
+<script type="text/javascript" src="ocp_right.js"></script>
+<title>OxCal Table View</title>
+<link rel=stylesheet type=text/css href=../style/OxCal.css>
+</head>
+
+<body onload="drawTable()">
+  <script type="text/javascript">
+  if(!parent.mainMode)
+  {
+   document.writeln("<h1>OxCal Output<\/h1>");
+   document.writeln("<hr\/>");
+   if(parent.source!="ocp_null.js")
+   {
+    document.write("<div class='filename'>");
+    document.write(parent.source.replace(".js",""));
+    document.writeln("<\/div>");
+   };
+  };
+  </script>
+<div id="tableArea">
+</div>
+</body>
+
+</html>

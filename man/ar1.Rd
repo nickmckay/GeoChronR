@@ -4,10 +4,10 @@
 \alias{ar1}
 \title{Estimate Auto-Regressive coefficient at 1-timesetep}
 \usage{
-ar1(X)
+ar1(x)
 }
 \arguments{
-\item{X}{a 1-column matrix or numeric dataset}
+\item{x}{a 1-column matrix or numeric dataset}
 }
 \value{
 ar coefficient estimate of ar1

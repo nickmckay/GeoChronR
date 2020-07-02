@@ -6,46 +6,59 @@
 \usage{
 runOxcal(
   L,
-  which.chron = NA,
-  which.mt = NA,
-  oxcalPath = "~/OxCal/",
-  modelNum = NA,
+  chron.num = NA,
+  meas.table.num = NA,
+  oxcal.path = "~/OxCal/",
+  model.num = NA,
   remove.rejected = TRUE,
   overwrite = TRUE,
-  maxEns = 1000,
-  staticReservoirAge = NA,
-  staticReservoirAgeUnc = NA,
-  surfaceAge = NA,
-  surfaceAgeUnc = NA,
-  surfaceAgeDepth = 0,
-  depthInterval = NA,
-  eventsPerUnitLength = NA,
-  eventsPerUnitLengthUncertainty = 0,
-  outlierProb = 0.05,
-  calCurve = "IntCal13",
+  max.ens = 1000,
+  static.reservoir.age = NA,
+  static.reservoir.age.unc = NA,
+  surface.age = NA,
+  surface.age.unc = NA,
+  surface.age.depth = 0,
+  depth.interval = NA,
+  events.per.unit.length = NA,
+  events.per.unit.length.uncertainty = 0,
+  outlier.prob = 0.05,
+  cal.curve = "IntCal13",
   ...
 )
 }
 \arguments{
 \item{L}{a single LiPD object}
 
-\item{which.chron}{the number of the chronData object that you'll be working in}
+\item{chron.num}{the number of the chronData object that you'll be working in}
 
-\item{which.mt}{the number of the measurementTable you'll be working in}
+\item{meas.table.num}{the number of the measurementTable you'll be working in}
 
-\item{modelNum}{which chronModel do you want to use?}
+\item{model.num}{chron.numModel do you want to use?}
 
 \item{remove.rejected}{don't write out dates that are marked as rejected}
 
 \item{overwrite}{overwrite files and directories}
 
-\item{maxEns}{the maximum number of ensembles to load in (default = 1000)}
+\item{max.ens}{the maximum number of ensembles to load in (default = 1000)}
 
-\item{staticReservoirAge}{optionally assign a deltaR to all radiocarbon dates}
+\item{static.reservoir.age}{optionally assign a deltaR to all radiocarbon dates}
 
-\item{staticReservoirAgeUnc}{optionally assign a deltaR uncertainty to all radiocarbon dates}
+\item{static.reservoir.age.unc}{optionally assign a deltaR uncertainty to all radiocarbon dates}
 
-\item{...}{arguments to pass to createChronMeasInputDf}
+\item{...}{
+  Arguments passed on to \code{\link[=createChronMeasInputDf]{createChronMeasInputDf}}
+  \describe{
+    \item{\code{lab.id.var}}{}
+    \item{\code{age.14c.var}}{}
+    \item{\code{age.14c.uncertainty.var}}{}
+    \item{\code{age.var}}{}
+    \item{\code{age.uncertainty.var}}{}
+    \item{\code{depth.var}}{}
+    \item{\code{reservoir.age.14C.var}}{}
+    \item{\code{reservoir.age.14c.uncertainty.var}}{}
+    \item{\code{rejected.ages.var}}{}
+    \item{\code{split.ages}}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
+  }}
 }
 \value{
 L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
@@ -58,7 +71,7 @@ Run in interactive mode:
 L = runOxcal(L)
 
 Run in noninteractive mode, describing everything:
-L = runOxcal(L,which.chron = 1, which.mt = 1, modelNum = 3, baconDir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+L = runOxcal(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 }
 \author{
 Nick McKay

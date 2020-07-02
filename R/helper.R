@@ -3,7 +3,7 @@
 #' @description Guesses year units based on some simple heuristics
 #' @param X A LiPD variable list or a vector of years BP 
 #' @return A *guessed* string unit label
-heuristicUnits = function(X,rangeMin = 25){
+heuristicUnits = function(X,range.min = 25){
   if(is.list(X)){
     if(all(is.na(X$values))){
       return(NA)
@@ -27,7 +27,7 @@ heuristicUnits = function(X,rangeMin = 25){
     todayCheckBP <- miv < convertAD2BP(as.numeric(substring(date(),21)))
     
     #see if range of values implies ka not BP
-    rangeCheck <- rv < rangeMin
+    rangeCheck <- rv < range.min
     
     #now work out some scenarios
     if(todayCheckBP & !todayCheckAD){

@@ -4,18 +4,18 @@
 \alias{ar1Surrogates}
 \title{Create a synthetic timeseries that emulates the characteristics of a variable}
 \usage{
-ar1Surrogates(time, vals, detrend_bool = TRUE, method = "redfit", nens = 1)
+ar1Surrogates(time, vals, detrend = TRUE, method = "redfit", n.ens = 1)
 }
 \arguments{
 \item{time}{LiPD "variable list" or vector of year/age values}
 
 \item{vals}{LiPD "variable list" or vector of values}
 
-\item{detrend_bool}{boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries}
+\item{detrend}{boolean variable, indicating whether one should remove a linear trend (default) or not. Note: does not affect the AR(1) fit, but does affect the generated timeseries}
 
 \item{method}{Method used for estimation. Possible values are "even" or "redfit"}
 
-\item{nens}{Number of ensemble members to simulate}
+\item{n.ens}{Number of ensemble members to simulate}
 }
 \value{
 a vector or matrix of AR(1) surrogates for series X
@@ -25,9 +25,9 @@ create synthetic timeseries based on a timeseries. Useful for null hypothesis te
 }
 \seealso{
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}

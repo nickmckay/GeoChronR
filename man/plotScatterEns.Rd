@@ -4,7 +4,7 @@
 \alias{plotScatterEns}
 \title{Plot an ensemble of data as a scatterplot}
 \usage{
-plotScatterEns(X, Y, alp = 0.2, maxPlotN = 1000, add.to.plot = ggplot())
+plotScatterEns(X, Y, alp = 0.2, n.ens.plot = 1000, add.to.plot = ggplot())
 }
 \arguments{
 \item{X}{A LiPD variable list to plot, including values, units, names, and more}
@@ -13,7 +13,7 @@ plotScatterEns(X, Y, alp = 0.2, maxPlotN = 1000, add.to.plot = ggplot())
 
 \item{alp}{Marker transparency}
 
-\item{maxPlotN}{Whats the maximum number of lines to plot?}
+\item{n.ens.plot}{Whats the maximum number of points to plot?}
 
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
 }
@@ -27,11 +27,11 @@ Plot an ensemble timeseries as a scatter plot. Useful in showing the general imp
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

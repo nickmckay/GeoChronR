@@ -47,7 +47,7 @@ We need to "map"" the age ensembles to paleo for all of these datasets. We'll us
 ```{r,results="hide"}
 FD2 = purrr::map(FD,
                  mapAgeEnsembleToPaleoData,
-                 strictSearch = TRUE,
+                 strict.search = TRUE,
                  age.var = "ageEnsemble",
                  depth.var = NULL )
 ```
@@ -70,12 +70,12 @@ tidyDf <- tidyTs(TS.filtered)
 
 ```{r}
 plotTimeseriesStack(tidyDf, 
-                    colorVar = "paleoData_variableName", 
-                    colorRamp = c("DarkBlue","Orange","Black","Dark Green"),
-                    lineSize = .1, 
-                    fillAlpha = .05,
-                    labSize = 2,
-                    labSpace = 3)
+                    color.var = "paleoData_variableName", 
+                    color.ramp = c("DarkBlue","Orange","Black","Dark Green"),
+                    line.size = .1, 
+                    fill.alpha = .05,
+                    lab.size = 2,
+                    lab.space = 3)
 ```
 
 
@@ -83,7 +83,7 @@ plotTimeseriesStack(tidyDf,
 
 Now bin all the data in the TS from 1400 to 2000, an interval of pretty good data coverage, into 5 year bins. 
 ```{r,results="hide",cache=TRUE}
-binned.TS = binTs(TS.filtered,binvec = seq(1400,2000,by=5),timeVar = "ageEnsemble")
+binned.TS = binTs(TS.filtered,bin.vec = seq(1400,2000,by=5),time.var = "ageEnsemble")
 ```
 
 
@@ -95,7 +95,7 @@ pcout = pcaEns(binned.TS)
 OK! Let's plot the results. 
 
 ```{r}
-plotPCA = plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.1,legendPosition = c(0.5,.6),which.PCs = 1:2,which.leg = 2)
+plotPCA = plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",bound.circ = T,restrict.map.range = T,f=.1,legend.position = c(0.5,.6),which.pcs = 1:2,which.leg = 2)
 ```
 
 Nice! A summary plot that combines the major features is produced, but all of the components, are included in the "plotPCA" list that was exported. 
@@ -121,18 +121,18 @@ plotPCA$sampleDepth
 this time - grab only those that are d18O, and use a covariance matrix
 let's look at all the names in the TS
 ```{r}
-varNames <- pullTsVariable(TS, "variableName")
+var.names <- pullTsVariable(TS, "variableName")
 ```
 Oops - looks like we didn't use quite the correct name. Next time use: 
 
 ```{r}
-varNames <- pullTsVariable(TS, "paleoData_variableName")
+var.names <- pullTsVariable(TS, "paleoData_variableName")
 ```
 
 and take a look at the unique variableNames in the TS
 
 ```{r}
-unique(varNames)
+unique(var.names)
 ```
 
 OK. Let's filter the timeseries again, this time pulling all the d18O data.
@@ -157,28 +157,28 @@ tidyd18O <- tidyd18O %>%
 
 ```{r}
 plotTimeseriesStack(tidyd18O, 
-                    colorVar = "paleoData_variableName", 
-                    colorRamp = c("DarkBlue"),
-                    lineSize = .1, 
-                    fillAlpha = .05,
-                    labSize = 2,
-                    labSpace = 2,
-                    labBuff = 0.03)
+                    color.var = "paleoData_variableName", 
+                    color.ramp = c("DarkBlue"),
+                    line.size = .1, 
+                    fill.alpha = .05,
+                    lab.size = 2,
+                    lab.space = 2,
+                    lab.buff = 0.03)
 ```
 
 Now, we'll bin again.
 ```{r,results="hide"}
-binned.TS2 = binTs(d18OTS,binvec = seq(1400,2000,by=5),na.col.rm = T)
+binned.TS2 = binTs(d18OTS,bin.vec = seq(1400,2000,by=5),na.col.rm = T)
 ```
 
 And calculate the ensemble PCA, this time using a covariance matrix
 ```{r,results="hide"}
-pcout2 = pcaEns(binned.TS2,PCAtype = "cov")
+pcout2 = pcaEns(binned.TS2,pca.type = "cov")
 ```
 
 
 ```{r}
-plotPCA2 = plotPcaEns(pcout2,TS = d18OTS,map.type = "line",projection = "stereo",boundcirc = T,restrict.map.range = T,f=.2)
+plotPCA2 = plotPcaEns(pcout2,TS = d18OTS,map.type = "line",projection = "stereo",bound.circ = T,restrict.map.range = T,f=.2)
 ```
 
 
