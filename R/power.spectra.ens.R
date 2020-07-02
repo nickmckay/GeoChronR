@@ -142,8 +142,8 @@ ar1Surrogates = function(time,vals,detrend_bool=TRUE,method='redfit',nens=1){
 #' \item nuspectral (Mathias et al 2004)  (no confidence estimation)
 #' }
 #' For REDFIT and MTM, only the 95% confidence limit is computed. The estimation thereof is as described in Mudelsee et al 2009 for a single ensemble member.
-#' For multiple ensemble members, the median that 95% quantile is taken (a conservative choice).  
-#' For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted sa confidence limits.
+#' For multiple ensemble members, the median of the ensemble of 95% CLs is taken.  
+#' For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted as confidence limits.
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param max.ens Maximum number of ensemble members to analyze
