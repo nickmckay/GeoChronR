@@ -6,31 +6,29 @@
 \usage{
 loadOxcalOutput(
   L,
-  oxcalResultFilePath,
-  modelParameters,
-  depthUnits = "cm",
-  which.chron = NA,
-  modelNum = NA,
-  makeNew = NA,
-  maxEns = 1000
+  oxcal.result.file.path,
+  model.parameters,
+  depth.units = "cm",
+  chron.num = NA,
+  model.num = NA,
+  make.new = NA,
+  max.ens = 1000
 )
 }
 \arguments{
-\item{L}{}
+\item{L}{a lipd object}
 
-\item{oxcalResultFilePath}{}
+\item{oxcal.result.file.path}{Path to oxcal output data (from oxcAAR::executeOxcalScript())}
 
-\item{modelParameters}{}
+\item{model.parameters}{model parameters to write into the lipd file}
 
-\item{depthUnits}{}
+\item{depth.units}{Depth units to assign in (default = "cm")}
 
-\item{which.chron}{}
+\item{model.num}{an integer that corresponds to model.num that has the variable you want}
 
-\item{modelNum}{}
+\item{make.new}{Create a new model?}
 
-\item{makeNew}{}
-
-\item{maxEns}{}
+\item{max.ens}{Maximum number of ensemble members to import (default = 1000)}
 }
 \value{
 

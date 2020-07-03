@@ -14,6 +14,20 @@ mapTs(TS, color = "archiveType", size = 6, shape = 21, ...)
 \item{size}{Size of the location marker}
 
 \item{shape}{Shape of the location marker}
+
+\item{...}{
+  Arguments passed on to \code{\link[=baseMap]{baseMap}}
+  \describe{
+    \item{\code{lat}}{latitude(s) range to map}
+    \item{\code{lon}}{longitude(s) range to map}
+    \item{\code{map.type}}{"stamen" or "line"}
+    \item{\code{f}}{buffer for the map range}
+    \item{\code{restrict.map.range}}{TRUE or FALSE. Trim the size of the map to the points, for "line" map type}
+    \item{\code{bound.circ}}{Draw a boundary circle around a polar projection. TRUE or FALSE(default).}
+    \item{\code{global}}{Should the scope of the map be global? TRUE or FALSE(default).}
+    \item{\code{projection}}{Map project. All options on: ?mapproject}
+    \item{\code{extend.range}}{increase the span of the map by this much (lat/long degrees)}
+  }}
 }
 \value{
 ggmap object

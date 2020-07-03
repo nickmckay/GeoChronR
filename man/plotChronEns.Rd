@@ -6,45 +6,45 @@
 \usage{
 plotChronEns(
   L,
-  ageVar = "ageEnsemble",
-  depthVar = "depth",
+  age.var = "ageEnsemble",
+  depth.var = "depth",
   chron.number = NA,
   model.num = NA,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
   x.bin = NA,
   y.bin = NA,
-  nbins = 100,
-  bandcolor.low = "white",
-  bandcolor.high = "grey70",
-  bandAlp = 1,
+  n.bins = 100,
+  color.low = "white",
+  color.high = "grey70",
+  alp = 1,
   color.line = "Black",
-  lineWidth = 1,
+  line.width = 1,
   add.to.plot = ggplot2::ggplot(),
-  nEnsLines = 5,
-  enscolor.line = "red",
-  ensLineAlp = 0.7,
+  n.ens.plot = 5,
+  color.ens.line = "red",
+  alp.ens.line = 0.7,
   distAlp = 0.3,
-  distType = "violin",
-  distColor = "purple",
-  distThick = 0.1,
-  distScale = 0.02,
-  truncateDist = NA,
-  addPaleoAgeDepth = FALSE,
+  dist.type = "violin",
+  dist.color = "purple",
+  dist.thick = 0.1,
+  dist.scale = 0.02,
+  truncate.dist = NA,
+  add.paleo.age.depth = FALSE,
   paleo.number = NA,
   meas.num = NA,
-  paleoColor = "cyan"
+  color.line.paleo = "cyan"
 )
 }
 \arguments{
 \item{L}{A LiPD object}
 
-\item{ageVar}{ariableName to use for age ensemble ("ageEnsemble" by default)}
+\item{age.var}{ariableName to use for age ensemble ("ageEnsemble" by default)}
 
-\item{depthVar}{variableName to use for depth ("depth" by default)}
+\item{depth.var}{variableName to use for depth ("depth" by default)}
 
-\item{chron.number}{which chronData object to use (NA by default, will ask if needed)}
+\item{chron.number}{chron.numData object to use (NA by default, will ask if needed)}
 
-\item{model.num}{which chronData model to use (NA by default, will ask if needed)}
+\item{model.num}{chron.numData model to use (NA by default, will ask if needed)}
 
 \item{probs}{quantiles to calculate and plot}
 
@@ -52,43 +52,43 @@ plotChronEns(
 
 \item{y.bin}{vector of bin edges over which to bin.}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{n.bins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{bandcolor.low}{Band color of the outer most band.}
+\item{color.low}{Band color of the outer most band.}
 
-\item{bandcolor.high}{Band color of the inner most band.}
+\item{color.high}{Band color of the inner most band.}
+
+\item{alp}{Transparency of the band plot}
 
 \item{color.line}{Line color (following ggplot rules)}
 
-\item{lineWidth}{Width of the line}
+\item{line.width}{Width of the line}
 
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
 
-\item{nEnsLines}{Number of ensemble members to plot}
+\item{n.ens.plot}{Number of ensemble members to plot}
 
-\item{enscolor.line}{color of the ensemble lines}
+\item{color.ens.line}{color of the ensemble lines}
 
-\item{ensLineAlp}{transparency of the lines}
+\item{alp.ens.line}{transparency of the lines}
 
-\item{distType}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
+\item{dist.type}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
 
-\item{distColor}{distribution color (following ggplot rules)}
+\item{dist.color}{distribution color (following ggplot rules)}
 
-\item{distThick}{thickness of the line around the distribution}
+\item{dist.thick}{thickness of the line around the distribution}
 
-\item{distScale}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
+\item{dist.scale}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
 
-\item{truncateDist}{truncate probability density values below this number. NA (default) means no truncation}
+\item{truncate.dist}{truncate probability density values below this number. NA (default) means no truncation}
 
-\item{addPaleoAgeDepth}{add a line that shows the paleoData age depth.}
+\item{add.paleo.age.depth}{add a line that shows the paleoData age depth.}
 
-\item{paleo.number}{which paleo number for the paleoData age-depth}
+\item{paleo.number}{paleo.num number for the paleoData age-depth}
 
 \item{meas.num}{which measurement Table for the paleoData age-depth}
 
-\item{paleoColor}{line color of the paleoData age-depth (following ggplot rules)}
-
-\item{bandAlpha}{Transparency of the band plot}
+\item{color.line.paleo}{line color of the paleoData age-depth (following ggplot rules)}
 }
 \value{
 A ggplot object
@@ -100,11 +100,11 @@ Plot creates an age model plot with all the bells and whistles, including a spre
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChron}()},
 \code{\link{plotCorEns}()},

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>Untitled</title>
+ <script type="text/javascript">
+  function requestFile(file,action)
+  {
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.open("GET", file, true);
+   xmlhttp.send();
+   xmlhttp.onreadystatechange = function() 
+   {
+    if (this.readyState == 4 && (this.status == 200 || this.responseText))
+	{
+     action(this.responseText);
+    };
+   };
+  };
+  function showOld(data)
+  {
+  	var e,settings=JSON.parse(data);
+  	delete settings.ok;
+  	for(e in settings)
+  	{
+  	 try
+  	 { 
+  	  document.getElementById(e).value=settings[e];
+  	 }
+  	 catch(err){alert(e+":"+err);};
+  	};
+  };
+ </script>
+ <link rel="stylesheet" type="text/css" href="./style/OxCal.css">
+ <style type="text/css" title="text/css">
+<!--
+  input { position: absolute;left:150px }
+-->
+</style>
+</head>
+<h1>OxCal standalone setup</h1>
+<body onload="requestFile('setup.json',showOld)">
+<form action="./setup.json" method="post">
+ <p>Localhost port:<input id="port" name="port" type="text" size="50"></p>
+ <p>Home directory:<input id="home" name="home" type="text" size="50"></p>
+ <p>Web directory:<input id="web" name="web" type="text" size="50"></p>
+ <p>OxCal binary:<input id="oxcal" name="oxcal" type="text" size="50"></p>
+ <p>TeX directory:<input id="texdir" name="texdir" type="text" size="50"></p>
+ <p>Rasterizer:<input id="rasterizer" name="rasterizer" type="text" size="50"></p>
+ <button type="submit">Save</button>
+</form>
+</body>
+</html>

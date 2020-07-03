@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="">
+  <title>OxCal input</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+<script type="text/javascript" src="../utils/Menu.js">
+</script>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+  <p><a href="hlp_contents.html">OxCal</a> &gt; Input of information</p>
+  <h1>Input of information<br></h1>
+  <hr>
+  <ul>
+    <li><a href="#single">Calibrating a single date</a></li>
+    <li><a href="#default_curve">Viewing the calibration curve</a></li>
+    <li><a href="#multiplots">Getting started with multi-plots</a></li>
+    <li><a href="#file_handling">File handling</a></li>
+    <li><a href="#local">Save to and open from your local computer</a></li>
+    <li><a href="#edit">Editing your input file</a></li>
+    <li><a href="#views">Views of the input file</a></li>
+    <li><a href="#insert">Inserting commands</a></li>
+    <li><a href="#tools">Tools for helping with input files</a></li>
+    <li><a href="#import">Importing from a spreadsheet</a></li>
+    <li><a href="#link">Linking from a web-site/database</a></li>
+  </ul>
+  <hr>
+  <h2><a name="single" id="single"></a>Calibrating a single date</h2>
+  <p>When using a server based or standalone versions of OxCal you can calibrate a single date from a simplified dialogue from the plotting utility (menu item @). This enables you to enter a lab identifier (or other label) the radiocarbon date (in <sup>14</sup>C BP or F14C) and the uncertainty. By pressing the [Calibrate] button, the OxCal program is run on the server and a results table or plot is opened (see <a href="hlp_output.html">viewing output</a>).</p><br>
+  <div id="Quick">
+    <table class="menu" style="width:300px">
+      <tbody>
+        <tr>
+          <td class="prompt">Name</td>
+          <td><input type="text" id="name" size="20"></td>
+        </tr>
+        <tr>
+          <td class="prompt"><select id="quickVerb" name="quickVerb">
+            <option selected>
+              Date
+            </option>
+            <option>
+              F14C
+            </option>
+          </select></td>
+          <td><input type="text" id="date" size="20"></td>
+        </tr>
+        <tr>
+          <td class="prompt">&#177;</td>
+          <td><input type="text" id="error" size="20"></td>
+        </tr>
+        <tr>
+          <td class="prompt">Curve</td>
+          <td><select id="pickCurve" name="CurveDropDown">
+            <option>
+              IntCal 09
+            </option>
+            <option>
+              IntCal 04
+            </option>
+            <option>
+              ShCal 04
+            </option>
+            <option>
+              Bomb 04 NH1
+            </option>
+            <option>
+              Bomb 04 NH2
+            </option>
+            <option>
+              Bomb 04 NH3
+            </option>
+            <option>
+              Bomb 04 SH
+            </option>
+            <option>
+              Kueppers 04
+            </option>
+          </select></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input style="width:80%" type="button" value="Calibrate" name="Calibrate"></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <hr>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input style="width:80%" type="button" value="View Curve" name="viewCurve"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input style="width:80%" type="button" value="Projects..." name="viewCurve"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The calibration curve can be selected. If one of the post-bomb curves is selected the program will switch over to take input in the form of F14C (<a href="javascript:go_bib('reimer2004drc')">Reimer  et al. 2004</a>) and to display the curve against this quantity.</p>
+  <p>In some standalone versions the first time you run the OxCal program there may be some delay and so the first calibration/view curve operation you do may have to be repeated.</p>
+  <hr>
+  <h2><a name="default_curve" id="default_curve"></a>Viewing the calibration curve</h2>
+  <p>Also you can press the [View curve] button from the opening dialogue (menu item @) of the plotting utility to generate a plot of the currently selected calibration curve. For details of how to adjust the plot see <a href="hlp_output.html">viewing output</a>. If no plot appears see the <a href="readme.html">installation</a> page for details of the compatible browsers and SVG viewers.</p>
+  <p>To view the curve you can also simply run an empty run file. If you include in the run file other calibration data-sets the curves for these will also be shown on the plot. This facility is useful for comparing data-sets.</p>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="multiplots" id="multiplots"></a>Getting started with multi-plots</h2>
+  <p>In order to calibrate several radiocarbon dates at once click on the 'Projects...' button which opens up a dialog showing any existing projects. Press the [+New] item to open a blank input window for you to enter your data for analysis. Alternatively, you can just select [File &gt; New] from the menu.</p>
+  <p>The input window that is then opened has a menu pane on the left hand side and an input file viewer on the right. To enter the dates for calibration click on the [Insert] item in the left hand pane and you will be prompted for the details of a date to be entered. When you have entered these details press the button:</p>
+  <p><input value="&gt;&gt;" name="Add" type="button"></p>
+  <p>This will insert the command for calibrating a radiocarbon date into the file and you can see this in the right hand side. Once you have entered all of your dates you will see something like:</p><br>
+  <table class="clear">
+    <tbody>
+      <tr>
+        <td>
+          <table class="clear">
+            <tbody>
+              <tr>
+                <td>
+                  <table class="normal">
+                    <tbody>
+                      <tr>
+                        <th class="normal"><img src="../img/Orange.gif"><span>Plot()</span></th>
+                      </tr>
+                      <tr>
+                        <td>
+                          <table style="display: block;" class="clearInside">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <table class="normal">
+                                    <tbody>
+                                      <tr>
+                                        <th class="normal"><img src="../img/Blue.gif"><span>R_Date("OxA-1200", 1287, 27)</span></th>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table class="normal">
+                                    <tbody>
+                                      <tr>
+                                        <th class="normal"><img src="../img/Blue.gif"><span>R_Date("OxA-1201", 1234, 27)</span></th>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table class="normal">
+                                    <tbody>
+                                      <tr>
+                                        <th class="normal"><img src="../img/Blue.gif"><span>R_Date("OxA-1201", 1289, 26)</span></th>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table class="normal">
+                                    <tbody>
+                                      <tr>
+                                        <th class="selected"><img src="../img/Blue.gif"></th>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table class="normal">
+                    <tbody>
+                      <tr>
+                        <th class="normal"><img src="../img/Blue.gif"></th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>You are now ready to run the analysis which you do by pressing [File &gt; Run] in the left hand pane. This will prompt you for a filename (which you can leave as 'Untitled.oxcal'), run the calibrations and open the <a href="hlp_output.html">output window</a> to show a table with the results of the calibration.</p>
+  <p>You can also run the calibrations by pressing the forward button at the top right hand side:</p>
+  <p><script type="text/javascript">
+ Button("","../img/GoForward.gif");
+</script></p>
+  <p>and you can also return to your input file from the output viewer using the button at the top left hand side of that page:</p>
+  <p><script type="text/javascript">
+ Button("","../img/GoBack.gif");
+</script></p>
+  <p>Once the analysis has been complete, you can use these two buttons to swap back and forth between the input and output.  The program will only run again if the input file is altered.</p>
+  <p>In some cases you may wish to paste the data from a spreadsheet. This is easily done: arrange the spreadsheet so that the results are in three columns (Name, Date, Error) and then press [Tools &gt; Import] and paste the contents of the spreadsheet into the blank input dialogue. Press the button:</p>
+  <p><input value="&gt;&gt;" name="Add" type="button"></p>
+  <p>And this should import all of the radiocarbon dates for analysis (see <a href="#import">import tool</a>)</p>
+  <p>The program includes context sensitive tips on the menus etc. which can be switched on and off by pressing the help button:</p>
+  <p><script type="text/javascript">
+ Button("","../img/Help.gif");
+</script></p>
+  <p>which is found at the top right hand corner of the left window pane.</p>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="file_handling" id="file_handling"></a>File handling</h2>
+  <p>See also <a href="hlp_analysis_file.html">file formats</a>.</p>
+  <h3>Overview of file structure</h3>
+  <p>When you run a quick analysis the program creates a file for you called 'Untitled.oxcal' which has the commands for your analysis. When the program is run three further files are created:</p>
+  <ul>
+    <li>Untitled.log - which contains a text version of the output</li>
+    <li>Untitled.txt - which contains a tab delimited tabular output</li>
+    <li>Untitled.js - which is the ECMA-Script encoded version of the output used by the output viewer</li>
+  </ul>
+  <p>You can view all of these files by pressing [File &gt; Open] this puts up a file viewer which shows a row labelled 'Untitled' with four icons. These allow you to access the files or delete them all:</p>
+  <ul style="list-style-type: none; list-style-image: none; list-style-position: outside;">
+    <li><img style="width: 15px; height: 15px;" alt="Model" src="../img/Model.gif"> Input file</li>
+    <li><img style="width: 15px; height: 15px;" alt="Output" src="../img/Output.gif"> Output file (table or plot)</li>
+    <li><img style="width: 15px; height: 15px;" alt="Text" src="../img/Text.gif"> Text file</li>
+    <li><img style="width: 15px; height: 15px;" alt="Log" src="../img/Log.gif"> Log file</li>
+    <li><img style="width: 15px; height: 15px;" alt="Delete" src="../img/Delete.gif"> Delete all four files</li>
+  </ul>
+  <h3>Naming your input file</h3>
+  <p>Obviously you may not wish to always overwrite the previous analysis. Whenever you run a new analysis a file dialog opens which allows you to name the project. All of the files for that analysis will then be shown in a separate row in the file dialog (which you access through [File &gt; Open]).</p>
+  <h3>File manager</h3>
+  <p>You can open the file manager by pressing [File &gt; Manager]. This opens a dialog similar to that for [File &gt; Open] but also showing all of the other relevant files for your projects (comparison curves, priors and saved graphics). Both this and the file open dialog allow you to create new folders (sub-directories) or rename existing projects and files (double click on the file label).</p>
+  <h3>Saving and running your input file</h3>
+  <p>From the main input screen you can save your input file (to the current file name) either by pressing [File &gt; Save] or [File &gt; Run]. When you run an analysis you will be transferred over to the output viewer. You can return to the input by pressing the back button:</p>
+   <p><script type="text/javascript">
+ Button("","../img/GoBack.gif");
+</script></p>
+ <p>If the analysis is more complex and might take some time. If you try to open the output for an analysis that is still active you can see that this is the case because it is shown as active in the file dialog:</p>
+  <ul style="list-style-type: none; list-style-image: none; list-style-position: outside;">
+    <li><img style="width: 15px; height: 15px;" alt="Output" src="../img/Running.gif"> Program active</li>
+  </ul>
+  <p>If the analysis might take some time the output viewer will display a <a href="hlp_output.html#status">status page</a>.</p>
+  <h3>Creating other files</h3>
+  <p>In addition to input files, the other types of file you might wish to create are:</p>
+  <ul>
+    <li>Prior probability files (for use with the Prior command)</li>
+    <li>Radiocarbon calibration record files (for use with the Curve command)</li>
+  </ul>
+  <p>These can be created from the file dialog or file manager. If you are using the file dialog, you need to select the relevant file type from the selection box at the top. The file manager has a special section for prior and curve files on the right. You just need to press the [+New] icon to open up an editor. The files created are shown in the file dialog and will be accessible when the program runs. The main calibration data files are stored elsewhere and should be used for proper calibration - however other data sets may be used for comparison purposes to get alternative estimates of age.</p>
+  <p>Prior probability files have a simple format. They should have two columns which are separated by a tab or other white space. The first item on each row should be the primary parameter (usually the calendar date) and the second column is the probability. The program will automatically normalise the values. See also <a href="hlp_analysis_file.html#prior">file formats</a>.</p>
+  <p>Calibration data-sets in their simplest form have a three column format (calendar date, bp, uncertainty) again separated by white-space. You can also have a special line which contains a reference for the data-set that will appear in the output. This line should start with ## (double hash). Any line starting with a single # will be ignored as a comment line. See also <a href="hlp_analysis_file.html#14c">file formats</a>.</p>
+  <p>Both forms of file can be entered by pasting data from a spreadsheet.</p>
+  <p>To use the files you can either enter their names in the Curve or Prior command, or you can use the [File &gt; Insert] menu item.</p>
+  <p><span style="font-weight: bold;">Important note</span>: OxCal will also accept calibration files in Calib format but for the above simplified formats the dates should be given in OxCal's internal date format. The is one plus the number of years from the start of AD1 or the end of 1BC. For example 2001.0 is the start of the year AD2001 and -1999.0 is the start of the year 2000BC. So the middle of 1950 (taken to be the datum for cal BP) is 1950.5 in OxCal's internal format. See the section on the <a href="hlp_analysis_calend.html">Calendar</a> for more details.</p><br>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="local" id="local"></a>Save to and open from your local computer</h2>
+  <p>You may often wish to save your files onto your local computer where they can be stored in the long term. OxCal servers are likely to put a time limit on file storage to prevent them from becoming cluttered with old files. To save an input file to your local computer use the [File &gt; Save as] menu item and then instead of pressing the [Save] button press [Download]. If you have installed the program locally this file can then be analysed on your own computer which may get over any server restrictions on CPU time.</p>
+  <p>The [File &gt; Open] menu item can be used to open input files (.oxcal) from your own computer by using the [Upload] button. You can also upload input files from previous version of the program (.14i) or output files (.js).</p>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="edit" id="edit"></a>Editing your input file</h2>
+  <p>Obviously you may wish to alter an input file, repeat elements et cetera and so there are facilities built into the input editor for this. To select an item in the input pane simply click on it. Any subsequent insertions will go just before this item. If you wish to select more than one item you can click, hold the mouse button down and then release it over a later item. All selected items will turn blue. You can then use the [Edit] menu items [Cut], [Copy], [Paste] and [Delete] to operate on all of the items together. The menu item [Edit &gt; Edit] will put up a editing dialogue box with the code for the selected items. The same box can be displayed by double clicking on an item.</p>
+  <p>There are also shortcut buttons displayed at the top of the editing window which perform the same actions:</p>
+  <table style="width:50%">
+  <tr>
+  <td><script type="text/javascript">
+ Button("","../img/Cut.gif");
+</script></td>
+  <td><script type="text/javascript">
+ Button("","../img/Copy.gif");
+</script></td>
+  <td><script type="text/javascript">
+ Button("","../img/Paste.gif");
+</script></td></tr>
+  <tr><td>Cut</td><td>Copy</td><td>Paste</td></tr>
+  </table>
+  
+  <p>You can also drag and drop items. To do this you click down on the label of the item you wish to move and hold the mouse button down; if you then release it over the bullet point associated with another item the selected item will be inserted before it.</p>
+  <p>[Edit &gt; Undo] and [Edit &gt; Redo] allow you to undo changes and repeat them again if you make a mistake and inadvertently delete important data.</p>
+  <p>The other way to edit an input file is to edit the code directly. This can be done by pressing [View &gt; Code]. In this mode none of the other editing function work. You may wish to copy the code to another text editor (such as Notepad or TextEdit) to perform more complicated editing processes such as find and replace.</p>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="views" id="views"></a>Views of the input file</h2>
+  <p>There are four different viewing modes for the input files. These are selected from the [View] menu and are:</p>
+  <ul>
+    <li>Chronological model (default): this view gives a schematic view of the input data with sequences in the order oldest first.</li>
+    <li>Stratigraphic model: similar to the chronological model but reversed so the youngest is at the top.</li>
+    <li>List: a simple list view with the oldest first in sequences.</li>
+    <li>Code: the actual OxCal input code; note that you cannot use any of the insert functions in this mode - it is a simple text editor; to check your code or to convert old OxCal code (versions 1-3) to the new version (4), redisplay in one of the other modes before running the code.</li>
+  </ul>
+  <p>There are shortcut buttons to switch between these views:</p>
+  <table style="width:50%">
+  <tr>
+  <td><script type="text/javascript">
+ Button("","../img/ModelView.gif");
+</script></td>
+  <td><script type="text/javascript">
+ Button("","../img/Reverse.gif");
+</script></td>
+  <td><script type="text/javascript">
+ Button("","../img/ListView.gif");
+</script></td>
+  <td><script type="text/javascript">
+ Button("","../img/CodeView.gif");
+</script></td></tr>
+  <tr><td>Model view</td><td>Reverse order</td><td>List view</td><td>Code view</td></tr>
+  </table>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="insert" id="insert"></a>Inserting commands</h2>
+  <p>Any command can be inserted into an OxCal run file using the [Insert] menu item. Just select from the drop down list of commands and enter the parameters for which you are prompted. There are also shortcuts to different types of input command shown underneath the insert dialogue.</p>
+  <p>In addition the two commands Curve and Prior can be inserted with the relevant file information using [File &gt; Insert].</p>
+  <p>A full list of commands and a description of their use is given in the <a href="hlp_commands.html">command reference</a>.</p>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="tools" id="tools"></a>Tools for helping with input files</h2>
+  <p>Given the range of commands available in OxCal it is often easier to use one of the tools to generate at least part of your model and then input the specific data afterwards or using the import dialogue. All tools for model building are found under the [Tools] menu and are then split into several categories.</p>
+  <h3>Options</h3>
+  <p>This tool available under [Tools &gt; Options] allows you to select the options for the analysis. The options are:</p>
+  <ul>
+    <li>Resolution: in years for histograms; for high resolution work set this to 1 or less</li>
+    <li>Calibration curve: this can also be set for specific samples in the file - but a default curve can be set here</li>
+    <li>Cubic interpolation: determines the type of interpolation used between data-points in a calibration data-set</li>
+    <li>Include raw curve: determines whether the raw data points are included in the .js output file; doing this slows down plotting but allows this data to be shown on the calibration curve plots</li>
+    <li>Use F14C space: as a default all calibrations are performed by comparing radiocarbon concentration ratios (as in F14C); turning this option off will perform calibrations by comparing BP dates instead; there should be very minimal effect unless the uncertainty terms are large</li>
+    <li>BC/AD: whether dates are reported in cal BC/AD (OxCal internal format) or converted to cal BP in the log file and for the C_Date() and C_Simulate() functions</li>
+    <li>Ranges: whether floruits are chosen (rarely advised) and which probability levels are reported in the log file</li>
+    <li>Convergence data: whether this is included in the output file (which increases file size)</li>
+    <li>Uniform span prior: sets whether two additional factors are applied to force the overall span of the dates to have a uniform prior</li>
+    <li>MCMC iterations: usually automatically determined by convergence tests; this can be used to set a higher value</li>
+  </ul>
+  <h3>Curves</h3>
+  <p>This tool helps you to specify the standard calibration curves. The top section allows the choice of the default calibration curve and the lower section allows you to specify a mixture between two curves for mixed reservoir dating. You can also use the [File &gt; Insert] menu item to switch to a comparison curve.</p>
+  <h3>Models</h3>
+  <p>The model help should be useful for people starting to set up models for the first time as most of the code is generated automatically and then can be subsequently edited. The models catered for here are:</p>
+  <ul>
+    <li>Phases: these are groups of events which are all form one coherent group in some context but for which there is no information on the internal ordering; the program will generate code for multiple phases; you need to enter:</li>
+    <li style="list-style: none">
+      <ul>
+        <li>the number of groups</li>
+        <li>whether they are contiguous (that is one starts as the previous one ends), sequential (that is one starts after the previous one has ended with a possible gap) or overlapping (one phase might start before the previous one has ended).</li>
+        <li>you then need to populate the phases with dated events which is most easily achieved using the [Tools &gt; Import] function or using [Insert] to insert them individually.</li>
+      </ul>
+    </li>
+    <li>Sequences: these are essentially the same as phases except it is now assumed that all of the events within each group have a predefined order</li>
+    <li><sup>14</sup>C date combination: allows you to enter a series of dates for combination; the assumption is that they are all exactly the same age; the program prompts for a name for the group, any extra uncertainty and then the dates to be combined in a three column format (Name, Date (BP), Uncertainty) separated in a number of possible ways (selectable)</li>
+    <li>Dendro wiggle match: this model covers the situation (most often found with tree rings) where you know the exact gap between subsequent events; the program prompts with a dialogue which expects input in a four column format (Name, Date (BP), Uncertainty, Gap) separated in a number of ways (selectable); dates should be entered oldest first.</li>
+    <li>Deposition model: this series of models covers dates distributed through a sedimentary sequence and should be entered from top down; the elements to be entered are:</li>
+    <li style="list-style: none">
+      <ul>
+        <li>the data for the sequence in four column format (Name, Date (BP), Uncertainty, Depth)</li>
+        <li>whether the flexible 'Poisson' deposition model is to be selected - if this is not selected the deposition is assumed to be uniform</li>
+        <li>the 'k' parameter; the higher this is the more rigid the model; if it is 0 then the dates are entered in a simple sequence but with depth information included</li>
+        <li>the separator used for the data (Tab, Comma ... etc.)</li>
+      </ul>
+    </li>
+    <li>Exponential distribution: this assumes that unlike in the normal phase, where the dates are assumed to be roughly uniformly distributed they are exponentially distributed; the choices are:</li>
+    <li style="list-style: none">
+      <ul>
+        <li>Rise (frequency of dated events increasing over time)</li>
+        <li>Fall (frequency falling)</li>
+        <li>Ordered (if all of the events are in a predefined order)</li>
+        <li>The central phase or sequence then needs to be populated with events.</li>
+      </ul>
+    </li>
+    <li>Ramped distribution: this is just like the exponential distribution except that the underlying prior is a triangular ramp instead of an exponential</li>
+    <li>Normal distribution: the dated events are assumed to be normally distributed; they can either be ordered in a sequence or unordered in a phase.</li>
+    <li>Outlier model: this is used with <a href="hlp_analysis_oper.html#outlier">outlier analysis</a>.  The outlier model should normally be at the start and one of the example models can be chosen and inserted, or the parameters can be altered by hand.</li>
+  </ul>
+  <h3>Import</h3>
+  <p>The final tool is the import utility (see next section).</p>
+  <hr>
+  <h2><a name="import" id="import">Importing from a spreadsheet</a></h2>
+  <p>The import tool (menu item [Tools &gt; Import] of the input utility of the input editor) can be used with any of the commands to import data from a spreadsheet or database. The data should be arranged in columns. For the default R_Date command three columns are required (Name, Date, Uncertainty).</p>
+  <p>Other commands can also be selected from a drop-down box which becomes visible when you open the import dialogue. You will be prompted for the relevant columns. The data separator (tab, space, comma etc.) can be selected from another drop-down menu.</p>
+  <p>Once the data has been entered, press the insert button:</p>
+  <p><input value="&gt;&gt;" name="Add" type="button"></p>
+  <p>to insert the data into the existing model. Note that this does not work with the code view.</p>
+  <p>The analysis can then be performed by selecting [File &gt; Run]. Once the analysis has finished you may wish to use the [View &gt; Tab delimited] option of the output utility to paste the results of the analysis back into a spreadsheet or you can use the [File &gt; Save as] option to save the data in spreadsheet format (.csv).</p>
+  <hr>
+  <h2><a name="link" id="link">Linking from a web-site/database</a></h2>
+  <p>You can link to the program directly from another web-site/database. The URL for the link should be of the form:</p>
+  <p><a href='../oxcal/OxCal.html?Command=R_Date("OxA-3000",3000,30);'>OxCal.html?Command=R_Date("OxA-3000",3000,30);</a></p>
+  <p>To be safe you may wish to replace the quote marks with %22 and you will certainly need to replace = with %3D (in other words escape the command string) as in:</p>
+  <p><a href='../oxcal/OxCal.html?Command=R_Date(%22OxA-3000%22,3000,30);'>OxCal.html?Command=R_Date(%22OxA-3000%22,3000,30);</a></p>
+  <p>The first time you follow such a link you will need to log onto the system, thereafter the calibration should be performed immediately. You can calibrate multiple dates in this way:</p>
+  <p><a href='../oxcal/OxCal.html?Command=R_Date("OxA-3000",3000,30);R_Date("OxA-3001",3060,30);R_Date("OxA-3002",3100,30);'>OxCal.html?Command=R_Date("OxA-3000",3000,30);R_Date("OxA-3001",3060,30);R_Date("OxA-3002",3100,30);</a></p>
+  <p>and can in principle perform any of OxCal's functions, such as specifying a marine calibration curve:</p>
+  <p><a href='../oxcal/OxCal.html?Command=Curve("Marine04");Delta_R(100,20);R_Date("OxA-3000",3000,30);'>OxCal.html?Command=Curve("Marine04");Delta_R(100,20);R_Date("OxA-3000",3000,30);</a></p>
+  <p>You can also link to the input window which allows the you to edit the data before running:</p>
+  <p><a href='../oxcal/OxCal.html?Mode=Input&Command=Plot(){R_Date("OxA-3000",3000,30);R_Date("OxA-3001",3060,30);R_Date("OxA-3002",3100,30);};'>OxCal.html?Mode=Input&Command=Plot(){R_Date("OxA-3000",3000,30);R_Date("OxA-3001",3060,30);R_Date("OxA-3002",3100,30);};</a></p>
+  
+  <hr>
+</body>
+</html>

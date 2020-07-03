@@ -4,13 +4,13 @@
 #' @author Maud Comboul (BAM)
 #' @title Generate a Banded Age Model (BAM) and add it into a LiPD object
 #' @description This is a high-level function that uses BAM to simulate age uncertainty in layer counted records, and stores this as an age-ensemble in a paleoData measurementTable, and in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. BAM produces reasonable results for non-layer counted data, and can generate ensembles for unevenly spaced data, and thus is useful for generating ensembles for tie-point chronologies that are missing the necessary data to calculate ensembles properly. See Comboul et al. (2015) doi:10.5194/cp-10-825-2014 for details.
-#' @param L a single LiPD object
-#' @param which.paleo the number of the paleoData object that you'll be working in
-#' @param which.pmt the number of the measurementTable you'll be working in
-#' @param which.model the number of the chronData model where you want to store the model information
-#' @param ens.number the number of the ensembleTable you want to put the output into
-#' @param makeNew Forces the creation of a new model (TRUE or FALSE{default})
-#' @param nens The number of members in the ensemble
+#' @inheritParams selectData
+#' @param paleo.num the number of the paleoData object that you'll be working in
+#' @param paleo.meas.table.num the number of the measurementTable you'll be working in
+#' @param model.num the number of the chronData model where you want to store the model information
+#' @param ens.table.number the number of the ensembleTable you want to put the output into
+#' @param make.new Forces the creation of a new model (TRUE or FALSE{default})
+#' @param n.ens The number of members in the ensemble
 #' @param model a list that describes the model to use in BAM
 #' \itemize{
 #' \item model$ns: number of samples 
@@ -34,35 +34,35 @@
 #' L = runBam(L)
 #' 
 #' Run in noninteractive mode, describing everything:
-#' L = runBam(L,which.paleo = 1, which.pmt = 1, which.model = 3, makeNew = TRUE,
-#' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = nens))
+#' L = runBam(L,paleo.num = 1, paleo.meas.table.num = 1, model.num = 3, make.new = TRUE,
+#' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
 
 
 
-runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens.number = NA,makeNew=FALSE,nens = 1000,model = NA){
+runBam = function(L,paleo.num=NA,paleo.meas.table.num=NA,chron.num=1,model.num=NA,ens.table.number = NA,make.new=FALSE,n.ens = 1000,model = NA){
   
-  #initialize which.paleo
-  if(is.na(which.paleo)){
+  #initialize paleo.num
+  if(is.na(paleo.num)){
     if(length(L$paleoData)==1){
-      which.paleo=1
+      paleo.num=1
     }else{
-      which.paleo=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? "))
+      paleo.num=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? "))
     }
   }
   
   #initialize measurement table number
-  if(is.na(which.pmt)){
-    if(length(L$paleoData[[which.paleo]]$measurementTable)==1){
+  if(is.na(paleo.meas.table.num)){
+    if(length(L$paleoData[[paleo.num]]$measurementTable)==1){
       #only one pmt
-      which.pmt=1
+      paleo.meas.table.num=1
     }else{
-      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$measurementTable), "measurement tables"))
-      which.pmt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
+      print(paste("PaleoData", paleo.num, "has", length(L$paleoData[[paleo.num]]$measurementTable), "measurement tables"))
+      paleo.meas.table.num=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
     }
   }
   
   #Which age/year vector do you want to perturb?
-  yearData = selectData(L,varName = "year",altNames = "age", which.data = which.paleo, which.mt=which.pmt,always.choose = FALSE)
+  yearData = selectData(L,var.name = "year",alt.names = "age", paleo.or.chron.num = paleo.num, meas.table.num=paleo.meas.table.num,always.choose = FALSE)
   
   
   #make sure that the most recent year is first
@@ -107,29 +107,29 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
     L$chronData=vector(mode = "list",length=1)
   }
   
-  C=L$chronData[[which.chron]]
+  C=L$chronData[[chron.num]]
   
   #initialize model
-  if(is.na(which.model)){
-    if(is.null(L$chronData[[which.chron]]$model[[1]])){
+  if(is.na(model.num)){
+    if(is.null(L$chronData[[chron.num]]$model[[1]])){
       #no models, this is first
-      which.model=1
+      model.num=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
-      which.model=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+      print(paste("You already have", length(L$chronData[[chron.num]]$model), "chron model(s) in chronData" ,chron.num))
+      model.num=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
   
   
 
   
-  if(length(L$chronData[[which.chron]]$model)<which.model){
-    if(makeNew){
-      L$chronData[[which.chron]]$model[[which.model]]=NA
+  if(length(L$chronData[[chron.num]]$model)<model.num){
+    if(make.new){
+      L$chronData[[chron.num]]$model[[model.num]]=NA
     }else{
-      nm=readline(prompt = paste("model",which.model,"doesn't exist. Create it? y or n "))
+      nm=readline(prompt = paste("model",model.num,"doesn't exist. Create it? y or n "))
       if(grepl(pattern = "y",x = tolower(nm))){
-        L$chronData[[which.chron]]$model[[which.model]]=NA
+        L$chronData[[chron.num]]$model[[model.num]]=NA
       }else{
         stop("Stopping, since you didn't want to create a new model")
       }
@@ -138,7 +138,7 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   
   
   
-  CM=L$chronData[[which.chron]]$model[[which.model]]
+  CM=L$chronData[[chron.num]]$model[[model.num]]
   #get BAM parameters
   if(all(is.na(CM))){
     CM=list()
@@ -177,8 +177,8 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   
   #ensemble members
   if(all(is.null( CM$methods$parameters$nEns))){
-    if(!is.na(nens)){
-      CM$methods$parameters$nEns=nens
+    if(!is.na(n.ens)){
+      CM$methods$parameters$nEns=n.ens
     }else{
       CM$methods$parameters$nEns = as.integer(readline(prompt = "How many ensemble members?"))
     }
@@ -203,16 +203,16 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   bamOut=simulateBam(yearDataToRun,yearDataToRun,ageEnsOut=TRUE,model = model)
   
   #check for existing ensembles
-  nenstables = length(CM$ensembleTable)
-  if(nenstables==0){#create 1
+  n.enstables = length(CM$ensembleTable)
+  if(n.enstables==0){#create 1
     #store output appropriately in model
-    ens.number = 1
-  }else if(all(is.na(ens.number))){
-    print(paste("You already have", nenstables, "ensemble table(s) in this model"))
-    ens.number=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+    ens.table.number = 1
+  }else if(all(is.na(ens.table.number))){
+    print(paste("You already have", n.enstables, "ensemble table(s) in this model"))
+    ens.table.number=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
   }
   
-  if(nenstables==0){#create
+  if(n.enstables==0){#create
     CM$ensembleTable = vector(mode = "list",length = 1)
   }
   
@@ -235,24 +235,24 @@ runBam = function(L,which.paleo=NA,which.pmt=NA,which.chron=1,which.model=NA,ens
   }
   
   
-  CM$ensembleTable[[ens.number]][[ensName]]$values = ensOut
-  CM$ensembleTable[[ens.number]][[ensName]]$units = ensUnits
-  CM$ensembleTable[[ens.number]][[ensName]]$variableName = ensName
+  CM$ensembleTable[[ens.table.number]][[ensName]]$values = ensOut
+  CM$ensembleTable[[ens.table.number]][[ensName]]$units = ensUnits
+  CM$ensembleTable[[ens.table.number]][[ensName]]$variableName = ensName
   
-  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$values = bamOut$tmc
-  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$units = NA
-  # CM$ensembleTable[[ens.number]]$timeCorrectionMatrix$description = "corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band)"
+  # CM$ensembleTable[[ens.table.number]]$timeCorrectionMatrix$values = bamOut$tmc
+  # CM$ensembleTable[[ens.table.number]]$timeCorrectionMatrix$units = NA
+  # CM$ensembleTable[[ens.table.number]]$timeCorrectionMatrix$description = "corresponding ensemble of time-correction matrices (tn*p*ns) to map realizations in Xp back to the original data X (2=insert nan, 0=remove double band)"
   
-  L$chronData[[which.chron]]$model[which.model]=list(CM)
+  L$chronData[[chron.num]]$model[model.num]=list(CM)
   
   #place into paleoData appropriately.
   #assign into measurementTable
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$variableName = ensName
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$values = ensOut
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$units = yearData$units
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$fromModel = which.model
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]][[ensName]]$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$variableName = ensName
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$values = ensOut
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$units = yearData$units
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$fromChronData = chron.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$fromModel = model.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensName]]$description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
   
   return(L)
   

@@ -13,11 +13,11 @@ Reverse axis in log10 scale
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -38,10 +38,10 @@ Other plot:
 \code{\link{plotTrendLinesEns}()}
 
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()}
 }

@@ -1,0 +1,64 @@
+.menu { font-size: 10pt; color: #000000 }
+.menuBack { font-size: 10pt;border: solid 1px #666666;padding:2px; color: #333333 }
+.menuBright { font-size: 10pt;background-color: #0066E0; color: #FFFFFF }
+.menuForward { font-size: 10pt;background-image: url('../img/Brushed.gif'); padding:2px;border-top: outset 1px;border-left: outset 1px;border-right: outset 1px; border-bottom:none 1px; }
+.menuHigh { font-size: 10pt;background-color: #003399; color: #FFFFFF }
+.menuTouch { font-size: 10pt;background-image: url('../img/Brushed.gif');padding:2px;border: solid 1px #666666; }
+a            { text-decoration: none }
+a:active     { text-decoration: none }
+a:link       { text-decoration: none }
+a:visited    { text-decoration: none  }
+body         { font-size: 10pt; font-family: arial, helvetica, sans-serif;color:#000000;padding: 0px;margin:0px;  }
+body.print   { padding:8px;font-size: 10pt; font-family: arial, helvetica, sans-serif;color:#000000 }
+div.body	 { position: absolute;width:98%;top: 115px;left:1%; }
+div.button   { width:28px; height:23px;overflow:hidden;line-height:0px }
+div.error	 { width:100%;display:none; background-color:#FF9966;color:#000000 }
+div.header	 { position:absolute;top:0px;left:0px;width:100%;height:90px; font-size: 10pt; background-color: #002147;color: #ffffff; font-family: Helvetica }
+div.headerBar  { position: absolute; left:0px; width: 100%;top: 70px }
+div.headerCrest { position: absolute; left:0px; top:0px; }
+div.headerLogo { position: absolute; border:0px;padding:0px; left:50%;width:50%;top:2px;text-align:right }
+div.headerMenu { position: absolute; left:200px; top: 70px }
+div.headerTitle { position: absolute; left:200px;width:500px;top:15px }
+div.login		{ position: absolute; left: 200px;width: 300px }
+div.option { display:none }
+div.optionInternal { position:absolute;overflow:visible;display:none;width:300px;top:30px }
+div.popupNote	{ position: absolute; left:100px; width:600px; background-color:#FFFFCC;border: solid 1px black; display:none; padding:5px; margin:0px; }
+div.toolbar     { position: absolute; left:150px; width: 300px; top:0px }
+h1 { font-size: 18pt; font-family: Times New Roman; font-weight: normal; color: #9999CC; margin-top:1px; margin-bottom:0px }
+h1.header { font-size: 20pt; font-family: Times New Roman; font-weight: normal; color: #B49D5A; margin-top:1px; margin-bottom:0px }
+h2 { font-size: 12pt; font-weight: bold; color: #336699; margin-top:8px; margin-bottom:4px }
+h3 { font-size: 10pt; font-weight: bold; color: #000000; margin-top:8px; margin-bottom:4px }
+h3.header { font-size: 10pt; font-weight: bold; color: #666666; margin-top:0px; margin-bottom:0px }
+select	 { width:150px }
+span.changed { color:#FF0000 }
+span.link    { color:#0000FF }
+table { font-size: 10pt;}
+table.clear  { font-size: 10pt;border-width:0;border-style:none }
+table.menubar { border: outset 1px white;border-left:0px; border-right:0px;font-size: 10pt;background-image: url('../img/BrushedMenu.gif'); color: #000000;width:600px;padding:1px;height:30px }
+table.menubar { border: outset 1px white;border-left:0px; border-right:0px;font-size: 10pt;background-image: url('../img/BrushedMenu.gif'); color: #000000;width:600px;padding:1px;height:30px }
+table.menuDrop { border: outset 1px #999999;font-size: 10pt;background-image: url('../img/Lines.gif'); color: #000000;width:auto;  }
+table.menutab { border-collapse:separate;border-spacing: 0px;padding:0px;font-size: 10pt;background-image: url('../img/BrushedBack.gif'); color: #000000;width:100% }
+table.object { border: outset 1px;font-size: 10pt;background-image: url('../img/Brushed.gif'); color: #000000;width:100% }
+td           { vertical-align:top;text-align: left; font-weight: normal  }
+td.bullet    {  }
+td.link      { color:#0000FF }
+td.lower	 { color: #FF9999 }
+textarea     { width:400px; height: 100px }
+textarea.doc { width:700px; height: 300px }
+th           { vertical-align:top;text-align: left }
+th.add      { color:#00FF00 }
+th.bullet    {  }
+th.link      { color:#0000FF }
+tr.changed { background-color: #C0C0F0 }
+tr.deleted { background-color: #F0C0F0 }
+tr.even { background-color: #F0F0F0 }
+tr.evenChanged { background-color: #C0C0F0 }
+tr.evenDeleted { background-color: #F0C0C0; color: #999999 }
+tr.evenNew { background-color: #C0F0C0 }
+tr.header { background-image: url('../img/Brushed.gif');  }
+tr.new { background-color: #C0F0F0 }
+tr.odd { background-color: #FFFFFF }
+tr.oddChanged { background-color: #CCCCFF }
+tr.oddDeleted { background-color: #FFCCCC; color: #999999 }
+tr.oddNew { background-color: #CCFFCC }
+ul  		 { list-style-image: url('../img/BlueSmall.gif')}

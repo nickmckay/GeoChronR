@@ -4,10 +4,10 @@
 \alias{plotRegressEns}
 \title{Plot ensemble regression results}
 \usage{
-plotRegressEns(regEnsList, alp = 0.2, quantiles = c(0.025, 0.5, 0.975))
+plotRegressEns(reg.ens, alp = 0.2, quantiles = c(0.025, 0.5, 0.975))
 }
 \arguments{
-\item{regEnsList}{output of regressEns()}
+\item{reg.ens}{output of regressEns()}
 
 \item{alp}{Transparency of the scatter plot.}
 
@@ -32,11 +32,11 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

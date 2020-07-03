@@ -4,13 +4,13 @@
 \alias{getBaconDir}
 \title{Get the name of bacon core directory}
 \usage{
-getBaconDir(baconDir = NA)
+getBaconDir(bacon.dir = NA)
 }
 \arguments{
-\item{baconDir}{if you already have it, it just returns this, (default=NA)}
+\item{bacon.dir}{if you already have it, it just returns this, (default=NA)}
 }
 \value{
-baconDir the bacon core directory
+bacon.dir the bacon core directory
 }
 \description{
 This is a mostly internal function that returns the core directory. Interactive if given a NA

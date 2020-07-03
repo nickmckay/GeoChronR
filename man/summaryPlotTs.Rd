@@ -6,9 +6,9 @@
 \usage{
 summaryPlotTs(
   TS,
-  sortVar = "archiveType",
-  ageRange = NA,
-  ageVar = "age",
+  sort.var = "archiveType",
+  age.range = NA,
+  age.var = "age",
   step = NA,
   ...
 )
@@ -16,15 +16,13 @@ summaryPlotTs(
 \arguments{
 \item{TS}{}
 
-\item{sortVar}{What variable in the TS should the map and histogram be organized by? (default = "archiveType)}
+\item{sort.var}{What variable in the TS should the map and histogram be organized by? (default = "archiveType)}
 
-\item{ageRange}{a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)}
+\item{age.range}{a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)}
 
-\item{ageVar}{What age variable should be used (default = "age)}
+\item{age.var}{What age variable should be used (default = "age)}
 
-\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)}
-
-\item{...}{variables to pass to mapTs()}
+\item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the age.range)}
 }
 \value{
 a gridExtra ggplot output

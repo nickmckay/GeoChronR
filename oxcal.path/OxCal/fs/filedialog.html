@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../fs/fs_utils.js">
+</script>
+<script type="text/javascript" src="../fs/filedialog.js">
+</script>
+<script type="text/javascript" src="../utils/Menu.js">
+</script>
+  <link rel="stylesheet" type="text/css" href="../style/db.css">
+</head>
+<body class="tool" onload="initialise()">
+  <script type="text/javascript">
+   showFilename();
+</script>
+  <table summary="Controls">
+    <tr>
+      <td width="20">
+        <script type="text/javascript">
+          Button('goGeneric("Home")',"../img/Home.gif");
+</script>
+      </td>
+      <td width="20">
+        <script type="text/javascript">
+         Button('dirOpen("..")',"../img/Up.gif");
+</script>
+      </td>
+      <td><select id="Directory" name="Directory" onchange="goGeneric()">
+        <script type="text/javascript">
+         showOptions(generics,0)
+</script>
+      </select></td>
+      <td><select id="FileType" name="FileType" onchange="refresh()">
+        <script type="text/javascript">
+         showOptions(fileTypes,fileTypeNo)
+</script>
+      </select></td>
+    </tr>
+    <tr>
+      <td colspan="4"><input name="PathName" id="PathName" type="text" size="55" readonly onchange="goPath()"></td>
+    </tr>
+  </table>
+  <p><iframe id="lister" src="" width="400" height="380" name="lister"></iframe></p>
+  <table class="dir" style="width:100%" summary="Action">
+    <tr>
+     <td></td><td></td>
+     <td colspan=2>
+       <div id="formatArea" style="display:none">
+        Format: 
+        <select id="FileFormat" name="FileFormat">
+        <script type="text/javascript">
+          showOptions(fileFormats,fileFormatNo);
+</script>
+        </select>
+     </td>
+    </tr>
+    <tr>
+      <td width="80%"><button type="button" id="newFolder" name="newFolder" onclick="newFolder()">New folder</button></td>
+      <td><button type="button" id="cancel" name="cancel" onclick="finishAction()">Cancel</button></td>
+      <td>
+        <script type="text/javascript">
+         showAction();
+</script>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

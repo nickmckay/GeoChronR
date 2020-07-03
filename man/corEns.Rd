@@ -5,38 +5,38 @@
 \title{Ensemble correlation}
 \usage{
 corEns(
-  time1,
-  values1,
-  time2,
-  values2,
-  binvec = NA,
-  binstep = NA,
-  binfun = mean,
+  time.1,
+  values.1,
+  time.2,
+  values.2,
+  bin.vec = NA,
+  bin.step = NA,
+  bin.fun = mean,
   max.ens = NA,
   percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
-  minObs = 10
+  min.obs = 10
 )
 }
 \arguments{
-\item{time1}{matrix of age/time ensembles, or single column}
+\item{time.1}{matrix of age/time ensembles, or single column}
 
-\item{values1}{matrix of values ensembles, or single column}
+\item{values.1}{matrix of values ensembles, or single column}
 
-\item{time2}{matrix of age/time ensembles, or single column}
+\item{time.2}{matrix of age/time ensembles, or single column}
 
-\item{values2}{matrix of values ensembles, or single column}
+\item{values.2}{matrix of values ensembles, or single column}
 
-\item{binvec}{vector of bin edges for binning step}
+\item{bin.vec}{vector of bin edges for binning step}
 
-\item{binstep}{spacing of bins, used to build bin step}
+\item{bin.step}{spacing of bins, used to build bin step}
 
-\item{binfun}{function to use during binning (mean, sd, and sum all work)}
+\item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
 \item{max.ens}{maximum number of ensemble members to correlate}
 
 \item{percentiles}{quantiles to calculate for regression parameters}
 
-\item{minObs}{minimum number of points required to calculate regression}
+\item{min.obs}{minimum number of points required to calculate regression}
 }
 \value{
 list of ensemble output and percentile information

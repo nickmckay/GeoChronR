@@ -1,0 +1,35 @@
+ <html>
+  <head>
+    <script type="text/javascript">
+     var ocd=parent.ocd;
+     var calib=parent.calib;
+     var plotOptions=parent.plotOptions;
+	 var ocdIndex=parent.ocdIndex;
+	 var model=parent.model;
+    </script>
+  </head>
+<body>
+<script type="text/javascript">
+  if(parent.localFilePossible())
+  {
+   document.writeln('<embed width="'
+    +(plotOptions.frameWidth*plotOptions.pxPerCm*plotOptions.scale)
+    +'px" height="'
+    +(plotOptions.frameHeight*plotOptions.pxPerCm*plotOptions.scale)
+    +'px" src="'+parent.getPlotName()+'?Source='+parent.source+'"');
+   document.writeln(' type="image/svg+xml" pluginspace="http:\/\/www.adobe.com\/svg\/viewer\/install\/"');
+   document.writeln(' id = "ViewPort" \/>');
+  }
+  else
+  {
+   document.writeln('<embed width="'
+    +(plotOptions.frameWidth*plotOptions.pxPerCm*plotOptions.scale)
+    +'px" height="'
+    +(plotOptions.frameHeight*plotOptions.pxPerCm*plotOptions.scale)
+    +'px" src="'+parent.getPlotName()+'"');
+   document.writeln(' type="image/svg+xml" pluginspace="http:\/\/www.adobe.com\/svg\/viewer\/install\/"');
+   document.writeln(' id = "ViewPort" \/>');
+  };
+</script>
+ </body>
+ </html>

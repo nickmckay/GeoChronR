@@ -6,9 +6,9 @@
 \usage{
 binTs(
   TS,
-  timeVar = "ageEnsemble",
-  binvec,
-  binfun = mean,
+  time.var = "ageEnsemble",
+  bin.vec,
+  bin.fun = mean,
   max.ens = 1000,
   na.col.rm = TRUE
 )
@@ -16,9 +16,9 @@ binTs(
 \arguments{
 \item{TS}{LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}}
 
-\item{binvec}{vector of bin edges for describing where to bin}
+\item{bin.vec}{vector of bin edges for describing where to bin}
 
-\item{binfun}{function to use during binning (mean, sd, and sum all work)}
+\item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
 \item{max.ens}{Maximum number of ensemble members.}
 

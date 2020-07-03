@@ -4,10 +4,10 @@
 \alias{pullInstance}
 \title{Pull one instance from an ensemble}
 \usage{
-pullInstance(x)
+pullInstance(X)
 }
 \arguments{
-\item{x}{A LiPD column object}
+\item{X}{A LiPD column object}
 }
 \value{
 a vector randomly drawn from the matrix

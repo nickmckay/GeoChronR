@@ -1,0 +1,41 @@
+<html>
+
+<head>
+	<title>OxCal code viewer</title>
+<script type="text/javascript" src="oci_right.js"></script>
+<link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<style>
+<!--
+ul { list-style: none }
+-->
+</style>
+</head>
+
+<body onload="writeModel();window.setTimeout('blinkCursor()',500);">
+  <script type="text/javascript">
+  if(!parent.mainMode)
+  {
+   document.writeln("<h1>OxCal Input<\/h1>");
+   document.writeln("<hr\/>");
+   if(parent.source!="ocp_null.js")
+   {
+    document.write("<div class='filename'>");
+    document.write(parent.source.replace(".oxcal",""));
+    document.writeln("<\/div><hr\/>");
+   };
+  };
+  </script>
+<div style="display:none">
+<form name="saveFile" id="saveFile" method="POST" action="oci_save.php">
+ <input type="hidden" name="command" id="saveFileCommand" cols="20" />
+ <input type="hidden" name="filename" id="saveFileFilename" size="20" />
+ <input type="submit" value="Submit" name="B1"></form>
+</div>
+<div style="display:none">
+<form name="runFile" id="runFile" method="POST" action="oci_run.php">
+ <input type="hidden" name="command" id="runFileCommand" cols="20" />
+ <input type="hidden" name="filename" id="runFileFilename" size="20" />
+ <input type="submit" value="Submit" name="B3"></form>
+</div>
+</body>
+</html>

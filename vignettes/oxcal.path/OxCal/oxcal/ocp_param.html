@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<script type="text/javascript">
+ var model=parent.model;
+ var constrColumns=5;
+
+ function param(i)
+ {
+  if(model.element[i])
+  {
+   if(model.element[i].op=="Curve")
+   {
+    return rparam(i)+ ", "+sparam(i); 
+   }
+   else
+   {
+    return "t<sub>" + (model.element[i].pos+1) + "<\/sub>";
+   };
+  };
+  return "";
+ }; 
+ 
+ function rparam(i)
+ {
+  if(model.element[i])
+  {
+   switch(model.element[i].op)
+   {
+   case "Curve":
+    return special("<b>r<\/b>",i);
+    break;
+   case "Delta_R":
+    return rparam(model.element[i].param[0]) + " + " + param(i);
+    break;
+   case "Mix_Curves":
+    return "(1 - "+param(i) + "\/100)(" 
+     + rparam(model.element[i].param[0]) + ") + " 
+     + "("+param(i) + "\/100)(" 
+     + rparam(model.element[i].param[1]) + ")";
+    break;
+   };
+  };
+  return "";
+ };
+
+ function sparam(i)
+ {
+  if(model.element[i])
+  {
+   switch(model.element[i].op)
+   {
+   case "Curve":
+    return special("<b>s<\/b>",i);
+    break;
+   case "Delta_R":
+    return sparam(model.element[i].param[0]);
+    break;
+   case "Mix_Curves":
+    return "&radic;(("
+     + "(1 - "+param(i) + "\/100)(" 
+     + sparam(model.element[i].param[0]) + "))<sup>2<\/sup> + (" 
+     + "("+param(i) + "\/100)(" 
+     + sparam(model.element[i].param[1]) + "))<\sup>2<\/sup>)";
+    break;
+   };
+  };
+  return "";
+ };
+
+ function params_str(i,str)
+ {
+  var j;
+  var list;
+  var p;
+  list="";
+  if(model.element[i] && model.element[i].param)
+  {
+   p=model.element[i].param;
+   for(j=0;j<p.length;j++)
+   {
+    if(p[j]==0)
+    {
+     list+="):(";
+     j++;
+    }
+    else
+    {
+     if(j!=0){list+=str;};
+    };
+    list+=param(p[j]);
+   };
+  };
+  return list;
+ };
+ 
+ function params(i)
+ {
+  return "("+params_str(i,",")+")";
+ };
+
+ function special(str,i)
+ {
+  if(model.element[i])
+  {
+   return ""+str+"<sub>" + (model.element[i].pos+1) + "<\/sub>";
+  };
+  return "";
+ }; 
+
+ function likelihood(i,j)
+ {
+  if(model.element[i])
+  {
+   return "p(" + special("y",i) + "|" + param(j) + ")";
+  };
+  return "";
+ }; 
+   
+ function drawTable()
+ {
+  var i,j;
+  var odd=true;
+  var p,g;
+  var prm;
+  var operator;
+  var modelindex=new Array();
+  function startRow()
+  {
+   if(odd)
+   {
+    d.write("<tr class='odd'>");
+   }
+   else
+   {
+    d.write("<tr class='even'>");
+   };
+   odd=!odd;
+  };
+  function addToCsv(item)
+  {
+   switch(typeof(item))
+   {
+   case "string":
+    parent.filecontent+='"'+item+'"'+',';
+    break;
+   default:
+    parent.filecontent+=item+',';
+    break;
+   };
+  };
+  function skipCsv()
+  {
+   parent.filecontent+=',';
+  };
+  function endCsv()
+  {
+   parent.filecontent+='\n';
+  };
+  
+  if(!model){return;};
+var d=document;
+  
+  // table of names and parameters
+
+  parent.filecontent='"Parameter","Name","Type","z","mu","sigma","llim","ulim",\n';
+  
+  d.writeln("<table class='param'>");
+  d.writeln("<tr class='header'><th colspan=9>Parameters<\/th><\/tr>");
+  d.writeln("<tr class='header'><th>Parameter<\/th><th>Name<\/th><th>Type<\/th><th>Functions<\/th><th>z<sub>i<\/sub><\/th><th>&mu;<sub>i<\/sub><\/th><th>&sigma;<sub>i<\/sub><\/th><th>llim<sub>i<\/sub><\/th><th>ulim<sub>i<\/sub><\/th><\/tr>");
+  for(i=0;i<model.element.length;i++)
+  {
+   if(model.element[i])
+   {
+    modelindex[model.element[i].pos]=i;
+   };
+  };
+  for(i=0;i<modelindex.length;i++)
+  {
+   if(!isNaN(modelindex[i]))
+   {
+    startRow();
+    d.write("<td>" + param(modelindex[i]) + "<\/td>");
+    addToCsv(modelindex[i]);
+    if(model.element[modelindex[i]] && model.element[modelindex[i]].name)
+    {
+      d.write("<td>" + model.element[modelindex[i]].name + "<\/td>");
+      addToCsv(model.element[modelindex[i]].name);
+    }
+    else
+    {
+      d.write("<td><\/td>");
+      skipCsv();
+    };
+    d.write("<td>" + model.element[modelindex[i]].op + "<\/td><td>");
+    addToCsv(model.element[modelindex[i]].op);
+    if(model.element[modelindex[i]] && model.element[modelindex[i]].calculator)
+    {
+     prm=model.element[modelindex[i]].param;
+     switch(model.element[modelindex[i]].calculator)
+     {
+     case "First":
+     case "Last":
+     case "Span":
+     case "Interval":
+     case "Order":
+      d.write(model.element[modelindex[i]].calculator);d.write(params(modelindex[i]));
+      break;
+     case "OutlierModel":
+      d.write(model.element[modelindex[i]].calculator);d.write(params(modelindex[i]));
+      break;
+     case "Correlation":
+      d.write("Plot("+param(prm[1])+ " vs. " +param(prm[0]) + ")");
+      break;
+     case "Sum":
+      d.write("= "+params_str(modelindex[i],"|"));
+      break;
+     case "Minus":
+      d.write("= "+params_str(modelindex[i],"-"));
+      break;
+     case "Plus":
+      d.write("= "+params_str(modelindex[i],"+"));
+      break;
+     case "Times":
+      d.write("= "+params_str(modelindex[i],"*"));
+      break;
+     case "Divide":
+      d.write("= "+params_str(modelindex[i],"/"));
+      break;
+     case "UniformDeposition":
+      d.write("= (("+special("z",prm[2])+ " - " +special("z",prm[0]) + ")"+param(prm[1])+" + ("
+       +special("z",prm[0])+ " - " +special("z",prm[2]) + ")"+param(prm[2])+")/("
+       +special("z",prm[2])+ " - " +special("z",prm[1]) +")");
+      break;
+     case "ExpDeposition":
+      d.write("= "+param(prm[1])+ " - ("+param(prm[2])+" - "+param(prm[1])+")ln(1-(("
+       +special("z",prm[0])+ " - " +special("z",prm[1]) + ")/("
+       +special("z",prm[3])+ " - " +special("z",prm[1]) + "))(1-exp(-("
+       +param(prm[3])+" - "+param(prm[1])+")/("+param(prm[2])+" - "+param(prm[1])+")))");
+      break;
+     case "FreeRampDeposition":
+      d.write("= "+param(prm[2])+" + ("+param(prm[1])+" - "+param(prm[2])+")sqrt(1-(("
+       +special("z",prm[0])+ " - " +special("z",prm[1]) + ")/("
+       +special("z",prm[3])+ " - " +special("z",prm[1]) + "))(1-(("
+       +param(prm[2])+" - "+param(prm[3])+")<sup>2<\/sup>/("
+       +param(prm[2])+" - "+param(prm[1])+")<sup>2<\/sup>)))");
+      break;
+     case "RampDeposition":
+      d.write("= "+param(prm[2])+" + ("+param(prm[1])+" - "+param(prm[2])+")sqrt(("
+       +special("z",prm[0])+ " - " +special("z",prm[2]) + ")/("
+       +special("z",prm[1])+ " - " +special("z",prm[2]) + "))");
+      break;
+     case "EqualWithShift":
+      d.write("= "+param(prm[1])+" - "+model.element[modelindex[i]].gap);
+      break;
+     case "Equal":
+      d.write("= "+param(prm[0]));
+      break;
+     case "Constant":
+      d.write("= "+model.element[modelindex[i]].constant);
+      break;
+     };
+    };
+    d.write("<\/td>");
+    if(!isNaN(model.element[modelindex[i]].z))
+    {
+	    d.write("<td>"+model.element[modelindex[i]].z+"<\/td>");
+	    addToCsv(model.element[modelindex[i]].z);
+    }
+    else
+    {
+	    d.write("<td><\/td>");
+	    skipCsv();
+    };
+    if(!isNaN(model.element[modelindex[i]].mean))
+    {
+	    d.write("<td>"+model.element[modelindex[i]].mean+"<\/td>");
+	    addToCsv(model.element[modelindex[i]].mean);
+    }
+    else
+    {
+	    d.write("<td><\/td>");
+	    skipCsv();
+    };
+    if(!isNaN(model.element[modelindex[i]].sd))
+    {
+	    d.write("<td>"+model.element[modelindex[i]].sd+"<\/td>");
+	    addToCsv(model.element[modelindex[i]].sd);
+    }
+    else
+    {
+	    d.write("<td><\/td>");
+	    skipCsv();
+    };
+    d.write("<td>"+model.element[modelindex[i]].lower+"<\/td>");
+	addToCsv(model.element[modelindex[i]].lower);
+    d.write("<td>"+model.element[modelindex[i]].upper+"<\/td>");
+	addToCsv(model.element[modelindex[i]].upper);
+    d.writeln("<\/tr>");
+    endCsv();
+   };
+  };
+  d.writeln("<\/table>");
+  d.writeln("<hr\/>");
+  
+  // table of likelihoods
+  
+  odd=true;
+  d.writeln("<table class='param'>");
+  d.writeln("<tr class='header'><th colspan=4>Likelihoods<\/th><\/tr>");
+  d.writeln("<tr class='header'><th>p(y<sub>i<\/sub>|t<sub>j<\/sub>)<\/th><th colspan=2>F<sub>i<\/sub><\/th><th>A<sub>i<\/sub>=100 F<sub>i<\/sub><\/th><\/tr>");
+  for(i=0;i<model.proportional.length;i++)
+  {
+    switch(model.proportional[i].func)
+    {
+    case "Likelihood":
+     startRow();
+     d.write("<td>" + likelihood(model.proportional[i].n,model.proportional[i].param[0]) + " &sim; " + model.element[model.proportional[i].n].op +"("+special("y",model.proportional[i].n) + ")<\/td><\/td>");
+     break;
+    case "R_DateCombined":
+      startRow();
+      d.write("<td> &sim; R_Date("
+	          + model.proportional[i].k + "," + model.proportional[i].e + ")<\/td>");
+	  break;
+    case "R_Date":
+      startRow();
+      d.write("<td>" + likelihood(model.proportional[i].n,model.proportional[i].param[0]) + " &sim; R_Date"+special("",model.proportional[i].n)+"("
+               + param(model.proportional[i].param[0]) + ", "
+               + rparam(model.proportional[i].param[1]) + ", "
+               + sparam(model.proportional[i].param[1]) + ", "
+	          + model.proportional[i].k + "," + model.proportional[i].e + ")<\/td>");
+	  break;
+    };
+    switch(model.proportional[i].func)
+    {
+    case "Likelihood":
+    case "R_Date":
+     d.write("<td>"+special("F",model.proportional[i].n)+
+       " = (&int; "+likelihood(model.proportional[i].n,model.proportional[i].param[0]) + " p("+param(model.proportional[i].param[0])+
+       "|<b>y<\/b>) d"+param(model.proportional[i].param[0])+")/(&int; p<sup>2<\/sup>("+special("y",model.proportional[i].n)+ 
+       "|"+ param(model.proportional[i].param[0])+ ") d"+param(model.proportional[i].param[0])+")<\/td>"); 
+     if(model.proportional[i].agreement)
+     {
+      d.writeln("<td>"+(model.proportional[i].agreement/100.0).toFixed(5)+"<\/td><td>"+(model.proportional[i].agreement).toFixed(2)+"<\/td><\/tr>");
+     }
+     else
+     {
+      d.writeln("<td><\/td><td><\/td><\/tr>");
+     };
+     break;
+    case "R_DateCombined":
+     d.writeln("<td><\/td><td><\/td><td><\/td><\/tr>");
+     break;
+    };
+  };
+  startRow();
+  d.writeln("<td colspan=4><hr\/><\/td><\/tr>");
+  if(!isNaN(model.nLikelihood))
+  {
+    startRow();
+    d.writeln("<th>n<\/th><td><\/td><td colspan=2>"+model.nLikelihood+"<\/td><\/tr>");
+  };
+  if(!isNaN(model.modelFactor))
+  {
+    startRow();
+    d.writeln("<th>F<sub>model<\/sub><\/th><td>"+
+    "&int;p(<strong>y<\/b>|<b>t<\/b>) p(<b>t<\/b>|<b>y<\/b>) d<b>t<\/b> / &int;p(<b>y<\/b>|<b>t<\/b>) p(<b>y<\/b>|<b>t<\/b>) d<b>t<\/b>"+
+    "<\/td><td colspan=2>"+(model.modelFactor/100).toPrecision(6)+"<\/td><\/tr>");
+  };
+  if(!isNaN(model.modelAgreement))
+  {
+    startRow();
+    d.writeln("<th>A<sub>model<\/sub><\/th><td>100 F<sub>model<\/sub><sup>1/&radic;n<\/sup><\/td><td colspan=2>"+(model.modelAgreement).toFixed(2)+"<\/td><\/tr>");
+  };
+  if(!isNaN(model.overallFactor))
+  {
+    startRow();
+    d.writeln("<th>F<sub>overall<\/sub><\/th><td>&prod; F<sub>i<\/sub><\/td><td colspan=2>"+(model.overallFactor/100).toPrecision(6)+"<\/td><\/tr>");
+  };
+  if(!isNaN(model.overallAgreement))
+  {
+    startRow();
+    d.writeln("<th>A<sub>overall<\/sub><\/th><td>100 F<sub>overall<\/sub><sup>1/&radic;n<\/sup><\/td><td colspan=2>"+(model.overallAgreement).toFixed(2)+"<\/td><\/tr>");
+  };
+  d.writeln("<\/table>");
+  d.writeln("<hr\/>");
+  
+  // table of constraints
+  odd=true;
+  
+  d.writeln("<table class='param'>");
+  d.writeln("<tr class='header'><th colspan=" + constrColumns + ">Constraints<\/th><\/tr>");
+  startRow();
+  for(i=0;i<model.constr.length;i++)
+  {
+    if(!model.constr[i]){continue;};
+    operator=" &lt; ";
+    if(model.constr[i][3]=="Q")
+    {
+	 operator=" ?&lt; ";
+    };
+    if(model.constr[i][2]==0)
+    {
+     d.write("<td>" + param(model.constr[i][0]) + operator + 
+      param(model.constr[i][1]) + "<\/td>");
+    }
+    else
+    {
+     d.write("<td>" + param(model.constr[i][0]) + operator + 
+      param(model.constr[i][1]) + " - " + model.constr[i][2] + "<\/td>");
+    };
+    if((i+1)%constrColumns == 0)
+    {
+     d.writeln("<\/tr>");
+     startRow();
+    };
+  };
+  for(;i%constrColumns;i++)
+  {
+   d.writeln("<td><\/td>");
+  };
+  d.writeln("<\/tr>");
+  d.writeln("<\/table>");
+  d.writeln("<hr\/>");
+  
+  // table of other priors
+
+  odd=true;
+  d.writeln("<table class='param'>");
+  d.writeln("<tr class='header'><th>Prior factors<\/th><\/tr>");
+  for(i=0;i<model.proportional.length;i++)
+  {
+    switch(model.proportional[i].func)
+    {
+    case "Likelihood": case "R_Date": case "R_DateCombined":
+     break;
+    default:
+     p=model.proportional[i].param;
+     startRow();
+     d.write("<td>");
+     switch(model.proportional[i].func)
+     {
+     case "GaussianGap":
+      d.write("exp(-("+param(p[2]) + " - " + param(p[1]) + " - " + model.element[model.proportional[i].param[1]].gap
+        + ")<sup>2<\/sup>/(2("+ model.element[model.proportional[i].param[1]].gerror +")<sup>2<\/sup>))");
+      break;
+     case "UniformN":
+      d.write("1/(" + param(p[2]) + " - " + param(p[1]) + ")<sup>" 
+        + model.proportional[i].n + "<\/sup>");
+      break;
+     case "Withinlimits":
+      d.write("1/min(("+special("ulim",p[2])+" - "+special("llim",p[1])+") - ("+param(p[2])+" - "+param(p[1])+"),("+param(p[2])+" - "+param(p[1])+") - ("+special("llim",p[2])+" - "+special("ulim",p[1])+"),"+special("ulim",p[2])+" - "+special("llim",p[2])+","+special("ulim",p[1])+" - "+special("llim",p[1])+")"); 
+      break;
+     case "Gaussian":
+      d.write("exp[-("+param(p[0])+" - ("+param(p[1])+" + "+param(p[2])+")\/2)<sup>2<\/sup>/(2(("+param(p[2])+" - "+param(p[1])+")/2)<sup>2<\/sup>)]/(" + param(p[2]) + " - " + param(p[1]) + ")");
+      break;
+     case "Ramp":
+      d.write("|" + param(p[0]) + " - " + param(p[2]) + "|/(" + param(p[1]) + " - " + param(p[2]) + ")<sup>2<\/sup>");
+      break;
+     case "GaussianFall":
+      d.write("exp[-("+param(p[0])+" - "+param(p[1])+")<sup>2<\/sup>/(2("+param(p[2])+" - "+param(p[1])+")<sup>2<\/sup>)]/(" + param(p[2]) + " - " + param(p[1]) + ")");
+      break;
+     case "Exponential":
+      d.write("exp[-("+param(p[0])+" - "+param(p[1])+")/("+param(p[2])+" - "+param(p[1])+")]/|" + param(p[2]) + " - " + param(p[1]) + "|");
+      break;
+     case "Pressure":
+      d.write("exp(("+ model.proportional[i].k +"("+special("z",p[2])+" - "+special("z",p[1])+")-1)ln("+param(p[2])+" - "+param(p[1])+"))");
+      break;
+     case "Balance":
+      d.write("1\/exp(("+ model.proportional[i].k +"("+special("z",p[2])+" - "+special("z",p[1])+")-1)ln("+param(p[2])+" - "+param(p[1])+"))");
+      break;
+     case "ExpPressure":
+      d.write("exp(("+ model.proportional[i].k +"|"+special("z",p[2])+" - "+special("z",p[1])+"|-1)ln(|exp(-("+param(p[1])+"-"+param(p[3])+")\/("+param(p[4])+"-"+param(p[3])+"))-exp(-("+param(p[2])+"-"+param(p[3])+")/("+param(p[4])+"-"+param(p[3])+"))|))");
+      break;
+     case "ExpBalance":
+      d.write("1\/exp(("+ model.proportional[i].k +"|"+special("z",p[2])+" - "+special("z",p[1])+"|-1)ln(|exp(-("+param(p[1])+"-"+param(p[3])+")\/("+param(p[4])+"-"+param(p[3])+"))-exp(-("+param(p[2])+"-"+param(p[3])+")/("+param(p[4])+"-"+param(p[3])+"))|))");
+      break;
+     case "LinPressure":
+      d.write("exp(("+ model.proportional[i].k +"|"+special("z",p[2])+" - "+special("z",p[1])+"|-1)ln(|(("+param(p[4])+"-"+param(p[1])+")<sup>2<\/sup> - ("+param(p[4])+"-"+param(p[2])+")<sup>2<\/sup>)\/("+param(p[4])+"-"+param(p[3])+")<sup>2<\/sup>|))");
+      break;
+     case "LinBalance":
+      d.write("1\/exp(("+ model.proportional[i].k +"|"+special("z",p[2])+" - "+special("z",p[1])+"|-1)ln(|(("+param(p[4])+"-"+param(p[1])+")<sup>2<\/sup> - ("+param(p[4])+"-"+param(p[2])+")<sup>2<\/sup>)\/("+param(p[4])+"-"+param(p[3])+")<sup>2<\/sup>|))");
+      break;
+     case "Trapezium":
+      d.write("Trapezium(");
+      if(p[3])
+      {
+       d.write(param(p[1])+"-"+param(p[3])+"/2, "+param(p[1])+"+"+param(p[3])+"/2, ");
+      }
+      else
+      {
+       d.write(param(p[1])+", "+param(p[1])+", ");
+      };
+      if(p[4])
+      {
+       d.write(param(p[2])+"-"+param(p[4])+"/2, "+param(p[2])+"+"+param(p[4])+"/2) ");
+      }
+      else
+      {
+       d.write(param(p[2])+", "+param(p[2])+") ");
+      };
+      break;
+     case "TrapeziumBalance":
+      d.write("TrapeziumBalance");
+      break;
+     };
+     d.writeln("<\/td><\/tr>");
+    };
+  };
+  d.writeln("<\/table>");
+  d.writeln("<hr\/>");
+  
+ // table of groups
+ 
+  odd=true;
+  d.writeln("<table class='param'>");
+  d.writeln("<tr class='header'><th colspan=7>Groupings used in generating above priors<\/th><\/tr>");
+  d.writeln("<tr class='header'><th>Type<\/th><th>b<sub>lower<\/sub><\/th><th>type<\/th><th>elements<\/th><th>n<\/th><th>b<sub>upper<\/sub><\/th><th>type<\/th><\/tr>");
+  for(i=0;i<model.group.length;i++)
+  {
+     g=model.group[i];
+     startRow();
+     d.write("<td>"+g.type+"<\/td><td>");
+     if(g.start){d.write(param(g.start));};
+     d.write("<\/td><td>"+g.start_op+"<\/td><td>");
+     for(j=0;j<g.contents.length;j++)
+     {
+       if(j!=0){d.write(", ");};
+       d.write(param(g.contents[j]));
+     };
+     d.write("<\/td><td>"+g.contents.length+"<\/td><td>"+param(g.end)+"<\/td><td>"+g.end_op+"<\/td><td>");
+     if(g.k){d.write("k<sub>"+i+"<\/sub>="+g.k);};
+     d.writeln("<\/td><\/tr>");
+  };
+  d.writeln("<\/table>");
+ };
+</script>
+    <title>OxCal Model Specification</title>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+  <script type="text/javascript">
+  if(!parent.mainMode)
+  {
+   document.writeln("<h1>OxCal Model Specification<\/h1>");
+   document.writeln("<hr\/>");
+   if(parent.source!="ocp_null.js")
+   {
+    document.write("<div class='filename'>");
+    document.write(parent.source.replace(".js",""));
+    document.writeln("<\/div>");
+   };
+  };
+  </script>
+    <script type="text/javascript">
+drawTable();
+</script>
+</body>
+</html>

@@ -9,17 +9,17 @@ plotModelDistributions(
   dist.var = "age",
   y.var = "depth",
   mode = "chron",
-  which.data = 1,
+  paleo.or.chron.num = 1,
   model.num = 1,
   add.to.plot = ggplot(),
   alp = 0.5,
   color = "purple",
-  scaleFrac = 0.02,
+  scale.frac = 0.02,
   equalArea = TRUE,
   dist.plot = NA,
-  distType = "violin",
+  dist.type = "violin",
   thick = 0.1,
-  truncateDist = NA
+  truncate.dist = NA
 )
 }
 \arguments{
@@ -31,7 +31,7 @@ plotModelDistributions(
 
 \item{mode}{chron or paleo}
 
-\item{which.data}{number of the chron or paleo Data object}
+\item{paleo.or.chron.num}{number of the chron or paleo Data object}
 
 \item{model.num}{number of the model object}
 
@@ -39,15 +39,15 @@ plotModelDistributions(
 
 \item{color}{distribution color (following ggplot rules)}
 
-\item{scaleFrac}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
+\item{scale.frac}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
 
 \item{dist.plot}{vector of distribution tables to plot}
 
-\item{distType}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
+\item{dist.type}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
 
 \item{thick}{thickness of the line around the distribution}
 
-\item{truncateDist}{truncate probability density values below this number. NA (default) means no truncation}
+\item{truncate.dist}{truncate probability density values below this number. NA (default) means no truncation}
 }
 \value{
 A ggplot object
@@ -59,11 +59,11 @@ Plot or add probability distributions from a paleo or chron model to a plot.
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

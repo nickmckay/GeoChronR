@@ -6,28 +6,28 @@
 \usage{
 estimateUncertaintyFromRange(
   L,
-  range1 = NA,
-  range2 = NA,
-  chronPaleo = "chronData",
-  sigmaRange = 2,
-  which.mt = 1,
-  which.data = 1
+  range.1 = NA,
+  range.2 = NA,
+  paleo.or.chron = "chronData",
+  sigma.range = 2,
+  meas.table.num = 1,
+  paleo.or.chron.num = 1
 )
 }
 \arguments{
-\item{L}{A lipd dataset}
+\item{L}{a lipd object}
 
-\item{range1}{name of one of the range variables}
+\item{range.1}{name of one of the range variables}
 
-\item{range2}{name of the other range variable}
+\item{range.2}{name of the other range variable}
 
-\item{sigmaRange}{what sigma range are the measurement uncertainties (default is 2)}
+\item{paleo.or.chron}{"paleoData" or "chronData"}
 
-\item{which.mt}{which measurment table}
+\item{sigma.range}{what sigma range are the measurement uncertainties (default is 2)}
 
-\item{which.data}{which chron or paleoData?}
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
 
-\item{where}{chron or paleo}
+\item{paleo.or.chron.num}{an integer that corresponds to paleo.num or chron Data object (L$<paleo.or.chron>[[?]]) has the variable you want?}
 }
 \value{
 MT: a LiPD measurementTable with a new unc.estimate variable
@@ -39,6 +39,7 @@ Estimate uncertainty (plus/minus values) from a range of values
 Other LiPD manipulation: 
 \code{\link{getVariableIndex}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
 \code{\link{selectData}()}
 }
 \concept{LiPD manipulation}

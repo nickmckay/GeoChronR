@@ -7,28 +7,28 @@
 plotChronEnsDiff(
   L,
   ageEnsVar = "ageEnsemble",
-  ageVar = "age",
-  depthVar = "depth",
-  which.paleo = NA,
-  which.pmt = NA,
-  which.chron = NA,
-  which.model = NA,
-  which.ens = NA,
+  age.var = "age",
+  depth.var = "depth",
+  paleo.num = NA,
+  paleo.meas.table.num = NA,
+  chron.num = NA,
+  model.num = NA,
+  ens.table.num = NA,
   max.ensemble.members = NA,
-  strictSearch = FALSE,
+  strict.search = FALSE,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
   x.bin = NA,
   y.bin = NA,
-  nbins = 100,
-  bandcolor.low = "white",
-  bandcolor.high = "grey70",
-  bandAlp = 1,
+  n.bins = 100,
+  color.low = "white",
+  color.high = "grey70",
+  alp = 1,
   color.line = "Black",
-  lineWidth = 1,
+  line.width = 1,
   add.to.plot = ggplot2::ggplot(),
-  nEnsLines = 5,
-  enscolor.line = "red",
-  ensLineAlp = 0.7
+  n.ens.plot = 5,
+  color.ens.line = "red",
+  alp.ens.line = 0.7
 )
 }
 \arguments{
@@ -36,49 +36,47 @@ plotChronEnsDiff(
 
 \item{ageEnsVar}{name of the age ensemble variable in the chronData to search for}
 
-\item{ageVar}{name of the age variable in the paleoData to search for}
+\item{age.var}{name of the age variable in the paleoData to search for}
 
-\item{which.paleo}{an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify}
+\item{depth.var}{name of the depth variable to search for}
 
-\item{which.pmt}{an integer that corresponds to which paleo measurementTable you want to add the ensemble to?}
+\item{paleo.num}{an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify}
 
-\item{which.chron}{an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
+\item{paleo.meas.table.num}{an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?}
 
-\item{which.model}{an integer that corresponds to which chron model you want to get the ensemble from?}
+\item{chron.num}{an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
 
-\item{which.ens}{an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?}
+\item{model.num}{an integer that corresponds to chron.num model you want to get the ensemble from?}
+
+\item{ens.table.num}{an integer that corresponds to chron.num model ensembleTable you want to get the ensemble from?}
 
 \item{max.ensemble.members}{Maximum number of ensemble members to map}
 
-\item{strictSearch}{Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
-
-\item{probs}{quantiles to calculate and plot}
+\item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE   #' @param probs quantiles to calculate and plot}
 
 \item{x.bin}{vector of bin edges over which to bin.}
 
 \item{y.bin}{vector of bin edges over which to bin.}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{n.bins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{bandcolor.low}{Band color of the outer most band.}
+\item{color.low}{Band color of the outer most band.}
 
-\item{bandcolor.high}{Band color of the inner most band.}
+\item{color.high}{Band color of the inner most band.}
+
+\item{alp}{Transparency of the band plot}
 
 \item{color.line}{Line color (following ggplot rules)}
 
-\item{lineWidth}{Width of the line}
+\item{line.width}{Width of the line}
 
 \item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
 
-\item{nEnsLines}{Number of ensemble members to plot}
+\item{n.ens.plot}{Number of ensemble members to plot}
 
-\item{enscolor.line}{color of the ensemble lines}
+\item{color.ens.line}{color of the ensemble lines}
 
-\item{ensLineAlp}{transparency of the lines}
-
-\item{depth.var}{name of the depth variable to search for}
-
-\item{bandAlpha}{Transparency of the band plot}
+\item{alp.ens.line}{transparency of the lines}
 }
 \value{
 A ggplot object
@@ -90,11 +88,11 @@ Plots the difference of an chron ensembleTable with the paleoData age
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
 \code{\link{plotCorEns}()},

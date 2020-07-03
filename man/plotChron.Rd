@@ -10,7 +10,7 @@ plotChron(
   meas.num = NA,
   depth.var = "depth",
   age.var = "age",
-  age14C.var = "age14C",
+  age.14C.var = "age14C",
   dotSize = 5,
   legend.position = c(0.7, 0.3),
   ...
@@ -19,21 +19,46 @@ plotChron(
 \arguments{
 \item{L}{A LiPD object}
 
-\item{chron.number}{which chronData object to use (NA by default, will ask if needed)}
+\item{chron.number}{chron.numData object to use (NA by default, will ask if needed)}
 
-\item{meas.num}{which chronData model to use (NA by default, will ask if needed)}
+\item{meas.num}{chron.numData model to use (NA by default, will ask if needed)}
 
 \item{depth.var}{variableName to use for depth ("depth" by default)}
 
 \item{age.var}{variableName to use for age ensemble ("age" by default)}
 
-\item{age14C.var}{variableName to use for age ensemble ("age14C" by default)}
+\item{age.14C.var}{variableName to use for age ensemble ("age14C" by default)}
 
 \item{legend.position}{where to put the legend on the chron plot?}
 
-\item{...}{arguments to pass on to plotChronEns()}
+\item{...}{
+  Arguments passed on to \code{\link[=plotChronEns]{plotChronEns}}
+  \describe{
+    \item{\code{model.num}}{chron.numData model to use (NA by default, will ask if needed)}
+    \item{\code{probs}}{quantiles to calculate and plot}
+    \item{\code{n.bins}}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+    \item{\code{x.bin}}{vector of bin edges over which to bin.}
+    \item{\code{y.bin}}{vector of bin edges over which to bin.}
+    \item{\code{color.low}}{Band color of the outer most band.}
+    \item{\code{color.high}}{Band color of the inner most band.}
+    \item{\code{alp}}{Transparency of the band plot}
+    \item{\code{color.line}}{Line color (following ggplot rules)}
+    \item{\code{line.width}}{Width of the line}
+    \item{\code{add.to.plot}}{A ggplot object to add this plot to. Default is ggplot() .}
+    \item{\code{n.ens.plot}}{Number of ensemble members to plot}
+    \item{\code{color.ens.line}}{color of the ensemble lines}
+    \item{\code{alp.ens.line}}{transparency of the lines}
+    \item{\code{dist.color}}{distribution color (following ggplot rules)}
+    \item{\code{dist.type}}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
+    \item{\code{dist.thick}}{thickness of the line around the distribution}
+    \item{\code{truncate.dist}}{truncate probability density values below this number. NA (default) means no truncation}
+    \item{\code{dist.scale}}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
+    \item{\code{add.paleo.age.depth}}{add a line that shows the paleoData age depth.}
+    \item{\code{paleo.number}}{paleo.num number for the paleoData age-depth}
+    \item{\code{color.line.paleo}}{line color of the paleoData age-depth (following ggplot rules)}
+  }}
 
-\item{dotsize}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
+\item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 }
 \value{
 a ggplot object, or NA if there's chronData to plot
@@ -45,11 +70,11 @@ Plot a chronology, either from a chron model (preferred) or from a chron measure
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotCorEns}()},

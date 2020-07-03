@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Output</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+<script type="text/javascript" src="../utils/Menu.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; Viewing output</p>
+    <h1>Viewing output<br></h1>
+    <hr>
+    <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#file">File handling</a></li>
+        <li><a href="#view">Different views of output</a></li>
+        <li><a href="#format">Changing what is shown</a></li>
+        <li><a href="#svg">Dealing with SVG plots</a></li>
+        <li><a href="#options">Options for single calibrations</a></li>
+        <li><a href="#data">Additional data</a></li>
+    </ul>
+    <hr>
+    <h2><a name="intro" id="intro">Introduction</a></h2>
+    <p>The output utility in OxCal is designed to allow the output from OxCal analysis to be presented in a number of different ways and also to allow output to other programs.</p>
+    <p>For convenience the output utility itself provides the ability to perform <a href="hlp_input.html#single">simple calibrations</a> so that simple quick calibrations do not require the user to switch between windows. The output window is therefore the first window to be presented to the user once you are logged onto the server. The left hand pane shows a dialogue for entry of a radiocarbon date for calibration and the right hand pane shows the results of these calibration - or of more complex analyses set up using the project manager.</p>
+    <p>When used for single calibrations, the [<a href="#options">Options</a>] menu item allows you to choose details of the calibration as in the full program.</p>
+    <p>The simple calibration dialogue can always be called up by selecting the [@] menu item. This also gives you access to the [View curve] and [Projects...] buttons for presentation of the calibration curve or for calling up the main OxCal <a href="hlp_input.html">input tool</a>.</p>
+    <p>The program includes context sensitive tips on the menus etc. which can be switched on and off by pressing the help button:</p>
+    <p><script type="text/javascript">
+ Button("","../img/Help.gif");
+</script></p>
+    <p>which is found at the top right hand corner of the left window pane.</p>
+    <hr>
+    <h2><a name="file" id="file">File handling</a></h2>
+    <p>The file handling should normally be fairly straight forward. When running OxCal on a server the output data is automatically loaded either by performing a simple calibration (which generates an Quick.js file) or by performing a more complex analysis using the <a href="hlp_input.html">input tool</a>. If you wish to open the output of a specific application which was performed on the server previously this can be done by selecting [File &gt; Open] or [File &gt; Manage].</p>
+    <p>The [File] menu in the output utility allows for other file operations, depending on the details of the OxCal configuration and the type of browser you are using. The available functions are:</p>
+    <ul>
+        <li>New - opens an empty input window</li>
+        <li>Open - allows you to open previously saved files and upload files from your computer</li>
+        <li>Close - closes the window</li>
+        <li>Save as [some browsers] - allows the SVG plot to be saved or a csv version of the main table</li>
+        <li>Manager - opens a file manager window</li>
+        <li>Reset - resets to default settings</li>
+        <li>Logout [when running on a server] - logs you off and returns you to the login prompt</li>
+    </ul>
+    <p>The most complete set of file handling options are available using Firefox or other Mozilla browsers with native SVG support. See <a href='readme.html'>installation instructions</a> and section below on <a href="#svg">dealing with SVG plots</a>.</p>
+    <hr>
+    <h2><a name="view" id="view">Different views of output</a></h2>
+    <p>There are a range of different types available for the analysis. These are:</p>
+    <ul>
+        <li><a href="#table">Table view</a></li>
+        <li><a href="#plot">Plot views</a></li>
+        <li><a href="#map">Plot on map</a></li>
+        <li><a href="#summary">Summaries</a></li>
+        <li><a href="#status">Status view</a></li>
+    </ul>
+    <h3><a name="table" id="table">Table view</a></h3>
+    <p>The default view is a table which summarises the ranges of the output and (in the case of Bayesian analysis) some of the diagnostics. This table view also allows you to link directly to the individual plots (by clicking on the name of the item) or to the raw output for the item (by clicking on the &equiv; symbol).</p>
+    <p>There are various options of what is shown, these are found under the [Format &gt; Show] menu item. In particular you may wish to display results in cal BP rather than cal BC/AD and you may wish to reverse the order of the table.</p>
+    <h3><a name="plot" id="plot">Plot views</a></h3>
+    <p>A number of different plots are available. The single plots are most conveniently accessed through the table view. The other plots show what is currently selected in the table. The multi-plots are arranged by type (dates, intervals and parameters) to ensure that similar types of distribution are shown together. The [View &gt; Plot selected] option allows you to plot specific distributions in the order in which you select them. Plots can also be made against the calibration curve (radiocarbon dated events only) and against depth where the z parameter is set for the items.</p>
+    <p>In most plot views an additional control is shown which allows you to navigate multiple plots. The buttons perform the following operations:</p>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <script type="text/javascript">
+     Button("","../img/DoubleLeft.gif");
+</script>
+                </td>
+                <td>Move back one whole page (or 10 individual items)</td>
+            </tr>
+            <tr>
+                <td>
+                    <script type="text/javascript">
+     Button("","../img/Left.gif");
+</script>
+                </td>
+                <td>Move back one item</td>
+            </tr>
+            <tr>
+                <td>
+                    <script type="text/javascript">
+     Button("","../img/Right.gif");
+</script>
+                </td>
+                <td>Move forward one item</td>
+            </tr>
+            <tr>
+                <td>
+                    <script type="text/javascript">
+     Button("","../img/DoubleRight.gif");
+</script>
+                </td>
+                <td>Move on one whole page (or 10 individual items)</td>
+            </tr>
+            <tr>
+                <td>
+                    <script type="text/javascript">
+     Button("","../img/Table.gif");
+</script>
+                </td>
+                <td>Return to table view</td>
+            </tr>
+        </tbody>
+    </table>
+    <h3><a name="map" id="map">Plot on map</a></h3>
+    <p>In addition to normal plots which have a time axis, it is also possible to plot data on a map.  To do this each item which you wish to have plotted on the map must be tagged with location information using the longitude and latitude tags.</p><script type="text/javascript">
+    specList(document,"mapping","Longitude,Latitude");
+</script>  
+    <p>The following is a simple example:<p>
+	<script type="text/javascript">
+startCode("Mapping example");
+</script>
+    <pre>
+ Plot()
+ {
+  Sequence()
+  {
+   Boundary();
+   Phase("Group 1")
+   {
+    R_Date("A1",4376,39){longitude=2.084;latitude=48.232;color="blue";};	
+    R_Date("A2",4366,37){longitude=3.536;latitude=48.646;color="blue";};	
+    R_Date("A3",4469,36){longitude=2.483;latitude=48.165;color="blue";};	
+    R_Date("A4",4420,31){longitude=4.625;latitude=48.901;color="blue";};	
+    R_Date("A5",4463,37){longitude=3.23;latitude=48.211;color="blue";};	
+    R_Date("A6",4537,38){longitude=3.254;latitude=48.435;color="blue";};	
+    R_Date("A7",4537,37){longitude=2.558;latitude=48.211;color="blue";};	
+    R_Date("A8",4517,32){longitude=4.178;latitude=49.075;color="blue";};
+   };
+   Boundary();
+  };
+  Sequence()
+  {
+   Boundary();
+   Phase("Group 2")
+   {
+    R_Date("B1",4719,33){longitude=-1.778;latitude=52.116;color="red";};	
+    R_Date("B2",4693,32){longitude=-1.712;latitude=53.573;color="red";};	
+    R_Date("B3",4546,30){longitude=-1.268;latitude=52.936;color="red";};	
+    R_Date("B4",4561,40){longitude=-1.699;latitude=52.261;color="red";};	
+    R_Date("B5",4718,32){longitude=-1.085;latitude=53.272;color="red";};	
+    R_Date("B6",4832,34){longitude=-1.485;latitude=52.904;color="red";};	
+    R_Date("B7",4512,38){longitude=-0.857;latitude=52.79;color="red";};	
+    R_Date("B8",4712,30){longitude=-1.182;latitude=53.567;color="red";};	
+   };
+   Boundary();
+  };
+ };	 
+</pre><script type="text/javascript">
+endCode();
+</script> 
+    
+    <h3><a name="summary" id="summary">Summaries</a></h3>
+    <p>In addition to the plot outputs there are a number of other summary reports available. These are:</p>
+    <ul>
+        <li>Model specification - this gives the detailed mathematical specification for Bayesian models including the parameter definitions, the likelihood distributions, the constraints, the other prior factors arising from the model and finally the groupings used to derive these.</li>
+        <li>Model schematic - this provides a visual representation of the Bayesian model applied and is intended to allow the user the check that the actual model is as expected.</li>
+        <li>Raw output - this gives for each item the output log from the program and the likelihood and posterior marginal likelihood distributions in tab delimited form (suitable for exporting to other programs or for using in Prior distributions).  For the P_Sequence and U_Sequence models it gives the age-depth model in numerical form for saving to a spreadsheet (in csv format).</li>
+        <li>Log file - a simple text output file from the program.</li>
+        <li>Tab delimited - a simple tab delimited output file suitable for pasting into a spreadsheet.</li>
+    </ul>
+    <h3><a name="status" id="status">Status view</a></h3>
+    <p>Finally the status view shows the status of an analysis in progress. This shows the proportion of the analysis that has been completed, the current status of the convergence, and the proportion of MCMC passes that have given results in accordance with the model.</p>
+    <table class="menuWide">
+        <tbody>
+            <tr>
+                <th><img onmouseover="this.src='../img/RedCross.gif'" onmouseout="this.src='../img/Red.gif'" src="../img/Red.gif"> OxCal Running</th>
+                <th>Untitled</th>
+                <td style="text-align: right;">Passes 48000</td>
+            </tr>
+            <tr>
+                <td>Done</td>
+                <td colspan="2"><img src="../img/BlueRod.gif" height="10" width="44"><img src="../img/GlassRod.gif" height="10" width="156"></td>
+            </tr>
+            <tr>
+                <td>Convergence</td>
+                <td colspan="2"><img src="../img/BlueRod.gif" height="10" width="193"><img src="../img/GlassRod.gif" height="10" width="7"></td>
+            </tr>
+            <tr>
+                <td>Ok</td>
+                <td colspan="2"><img src="../img/BlueRod.gif" height="10" width="200"><img src="../img/GlassRod.gif" height="10" width="0"></td>
+            </tr>
+            <tr>
+                <td style="color:green">MCMC</td>
+                <td colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>If you press the <img onmouseover="this.src='../img/RedCross.gif'" onmouseout="this.src='../img/Red.gif'" src="../img/Red.gif"> button you can abandon the particular analysis and output all of the results so far calculated.  If the MCMC analysis has difficulty starting any temporary error messages will appear in red at the bottom of this box.</p>
+    <p>Once the analysis is complete the program will revert to the table view.</p>
+    <h3>Returning to the input view</h3>
+    <p>You can return to the input view and, if you like, change the model by pressing the back button:</p><script type="text/javascript">
+ Button("","../img/GoBack.gif");</script>
+    <hr>
+    <h2><a name="format" id="format">Changing what is shown</a></h2>
+	<h3>Adjustments before analysis</h3>
+	<p>There are a few options which can be included into the analysis code which affect the output views.  The relevant commands are:</p><script type="text/javascript">
+    specList(document,"plotting","Axis,Color,Label,Line,Page");
+</script>
+	<p>The following example shows all of these in action and how they are used:</p>
+	<script type="text/javascript">
+startCode("Plot control");
+</script>
+    <pre>
+ Plot()
+ {
+  Label("Site I");
+  Axis(BC(600), BC(100));
+  R_Date("A", 2250, 20)
+  {
+   color="Red";
+  };
+  R_Date("B", 2200, 20)
+  {
+   color="Green";
+  };
+  Page( );
+  Label("Site II");
+  Axis(BC(1800), BC(1300));
+  R_Date("C", 3200, 20)
+  {
+   color="Blue";
+  };
+  R_Date("D", 3300, 20)
+  {
+   color="Magenta";
+  };
+ };
+</pre><script type="text/javascript">
+endCode();
+</script> 
+    <p>Note that the color command will work with any of the color definitions compatable with html or svg and the color can be used to label radiocarbon calibration data-sets as well as individual distributions.</p>
+    <h3>Adjustments after analysis</h3>
+    <p>Most of the different display views allow changes to be made to exactly what is shown. All of these changes are accessed through the [Format] menu. This puts up a three part dialogue which enables changes to be made to the plot or table. Most of the changes are self explanatory but the main options are:</p>
+    <ul>
+        <li>Show - the main options for display of data in the table and in the plots</li>
+        <li>Plot - details of what is shown on the plots</li>
+        <li>Style - the style of plots</li>
+        <li>Adjust - adjustments to the axes, font sizes, labels etc. on the plots; note that the plots-per-page (PPP) allows you to select the number of plots put on a page</li>
+    </ul>
+    <p>Since redrawing a plot can take a few seconds (depending on the speed of your computer and the complexity of the plot) in the latter two cases you need to press the reload button on the dialogue (not in your browsers toolbar):</p><script type="text/javascript">
+ Button("","../img/Reload.gif");</script>
+	<p>Some of the options set are remembered between sessions.</p>
+	<p><a name='dynamic'><em>Dynamic plot manipulation</em></a>: The most convenient way to alter axes and the size of the plot is by using the mouse directly on the plot.  This allows you to dynamically drag, stretch and zoom the plot.  To do this just click and drag anywhere in a plot and you can move the axes.  Using the curve plot, this enables you to explore the calibration curve.  If you press [Shift] at the same time as you drag the mouse you can change the overall scale of the plot instead (covering a wider or narrower range).  Pressing [Alt] at the same time as dragging allows you to change the overall size of the plot (zoom in and out).</p>
+	<p>Rather than using the [Format &gt; Adjust ] menu or direct manipulation of the plots with the mouse, you can also use the adjustment tools which are shown just above the plot.  These are:</p>
+	<table>
+	</tr><td>Zoom</td><td><img alt="rocker" src="../img/Rocker.gif"/></td><td>the left arrow reduces the size of the plot, the right arrow increases it; the up and down arrows changes the number of plots per page</td></tr>
+	</tr><td>Centre</td><td><img alt="rocker" src="../img/Rocker.gif"/></td><td>re-centres the plot in either direction</td></tr>
+	</tr><td>Span</td><td><img alt="rocker" src="../img/Rocker.gif"/></td><td>re-scales the plot in either direction</td></tr>
+	</table>
+	<p>In all cases clicking the rocker near the edge will effect a larger change, and nearer the centre a smaller change.  The adjustments made result in an immediate redraw and so work best with a browser that has a fast Javascript interpreter.</p>
+    <hr>
+    <h2><a name="svg" id="svg">Dealing with SVG plots</a></h2>
+    <p>All of the output plots and the Model schematic view are generated as SVG (scalable vector graphics) plots dynamically by your web browser. They are not generated on the server. Depending on the type of browser you have this should mean that changes to the plot do not rely on a fast access to the server. Unfortunately some server/svg combinations do not work together so well and the underlying data may have to be downloaded each time a plot is changed. See <a href="readme.html">Installation</a> guide for further details of configurations.</p>
+    <p>The way in which you deal with the plots produced by OxCal will depend on the SVG viewer you are using. You can either use an SVG enabled browser (such as Firefox, Safari, Chrome or Opera) or use the Adobe SVG viewer (no longer supported by Adobe).</p>
+    <p>SVG is a relatively new standard for further information on SVG viewers etc see:</p>
+    <ul>
+        <li><a href="http://www.w3.org/Graphics/SVG/">W3C Scalable Vector Graphics (SVG)</a></li>
+        <li><a href="http://www.mozilla.org/projects/svg/">Mozilla SVG Project</a></li>
+        <li><a href="http://www.adobe.com/svg/">Adobe Scalable Vector Graphics: SVG Zone</a></li>
+    </ul>
+    <h3>Native SVG support (Firefox, Safari, Chrome, Opera)</h3>
+    <p>In any of these browsers you can use the [File &gt; Save as] function of OxCal to save the plot in SVG format, or on the server version to convert this to PDF or PNG format. You can use <a href="http://www.inkscape.org/">Inkscape</a> or Adobe Illustrator to edit the SVG plots.  You can also use utilities such as the Batik-rasterizer to convert them to other formats (PDF, PNG etc) which is what is used on the server version.</p>
+    <p>Inkscape is an open source SVG editor, viewer and converter and is available from:</p>
+    <p><a href="http://www.inkscape.org/">http://www.inkscape.org/</a></p>
+    <p>You can also convert svg files to raster formats using the utility at:</p>
+    <p><a href="http://www.fileformat.info/convert/image/svg2raster.htm"> http://www.fileformat.info/convert/image/svg2raster.htm</a></p>
+    <h3>Adobe SVG viewer</h3>
+    <p>If you wish to use a plot generated in the Adobe SVG viewer you need to use the [Copy SVG] command of the viewer (<b>NOT</b> the [Save SVG] command as this just saves the script that generated the graph). This can be accessed by right mouse clicking on the plot (Windows) or ctrl clicking on the plot (Mac OS X). This will put the plot in two forms on your clipboard. There will be a text form of the plot which is the raw SVG for the plot; this can be pasted into a plain text file and saved with the extension .svg (such files can be edited in Adobe Illustrator and other graphics packages and should be accepted by publishers). There will also be a bit-imaged form of the plot at the current screen resolution which can be pasted into other documents; if you want higher quality bit-images simply use the [Format &gt; Adjust &gt; Zoom] control to enlarge the plot on the screen. The SVG plot is a form of vector graphics and so is much higher quality but it is harder to manipulate.</p>
+    <hr>
+    <h2><a name="options" id="options">Options for single calibrations</a></h2>
+    <p>The full range of options is available for single calibration. These options can be set under the [Options] menu item. The details of of these options are given in the section on <a href="hlp_input.html#tools">input of information</a></p>
+    <hr>
+    <h2><a name="data" id="data">Additional data</a></h2>
+    <p>The final menu item in the output module allows you to add additional data to the top of multiple plots. There are three main options here:</p>
+    <ul>
+        <li>Clear - which removes the extra data panel from the plot</li>
+        <li>New - which adds an extra data panel</li>
+        <li>Edit - which changes the details of the extra data</li>
+    </ul>
+    <p>In addition there are extra menu items which add predefined data to the plot.</p>
+    <p>In specifying the data there are just five items to be filled in:</p>
+    <ul>
+        <li>Label - the label to be used on the y-axis of the panel</li>
+        <li>Data - the data in two columns (date, value) to be plotted</li>
+        <li>Min - the maximum value of the data in the plot</li>
+        <li>Max - the minimum value of teh data in the plot</li>
+        <li>cal BC/AD - set if (as is normal) the date is given in BC/AD as defined in the OxCal's internal date format; otherwise the date is assumed to be in cal BP (Gregorian years before mid AD 1950)</li>
+    </ul>
+    <hr>
+</body>
+</html>

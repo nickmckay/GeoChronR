@@ -2,16 +2,18 @@
 % Please edit documentation in R/chronBuilding.R
 \name{stringifyVariables}
 \alias{stringifyVariables}
-\title{Convert variable names to strings}
+\title{Convert var.names to strings}
 \usage{
-stringifyVariables(varName, usedValue)
+stringifyVariables(var.name, used.value)
 }
 \arguments{
-\item{varName}{}
+\item{var.name}{string name of the variable to extract}
+
+\item{used.value}{}
 }
 \value{
-the variable name as a string
+the var.name as a string
 }
 \description{
-Convert variable names to strings
+Convert var.names to strings
 }

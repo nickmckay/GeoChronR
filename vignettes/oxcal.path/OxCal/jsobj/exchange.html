@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <title>Import/Export Utility</title>
+  <link rel="stylesheet" type="text/css" href="../style/db.css">
+<script type="text/javascript" src="../utils/Menu.js">
+</script>
+<script type="text/javascript">
+ function doExport()
+ {
+  var a;
+  a=window.opener.exchangeSpec.exportData(true).split("\n");
+  document.getElementById("header").value=a[0];
+  a.splice(0,1);
+  document.getElementById("export").value=a.join("\n");
+ };
+ function doImport()
+ {
+  window.opener.newExchange=
+   document.getElementById("header").value+"\n"+
+   document.getElementById("export").value;
+  window.close();
+ };
+</script>
+</head>
+<body class="menuForward" onload="doExport()">
+  <script type="text/javascript">
+  document.write("<table><tr><td>");
+  Button("window.close()","../img/Left.gif");
+  document.write("<\/td><td>");
+  Button("doExport()","../img/Reload.gif");
+  document.write("<\/td><\/tr><\/table>");
+</script>
+  <table class="object" summary="Input table">
+    <tbody>
+      <tr>
+        <td>
+        <textarea id="header" name="Header"
+         style="width:480px; height: 40px;" readonly>
+</textarea></td>
+      </tr>
+      <tr>
+        <td>
+        <textarea id="export" name="Export" 
+         style="width:480px; height: 320px;" >
+</textarea></td>
+      </tr>
+      <tr>
+        <td><input type="submit" value="Ok" onclick="doImport()"> <input type="button" value="Cancel" onclick="window.close()">
+        [Paste in data from a spreadsheet with given columns]
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
