@@ -1816,8 +1816,9 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
     binX[is.nan(binX)]=NA
     
     #plot timeseries of regression and target over interval
-    regPlot$XPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binX,n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(reg.ens$time.1))+ylab(axisLabel(reg.ens$values.1))
-    regPlot$YPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binY,color.high = "red",n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(reg.ens$time.2))+ylab(axisLabel(reg.ens$values.2))
+    regPlot$XPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binX,n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(reg.ens$time.x))+ylab(axisLabel(reg.ens$values.x))
+    
+    regPlot$YPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binY,color.high = "red",n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(reg.ens$time.y))+ylab(axisLabel(reg.ens$values.y))
     
     
     

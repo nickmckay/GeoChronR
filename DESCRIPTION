@@ -38,7 +38,8 @@ Imports:
     pbapply,
     oxcAAR,
     Hmisc,
-    glue
+    glue,
+    BiocManager
 Suggests: knitr,
     rmarkdown,
     testthat,
