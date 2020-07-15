@@ -1025,14 +1025,26 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   #' @title Plot an ensemble dataset as a histogram
   #' @description Plots ensemble data as a histogram
   #' @import ggplot2
+  #'
   #' @param ens.data A data.frame of values to plot as a histogram
-  #' @param probs quantiles to calculate and plot
   #' @param bins Number of bins in the histogram
   #' @param line.labels Labels for the quantiles lines
   #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
+  #' @param quantiles a vecctor of quantiles to add the histogram
+  #' @param alp transparency (between 0 and 1)
+  #' @param font.size font size for the labels
   #' @param fill fill color of the histogram, following ggplot rules
+  #'
   #' @return A ggplot object
-  plotHistEns = function(ens.data,quantiles=c(.025, .25, .5, .75, .975),bins=50,line.labels = rownames(ensStats),add.to.plot=ggplot(),alp=1,fill="grey50"){
+  plotHistEns = function(ens.data,
+                         quantiles=c(.025, .25, .5, .75, .975),
+                         bins=50,
+                         line.labels = rownames(ensStats),
+                         add.to.plot=ggplot(),
+                         alp=1,
+                         fill="grey50",
+                         font.size = 10,
+                         label.vert.position = .1){
     #plots a histogram of ensemble distribution values, with horizontal bars marking the distributions
     plotData = data.frame("r"=c(ens.data))
     
@@ -1044,11 +1056,12 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
       ylab("Probability density")
     if(!all(is.na(quantiles))){
       #make labels better
-      
+      labelPositionY <- geoChronR::getPlotRanges(histPlot)$y.lims[2] * label.vert.position
       quants = quantile(ens.data,quantiles)
       quantdf = data.frame(ll = names(quants),quants = quants)
-      histPlot = histPlot + geom_vline(data=quantdf,aes(xintercept = quants),color="red") +
-        geom_label(data = quantdf, aes(x = quants, y=0,label=ll))+
+      histPlot = histPlot + 
+        geom_vline(data=quantdf,aes(xintercept = quants),color="red") +
+        geom_label(data = quantdf, aes(x = quants, y=labelPositionY ,label=ll),size = font.size)+
         xlab(axisLabel(ens.data))
       
     }
@@ -1786,7 +1799,10 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   #' \item modeledYPlot - ribbon plot of values modeled by the ensemble regression, incorporating age uncertainty in both the regression and the predictor timeseries
   #' \item summaryPlot - grid.arrange object of all the regression plots
   #' }
-  plotRegressEns = function(reg.ens,alp=0.2,quantiles = c(0.025, .5, .975)){
+  plotRegressEns = function(reg.ens,
+                            alp=0.2,
+                            quantiles = c(0.025, .5, .975),
+                            font.size = 10){
     regPlot = list()
     #scatter plot
     scatterplot = plotScatterEns(X = reg.ens$binX,Y = reg.ens$binY,alp=alp)
@@ -1794,20 +1810,20 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
     scatterplot = plotTrendLinesEns(mb.df = t(rbind(reg.ens$m,reg.ens$b)),x.range = range(reg.ens$binX,na.rm=TRUE), alp = alp,add.to.plot = scatterplot)
     
     
-    scatterplot = scatterplot + xlab(axisLabel(reg.ens$values.1)) + ylab(axisLabel(reg.ens$values.2))
+    scatterplot = scatterplot + xlab(axisLabel(reg.ens$values.x)) + ylab(axisLabel(reg.ens$values.y))
     
     #assign scatter plot to out list
-    regPlot$scatterplot = scatterplot
+    regPlot$scatterplot = scatterplot + theme(text = element_text(size = font.size))
     
     
     
     #plot histograms of m and b
     mStats = reg.ens$regStats[,1:2]
     names(mStats)[2]="values"
-    regPlot$mHist = plotHistEns(reg.ens$m,quantiles = quantiles)+xlab("Slope")
+    regPlot$mHist = plotHistEns(reg.ens$m,quantiles = quantiles,font.size = font.size*.25)+xlab("Slope") + theme(text = element_text(size = font.size))
     bStats = reg.ens$regStats[,c(1,3)]
     names(bStats)[2]="values"
-    regPlot$bHist = plotHistEns(reg.ens$b,quantiles = quantiles)+xlab("Intercept")
+    regPlot$bHist = plotHistEns(reg.ens$b,quantiles = quantiles,font.size = font.size*.25)+xlab("Intercept") + theme(text = element_text(size = font.size))
     
     binY = reg.ens$binY
     binX = reg.ens$binX
@@ -1816,9 +1832,9 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
     binX[is.nan(binX)]=NA
     
     #plot timeseries of regression and target over interval
-    regPlot$XPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binX,n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictor")+xlab(axisLabel(reg.ens$time.x))+ylab(axisLabel(reg.ens$values.x))
+    regPlot$XPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binX,n.bins = length(reg.ens$yearX))+ggtitle("Calibration predictor")+xlab(axisLabel(reg.ens$time.x))+ylab(axisLabel(reg.ens$values.y)) + theme(text = element_text(size = font.size))
     
-    regPlot$YPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binY,color.high = "red",n.bins = length(reg.ens$yearX))+ggtitle("Calibration interval predictand")+xlab(axisLabel(reg.ens$time.y))+ylab(axisLabel(reg.ens$values.y))
+    regPlot$YPlot = plotTimeseriesEnsRibbons(X = reg.ens$yearX,Y = reg.ens$binY,color.high = "red",n.bins = length(reg.ens$yearX))+ggtitle("Calibration predictand")+xlab(axisLabel(reg.ens$time.y))+ylab(axisLabel(reg.ens$values.y)) + theme(text = element_text(size = font.size))
     
     
     
@@ -1826,12 +1842,14 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
     if(!is.list(reg.ens$modeledYear)){
       modYear = list()
       modYear$values = reg.ens$modeledYear
-      modYear$units = reg.ens$time.1$units
-      modYear$variableName = reg.ens$time.1$variableName
+      modYear$units = reg.ens$time.x$units
+      modYear$variableName = reg.ens$time.x$variableName
     }else{
       modYear = reg.ens$modeledYear
     }
-    regPlot$modeledYPlot = plotTimeseriesEnsRibbons(X = modYear,Y=reg.ens$modeled)+ggtitle("Calibrated record using ensemble regression")
+    regPlot$modeledYPlot = plotTimeseriesEnsRibbons(X = modYear,Y=reg.ens$modeled)+
+      ggtitle("Calibrated record using ensemble regression") + 
+      theme(text = element_text(size = font.size))
     
     
     
@@ -1841,7 +1859,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
                 c(6,6,6,6,6,6))
     
     
-    regPlot$summaryPlot = gridExtra::grid.arrange(grobs = list(regPlot$YPlot,regPlot$XPlot,regPlot$scatterplot,
+    regPlot$summaryPlot <- gridExtra::grid.arrange(grobs = list(regPlot$YPlot,regPlot$XPlot,regPlot$scatterplot,
                                                                regPlot$mHist,regPlot$bHist,regPlot$modeledYPlot),
                                                   layout_matrix=lay)  
     
