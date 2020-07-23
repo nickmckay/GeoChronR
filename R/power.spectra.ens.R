@@ -348,7 +348,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     ens.mtm.cl     <-  matrix(NA,ncol=n.ens,nrow=nout)
     ens.mtm.sigfreq <-  matrix(0,ncol=n.ens,nrow=nout)
     
-    pb = txtProgressBar(min = 2, max = n.ens, style = 3)
+    pb = txtProgressBar(min = 0, max = n.ens, style = 3)
     # rinse, repeat
     for (k in 1:n.ens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
@@ -367,7 +367,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         ens.mtm.cl[,k] <- astrochron::mtm.main$AR1_95_power
       } 
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
-      if(k%%round(n.ens/50)==0){
+      if(n.ens>1 & k%%round(n.ens/50)==0){
         setTxtProgressBar(pb,k)
       }
     }
