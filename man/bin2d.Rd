@@ -7,10 +7,10 @@
 bin2d(
   x,
   y,
-  nbins = 100,
+  n.bins = 100,
   x.bin = NA,
   y.bin = NA,
-  filterFrac = NA,
+  filter.frac = NA,
   interpolate = TRUE
 )
 }
@@ -19,13 +19,13 @@ bin2d(
 
 \item{y}{n by j matrix where n is the number of observations and j is >= 1}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{n.bins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
 \item{x.bin}{vector of bin edges over which to bin.}
 
 \item{y.bin}{vector of bin edges over which to bin.}
 
-\item{filterFrac}{Used to beef up sampling for poorly sampled intervals. Interpolates intervals with less than filterFrac coverage.}
+\item{filter.frac}{Used to beef up sampling for poorly sampled intervals. Interpolates intervals with less than filter.frac coverage.}
 
 \item{interpolate}{use interpolation? T/F}
 }
@@ -37,7 +37,7 @@ Calculate the density of samples along a 2-dimensional grid
 }
 \seealso{
 Other gridding: 
-\code{\link{kde_2d}()},
+\code{\link{kde2d}()},
 \code{\link{quantile2d}()}
 }
 \concept{gridding}

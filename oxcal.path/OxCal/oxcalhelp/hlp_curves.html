@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="">
+  <title>OxCal Calibration Curves</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+  <p><a href="hlp_contents.html">OxCal</a> &gt; Calibration Curves</p>
+  <h1>Calibration Curves<br></h1>
+  <hr>
+  <ul>
+    <li><a href="#atmos">Atmospheric curves</a></li>
+    <li><a href="#marine">Marine curves</a></li>
+  </ul>
+  <hr>
+  <a href="https://journals.uair.arizona.edu/index.php/radiocarbon/issue/view/1024"><img src="IntCal13.jpg" id="IntCal13 Radiocarbon" name="IntCal13 Radiocarbon" align="right" style="width:30%"></a>
+  <h2><a name="atmos" id="atmos">Atmospheric Curves</a></h2>
+  <p>The main curves recommended for calibration are:</p>
+  <ul>
+    <li>IntCal series
+      <ul>
+        <li>IntCal13: Northern Hemisphere (<a href="javascript:go_bib('reimer2013imr')">Reimer et al. 2013</a>)</li>
+        <li>SHCal13: Southern Hemisphere (<a href="javascript:go_bib('hogg2013ssh')">Hogg et al. 2013</a>)</li>
+      </ul>
+    </li>
+    <li>Bomb series (<a href="javascript:go_bib('hua2013arp')">Hua et al. 2013</a>)
+      <ul>
+        <li>Bomb13NH1: North of 40¡N; note this is prepended with the last 300 years of IntCal13</li>
+        <li>Bomb13NH2: Between 40¡N and mean summer intertropical convergence zone; note this is prepended with the last 300 years of IntCal13</li>
+        <li>Bomb13NH3: Northern hemisphere mean summer intertropical convergence zone; note this is prepended with the last 300 years of IntCal13</li>
+        <li>Bomb13SH12: Southern hemisphere (not in mean summer intertropical convergence zone); note this is prepended with the last 300 years of SHCal13</li>
+        <li>Bomb13SH3: Southern hemisphere mean summer intertropical convergence zone; note this is prepended with the last 300 years of SHCal13</li>
+      </ul>
+    </li>
+    <li>Kueppers04: Bomb series based on growth season (<a href="javascript:go_bib('kueppers2004btm')">Kueppers et al. 2004</a>)</li>
+  </ul>
+  <p>For comparison with older calibrations the following are also included:</p>
+  <ul>
+    <li>IntCal09: Northern Hemisphere (<a href="javascript:go_bib('reimer2009imr')">Reimer et al. 2009</a>)</li>
+    <li>IntCal04: Northern Hemisphere (<a href="javascript:go_bib('reimer2004itr')">Reimer et al. 2004</a>)</li>
+    <li>IntCal98 (<a href="javascript:go_bib('stuiver1998irc')">Stuiver et al. 1998</a>)</li>
+    <li>SHCal04: Southern Hemisphere (<a href="javascript:go_bib('mccormac2004ssh')">McCormac et al. 2004</a>)</li>
+    <li>Bomb04NH1: North of 40¡N; note this is prepended with the last 300 years of IntCal04</li>
+    <li>Bomb04NH2: Between 40¡N and mean summer intertropical convergence zone; note this is prepended with the last 300 years of IntCal04</li>
+    <li>Bomb04NH3: Northern hemisphere mean summer intertropical convergence zone; note this is prepended with the last 300 years of IntCal04</li>
+    <li>Bomb04SH: Southern hemisphere; note this is prepended with the last 300 years of SHCal04</li>
+  </ul>
+  <p>For post-bomb results the function R_F14C() should be used which uses results in the form of F14C as defined by <a href="javascript:go_bib('reimer2004drc')">Reimer et al. 2004</a>. As a default OxCal works on a resolution of 0.2yr with such data. To obtain results similar to those for the non-smoothed curve in CALIBomb (<a href="javascript:go_bib('reimer2004drc')">Reimer et al. 2004</a>), you should set the resolution to 0.01. For many purposes you should consider adding a Reservoir time constant in this time period as even short-lived plants grow over several months.</p>
+  <hr>
+  <h2><a name="marine" id="marine">Marine Curves</a></h2>
+  <p>The recommended marine curve is:</p>
+  <ul>
+    <li>Marine13 - Modelled ocean average (<a href="javascript:go_bib('reimer2013imr')">Reimer et al. 2013</a>)</li>
+  </ul>
+  <p>For marine calibrations you will need to find an appropriate &Delta;R offset from the <a href="http://calib.org/marine/">CHRONO Marine Reservoir Database</a>.</p>
+  <p>For comparison with older calibrations the following are also included:</p>
+  <ul>
+    <li>Marine09 - Modelled ocean average (<a href="javascript:go_bib('reimer2009imr')">Reimer et al. 2009</a>)</li>
+    <li>Marine04 - Modelled ocean average (<a href="javascript:go_bib('hughen2004mmr')">Hughen et al. 2004</a>)</li>
+    <li>Marine98 (<a href="javascript:go_bib('stuiver1998prc')">Stuiver et al. 1998</a>)</li>
+  </ul>
+  <hr>
+</body>
+</html>

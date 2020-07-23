@@ -6,23 +6,23 @@
 \usage{
 runBchron(
   L,
-  which.chron = NA,
+  chron.num = NA,
   which.table = NA,
   site.name = L$dataSetName,
-  modelNum = NA,
-  calCurves = NA,
+  model.num = NA,
+  cal.curves = NA,
   iter = 10000,
-  outlierProbs = 0.05,
+  outlier.probs = 0.05,
   ask = TRUE,
-  labIDVar = "labID",
-  age14CVar = "age14C",
-  age14CuncertaintyVar = "age14CUnc",
-  ageVar = "age",
-  ageUncertaintyVar = "ageUnc",
-  depthVar = "depth",
-  reservoirAge14CVar = "reservoirAge",
-  reservoirAge14CUncertaintyVar = "reservoirAge14C",
-  rejectedAgesVar = "rejected",
+  lab.id.var = "labID",
+  age.14c.var = "age14C",
+  age.14c.uncertainty.var = "age14CUnc",
+  age.var = "age",
+  age.uncertainty.var = "ageUnc",
+  depth.var = "depth",
+  reservoir.age.14C.var = "reservoirAge",
+  reservoir.age.14c.uncertainty.var = "reservoirAge14C",
+  rejected.ages.var = "rejected",
   depth.units = "cm",
   ...
 )
@@ -30,13 +30,13 @@ runBchron(
 \arguments{
 \item{L}{a single LiPD object}
 
-\item{which.chron}{the number of the chronData object that you'll be working in}
+\item{chron.num}{the number of the chronData object that you'll be working in}
 
 \item{site.name}{the name of the site}
 
-\item{modelNum}{which chronModel do you want to use?}
+\item{model.num}{chron.numModel do you want to use?}
 
-\item{calCurves}{The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.}
+\item{cal.curves}{The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.}
 }
 \value{
 L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
@@ -49,7 +49,7 @@ Run in interactive mode:
 L = runBchron(L)
 
 Run in noninteractive mode:
-L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
+L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
 }
 \author{
 Deborah Khider

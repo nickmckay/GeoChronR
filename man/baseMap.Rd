@@ -11,7 +11,7 @@ baseMap(
   f = 0.1,
   restrict.map.range = TRUE,
   projection = "mollweide",
-  boundcirc = FALSE,
+  bound.circ = FALSE,
   global = FALSE,
   extend.range = 5
 )
@@ -29,7 +29,7 @@ baseMap(
 
 \item{projection}{Map project. All options on: ?mapproject}
 
-\item{boundcirc}{Draw a boundary circle around a polar projection. TRUE or FALSE(default).}
+\item{bound.circ}{Draw a boundary circle around a polar projection. TRUE or FALSE(default).}
 
 \item{global}{Should the scope of the map be global? TRUE or FALSE(default).}
 

@@ -10,7 +10,7 @@ plotTimeseriesEnsLines(
   Y,
   alp = 0.2,
   color = "blue",
-  maxPlotN = 100
+  n.ens.plot = 100
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ plotTimeseriesEnsLines(
 
 \item{color}{Either 1) A line color (following ggplot rules) to use for all lines (e.g., "blue"), 2) An RColorBrewer pallette to repeat over the lines (e.g. "Blues") or 3) a vector specifying the color for all lines (e.g., c("red","white","blue"))}
 
-\item{maxPlotN}{Whats the maximum number of lines to plot?}
+\item{n.ens.plot}{Whats the maximum number of lines to plot?}
 }
 \value{
 A ggplot object
@@ -36,11 +36,11 @@ Plot an ensemble timeseries as a set of lines. Useful for displaying a handful o
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

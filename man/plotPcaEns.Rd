@@ -5,39 +5,40 @@
 \title{Map ensemble pca loadings and plot PC timeseries}
 \usage{
 plotPcaEns(
-  ens.PC.out,
+  ens.pc.out,
   TS,
   map.type = "line",
-  which.PCs = c(1, 2),
+  which.pcs = c(1, 2),
   f = 0.2,
-  highColor = "red",
-  lowColor = "blue",
-  dotsize = 5,
+  high.color = "red",
+  low.color = "blue",
+  dot.size = 5,
   restrict.map.range = TRUE,
   shape.by.archive = TRUE,
   projection = "mollweide",
-  boundcirc = TRUE,
+  bound.circ = TRUE,
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
   which.leg = 1,
-  legendPosition = c(0.5, 0.5)
+  legend.position = c(0.5, 0.5),
+  color
 )
 }
 \arguments{
-\item{ens.PC.out}{results of pcaEns()}
+\item{ens.pc.out}{results of pcaEns()}
 
 \item{TS}{Timeseries object \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series} used in the pcaEns() analysis}
 
 \item{map.type}{"google" or "line"}
 
-\item{which.PCs}{vector of PCs to plot. Choose two. c(1,2) is default.}
+\item{which.pcs}{vector of PCs to plot. Choose two. c(1,2) is default.}
 
 \item{f}{zoom buffer for plotting}
 
-\item{highColor}{color for the high end of the scale}
+\item{high.color}{color for the high end of the scale}
 
-\item{lowColor}{color for the low end of the scale}
+\item{low.color}{color for the low end of the scale}
 
-\item{dotsize}{How big are the dots on the map}
+\item{dot.size}{How big are the dots on the map}
 
 \item{restrict.map.range}{TRUE or FALSE. Trim the size of the map to the points, for "line" map type}
 
@@ -45,15 +46,17 @@ plotPcaEns(
 
 \item{projection}{Map project. All options on: ?mapproject}
 
-\item{boundcirc}{For polar projects, draw a boundary circle? TRUE or FALSE}
+\item{bound.circ}{For polar projects, draw a boundary circle? TRUE or FALSE}
 
 \item{probs}{quantiles to calculate and plot in the PC timeseries}
 
 \item{which.leg}{which map legend to include in the summary plot?}
 
-\item{legendPosition}{Where to put the map legend?}
+\item{legend.position}{Where to put the map legend?}
 
-\item{lineLabels}{Labels for the quantiles lines}
+\item{color}{deprecated. Use high.color and low.color instead}
+
+\item{line.labels}{Labels for the quantiles lines}
 }
 \value{
 A gridExtra ggplot object
@@ -65,11 +68,11 @@ Map ensemble pca loadings and plot PC timeseries
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

@@ -4,12 +4,12 @@
 \alias{corMatrix}
 \title{Matrix correlation}
 \usage{
-corMatrix(M1, M2)
+corMatrix(ens.1, ens.2)
 }
 \arguments{
-\item{M1}{matrix of age-uncertain columns to correlate and calculate p-values}
+\item{ens.1}{matrix of age-uncertain columns to correlate and calculate p-values}
 
-\item{M2}{matrix of age-uncertain columns to correlate and calculate p-values}
+\item{ens.2}{matrix of age-uncertain columns to correlate and calculate p-values}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)

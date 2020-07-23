@@ -4,7 +4,7 @@
 \alias{heuristicUnits}
 \title{Makes a guess about the units of a time vector based on the values}
 \usage{
-heuristicUnits(X, rangeMin = 25)
+heuristicUnits(X, range.min = 25)
 }
 \arguments{
 \item{X}{A LiPD variable list or a vector of years BP}

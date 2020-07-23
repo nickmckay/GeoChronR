@@ -1,0 +1,29 @@
+<html>
+
+<head>
+<script type="text/javascript" src="ocp_utils.js"></script>
+<script type="text/javascript" src="ocp_export.js"></script>
+<script type="text/javascript" src="ocp_utils.js"></script>
+<script type="text/javascript" src="Labels.js"></script>
+<script type="text/javascript" src="../jsobj/ObjectWriter.js"></script>
+<title>OxCal Data Export</title>
+<link rel=stylesheet type=text/css href=../style/OxCal.css>
+</head>
+
+<body onload="initialise()">
+  <script type="text/javascript">
+   document.writeln("<h1>OxCal Data Export<\/h1>");
+   document.writeln("<hr\/>");
+   if(parent.source!="ocp_null.js")
+   {
+    document.write("<div class='filename'>");
+    document.write(parent.source.replace(".js",""));
+    document.writeln("<\/div>");
+   };
+  </script>
+<script>
+ drawTable();
+</script>
+</body>
+
+</html>

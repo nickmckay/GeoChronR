@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <script type="text/javascript" src="../utils/ViewPort.js"></script>   
+   <script type="text/javascript" src="ocp_utils.js"></script>   
+   <script type="text/javascript" src="Labels.js"></script>   
+   <script type="text/javascript" src="ocp_plot.js"></script> 
+   <script id="remover" type="text/javascript">
+	function createPlot()
+	{
+	 draw();
+ 	};
+ 	var ocd,calib,plotOptions,ocdIndex,model;
+ 	if(typeof(window.parent)!='undefined')
+ 	{
+	 ocd=window.parent.ocd;
+	 calib=window.parent.calib;
+	 plotOptions=window.parent.plotOptions;
+	 ocdIndex=window.parent.ocdIndex;
+	 model=window.parent.model;
+	};
+   </script>
+</head>
+<body onclick="void(0)" onmouseup="move_bd(event)" onmousemove="move_bd(event)" onmousedown="move_bd(event)">
+<svg 
+ id="top" 
+ version="1.1" 
+ xmlns="http://www.w3.org/2000/svg" 
+ xmlns:xlink="http://www.w3.org/1999/xlink" 
+ xmlns:ev="http://www.w3.org/2001/xml-events" 
+ width="20cm"
+ height="28cm" 
+ zoomAndPan="magnify"
+ preserveAspectRatio="xMinYMin" onload="createPlot()">
+   <defs id="definitions">
+   <filter id="Shadow" filterUnits="userSpaceOnUse">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+    <feOffset in="blur" dx="4" dy="4" result="offsetBlurredAlpha"/>
+    <feMerge>
+     <feMergeNode in="offsetBlurredAlpha"/>
+     <feMergeNode in="SourceGraphic"/>
+    </feMerge> 
+   </filter>    
+    <filter id="Correlation1" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox">
+     <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+     <feColorMatrix type="matrix" in="blur" 
+       values="0 0 0  5.00 -2.00
+               0 0 0 -2.50  2.50
+               0 0 0  0.00  0.00
+               0 0 0  2.50  0.00"/>
+    </filter>    
+    <filter id="Correlation2" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox">
+     <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+     <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="opacity"/>
+     <feColorMatrix type="matrix" in="blur" result="newcolor"
+       values="0 0 0  5.00 -2.00
+               0 0 0 -2.50  2.50
+               0 0 0  0.00  0.00
+               0 0 0  2.50  0.00"/>
+     <feSpecularLighting in="opacity" surfaceScale="5" 
+      specularConstant="1" specularExponent="20" lighting-color="white" 
+      result="specularOut">
+      <feDistantLight azimuth="225" elevation="30"/>
+     </feSpecularLighting>
+     <feComposite in="newcolor" in2="specularOut" operator="arithmetic" 
+       k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
+    </filter>
+    <pattern id="Sequence" patternUnits="userSpaceOnUse"
+      x="0" y="0" width="5" height="5" viewBox="0 0 5 5" >
+    </pattern>    
+    <pattern id="U_Sequence" patternUnits="userSpaceOnUse"
+      x="0" y="0" width="5" height="5" viewBox="0 0 5 5" >
+     <line x1="-2.5" x2="5" y1="5" y2="-2.5" style="stroke-width:1.5;stroke:black"/>
+     <line x1="0" x2="7.5" y1="7.5" y2="0" style="stroke-width:1.5;stroke:black"/>
+    </pattern>    
+    <pattern id="D_Sequence" patternUnits="userSpaceOnUse"
+      x="0" y="0" width="5" height="5" viewBox="0 0 5 5" >
+     <line x1="-2.5" x2="7.5" y1="-2.5" y2="7.5" style="stroke-width:1;stroke:black"/>
+     <line x1="-2.5" x2="7.5" y1="7.5" y2="-2.5" style="stroke-width:1;stroke:black"/>
+    </pattern>    
+    <pattern id="V_Sequence" patternUnits="userSpaceOnUse"
+      x="0" y="0" width="5" height="5" viewBox="0 0 5 5" >
+     <ellipse cx="2.5" cy="2.5" rx="1.5" ry="0.7" style="fill:black"/>
+    </pattern>    
+    <pattern id="P_Sequence" patternUnits="userSpaceOnUse"
+      x="0" y="0" width="5" height="5" viewBox="0 0 5 5" >
+     <circle cx="1.25" cy="3.75" r="1" style="fill:black"/>
+     <circle cx="3.75" cy="1.25" r="1" style="fill:black"/>
+    </pattern>
+    <style type="text/css"><![CDATA[
+      rect.border { fill:none; stroke:black;stroke-width:1px }
+      rect.fillblack { fill:black; stroke:black;stroke-width:1px }
+      rect.structure { fill:none; stroke:none }
+      rect.structtab { fill:none; stroke:none }
+      rect.structclip { fill:white; stroke:none }
+      rect.structborder { fill:none; stroke:black; stroke-width:0.5px }
+      rect.range3 {fill:none;stroke:black;stroke-width:1px }
+      rect.range2 {fill:none;stroke:black;stroke-width:1px }
+      rect.range1 {fill:none;stroke:black;stroke-width:1px }
+      rect.fillbackground { fill:#000099 }
+      rect.fillmodel { fill:none;stroke:black;stroke-width:1px }
+      rect.modeldist { fill:none;stroke:black;stroke-width:1px }
+      rect.fill { }
+      polygon.main { fill:black; stroke:black;stroke-width:0.2px }
+      polygon.shadow { fill:none;stroke:black;stroke-width:0.2px }
+      polygon.curve { fill:none;stroke:black;stroke-width:1px }
+      polygon.normal { fill:none;stroke:black;stroke-width:1px }
+      polygon.kdesigma { fill:lightgrey; stroke:grey;stroke-width:0px;fill-opacity:0.2 }
+      polygon.modeldist { fill:url(#U_Sequence);stroke:black;stroke-width:1px }
+      polyline.datacurve { fill:none; stroke:black;stroke-width:1px }
+      polyline.range { fill:none; stroke:black; stroke-width:1px; stroke-linejoin:round }
+      polyline.ensemble { fill:none; stroke:black; stroke-width:0.5px;stroke-opacity:0.2 }
+      polyline.kdemean { fill:none; stroke:black; stroke-width:1px }
+      path.model3 { fill:none;stroke:black;stroke-width:1px }
+      path.model2 { fill:none;stroke:black;stroke-width:1px }
+      path.model1 { fill:none;stroke:black;stroke-width:1px }
+      g.curve { fill:none;stroke:black;stroke-width:1px }
+      line.majorpip { stroke:black; stroke-width:1px }
+      line.minorpip { stroke:black; stroke-width:0.5px }
+      line.gridline { stroke:black; stroke-width:0.5px }
+      line.majorpip2 { stroke:white; stroke-width:1px }
+      line.minorpip2 { stroke:white; stroke-width:0.5px }
+      line.gridline2 { stroke:white; stroke-width:0.5px }
+      line.okline { stroke:black; stroke-width:1px }
+      line.errorline { stroke:black; stroke-width:1px }
+      line.range { stroke:black; stroke-width:1px }
+      line.modelline { stroke:black; stroke-width:1px }
+      line.constrshadow { stroke:none; stroke-width:2px }
+      line.constrok { stroke:black; stroke-width:1px }
+      line.constrerror { stroke:black; stroke-width:1px }
+      line.curve { stroke:black;stroke-width:1px }
+      text { fill:black; stroke:none; font-size:10pt; font-family:"Arial","Helvetica"; font-style:normal }
+    ]]></style>
+   </defs>
+    <g id="mainframe">
+    </g>
+</svg>
+</body>
+</html>

@@ -7,9 +7,9 @@
 plotSpectrum(
   spec.df,
   cl.df = NULL,
-  xlims = NULL,
-  xticks = c(10, 20, 50, 100, 200, 500, 1000),
-  ylims = NULL,
+  x.lims = NULL,
+  x.ticks = c(10, 20, 50, 100, 200, 500, 1000),
+  y.lims = NULL,
   color.line = "black",
   color.cl = "red"
 )
@@ -19,18 +19,18 @@ plotSpectrum(
 
 \item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)}
 
-\item{xlims}{range of plotted periodicities}
+\item{x.lims}{range of plotted periodicities}
 
-\item{xticks}{ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)}
+\item{x.ticks}{ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)}
 
-\item{ylims}{2-vector for the y-axis. If NULL, computed from range(pwr)}
+\item{y.lims}{2-vector for the y-axis. If NULL, computed from range(pwr)}
 
 \item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
 
 \item{color.main}{color of the line representing the spectrum}
 }
 \value{
-SpecPlot, a ggplot object
+a ggplot object
 }
 \description{
 Plot a a single spectrum, with confidence limits (no age ensemble). Useful for comparison with plotSpectraEns() in cases of no age uncertainty (e.g. GCM output)
@@ -39,11 +39,11 @@ Plot a a single spectrum, with confidence limits (no age ensemble). Useful for c
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -64,10 +64,10 @@ Other plot:
 \code{\link{reverselog10_trans}()}
 
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{reverselog10_trans}()}
 }

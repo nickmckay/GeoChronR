@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<script type="text/javascript">
+ var ocd=parent.ocd;
+ var calib=parent.calib;
+ var plotOptions=parent.plotOptions;
+ var ocdIndex=parent.ocdIndex;
+ function isSimple(it)
+ {
+  switch(typeof(it))
+  {
+  case "number":
+  case "string":
+  case "boolean":
+   return true;
+  };
+  return false;
+ };
+ function displaySimple(it)
+ {
+  switch(typeof(it))
+  {
+  case "number":
+   return it.toString();
+  case "string":
+   return '"'+it.toString()+'"';
+  case "boolean":
+   return it.toString();
+  };
+ };
+ function displayItem(it,name)
+ {
+  var disp="";
+  var el;
+  var i;
+  if(it==undefined){return "";};
+  if(isSimple(it))
+  {
+   disp += name + "=" + displaySimple(it) + ";\n";
+  }
+  else
+  {
+   if(typeof(it)!="object"){return "";};
+// check if it is an array
+   if(it.length)
+   {
+    if((it.length>1) && isSimple(it[it.length-1]))
+    {
+     disp += name + "= new Array(" + displaySimple(it[0]);
+     for(i=1;i<it.length;i++)
+     {
+      disp+= ", " + displaySimple(it[i]);
+     };
+     disp += ");\n";
+    }
+    else
+    {
+     disp += name + "= new Array();\n";
+     for(el in it)
+     {
+      disp+=displayItem(it[el],name + "[" + el + "]");
+     };
+    };
+   }
+   else
+   {
+    disp += name + "= new Object();\n";
+    for(el in it)
+    {
+     disp+=displayItem(it[el],name + "." + el);
+    };
+   };
+  };
+  return disp;
+ };
+</script>
+<title>OxCal Raw Data View</title>
+<link rel=stylesheet type=text/css href=../style/OxCal.css>
+</head>
+
+<body onload="document.getElementById('load').submit()">
+<h1>OxCal Plot Loader</h1>
+<hr/>
+<div style="display:none">
+<form name="load" id="load"  method="POST" action="ocp_plot_loader.php">
+<script type="text/javascript">
+ document.write('<textarea rows="20" cols="40" name="Options">');
+ document.writeln(displayItem(plotOptions,"plotOptions"));
+ document.write(displayItem(ocdIndex,"ocdIndex"));
+ document.writeln('</textarea><br/>');
+ document.writeln('<input type="text" name="Source" value="'+parent.source+'"size="40"/>');
+</script>
+</form>
+</div>
+</body>
+
+</html>

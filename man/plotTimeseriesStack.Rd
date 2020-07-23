@@ -6,38 +6,38 @@
 \usage{
 plotTimeseriesStack(
   plot.df,
-  timeVar = "year",
-  colorVar = "paleoData_TSid",
-  fillAlpha = 0.2,
+  time.var = "year",
+  color.var = "paleoData_TSid",
+  fill.alpha = 0.2,
   lineSize = 0.5,
-  scaleFactor = 1/3,
-  scaleHeight = 0.75,
-  labBuff = 0.02,
-  labSize = 3,
-  labSpace = 2,
+  scale.factor = 1/3,
+  scale.height = 0.75,
+  lab.buff = 0.02,
+  lab.size = 3,
+  lab.space = 2,
   colorRamp = function(nColors) {     RColorBrewer::brewer.pal(nColors, "Dark2") }
 )
 }
 \arguments{
 \item{plot.df}{A tidy data.frame, typically the output of tidyTs()}
 
-\item{timeVar}{Which variable to put on the x-axis. Must be in plot.df. Typically "year", "age", or "depth"}
+\item{time.var}{Which variable to put on the x-axis. Must be in plot.df. Typically "year", "age", or "depth"}
 
-\item{colorVar}{Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.}
+\item{color.var}{Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.}
 
-\item{fillAlpha}{Transparency of the shading}
+\item{fill.alpha}{Transparency of the shading}
 
-\item{scaleFactor}{Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)}
+\item{scale.factor}{Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)}
 
-\item{scaleHeight}{Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)}
+\item{scale.height}{Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)}
 
-\item{labBuff}{Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)}
+\item{lab.buff}{Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)}
 
-\item{labSize}{Font size for the ylabels}
+\item{lab.size}{Font size for the ylabels}
 
-\item{labSpace}{Multiplier on labBuff for the axis label separation from the y-scale}
+\item{lab.space}{Multiplier on lab.buff for the axis label separation from the y-scale}
 
-\item{colorFun}{A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))}
+\item{color.fun}{A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))}
 }
 \value{
 A ggplot object of the plot
@@ -49,11 +49,11 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

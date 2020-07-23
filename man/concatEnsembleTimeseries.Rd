@@ -4,16 +4,16 @@
 \alias{concatEnsembleTimeseries}
 \title{Concatenate two independent ensemble timeseries}
 \usage{
-concatEnsembleTimeseries(ae1, pd1, ae2, pd2)
+concatEnsembleTimeseries(age.ens.1, paleo.data.1, age.ens.2, paleo.data.2)
 }
 \arguments{
-\item{ae1}{Age ensemble list for the first dataset}
+\item{age.ens.1}{Age ensemble list for the first dataset}
 
-\item{pd1}{Paleo data list for the first dataset}
+\item{paleo.data.1}{Paleo data list for the first dataset (ensembles optional)}
 
-\item{ae2}{Age ensemble list for the second dataset}
+\item{age.ens.2}{Age ensemble list for the second dataset}
 
-\item{pd2}{Paleo data  list for the second dataset}
+\item{paleo.data.2}{Paleo data  list for the second dataset (ensembles optional)}
 }
 \value{
 a matrix with one instance of concatenate ensemble data

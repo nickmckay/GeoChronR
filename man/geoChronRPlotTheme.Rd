@@ -18,10 +18,10 @@ Use this to define a theme across geoChronR
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

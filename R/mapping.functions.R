@@ -2,23 +2,23 @@
 #
 #' TS overview plot
 #'
-#' @param TS 
-#' @param sortVar What variable in the TS should the map and histogram be organized by? (default = "archiveType)
-#' @param ageRange a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
-#' @param ageVar What age variable should be used (default = "age)
-#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)
-#' @param ... variables to pass to mapTs()
+#' @inheritParams binTS
+#' @param sort.var What variable in the TS should the map and histogram be organized by? (default = "archiveType)
+#' @param age.range a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
+#' @param age.var What age variable should be used (default = "age)
+#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the age.range)
+#' @inheritParams mapTs
 #' @importFrom gridExtra grid.arrange
 #' @return a gridExtra ggplot output
 #' @export
-summaryPlotTs <- function(TS,sortVar = "archiveType", ageRange = NA, ageVar = "age", step = NA,... ){
+summaryPlotTs <- function(TS,sort.var = "archiveType", age.range = NA, age.var = "age", step = NA,... ){
 
 
 #make a map
-tsMap <- mapTs(TS,color = sortVar,...)
+tsMap <- mapTs(TS,color = sort.var,...)
 
 #make a time availability plot
-ta <- plotTimeAvailabilityTs(TS,ageRange = ageRange, ageVar = ageVar, groupVar = sortVar, step = step)+theme(legend.position = "none")
+ta <- plotTimeAvailabilityTs(TS,age.range = age.range, age.var = age.var, group.var = sort.var, step = step)+theme(legend.position = "none")
 
 #define the layout
 lay <- rbind(c(1,1,1),
@@ -36,61 +36,56 @@ return(out)
 #' 
 #' @title Create a Time availability plot
 #' @param TS a lipd TS object. This should probably be filtered to show just records you're interested in, as all we counted
-#' @param ageRange a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
-#' @param ageVar What age variable should be used (default = "age")
-#' @param groupVar What variable Should be used to Group the counts? (default = "archiveType")
-#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the ageRange)
+#' @param age.range a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
+#' @param age.var What age variable should be used (default = "age")
+#' @param group.var What variable Should be used to Group the counts? (default = "archiveType")
+#' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the age.range)
 #' @import ggplot2 tidyr
 #' @importFrom purrr map_dbl map_dfc map_chr
 #' @return a ggplot object
 #' @export
 plotTimeAvailabilityTs <- function(TS,
-                                 ageRange = NA,
-                                 ageVar = "age",
-                                 groupVar = "archiveType",
+                                 age.range = NA,
+                                 age.var = "age",
+                                 group.var = "archiveType",
                                  step = NA){ 
   
   
   #estimate age range
-if(is.na(ageRange)){
-  ageRange <- c(min(purrr::map_dbl(TS,function(x) min(x[[ageVar]],na.rm = TRUE))),
-                max(purrr::map_dbl(TS,function(x) max(x[[ageVar]],na.rm = TRUE))))
+if(is.na(age.range)){
+  age.range <- c(min(purrr::map_dbl(TS,function(x) min(x[[age.var]],na.rm = TRUE))),
+                max(purrr::map_dbl(TS,function(x) max(x[[age.var]],na.rm = TRUE))))
   
 }
 
 #estimate step
 if(is.na(step)){
-step <- round(.005 * abs(diff(ageRange)))
+step <- round(.005 * abs(diff(age.range)))
 }
 
-if(requireNamespace("lipdR", quietly = TRUE)){#check for lipdR
-  gv <- lipdR::pullTsVariable(TS,groupVar)
+gv <- pullTsVariable(TS,group.var)
   
-}else{#this will probably work
-  gv <- sapply(TS,"[[",groupVar)
-
-}
   gv[is.na(gv)] <- "missing metadata"
 ugv <- sort(unique(gv))
 
 
-y1 <- min(ageRange)
-y2 <- max(ageRange)
+y1 <- min(age.range)
+y2 <- max(age.range)
 
 yvec <- seq(floor(y1),
             ceiling(y2),
             by = step)
 
-tvf <- function(ts,ageVar,yvec){
-  return(yvec >= min(ts[[ageVar]],na.rm = T) & yvec <= max(ts[[ageVar]],na.rm = T))
+tvf <- function(ts,age.var,yvec){
+  return(yvec >= min(ts[[age.var]],na.rm = T) & yvec <= max(ts[[age.var]],na.rm = T))
 }
 
-tfmat <- as.matrix(purrr::map_dfc(TS,tvf,ageVar,yvec))
+tfmat <- as.matrix(purrr::map_dfc(TS,tvf,age.var,yvec))
 
 hgroups <- length(ugv)
 
 if(hgroups == 0){
-  stop("no variables in groupVar")
+  stop("no variables in group.var")
 }
 
 countMat <- matrix(0,nrow = nrow(tfmat),ncol = hgroups)
@@ -105,36 +100,42 @@ names(dcm) <- c("yvec",ugv)
 longCount <- tidyr::pivot_longer(dcm,-yvec,names_to = "group")
 
 densityPlot <- ggplot2::ggplot(longCount)+ggplot2::geom_area(ggplot2::aes(x = yvec,y = value, fill = group ))+
-  ggplot2::labs(fill = groupVar)  +
+  ggplot2::labs(fill = group.var)  +
   ggplot2::ylab("count")+
   geoChronRPlotTheme()+
   ggtitle("Data availability")
 
-if(grepl("age",ageVar,ignore.case = T)){
-  densityPlot <- densityPlot+scale_x_reverse(ageVar)
+if(grepl("age",age.var,ignore.case = T)){
+  densityPlot <- densityPlot+scale_x_reverse(age.var)
 }else{
-  densityPlot <- densityPlot+scale_x_continuous(ageVar)
+  densityPlot <- densityPlot+scale_x_continuous(age.var)
 }
 
 return(densityPlot)
 }
 
 #' @export
-#' @import ggplot2
+#' @import ggplot2 dplyr
 #' @family mapping
 #' @title Map a TS object
 #' @author Nick McKay
 #' @description Create a stamen or line map of the location of a list of LiPD objects
+#'
 #' @param TS A list of LiPD objects
 #' @param color variable by which to color
 #' @param size Size of the location marker
+#' @param lat.range Latitudes to use to create baseMap range (default = NA, which determines from TS)
+#' @param lon.range Longitudes to use to create baseMap range (default = NA, which determines from TS)
 #' @param shape Shape of the location marker
-#' @inheritParams baseMap
+#'
+#' @inheritDotParams baseMap
 #' @return ggmap object
 mapTs <- function(TS,
                     color = "archiveType",
                     size=6,
                     shape= 21,
+                    lat.range = NA,
+                    lon.range = NA,
                     ...){
   
   
@@ -151,9 +152,25 @@ mapTs <- function(TS,
   
   #omit NAs
   dfp <- dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
-
+  
+  #which coords to use for basemap?
+  if(is.na(lon.range)){
+    blon <- dfp$lon
+  }else{
+    blon <- lon.range
+    dfp <- dplyr::filter(dfp,between(lon,min(blon),max(blon)))
+    
+  }
+  if(is.na(lat.range)){
+    blat <- dfp$lat
+  }else{
+    blat <- lat.range
+    dfp <- dplyr::filter(dfp,between(lat,min(blat),max(blat)))
+  }
+  
+  
   #create the baseMap  
-  basemap <-  baseMap(dfp$lon,dfp$lat,...)
+  basemap <-  baseMap(lon = blon,lat = blat,...)
   
   #add the dots
   map <-  basemap  + 
@@ -171,17 +188,20 @@ labs(fill = color)
 #' @title Map a list of LiPD objects
 #' @author Nick McKay
 #' @description Create a google or line map of the location of a list of LiPD objects
+#'
 #' @param D A list of LiPD objects
 #' @param color Color of the location marker
 #' @param size Size of the location marker
+#' @param label.site Label the sites on the map (T/f)
+#' @param ... 
 #' @param shape Shape of the location marker
-#' @inheritParams baseMap
+#' @inheritDotParams baseMap
 #' @return ggmap object
 mapLipd <- function(D,
                     color = NA,
                     size=8,
                     shape= 21,
-                    labelSite = TRUE,
+                    label.site = TRUE,
                     ...){
   if(any(names(D) == "paleoData")){#single lipd file
     if(is.na(color)){
@@ -191,7 +211,7 @@ mapLipd <- function(D,
     dfp <- data.frame(lon = L$geo$longitude,lat = L$geo$latitude)
     basemap <-  baseMap(dfp$lon,dfp$lat,...)
     map <-  basemap + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,fill = color,size=size,shape = shape) 
-    if(!is.null( L$geo$siteName) & labelSite){
+    if(!is.null( L$geo$siteName) & label.site){
       dfp$sitename <-  L$geo$siteName
       map <- map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-1)
     }
@@ -240,7 +260,7 @@ mapLipd <- function(D,
 #' @param map.type "stamen" or "line" 
 #' @param f buffer for the map range
 #' @param restrict.map.range TRUE or FALSE. Trim the size of the map to the points, for "line" map type
-#' @param boundcirc Draw a boundary circle around a polar projection. TRUE or FALSE(default).
+#' @param bound.circ Draw a boundary circle around a polar projection. TRUE or FALSE(default).
 #' @param global Should the scope of the map be global? TRUE or FALSE(default).
 #' @param projection Map project. All options on: ?mapproject
 #' @param extend.range increase the span of the map by this much (lat/long degrees)
@@ -251,7 +271,7 @@ baseMap = function(lon,
                    f=.1,
                    restrict.map.range=TRUE,
                    projection="mollweide",
-                   boundcirc=FALSE,
+                   bound.circ=FALSE,
                    global=FALSE,
                    extend.range=5){
   
@@ -261,9 +281,9 @@ baseMap = function(lon,
     lat = lat + c(-extend.range,extend.range)
   }
   
-  #boundcirc and restrict.map.range can't both be true
-  if(boundcirc & restrict.map.range){
-    warning("boundcirc and restrict.map.range can't both be true - setting restrict.map.range to FALSE")
+  #bound.circ and restrict.map.range can't both be true
+  if(bound.circ & restrict.map.range){
+    warning("bound.circ and restrict.map.range can't both be true - setting restrict.map.range to FALSE")
     restrict.map.range=FALSE
   }
   
@@ -368,11 +388,11 @@ baseMap = function(lon,
     if(restrict.map.range){
       baseMap  = baseMap  +  geom_rect(aes(xmax=bb[3]-.1,xmin=bb[1]+.1,ymax=bb[4]-.1,ymin=bb[2]+.1),fill=NA, colour="black",data=bbdf)
     
-    }else if(boundcirc){ #this is only for polar projections
+    }else if(bound.circ){ #this is only for polar projections
       wbb=which(min(abs(bb[c(2,4)]))==abs(bb[c(2,4)]))
       wbb=c(2,4)[wbb]
-      boundcirc = data.frame(x = seq(-180,180),y=rep(bb[wbb]+.1,length.out=length(seq(-180,180))))
-      baseMap  = baseMap  + geom_path(aes(x = x, y = y), data = boundcirc)
+      bound.circ = data.frame(x = seq(-180,180),y=rep(bb[wbb]+.1,length.out=length(seq(-180,180))))
+      baseMap  = baseMap  + geom_path(aes(x = x, y = y), data = bound.circ)
     }
     
     baseMap  = baseMap  +   

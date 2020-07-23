@@ -5,11 +5,11 @@
 #'@family Bchron
 #'@title Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object
 #'@description This is a high-level function that uses Bchron to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Haslett and Parnell (2008) doi:10.1111/j.1467-9876.2008.00623.x for details.
-#'@param L a single LiPD object
-#'@param which.chron the number of the chronData object that you'll be working in
+#'@inheritParams selectData
+#'@param chron.num the number of the chronData object that you'll be working in
 #'@param site.name the name of the site
-#'@param modelNum which chronModel do you want to use?
-#'@param calCurves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
+#'@param model.num chron.numModel do you want to use?
+#'@param cal.curves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
 #'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #'@import Bchron
 #'@examples
@@ -17,66 +17,66 @@
 #'L = runBchron(L)
 #'
 #'Run in noninteractive mode:
-#'L = runBchron(L,which.chron = 1, site.name = "MyWonderfulSite", modelNum = 3, calCurves = "marine13") 
+#'L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
 
 runBchron =  function(L,
-                      which.chron=NA,
+                      chron.num=NA,
                       which.table = NA,
                       site.name=L$dataSetName,
-                      modelNum=NA, 
-                      calCurves = NA,
+                      model.num=NA, 
+                      cal.curves = NA,
                       iter = 10000,
-                      outlierProbs = 0.05,
+                      outlier.probs = 0.05,
                       ask = TRUE,
-                      labIDVar="labID",  
-                      age14CVar = "age14C", 
-                      age14CuncertaintyVar = "age14CUnc", 
-                      ageVar = "age",
-                      ageUncertaintyVar = "ageUnc", 
-                      depthVar = "depth", 
-                      reservoirAge14CVar = "reservoirAge",
-                      reservoirAge14CUncertaintyVar = "reservoirAge14C",
-                      rejectedAgesVar="rejected",
+                      lab.id.var="labID",  
+                      age.14c.var = "age14C", 
+                      age.14c.uncertainty.var = "age14CUnc", 
+                      age.var = "age",
+                      age.uncertainty.var = "ageUnc", 
+                      depth.var = "depth", 
+                      reservoir.age.14c.var = "reservoirAge",
+                      reservoir.age.14c.uncertainty.var = "reservoirAge14C",
+                      rejected.ages.var="rejected",
                       depth.units = "cm",
                       ...){
   
   
   cur.dir = getwd()
   
-  #initialize which.chron
-  if(is.na(which.chron)){
+  #initialize chron.num
+  if(is.na(chron.num)){
     if(length(L$chronData)==1){
-      which.chron=1
+      chron.num=1
     }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to run Bchron for? "))
+      chron.num=as.integer(readline(prompt = "Which chronData do you want to run Bchron for? "))
     }
   }
   
   
   #initialize model number
-  if(is.na(modelNum)){
-    if(is.null(L$chronData[[which.chron]]$model[[1]])){
+  if(is.na(model.num)){
+    if(is.null(L$chronData[[chron.num]]$model[[1]])){
       #no models, this is first
-      modelNum=1
+      model.num=1
     }else{
-      print(paste("You already have", length(L$chronData[[which.chron]]$model), "chron model(s) in chronData" ,which.chron))
-      modelNum=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+      print(paste("You already have", length(L$chronData[[chron.num]]$model), "chron model(s) in chronData" ,chron.num))
+      model.num=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
     }
   }
   
   #get chron data data frame
   cdf <- createChronMeasInputDf(L,
-                                which.chron,
+                                chron.num,
                                 which.table,
-                                labIDVar,
-                                age14CVar, 
-                                age14CuncertaintyVar, 
-                                ageVar, 
-                                ageUncertaintyVar, 
-                                depthVar, 
-                                reservoirAge14CVar,
-                                reservoirAge14CUncertaintyVar,
-                                rejectedAgesVar)
+                                lab.id.var,
+                                age.14c.var, 
+                                age.14c.uncertainty.var, 
+                                age.var, 
+                                age.uncertainty.var, 
+                                depth.var, 
+                                reservoir.age.14c.var,
+                                reservoir.age.14c.uncertainty.var,
+                                rejected.ages.var)
   
   #replace NAs appropriately
   cdf[is.na(cdf[,1]),1] <- "unknown"
@@ -87,19 +87,19 @@ runBchron =  function(L,
 
   
   # Prompt the user for the calibration curve
-  if(is.na(calCurves)){
+  if(is.na(cal.curves)){
     if(!is.null(L$archiveType)){#make an educated guess
       if(grepl(L$archiveType,pattern = "marine")){
-        calCurves <- "marine13"
+        cal.curves <- "marine13"
       }else{
-        calCurves <- "intcal13"
+        cal.curves <- "intcal13"
       }
     }else{
          possible_curve = c("marine13","intcal13","shcal13","normal")
          print("You haven't specified a calibration curve")
          for (i in seq(from=1, to=length(possible_curve), by =1)){
            print(paste(i,": ",possible_curve[i]))}
-         calCurves = possible_curve[as.integer(readline(prompt = "Enter the number of the calibration curve you'd like to use: "))]
+         cal.curves = possible_curve[as.integer(readline(prompt = "Enter the number of the calibration curve you'd like to use: "))]
     }
   }
   
@@ -131,27 +131,27 @@ runBchron =  function(L,
     cdf$adjustedAgeUncertainty <- sqrt(cdf$allUnc^2 + cdf$reservoirAgeUnc^2)
     
     #figure out calcurves
-    cdf$calCurve <- calCurves
+    cdf$cal.curve <- cal.curves
     
     which.calage <- which(grepl(cdf$ageType,pattern = "cal"))
-    cdf$calCurve[which.calage] <- "normal"
+    cdf$cal.curve[which.calage] <- "normal"
     
     too.old <- which(cdf$adjustedAges + 3*cdf$adjustedAgeUncertainty > 35000)
-    cdf$calCurve[too.old] <- "normal"
+    cdf$cal.curve[too.old] <- "normal"
     
     #add in outlier probs
-    cdf$outlierProbs <- outlierProbs
+    cdf$outlier.probs <- outlier.probs
 
 
   # Perfom the run (finally)
   run <-  Bchron::Bchronology(ages = cdf$adjustedAges, 
                             ageSds = cdf$adjustedAgeUncertainty, 
-                            calCurves = cdf$calCurve, 
+                            calCurves = cdf$cal.curve, 
                             positions = cdf$depth,
                             positionThicknesses = rep(1,length(cdf$depth)),
                             iterations = iter,
                             jitterPositions = TRUE,
-                            outlierProbs = cdf$outlierProbs,
+                            outlierProbs = cdf$outlier.probs,
                             ...)
                             
   
@@ -165,12 +165,14 @@ runBchron =  function(L,
   
   #write it out
   
-  L$chronData[[which.chron]]$model[[modelNum]]=list(methods=methods)
+  L$chronData[[chron.num]]$model[[model.num]]=list(methods=methods)
   
   
   # Ensemble table since it's easy to access in Bchron
   ageEns = list()
   ageEns$ageEnsemble$values = t(run$thetaPredict)
+  ageEns$ageEnsemble$variableName <- "ageEnsemble"
+  
   bc <- which(colSums(is.finite(ageEns$ageEnsemble$values)) == 0)
   if(length(bc) > 0){
     if(length(bc) == ncol(ageEns$ageEnsemble$values)){
@@ -185,14 +187,14 @@ runBchron =  function(L,
   ageEns$depth$values = run$predictPositions
   ageEns$depth$units =  depth.units
   
-  L$chronData[[which.chron]]$model[[modelNum]]$ensembleTable[[1]]=ageEns
+  L$chronData[[chron.num]]$model[[model.num]]$ensembleTable[[1]]=ageEns
   
   #Probability distribution table
   for (i in seq(from=1, to=length(run$calAges), by =1)){
     distTable=list()
     distTable$depth = run$calAges[[i]]$positions
     distTable$depthunits ='cm'
-    distTable$calibrationCurve = calCurves
+    distTable$calibrationCurve = cal.curves
     distTable$age14C = run$calAges[[i]]$ages
     distTable$sd14C = run$calAges[[i]]$ageSds
     distTable$probabilityDensity$variableName = "probabilityDensity"
@@ -204,7 +206,7 @@ runBchron =  function(L,
     distTable$age$variableName <- "age"
     
     # write it out
-    L$chronData[[which.chron]]$model[[modelNum]]$distributionTable[[i]]=distTable
+    L$chronData[[chron.num]]$model[[model.num]]$distributionTable[[i]]=distTable
   }
   
   # Summary Table
@@ -215,7 +217,7 @@ runBchron =  function(L,
   sumTable$meanCalibratedAge$values = rowMeans(t(run$theta))
   sumTable$meanCalibratedAge$units = "yr BP"
   
-  L$chronData[[which.chron]]$model[[modelNum]]$summaryTable[[1]]=sumTable
+  L$chronData[[chron.num]]$model[[model.num]]$summaryTable[[1]]=sumTable
   
   return(L)
   

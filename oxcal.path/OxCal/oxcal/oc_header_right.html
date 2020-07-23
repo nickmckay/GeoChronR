@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Header</title>
+  <link rel="stylesheet" type="text/css" href="../style/db.css">
+ <script type="text/javascript" src="../utils/Menu.js">
+ </script>
+ <script type="text/javascript">
+  var views=new Array("output","table","individual","multiple","curve","z",
+   "parameter","model","outlier","raw","status");
+  var viewNames=new Array("Output","Table","Single plot","Multiple plot",
+   "Curve plot","Depth plot","Model specification","Model schematic","Outliers",
+   "Raw data","Run status");
+  var viewno=0;
+  function changeView(el)
+  {
+   if(el.selectedIndex)
+   {
+    switch(views[el.selectedIndex])
+    {
+    case "table":
+    case "multiple":
+     parent.plotOptions.plotFrom=0;
+     break;
+    };
+    parent.setView(views[el.selectedIndex]);
+   };
+  };
+  function initialise()
+  {
+   var el;
+   el=document.getElementById('view');
+   if(el)
+   {
+    el.selectedIndex=viewno;
+   };
+  };
+  function ppp(no)
+  {
+   switch(views[viewno])
+   {
+   case "multiple":
+   case "curve":
+   case "z":
+   case "parameter":
+    parent.left.setPlotsPerPage(parent.plotOptions.plotsPerPage+no);
+    parent.left.updater(false);
+    break;
+   default:
+    switch(no)
+    {
+    case -5:
+     zoom(1/1.4142);
+     break;
+    case -1:
+     zoom(1/1.0443);
+     break;
+    case 1:
+     zoom(1.0443);
+     break;
+    case 5:
+     zoom(1.4142);
+     break;
+    };
+    break;
+   };
+  };
+  function zoom(no)
+  {
+   parent.left.changeZoom(no);
+   parent.left.updater(false);
+  };
+  function moveCentre(no)
+  {
+   parent.left.moveCentre(no);
+   parent.left.updater(false);
+  };
+  function changeSpan(no)
+  {
+   parent.left.changeSpan(no);
+   parent.left.updater(false);
+  };
+  function changeMinY(no)
+  {
+   parent.left.changeMinY(no);
+   parent.left.updater(false);
+  };
+  function changeYRange(no)
+  {
+   parent.left.changeYRange(no);
+   parent.left.updater(false);
+  };
+  function togglePlotReversed()
+  {
+   parent.plotOptions.showReversed=!parent.plotOptions.showReversed;
+   parent.left.readback();
+   parent.left.updater(false);  
+  };
+ </script>
+</head>
+<body class="tool" style="padding:0px" onload="initialise()">
+ <table class="menubar" style="width:100%">
+  <tr>
+   <script type="text/javascript">
+     var i;
+     switch(parent.mainMode)
+     {
+     case "Input":
+      document.write("<td class='button'>");
+      Button("parent.setInView(0)","../img/ModelView.gif");       
+      document.write("<\/td><td class='button'>");
+      Button("parent.reversed=!parent.reversed;parent.setInView(0)","../img/Reverse.gif");       
+      document.write("<\/td><td class='button'>");
+      Button("parent.setInView(1)","../img/ListView.gif");       
+      document.write("<\/td><td class='button'>");
+      Button("parent.setInView(2)","../img/CodeView.gif");       
+      document.write("<\/td><td class='button'>");
+      document.write("<\/td><td class='button'>");
+      Button("parent.cut()","../img/Cut.gif");       
+      document.write("<\/td><td class='button'>");
+      Button("parent.copy()","../img/Copy.gif");       
+      document.write("<\/td><td class='button'>");
+      Button("parent.paste()","../img/Paste.gif");       
+      document.write("<\/td>");
+      if(parent.source!="ocp_null.js")
+      {
+       document.write("<td style='text-align:right'>File:<\/td>");
+       document.write("<td style='text-align:left'>"+parent.source.replace(".oxcal","")+"<\/td>");
+      };
+     
+      document.write("<td>&nbsp;<\/td>");
+      document.write("<td style='width:30px'>");
+      Button("parent.runOrPlotFile()","../img/GoForward.gif");       
+      document.write("<\/td>");
+      break;
+     case "Plot":
+      if(parent.plotOptions.viewType!="table")
+      {
+       document.write("<td class='button'>");
+       Button("parent.left.viewClick(0)","../img/Table.gif");
+       document.write("<\/td>");
+      };
+      switch(parent.plotOptions.viewType)
+      {
+  	  case "individual":
+      case "status":
+      case "raw":
+      case "outlier":
+      case "parameters":
+       break;
+      default:
+       document.write("<td class='button'>");
+       Button("togglePlotReversed()","../img/Reverse.gif");       
+       document.write("<\/td>");
+       break;
+      };
+      document.writeln("<td style='text-align:left'><select onclick='changeView(this)' name='view' id='view'>");
+      for(i=0;i<views.length;i++)
+      {
+       document.writeln("<option>"+viewNames[i]+"<\/option>");
+       if(views[i]==parent.plotOptions.viewType)
+       {
+        viewno=i;
+       };
+      };
+      document.writeln("<\/select><\/td>");
+      switch(parent.plotOptions.viewType)
+      {
+      case "table":
+      case "status":
+      case "raw":
+      case "outlier":
+      case "parameters":
+       if(parent.source!="ocp_null.js")
+       {
+        document.write("<td style='text-align:right'>File:<\/td>");
+        document.write("<td style='text-align:left'>"+parent.source.replace(".js","")+"<\/td>");
+       };
+       break;
+      default:
+       document.write("<td style='text-align:right'>Zoom:<\/td>");
+       document.write("<td class='button'>");
+       Rocker("zoomMap");
+       document.write("<\/td>");
+       document.write("<td style='text-align:right'>Centre:<\/td>");
+       document.write("<td class='button'>");
+       Rocker("centreMap");
+       document.write("<\/td>");
+       document.write("<td style='text-align:right'>Span:<\/td>");
+       document.write("<td class='button'>");
+       Rocker("spanMap");
+       document.write("<\/td>");
+       break;
+      };
+      switch(parent.plotOptions.viewType)
+      {
+  	  case "individual":
+      case "multiple":
+      case "select":
+      case "stack":
+      case "raw":
+       document.write("<td style='text-align:right'>Page:<\/td>");
+       document.write("<td class='button'>");
+       Button("parent.left.setPlotFrom(parent.plotOptions.plotPrev)","../img/DoubleLeft.gif");
+       document.write("<\/td><td class='button'>");
+       Button("parent.left.setPlotFrom(parent.plotOptions.plotLast)","../img/Left.gif");
+       document.write("<\/td><td class='button'>");
+       Button("parent.left.setPlotFrom(parent.plotOptions.plotNext)","../img/Right.gif");
+       document.write("<\/td><td class='button'>");
+       Button("parent.left.setPlotFrom(parent.plotOptions.plotTo+1)","../img/DoubleRight.gif");
+       document.write("<\/td>");
+       break;
+      default:
+       document.write("<td>&nbsp;<\/td><td>&nbsp;<\/td><td>&nbsp;<\/td><td>&nbsp;<\/td>");
+       break;
+      };
+      break;
+     default: 
+      break;
+     };
+   </script>
+  </tr>
+  <tr><td style='height:1px'> </td></tr> 
+  </table>
+   <map id="zoomMap" name="zoomMap">
+      <area shape="rect" coords="6,0,16,2" alt="Up" href="javascript:ppp(5);" />
+      <area shape="rect" coords="8,3,14,7" alt="up" href="javascript:ppp(1);" />
+      <area shape="rect" coords="8,15,14,19" alt="down" href="javascript:ppp(-1);" />
+      <area shape="rect" coords="6,20,16,22" alt="Down" href="javascript:ppp(-5);" />
+      <area shape="rect" coords="0,6,2,16" alt="Left" href="javascript:zoom(1/1.4142);" />
+      <area shape="rect" coords="3,8,7,14" alt="left" href="javascript:zoom(1/1.0443);" />
+      <area shape="rect" coords="15,8,19,14" alt="right" href="javascript:zoom(1.0443);" />
+      <area shape="rect" coords="20,6,22,16" alt="Right" href="javascript:zoom(1.4142);" />
+    </map> 
+   <map id="spanMap" name="spanMap">
+      <area shape="rect" coords="6,0,16,2" alt="Up" href="javascript:changeYRange(2);" />
+      <area shape="rect" coords="8,3,14,7" alt="up" href="javascript:changeYRange(1.05);" />
+      <area shape="rect" coords="8,15,14,19" alt="down" href="javascript:changeYRange(1/1.05);" />
+      <area shape="rect" coords="6,20,16,22" alt="Down" href="javascript:changeYRange(0.5);" />
+      <area shape="rect" coords="0,6,2,16" alt="Left" href="javascript:changeSpan(0.5);" />
+      <area shape="rect" coords="3,8,7,14" alt="left" href="javascript:changeSpan(1/1.05);" />
+      <area shape="rect" coords="15,8,19,14" alt="right" href="javascript:changeSpan(1.05);" />
+      <area shape="rect" coords="20,6,22,16" alt="Right" href="javascript:changeSpan(2);" />
+    </map> 
+   <map id="centreMap" name="centreMap">
+      <area shape="rect" coords="6,0,16,2" alt="Up" href="javascript:changeMinY(0.5);" />
+      <area shape="rect" coords="8,3,14,7" alt="up" href="javascript:changeMinY(0.05);" />
+      <area shape="rect" coords="8,15,14,19" alt="down" href="javascript:changeMinY(-0.05);" />
+      <area shape="rect" coords="6,20,16,22" alt="Down" href="javascript:changeMinY(-0.5);" />
+      <area shape="rect" coords="0,6,2,16" alt="Left" href="javascript:moveCentre(-0.5);" />
+      <area shape="rect" coords="3,8,7,14" alt="left" href="javascript:moveCentre(-0.05);" />
+      <area shape="rect" coords="15,8,19,14" alt="right" href="javascript:moveCentre(0.05);" />
+      <area shape="rect" coords="20,6,22,16" alt="Right" href="javascript:moveCentre(0.5);" />
+    </map> 
+</body>
+</html>

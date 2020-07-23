@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="">
+  <title>Plot loader</title>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<script type="text/javascript" src="../jsobj/ObjectWriter.js"></script>
+<script type="text/javascript">
+ var canvas,plotInfo,plotOptions,plotData,multiPlots,plotColor;
+  function initialise()
+  {
+   var temp,i;
+   canvas=parent.decodeObject(canvas);
+   plotInfo=parent.decodeObject(plotInfo);
+   plotOptions=parent.decodeObject(plotOptions);
+   plotData=parent.decodeObject(plotData);
+   multiPlots=parent.decodeObject(multiPlots);
+   plotColor=parent.decodeObject(plotColor);
+   if(canvas && parent.fileOptions.canvas)
+   {
+    parent.canvas=parent.duplRemoteItem(window,canvas);
+   };
+   if(plotOptions && parent.fileOptions.format)
+   {
+    parent.plotOptions=parent.duplRemoteItem(window,plotOptions);
+   };
+   if(plotData && parent.fileOptions.data)
+   {
+    temp=parent.duplRemoteItem(window,plotData);
+    for(i=0;i<temp.length;i++)
+    {
+     parent.plotData.push(temp[i]);
+    };
+   };
+   if(plotInfo && parent.fileOptions.view)
+   {
+    parent.plotInfo=parent.duplRemoteItem(window,plotInfo);
+   };
+   if(plotColor && parent.fileOptions.view)
+   {
+    parent.plotColor=parent.duplRemoteItem(window,plotColor);
+   };
+   if(multiPlots && parent.fileOptions.view)
+   {
+    parent.multiPlots=parent.duplRemoteItem(window,multiPlots);
+   };
+   parent.setValues(false,true);
+  };
+</script>
+<script type="text/javascript">
+  if(parent.fileinclude)
+  {
+   document.writeln('<script type="text\/javascript" src="'+parent.fileinclude+'"><\/script>');
+   parent.fileinclude=false;
+  }
+  else
+  {
+   if(parent.onAServer())
+   {
+    document.writeln('<script type="text\/javascript"  src="'+'../fs/get_file.php?filename='+parent.filename+'"><\/script>');
+   }
+   else
+   {
+    document.writeln('<script type="text\/javascript" src="'+"file:\/\/"+parent.filename.replace(/\\/g,"\/")+'"><\/script>');
+   };
+  };
+</script>
+</head>
+<body class="clear" onload="initialise()">
+</body>
+</html>

@@ -1,0 +1,84 @@
+.expander    { border:0px none; font-size:8pt;  color: #FF0000; display:inline }
+.link      { color:#99CCCC }
+.linked      { color: #0000FF }
+.linkhover { color:#99CCCC;text-decoration: underline }
+.menu { font-size: 10pt; color: #000000 }
+.menuBack { font-size: 10pt;border: solid 1px #666666;padding:2px; color: #333333 }
+.menuBright { font-size: 10pt;background-color: #0066E0; color: #FFFFFF }
+.menuForward { font-size: 10pt;background-color:rgba(225,225,230,0.9); padding:2px;border-top: outset 1px;border-left: outset 1px;border-right: outset 1px; border-bottom:none 1px; }
+.menuHigh { font-size: 10pt;background-color: #003399; color: #FFFFFF }
+.menuTouch { font-size: 10pt;background-color:rgba(225,225,230,0.9);padding:2px;border: solid 1px #666666; }
+a:active { color:#0000FF; text-decoration:none; }
+a:link { color:#0000FF; text-decoration:none; }
+a:visited { color:#0000FF; text-decoration:none; }
+body         { padding:8px;font-size: 10pt; font-family: "Helvetica Neue", helvetica, arial, sans-serif;color:#000000 }
+body.clear    { padding:8px;background-color: #002147; font-size:8pt;  color: #FFFFFF  }
+body.tool     { background-color:rgba(225,225,230,0.9) }
+div.body	 { position: absolute;width:98%;top: 115px;left:1%; }
+div.button   { width:26px; height:21px;overflow:hidden;line-height:0px;border-radius:4px;border:solid 1px #CCC;background-color:rgba(255,255,255,0.5) }
+div.button:hover   { background-color:rgba(255,255,255,0.2) }
+div.confirmbox { border: outset 1px;padding:8px;width:90%; background-color:rgba(225,225,230,0.9);  color:#000000; position:relative; left:2.5%; margin-top:8px; margin-bottom:8px }
+div.error	 { display:none; background-color:#FF9966;color:#000000 }
+div.filename { position: absolute;width:78%;top: 8px; left:21%; text-align:right }
+div.header	 { position:absolute;top:0px;left:0px;width:100%;height:90px; font-size: 10pt; background-color: #002147;color: #ffffff; }
+div.headerBar  { position: absolute; left:0px; width: 100%;top: 70px }
+div.headerCrest { position: absolute; left:0px; top:0px; }
+div.headerLogo { position: absolute; border:0px;padding:0px; left:75%;width:25%;top:2px;text-align:right }
+div.headerTitle { position: absolute; left:200px;width:500px;top:15px }
+div.help { border: inset 1px white;padding:4px;width:90%;background-color: #FFFFCC; display:none; color:#000000;position:relative;left:2.5%;margin-top:4px; margin-bottom:4px }
+div.helpButton { position: absolute; left:85%; top:3px; color:#999999;font-size: 18pt; font-weight: bold;}
+div.login		{ position: absolute; left: 200px;width: 300px }
+div.maths { border:solid black 1px; margin: 10px;background-color:#CCCCCC;padding:10px;display:none }
+div.menu { border: outset 1px;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:100% }
+div.option { display:none }
+div.search { position: absolute; left:50%; top:3px }
+h1 { font-size: 18pt; font-weight: normal; color: #9999CC; margin-top:1px; margin-bottom:0px }
+h1.header { font-size: 18pt; font-weight: normal; color: #B49D5A; margin-top:1px; margin-bottom:0px }
+h2 { font-size: 12pt; font-weight: bold; color: #002147; margin-top:0px; margin-bottom:0px }
+h3 { font-size: 10pt; font-weight: bold; color: #666666; margin-top:0px; margin-bottom:0px }
+h4.maths { width:80px;background-color:#999999;font-size: 10pt; font-weight: bold; color: #FFFFFF; margin:4px;padding:2px; }
+img.button { height: 18px; padding:0px; margin:0px; border:0px; }
+input.readonly    { color: #000000; background-color:#CCCCCC;border:0px none; text-align:right }
+input.text { font-size:10pt; background-color: #FFFFCC }
+pre.file { margin:20px;color:#FF0000 }
+span.expression { font-style:italic }
+span.help { background-color: #002147; display:none; color:#FFFF00 }
+span.normal  { font-size:10pt;  color: #000000;display:inline }
+span.quote { font-weight:bold }
+span.selected  { font-size:10pt;  color: #0000FF;display:inline }
+table.active   { border-width: 0px; background-color: #002147; font-size:8pt;  color: #FFFFFF; display: block }
+table.clear    { background-color: #FFFFFF; font-size:8pt;  color: #000000 }
+table.clearHelp    { border: inset 1px; background-color: #FFFFCC; font-size:8pt;  color: #000000 }
+table.clearInside    { border: inset 1px; background-color: #6699CC; font-size:8pt;  color: #000000 }
+table.dir   { border-width: 0px; font-size: 10pt; width:auto; height:auto; }
+table.inactive { border-width: 0px; background-color: #002147; font-size:8pt;  color: #FFFFFF; display: none }
+table.menu { border: outset 1px;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:100% }
+table.menubar { border: outset 1px white;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:100% }
+table.menuDrop { border: outset 1px #999999;font-size: 10pt;background-color: rgba(230,230,235,0.95); color: #000000;width:auto;  }
+table.menutab { border-collapse:separate;border-spacing: 0px;padding:0px;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:100% }
+table.menuWide { border: outset 1px;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:400px }
+table.normal  { border: outset 1px #999999;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000; font-size:8pt; }
+table.object { border: outset 1px;font-size: 10pt;background-color:rgba(225,225,230,0.9); color: #000000;width:100%; }
+table.param   { border: outset 1px;background-color: #CCCCCC;font-size: 8pt;  width:auto; height:auto }
+td.button { text-align: center; padding:0px;border: outset 2px white }
+td.buttonDown { text-align: center; padding:0px;border: inset 2px white }
+td.comment { border-width:1px; background-color: #FFFFFF;color: #000000 }
+td.filelink { text-align:left; color: #0000FF }
+td.normal  { border-width: 1px; background-color: #CCCCCC; font-size:8pt;  color: #000000 }
+td.prompt { text-align:right }
+td.selected  { border-width: 1px; background-color: #0066E0; font-size:8pt;  color: #FFFFFF }
+td.warning { color: #FF0000 }
+textarea.clear { font-size:10pt;  }
+textarea.code { font-size:10pt; background-color: #FFFFCC }
+textarea.compact { font-size: 8pt; background-color: #FFFFCC }
+th           { text-align: left }
+th.menu { border: groove 2px white;font-size: 10pt; color: #000000 }
+th.normal  { font-size:8pt;  color: #000000;font-weight:normal }
+th.selected  { background-color: #0066E0; font-size:8pt;  color: #FFFFFF;font-weight:normal }
+tr.even { background-color: #F0F0F0 }
+tr.header { background-color:rgba(225,225,230,0.9);  }
+tr.model { background-color: #CCCCFF }
+tr.odd { background-color: #FFFFFF }
+ul           { list-style-type: circle;font-size:10pt; color: #000000 }
+ul.blank     { list-style-type: none;list-style-image:none;font-size:10pt; color: #000000 }
+ul.help      { list-style-type: circle; font-size: 8pt; }

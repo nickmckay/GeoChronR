@@ -12,12 +12,12 @@ plotTimeseriesEnsRibbons(
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
   x.bin = NA,
   y.bin = NA,
-  nbins = 200,
+  n.bins = 200,
   color.low = "white",
   color.high = "grey70",
   color.line = "Black",
   color.vector = NA,
-  lineWidth = 1,
+  line.width = 1,
   export.quantiles = FALSE,
   ...
 )
@@ -37,17 +37,17 @@ plotTimeseriesEnsRibbons(
 
 \item{y.bin}{vector of bin edges over which to bin.}
 
-\item{nbins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
+\item{n.bins}{number bins over which to calculate intervals. Used to calculate x.bin if not provided.}
 
-\item{color.low}{Band color of the outermost band.}
+\item{color.low}{Color of the outermost band; the extreme quantiles of the distribution}
 
-\item{color.high}{Band color of the innermost band.}
+\item{color.high}{Color of the innermost band; the central quantiles of the distribution}
 
 \item{color.line}{Line color (following ggplot rules)}
 
 \item{color.vector}{A vector (of length equal to the number of bands) that specifies the colors for the ribbons from the outermost band in (default = NA). Colors specified as string according to ggplot2 conventions. If present, this overrules color.high and color.low}
 
-\item{lineWidth}{Width of the line}
+\item{line.width}{Width of the line}
 
 \item{export.quantiles}{If TRUE, teturn the plotted quantiles rather than the plot}
 }
@@ -61,11 +61,11 @@ Plot an ensemble timeseries as a set of bands of probability. Useful for display
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

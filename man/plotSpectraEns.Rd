@@ -7,9 +7,9 @@
 plotSpectraEns(
   spec.ens,
   cl.df = NULL,
-  xlims = NULL,
-  xticks = c(10, 20, 50, 100, 200, 500, 1000),
-  ylims = NULL,
+  x.lims = NULL,
+  x.ticks = c(10, 20, 50, 100, 200, 500, 1000),
+  y.lims = NULL,
   color.low = "white",
   color.high = "grey70",
   color.line = "Black",
@@ -22,21 +22,21 @@ plotSpectraEns(
 
 \item{cl.df}{list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)}
 
-\item{xlims}{2-element vector defining the range of periods (x-axis)}
+\item{x.lims}{2-element vector defining the range of periods (x-axis)}
 
-\item{xticks}{n-element vector of the periods labeled}
+\item{x.ticks}{n-element vector of the periods labeled}
 
-\item{ylims}{2-element vector defining the range of spectral power (y-axis)}
+\item{y.lims}{2-element vector defining the range of spectral power (y-axis)}
 
-\item{color.low}{colour for extreme quantiles of the distribution (low probability); see `plotTimeseriesRibbons`)}
+\item{color.low}{Color of the outermost band; the extreme quantiles of the distribution}
 
-\item{color.high}{colour for central quantiles of the distribution (high probability); see `plotTimeseriesRibbons`)}
+\item{color.high}{Color of the innermost band; the central quantiles of the distribution}
 
-\item{color.line}{color used for the median spectrum (see `plotTimeseriesRibbons`)}
+\item{color.line}{Line color (following ggplot rules)}
 
 \item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
 
-\item{alp}{alpha (transparency) parameter for the ribbons}
+\item{alp}{Line transparency}
 }
 \value{
 a ggplot object
@@ -51,11 +51,11 @@ Plot the output of `computeSpectraEns` as a ribbon plot of distributions, with s
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -76,10 +76,10 @@ Other plot:
 \code{\link{reverselog10_trans}()}
 
 Other spectra: 
-\code{\link{PeriodAnnotate}()},
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
 }

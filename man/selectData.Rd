@@ -6,43 +6,43 @@
 \usage{
 selectData(
   L,
-  varName = NA,
-  where = "paleoData",
-  which.data = NA,
-  tableType = "measurement",
-  which.mt = NA,
+  var.name = NA,
+  paleo.or.chron = "paleoData",
+  paleo.or.chron.num = NA,
+  table.type = "measurement",
+  meas.table.num = NA,
   always.choose = FALSE,
-  altNames = NA,
+  alt.names = NA,
   model.num = 1,
-  which.ens = 1,
-  which.sum = 1,
-  strictSearch = FALSE
+  ens.table.num = 1,
+  sum.table.num = 1,
+  strict.search = FALSE
 )
 }
 \arguments{
 \item{L}{a lipd object}
 
-\item{varName}{string name of the variable to extract}
+\item{var.name}{string name of the variable to extract}
 
-\item{where}{"paleoData" or "chronData"}
+\item{paleo.or.chron}{"paleoData" or "chronData"}
 
-\item{which.data}{an integer that corresponds to which paleo or chron Data object (L$<where>Data[[?]]) has the variable you want?}
+\item{paleo.or.chron.num}{an integer that corresponds to paleo.num or chron Data object (L$<paleo.or.chron>[[?]]) has the variable you want?}
 
-\item{tableType}{What type of table do you want to select data from? ("measurement", "summary" or "ensemble")}
+\item{table.type}{What type of table do you want to select data from? ("measurement", "summary" or "ensemble")}
 
-\item{which.mt}{an integer that corresponds to which paleo measurementTable has the variable you want?}
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
 
 \item{always.choose}{Force selection of the variable from a list}
 
-\item{altNames}{A vector of strings for alternative names to search for}
+\item{alt.names}{A vector of strings for alternative names to search for}
 
-\item{model.num}{an integer that corresponds to which model that has the variable you want}
+\item{model.num}{an integer that corresponds to model.num that has the variable you want}
 
-\item{which.ens}{an integer that corresponds to which ensembleTable you want to get the variable from?}
+\item{ens.table.num}{an integer that corresponds to ensembleTable you want to get the variable from?}
 
-\item{which.sum}{an integer that corresponds to which summaryTable you want to get the variable from?}
+\item{sum.table.num}{an integer that corresponds to which summaryTable you want to get the variable from?}
 
-\item{strictSearch}{Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
+\item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }
 \value{
 A LiPD "variable list" object
@@ -54,6 +54,7 @@ Selects and extracts a LiPD "variable list"
 Other LiPD manipulation: 
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
-\code{\link{mapAgeEnsembleToPaleoData}()}
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()}
 }
 \concept{LiPD manipulation}

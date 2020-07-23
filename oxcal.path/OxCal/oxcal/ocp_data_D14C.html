@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<title>D14C</title>
+  <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+  <script type="text/javascript">
+  calib=parent.calib;
+  function calcData()
+  {
+   var min,max;
+   var str="";
+   var i,yr,rpmc,D14c;
+   if(!calib[0]){return;};
+   min=0;max=1;
+   document.getElementById("dataLabel").value="\u039414C";
+   for(i=0;i<calib[0].bp.length;i++)
+   {
+    yr=calib[0].start + i*calib[0].resolution;
+    rpmc=100*Math.exp(-calib[0].bp[i]/8033.0)/
+     Math.exp((yr-parent.plotOptions.BPDatum)/8266.64);
+    D14C=10*(rpmc-100);
+    if(D14C<min){min=D14C;};
+    if(D14C>max){max=D14C;};
+    str+=yr+"\t"+Math.round(D14C*10)/10+"\n";
+   };
+   document.getElementById("dataMin").value=min;
+   document.getElementById("dataMax").value=max;
+   document.getElementById("dataValues").value=str;
+   document.getElementById("wait").style.display="none";
+  };
+  </script>
+</head>
+
+<body class="clear" onload="window.setTimeout('calcData()',100)">
+ <h1> <img onclick="parent.updateView()" onmouseover="this.src='../img/BackOver.gif'" onmouseout="this.src='../img/Back.gif'" src="../img/Back.gif" width="25" height="20"/> &Delta;<sup>14</sup>C
+ <script type="text/javascript">
+  if(calib[0])
+  {
+   document.write(calib[0].ref);
+  };
+ </script>
+ </h1>
+ <hr/>
+ <table class="menuWide">
+  <tbody>
+   <tr><th colspan="2">Data</td></tr>   
+   <tr>
+      <td>Label</td>
+      <td><input type="text" id="dataLabel" size="12""></td>
+   </tr>
+   <tr><th>Date</th><th>Value</th></tr>
+   <tr>
+    <td colspan=2><textarea rows="16" id="dataValues" cols="32" class="compact"></textarea></td>
+   </tr>
+   <tr>
+      <td>Min</td>
+      <td><input type="text" id="dataMin" size="12"></td>
+   </tr>
+   <tr>
+      <td>Max</td>
+      <td><input type="text" id="dataMax" size="12"></td>
+   </tr>
+   <tr>
+      <td>cal BC/AD</td>
+      <td><input type="checkbox" id="dataBCAD" value="ON" checked></td>
+   </tr>
+   <tr><td></td><td><input type="button" value="Ok" onclick="parent.dataOk()">
+    <input type="button" value="Cancel" onclick="parent.dataCancel()"></td></tr>
+  </tbody>
+ </table>
+<div id="wait" class="menu" style="position: absolute;  left:10%; width:40%;height: 20%; top:30%">
+ <div >Please wait...</div>
+<div>
+</body>
+
+</html>

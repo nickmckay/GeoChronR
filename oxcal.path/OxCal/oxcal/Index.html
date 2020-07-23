@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>Quick OxCal</title>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<script type="text/javascript">
+function onAServer()
+{
+ re=/^http/i;
+ return re.test(document.location);
+};
+function redirect()
+{
+ document.location="OxCal.html";
+};
+function initialise()
+{
+ window.setTimeout("redirect()",500);
+};
+</script>
+</head>
+<body class="clear" onload="initialise()">
+    <h1 class="header">OxCal</h1>
+    <hr>
+    <h2>Welcome to OxCal</h2><script type="text/javascript">
+if(onAServer)
+{
+ if(onAServer())
+ {
+  document.write("<h2>Server version<\/h2>");
+ }
+ else
+ {
+  document.write("<h2>Standalone version<\/h2>");
+ };
+};
+</script>
+    <p>Loading...</p>
+</body>
+</html>

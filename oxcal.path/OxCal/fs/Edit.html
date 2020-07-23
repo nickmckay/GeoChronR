@@ -1,0 +1,56 @@
+<html>
+<head>
+ <title>OxCal:Edit</title>
+ <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+ <script type="text/javascript" src="../fs/fs_utils.js">
+ </script>
+ <script type="text/javascript">
+  function setFilename(fname)
+  {
+   filename=fname;
+   document.getElementById("filename").value=fname;
+  };
+  function getFilename() 
+  {
+   return document.getElementById("filename").value;
+  };
+  function getFileContent() 
+  {
+   return document.getElementById("content").value;
+  };
+  function onSave()
+  {
+   saveFileAs(getArgs().ext);
+  };
+  function onClose()
+  {
+   window.close();
+  };
+  function readFile()
+  {
+   filename=getArgs().filename;
+   if(filename && localFilePossible())
+   {
+    setFilename(filename);
+    localFileRead(filename,function(txt){onLocalOpenFile(txt);});
+   };
+  };
+  function onLocalOpenFile(message)
+  {
+   document.getElementById("content").value=message;
+  };
+ </script>
+</head>
+ <body class="tool" onload="readFile()">
+ <table class="menuWide">
+  <tr><th>Filename</th><td colspan=2 style="text-align:right">
+    <input type="text" name="filename" id="filename" size="40" value="" readonly /></td></tr>
+  <tr><td></td><td></td>
+                   <td style="text-align:right"><input type="button" value="Close" onclick="onClose()"/> <input type="submit" value="Save" onclick="onSave()"/></td></tr>
+ </table>
+ <hr/>
+
+<textarea name="content" id="content" rows=30 cols=70>
+</textarea>
+ </body>
+</html>

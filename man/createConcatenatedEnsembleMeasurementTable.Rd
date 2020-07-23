@@ -4,18 +4,24 @@
 \alias{createConcatenatedEnsembleMeasurementTable}
 \title{Create a measurementTable from concatenated ensembles}
 \usage{
-createConcatenatedEnsembleMeasurementTable(ae1, pd1, ae2, pd2, nens = 1000)
+createConcatenatedEnsembleMeasurementTable(
+  age.ens.1,
+  paleo.data.1,
+  age.ens.2,
+  paleo.data.2,
+  n.ens = 1000
+)
 }
 \arguments{
-\item{ae1}{Age ensemble list for the first dataset}
+\item{age.ens.1}{Age ensemble list for the first dataset}
 
-\item{pd1}{Paleo data list for the first dataset}
+\item{paleo.data.1}{Paleo data list for the first dataset (ensembles optional)}
 
-\item{ae2}{Age ensemble list for the second dataset}
+\item{age.ens.2}{Age ensemble list for the second dataset}
 
-\item{pd2}{Paleo data  list for the second dataset}
+\item{paleo.data.2}{Paleo data  list for the second dataset (ensembles optional)}
 
-\item{nens}{How many ensemble members?}
+\item{n.ens}{How many ensemble members?}
 }
 \value{
 
@@ -34,17 +40,17 @@ L2 <- readLipd("~/Downloads/ANP3.Kjellman.2019.lpd")
 
 
 #composite two independent records
-L1 <- mapAgeEnsembleToPaleoData(L1,which.pmt = 1,age.var = "ageEnsemble")
+L1 <- mapAgeEnsembleToPaleoData(L1,paleo.meas.table.num = 1,age.var = "ageEnsemble")
 
-ae1 <- selectData(L1,"ageEnsemble",which.mt = 1)
-pd1 <- selectData(L1,"C28d2H",,which.mt = 1)
+age.ens.1 <- selectData(L1,"ageEnsemble",meas.table.num = 1)
+paleo.data.1 <- selectData(L1,"C28d2H",,meas.table.num = 1)
 
-L2 <- mapAgeEnsembleToPaleoData(L2,which.pmt = 1,age.var = "ageEnsemble")
-ae2 <- selectData(L2,"ageEnsemble",which.mt = 1)
-pd2 <- selectData(L2,"C28d2H",,which.mt = 1)
-cmt <- createConcatenatedEnsembleMeasurementTable(ae1,pd1,ae2,pd2)
+L2 <- mapAgeEnsembleToPaleoData(L2,paleo.meas.table.num = 1,age.var = "ageEnsemble")
+age.ens.2 <- selectData(L2,"ageEnsemble",meas.table.num = 1)
+paleo.data.2 <- selectData(L2,"C28d2H",,meas.table.num = 1)
+cmt <- createConcatenatedEnsembleMeasurementTable(age.ens.1,paleo.data.1,age.ens.2,paleo.data.2)
 plotTimeseriesEnsRibbons(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite) \%>\%
-plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,maxPlotN = 5,color = "red")
+plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,n.ens.plot = 5,color = "red")
 }
 
 

@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal File Formats</title>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; <a href="hlp_analysis.html">Analysis</a> &gt; File formats</p>
+    <h1>File formats</h1>
+    <hr>
+    <p>The OxCal program uses a number of different file types. For input there are:</p>
+    <ul>
+        <li><a href="#oxcal">Input files [.oxcal]</a></li>
+        <li><a href="#14c">Curve files [.14c]</a></li>
+        <li><a href="#prior">Prior files [.prior]</a></li>
+    </ul>
+    <p>and for output:</p>
+    <ul>
+        <li><a href="#js">Output files [.js]</a></li>
+        <li><a href="#log">Log files [.log]</a></li>
+        <li><a href="#txt">Tab-delimited files [.txt]</a></li>
+        <li><a href="#work">Work files [.work]</a></li>
+    </ul>
+    <hr>
+    <h2><a name="oxcal" id="oxcal">Input files [.oxcal]</a></h2>
+    <p>This file contains the instructions for OxCal. The section of this manual on <a href="hlp_analysis.html">analysis</a> is all about the content of these files. The <a href="hlp_commands.html">command reference</a> contains a full list of possible commands.</p>
+    <p>The files are plain text and can be written and edited by other programs.  There is a maximum file size of 256k, and a maximum number of distributions of 8000.</p>
+    <p>It is also possible to run the OxCal program directly and type in the commands on the command line.</p>
+    <hr>
+    <h2><a name="14c">Curve files [.14c]</a></h2>
+    <p>These files contain the data for calibration curves. Because of the range of formats that have been used over the years for files of this kind, OxCal will accept a number of different formats. However, the preferred format is simply a three column format containing:</p>
+    <ul>
+        <li>The calendar date in Gregorian fractional format</li>
+        <li>The radiocarbon age in BP</li>
+        <li>The standard uncertainty in the radiocarbon age</li>
+    </ul>
+    <p>In addition comment lines can be added at the top starting with a # or ! and a line containing the reference string starting with ## or a ". Here is an example of the start of such a file:</p>
+    <pre class="file">
+##Tree rings (Seattle: IntCal04 dataset 1)
+-9708.5 10111.7 30.4
+-9698.5 10122.1 31.4
+-9688.5 10091.2 35.9
+-9688.5 10093.7 24.5
+-9678.5 10111   34.5
+-9668.5 10126.4 34.3
+-9658.5 10065.8 24.4
+-9648.5 10055.1 30.4
+    
+</pre>
+    <h4 class="maths" onclick="reveal('maths',this)">More &darr;</h4>
+    <div class="maths">
+        <p>The other main formats accepted by the program are those for the various IntCal and bomb curve files. The IntCal04 format (common to SHCal04 and Marine04). These files are of this form:</p>
+        <pre class="file">
+##IntCal04 atmospheric curve (Reimer et al 2004)
+# Reimer et al. 2004
+# 
+# PJ Reimer, MGL Baillie, E Bard, A Bayliss, JW Beck, C Bertrand, PG Blackwell, 
+#   CE Buck, G Burr, KB Cutler, PE Damon, RL Edwards, RG Fairbanks, M Friedrich,
+#   TP Guilderson, KA Hughen, B Kromer, FG McCormac, S Manning, C Bronk Ramsey, 
+#   RW Reimer, S Remmele, JR Southon, M Stuiver, S Talamo, FW Taylor, 
+#   J van der Plicht, and CE Weyhenmeyer (2004), Radiocarbon 46:1029-1058.
+#
+#CAL BP, 14C age,Error,Delta 14C,Sigma
+#      , YR BP  ,YR BP,per mil  ,per mil
+26000,  21341.0, 108.0, 629.9, 21.9
+25980,  21348.0, 103.0, 624.5, 20.8
+25960,  21354.0,  98.0, 619.4, 19.8
+25940,  21360.0,  93.0, 614.3, 18.7
+25920,  21366.0,  88.0, 609.2, 17.6
+25900,  21371.0,  83.0, 604.3, 16.6
+	
+</pre>
+        <p>The comma delimited form like this is assumed to imply that the time-scale is based on cal BP, which in turn is assumed to be numbers of years back from mid AD 1950.</p>
+        <p>Previous calibration curves used a five column format as in:</p>
+        <pre class="file">
+!!
+!!  1998 Atmospheric delta 14C and radiocarbon ages from:
+!!
+!!  M. Stuiver, P. J. Reimer, E. Bard, J. W. Beck, G. S. Burr,
+!!  K. A. Hughen, B. Kromer, F. G. McCormac, J. v. d. Plicht 
+!!  and M. Spurk. INTCAL98 Radiocarbon Age Calibration, 24,000-0
+!!  cal BP. Radiocarbon 40, 1041-1083 (1998).  
+"IntCal98 atmospheric curve (Stuiver et al 1998)
+!!  modified by the inclusion of the above line
+!!  by Bronk Ramsey July 1999
+!!  distributed with permission
+!!
+!!
+!!
+!! YR AD/BC  Delta 14C  Sigma    14C age   Error
+!!            per mil  per mil    YR BP     YR
+   -22050      462.8    63.7     20265.1   349.7
+   -21050      444.2    57.0     19396.1   316.9
+   -20050      425.9    52.0     18527.1   293.1
+   -19050      407.8    49.1     17658.1   280.3
+   -18050      389.9    47.1     16789.1   272.3
+   -17050      372.2    43.9     15920.1   257.2
+	
+</pre>
+        <p>Where the string "BC" is found in the header as in this case, negative numbers are assumed to be BC years (with no year zero). A similar format has been used for the bomb calibration data as in:</p>
+        <pre class="file">
+##Post-bomb atmospheric NH1 curve  (Hua and Barbetti 2004)  
+#Year   D14C    1sigma  F14C    1sigma
+1955.5  21.1    6.3 1.0218  0.0063
+1956.5  37.9    14.7    1.0387  0.0147
+1957.5  100.7   16.2    1.1017  0.0163
+1958.5  167.2   4.8 1.1684  0.0048
+1959.12 180.5   7.5 1.1818  0.0075
+1959.2  196 4.9 1.1973  0.005
+	
+</pre>
+        <p>In such cases the "F14C" string is detected in the header text and the measurements treated as F14C rather than BP. The same can be done with the three column format.</p>
+        <p>Formats can also be mixed - as for example with the bomb curves which have been prefixed with the IntCal04 data for the last 300 years.</p>
+    </div>
+    <hr>
+    <h2><a name="prior" id="prior">Prior files [.prior]</a></h2>
+    <p>The prior files used with the Prior() command take a simple form. There are two columns:</p>
+    <ul>
+        <li>Parameter value - typically date (in Gregorian fractional years) or interval (in Gregorian years)</li>
+        <li>Probability density - typically per year</li>
+    </ul>
+    <p>Here is an example - being the probable number of years that wood is stockpiled before use (from <a href="javascript:go_bib('miles2005did')">Miles  2005</a>). Note that the first line or two are zero probability - as are the last lines (not shown here).</p>
+    <pre class="file">
+-2  0
+-1  0
+0   0.630467687
+1   0.151353541
+2   0.065691432
+3   0.036334764
+4   0.022952663
+5   0.015770247
+6   0.01148229
+7   0.008722723
+8   0.006844703
+9   0.005510143
+10  0.004528517
+11  0.003785892
+12  0.003210779
+	
+</pre>
+    <p>The raw output page in the output utility gives resultant distributions in exactly this form too, so those distributions can be copied and pasted into files of this form.</p>
+    <hr>
+    <h2><a name="js" id="js">Output files [.js]</a></h2>
+    <p>These are the main depository for information output from the program. The format is standard ECMAScript or Javascript. There are two main data structures:</p>
+    <ul>
+        <li>The array <tt>ocd</tt> (standing for OxCal Data) which holds the ranges, probability distributions etc. for each parameter.</li>
+        <li>The <tt>model</tt> object which contains information about the model</li>
+    </ul>
+    <p>This file is principally intended for use with the OxCal output utility but you may wish to extract data directly from it - the format should be understandable by inspection.</p>
+    <hr>
+    <h2><a name="log" id="log">Log files [.log]</a></h2>
+    <p>These are plain text files with a text form of the output from the analysis.</p>
+    <hr>
+    <h2><a name="txt" id="txt">Tab-delimited files [.txt]</a></h2>
+    <p>These are plain text files with labels and ranges in a tab-delimited form. This file is intended for transfer of ranges to spreadsheets and databases.</p>
+    <hr>
+    <h2><a name="work" id="work">Work files [.work]</a></h2>
+    <p>While the analysis is in progress, a work file is created. This contains some lines of ECMAScript which indicate how the analysis is progressing. This file is deleted when the analysis finishes.</p>
+    <p>If the work file is deleted during the analysis, it is terminated at the next suitable point. The work file can be deleted by attempting to run the same input file a second time. This is the way analyses are aborted using the usual front end.</p>
+    <hr>
+</body>
+</html>

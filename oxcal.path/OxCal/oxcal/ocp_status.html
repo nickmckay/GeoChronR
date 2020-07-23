@@ -1,0 +1,193 @@
+<html>
+<head>
+<script type="text/javascript">
+var work=new Object();
+var timer;
+(new Image()).src="../img/Red.gif";
+(new Image()).src="../img/RedCross.gif";
+(new Image()).src="../img/BlueRod.gif";
+(new Image()).src="../img/RedRod.gif";
+(new Image()).src="../img/GlassRod.gif";
+function ocp_open(filename)
+{
+ window.clearTimeout(timer);
+ parent.location.reload();
+};
+function ocp_cancel()
+{
+ window.clearTimeout(timer);
+ if(parent.localFilePossible)
+ {
+  // running oxcal should clear this working file
+  parent.localFileDelete(parent.source.replace('.js','.work'));
+  document.getElementById("operation").style="color:red";
+  document.getElementById("operation").lastChild.nodeValue="Quitting...";
+ };
+};
+function graph(id,percent,width,col)
+{
+ var left,right;
+ if(isNaN(percent))
+ {
+  left=0;
+ }
+ else
+ {
+  left=Math.round((percent/100)*width);
+  if(left>width){left=width;};
+  if(left<0){left=0;};
+ };
+ right=width-left;
+ document.writeln("<img id='" + id + "_L' width=" + left + "px height=10px src='../img/"+col+"Rod.gif'><img id='" + id + "_R' width=" + right + " height=10 src='../img/GlassRod.gif'>");
+};
+function adjustGraph(id,percent,width,col)
+{
+ var left,right,leftImage,rightImage;
+ if(isNaN(percent))
+ {
+  left=0;
+ }
+ else
+ {
+  left=Math.round((percent/100)*width);
+  if(left>width){left=width;};
+  if(left<0){left=0;};
+ };
+ right=width-left;
+ leftImage=document.getElementById(id+"_L");
+ rightImage=document.getElementById(id+"_R");
+ leftImage.src="../img/"+col+"Rod.gif";
+ leftImage.width=left;
+ rightImage.width=right;
+};
+function showStatus()
+{ 
+ if(typeof(work.passes)!="undefined")
+ {
+  document.getElementById("passes").lastChild.nodeValue="Passes: "+work.passes;
+ };
+ if(typeof(work.done)!="undefined")
+ {
+  switch(typeof(work.ok))
+  {
+  case "number":
+   adjustGraph("done",work.done,200,"Blue");
+   break;
+  default:
+   adjustGraph("done",work.done,200,"Red");
+   break;
+  };
+ };
+ if(typeof(work.convergence)!="undefined") 
+ {
+  adjustGraph("convergence",work.convergence,200,"Blue");
+ };
+ switch(typeof(work.ok))
+ {
+ case "number":
+  adjustGraph("ok",work.ok,200,"Blue");
+  document.getElementById("error_message").lastChild.nodeValue="";
+  break;
+ case "string":
+  adjustGraph("ok",0,200,"Blue");
+  document.getElementById("error_message").lastChild.nodeValue=work.ok;
+  break;
+ };
+ if(typeof(work.operation)!="undefined")
+ {
+  document.getElementById("operation").lastChild.nodeValue=work.operation;
+ };
+ if(typeof work.program=='undefined')
+ {
+  parent.plotOptions.viewType='table';
+  if(parent.wasWorking)
+  {
+   document.getElementById("operation").lastChild.nodeValue="Quitting...";
+   window.setTimeout("checkStatus()",5000);
+   parent.wasWorking=false;
+  }
+  else
+  {
+   parent.tableDrawn=false;
+   parent.reload();
+  };
+ }
+ else
+ {
+  window.setTimeout("checkStatus()",2000);
+ };
+};
+function checkStatus()
+{
+ work=new Object();
+ parent.localOpenOxCal(parent.source.replace(".js",".work"),"work");
+};
+function initialise()
+{
+ parent.wasWorking=true;
+ window.setTimeout("checkStatus()",2000);
+};
+</script>
+ <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+ <body onload='initialise()'>
+  <script type="text/javascript">
+  if(!parent.mainMode)
+  {
+   document.writeln("<h1>OxCal Run Status<\/h1>");
+   document.writeln("<hr\/>");
+   if(parent.source!="ocp_null.js")
+   {
+    document.write("<div class='filename'>");
+    document.write(parent.source.replace(".js",""));
+    document.writeln("<\/div>");
+   };
+  };
+  </script>
+<script type="text/javascript">
+   </script>
+    <table class="menuWide"><tbody><tr>
+	 <th>
+	 <img onclick="ocp_cancel()" onmouseover="this.src='../img/RedCross.gif'" onmouseout="this.src='../img/Red.gif'" src="../img/Red.gif"/>
+	 OxCal Running:
+	 </th><th><script type="text/javascript">
+       if(parent.source!="ocp_null.js")
+       {
+        document.write(" "+parent.source.replace(".js",""));
+       };
+      </script></th>
+	 <td style="text-align:right" id="passes"> Passes:  
+	 </td>
+     </tr>
+	 <tr><td>Done</td>
+	  <td colspan=2>
+	   <script type=text/javascript>
+	    graph("done",1,200,"Blue");
+	   </script>
+	  </td></tr>
+	 <tr><td>Convergence</td>
+	  <td colspan=2>
+	   <script type=text/javascript>
+ 	    graph("convergence",0,200,"Blue");
+	   </script>
+	  </td></tr>
+	 <tr><td>Ok</td>
+	  <td colspan=2>
+	   <script type=text/javascript>
+ 	    graph("ok",0,200,"Blue");
+	   </script>
+	  </td></tr>
+	 <tr><td></td>
+	  <td colspan=2 style='color:red' id='error_message'>
+	  </td></tr>
+	 <tr><td colspan=3 style='color:green' id='operation'>Initialising...
+	  </td></tr>
+	</tbody></table>
+  <div style="display:none">
+   <form name="operate" id="operate" method="POST" action="ocp_status.php">
+     <input type="hidden" name="operation" id="operation" />
+     <input type="hidden" name="filename" id="operateFilename"/>
+   </form>
+  </div>
+ </body>
+</html>

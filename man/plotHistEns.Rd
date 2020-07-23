@@ -5,21 +5,21 @@
 \title{Plot an ensemble dataset as a histogram}
 \usage{
 plotHistEns(
-  ensData,
+  ens.data,
   quantiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
   bins = 50,
-  lineLabels = rownames(ensStats),
+  line.labels = rownames(ensStats),
   add.to.plot = ggplot(),
   alp = 1,
   fill = "grey50"
 )
 }
 \arguments{
-\item{ensData}{A data.frame of values to plot as a histogram}
+\item{ens.data}{A data.frame of values to plot as a histogram}
 
 \item{bins}{Number of bins in the histogram}
 
-\item{lineLabels}{Labels for the quantiles lines}
+\item{line.labels}{Labels for the quantiles lines}
 
 \item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot()}
 
@@ -37,11 +37,11 @@ Plots ensemble data as a histogram
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

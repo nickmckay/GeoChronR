@@ -4,20 +4,20 @@
 \alias{binEns}
 \title{Bin ensemble data}
 \usage{
-binEns(time, values, binvec, binfun = mean, max.ens = NA)
+binEns(time, values, bin.vec, bin.fun = mean, max.ens = NA)
 }
 \arguments{
 \item{time}{single column vector of time}
 
 \item{values}{single column vector of values to bin}
 
-\item{binvec}{vector of bin edges for binning step}
+\item{bin.vec}{vector of bin edges for binning step}
 
-\item{binfun}{function to use during binning (mean, sd, and sum all work)}
+\item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
 \item{max.ens}{maximum number of ensemble members to regress}
 
-\item{binstep}{spacing of bins, used to build bin step}
+\item{bin.step}{spacing of bins, used to build bin step}
 }
 \value{
 list that includes matrix of binned data and binned time

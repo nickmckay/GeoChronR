@@ -7,22 +7,22 @@
 plotCorEns(
   corEns,
   bins = 40,
-  lineLabels = rownames(corStats),
+  line.labels = rownames(cor.stats),
   add.to.plot = ggplot(),
-  legendPosition = c(0.2, 0.8),
-  significanceOption = "autocor"
+  legend.position = c(0.2, 0.8),
+  significance.option = "autocor"
 )
 }
 \arguments{
 \item{bins}{Number of bins in the histogram}
 
-\item{lineLabels}{Labels for the quantiles lines}
+\item{line.labels}{Labels for the quantiles lines}
 
 \item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot()}
 
-\item{legendPosition}{Where to put the map legend?}
+\item{legend.position}{Where to put the map legend?}
 
-\item{significanceOption}{Choose how handle significance. Options are:
+\item{significance.option}{Choose how handle significance. Options are:
 \itemize{
 \item "autocor" (default) for serial-autocorrelation corrected p-values
 \item "raw" for uncorrected p-values
@@ -31,7 +31,7 @@ plotCorEns(
 
 \item{cor.df}{A data.frame correlation r and p-values. Output from corEns()}
 
-\item{corStats}{A data.frame of correlation quantiles. Output from corEns()}
+\item{cor.stats}{A data.frame of correlation quantiles. Output from corEns()}
 }
 \value{
 A ggplot object
@@ -43,11 +43,11 @@ Plots the output of an ensemble correlation analysis.
 Other plot: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
-\code{\link{PeriodAnnotate}()},
 \code{\link{axisLabel}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},

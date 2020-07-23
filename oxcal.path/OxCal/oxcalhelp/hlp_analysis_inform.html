@@ -1,0 +1,593 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="">
+    <title>OxCal Analysis Specification of Information</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css">
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; <a href="hlp_analysis.html">Analysis</a> &gt; Information</p>
+    <h1>Specification of Information<br></h1>
+    <hr>
+    <ul>
+        <li><a href="#type">Parameter types</a></li>
+        <li><a href="#time">Definition of time-scale</a></li>
+        <li><a href="#param">Parameters</a></li>
+        <li><a href="#date">Date functions</a></li>
+        <li><a href="#calib">Radiocarbon calibration</a></li>
+        <li><a href="#dendro">Sapwood estimates for dendrochronology</a></li>
+        <li><a href="#paramdate">Parameterisation of date information</a></li>
+        <li><a href="#xref">Cross referencing</a></li>
+    </ul>
+    <hr>
+    <h2><a name="type" id="type">Parameter types</a></h2>
+    <p>The parameters used in models can be of three different types:</p>
+    <ul>
+        <li>Number - any general parameter</li>
+        <li>Date - parameter relating directly to time</li>
+        <li>Interval - difference between date parameters</li>
+    </ul>
+    <p>The program attempts to keep track of types through the calculation process. The functions Number() and Date() can be used to force parameters to be of a specific type.</p>
+    <hr>
+    <h2><a name="time" id="time">Definition of time-scale</a></h2>
+    <p>Because of the many different applications of OxCal, it is important that there is a well defined internal time-scale. For this purpose cal BP is not suitable as it is an integer time-scale and refers only to whole years - not to specific dates and times. The internal time-scale in OxCal is therefore based on the Gregorian calendar:</p>
+    <ul>
+        <li>Intervals are given in Gregorian years (that is 365.2425 days)</li>
+        <li>Dates are given as one plus the number of Gregorian years after 00:00:00 UT on Monday 0001-01-01 (ISO-8601 definition; this corresponds to Julian Day 1721425.5, Julian Date 0001-01-03 and is defined as the start of the Gregorian Epoch)</li>
+    </ul>
+    <p>This gives a continuous real number time-scale (G), which can be directly related to BC/AD dates. Note however that G-1 corresponds to the start of 2 BC and G1 corresponds to the start of AD 1, since there is no year zero in the BC/AD scheme.</p>
+    <p>Given the widespread use of cal BP as a time-scale, this is defined here as a real time-scale from the middle of AD 1950 (i.e. G1950.5 using the internal date scale).</p>
+    <p>Special pre-processor functions are included for entering mid-year dates (see <a href="hlp_analysis_detail.html#pre">pre-processor calculations</a>).  The following examples show their use:</p>
+    <ul>
+    <li>AD(1066) gives G1066.5 which is the middle of AD 1066</li>
+    <li>BC(12) gives G-10.5 which is the middle of 12 BC</li>
+    <li>CE(1812) gives G1812.5 which is the middle of 1812 CE</li>
+    <li>BCE(79) gives G-77.5 which is the middle of 79 BCE</li>
+    <li>CE(-78) gives G-77.5 which is the middle of 79 BCE or ISO-8601 year -78</li>
+    <li>calBP(100) gives G1850.5 which is the middle of AD 1850</li>
+    </ul>
+    <p>Further details and conversions between this format and other time-scales is given in the section on the <a href="hlp_analysis_calend.html">calendar definitions</a>.</p>
+    <p>On plots axes OxCal shows the start of the year. When reporting in BC/AD the transition between 1BC and 1AD is shown as '1BC/1AD'. The spacing between the labels is regular. Thus the axis on a plot with labels every century will show:</p>
+    <pre>
+     .     .     .     .     .     .     .
+    300   200   100 1BC/1AD 101   201   301
+    
+</pre>
+    <p>For a one year spacing in the labels the axis is shown as:</p>
+    <pre>
+     .     .     .     .     .     .     .
+     3     2     1  1BC/1AD  2     3     4
+    
+</pre>
+    <p>which effectively means:</p>
+    <pre>
+     .     .     .     .     .     .     .
+     | 3BC | 2BC | 1BC | AD1 | AD2 | AD3 |     
+    
+</pre>
+    <p>If the same were plotted using fractional Gregorian years (&#177;CE or OxCal internal format) it would be shown as:</p>
+    <pre>
+     .     .     .     .     .     .     .
+    -2    -1     0     1     2     3     4
+    
+</pre>
+    <p>and when reporting the same dates as BP the centre of the year is given - thus the equivalent axis would be:</p>
+    <pre>
+        .     .     .     .     .     .   
+       1952  1951  1950  1949  1948  1947
+    
+</pre>
+    <p>When reporting dates and ranges in the BC/AD or BCE/CE format OxCal will give the year in which the event occurs (without a year zero). If ISO-8601 is chosen all dates will be reported CE but a year zero will be used (as is defined in this standard and as is the practice in astronomy) and negative year numbers before that. If the Gregorian year format is chosen fractional years are given in the internal format described above. All files and data-sets use the fractional format.</p>
+    <p>For most purposes involving radiocarbon this is irrelevant but future versions of OxCal may give alternative date format outputs and they will be based on the definitions laid out here and in the section on <a href="hlp_analysis_calend.html">calendar definitions</a>.</p>
+    <hr>
+    <h2><a name="param" id="param">Parameters</a></h2>
+    <p>Parameters can be introduced into models by assigning them a parameter name. The main functions that are used are:</p><script type="text/javascript">
+     specList(document,"parameters","Number,N,U,Top_Hat,LnN,P,Pois,Prior");
+</script>
+    <p>The type function Number() allows a general numerical parameter to be defined by an expression. This is the equivalent of the Date() function described in the next section. The other functions given here allow parameters to be assigned specific probability distribution functions, usually to describe the likelihood for specific functions: the N() function for normal distributions, the U() and Top_Hat() functions for uniform distributions and P() for more general functions. Finally Prior() allows distributions to be defined numerically using some prior information.</p>
+    <p>For any of the methods described here, or below, two different formats of parameter definition are allowed. OxCal will also try to work out the type from the context if you do not specify Date() or Number(). The following are all equivalent:</p>
+    <pre>
+    a=200;
+    a=Number(200);
+    Number("a",200);
+    
+</pre>
+    <p>The format based on the equality operator is better suited to complex mathematical calculations but the parameter names have to be simple strings and cannot contain operators like + - / * ( ). Examples of parameter definitions are:</p><script type="text/javascript">
+startCode("Parameters");
+</script>
+    <pre>
+// Simple numbers
+n1=200;                  n2=166.66*1.2;
+
+// Normal likelihood with a mean of 200 and a sigma of 20
+a1=N(200,20);            N("a2",200,20); 
+
+// Uniform likelihood between 180 and 200
+b1=U(180,220);           U("b2",180,220); 
+b3=Top_Hat(200,20);      Top_Hat("b4",200,20); 
+
+// Poisson distribution with a mean of 10
+p1=Pois(10);             Pois("p2",10);
+
+// Poisson distribution but scaled by a factor of 3
+p3=Pois(10,3);           Pois("p4",10,3);
+
+// log-normal distribution with a mean of about 1000
+l1=LnN(ln(1000),ln(1.1));	LnN("l2",ln(1000),ln(1.1));
+
+// Exponentially falling likelihood with time constant 10
+d1=P(0,100,exp(-d1/10)); P("d2",0,100,exp(-d2/10)); 
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The reason that you might wish to introduce general parameters of this form is that they can be used in subsequent calculations (see <a href="hlp_analysis_oper.html#oper">operations on probability distributions</a>).</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>The parameters of any Bayesian model are all treated in a similar way. Each parameter has a value t<sub>i</sub> and might also have observations or other information about it which are conceptually denoted as y<sub>i</sub>. Each parameter introduced is assumed to have a uniform uninformed prior p(t<sub>i</sub>). Where there is other information, this can be used to define a likelihood function p(y<sub>i</sub>|t<sub>i</sub>) for that parameter.</p>
+        <p>The functions N(), U(), Top_Hat(), P() and Prior(), can be used to directly assign such likelihoods:</p>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Likelihood</th>
+            </tr>
+            <tr>
+                <td>N(r<sub>i</sub>,s<sub>i</sub>)</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; (1/(s<sub>i</sub>&radic;(2&pi;))) exp(-(t<sub>i</sub> - r<sub>i</sub>)<sup>2</sup>/(2 s<sub>i</sub><sup>2</sup>))</td>
+            </tr>
+            <tr>
+                <td>U(r<sub>i</sub>,s<sub>i</sub>)</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; H(t<sub>i</sub>-r<sub>i</sub>)H(s<sub>i</sub>-t<sub>i</sub>)</td>
+            </tr>
+            <tr>
+                <td>Top_Hat(r<sub>i</sub>,s<sub>i</sub>)</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; H(t<sub>i</sub>-r<sub>i</sub>+s<sub>i</sub>)H(r<sub>i</sub>+s<sub>i</sub>-t<sub>i</sub>)</td>
+            </tr>
+        </table>
+        <p>where H(x) is the Heaviside step function which is 0 when x&lt;0, 1/2 when x=0 and 1 when x&gt;0. The P() function defines a likelihood function directly and the Prior() function can be used to provide such a function in numerical form. Usually the Prior() function is used to define a non-uniform prior but it can equally be used to provide a particular functional form for a likelihood where the prior is defined in some other way. Assuming no other prior information, a likelihood can be viewed as an informed prior, since for constant p(t):</p>
+        <center>
+            p(t<sub>i</sub>|y<sub>i</sub>) &prop; p(y<sub>i</sub>|t<sub>i</sub>)p(t<sub>i</sub>) &prop; p(y<sub>i</sub>|t<sub>i</sub>)
+        </center>
+    </div>
+    <hr>
+    <h2><a name="date" id="date">Date functions</a></h2>
+    <p>Special functions are provided for specifying information about the time of events - these have the type of Date. The main functions currently implemented are:</p><script type="text/javascript">
+     specList(document,"date","Date,Age,Year,R_Date,R_Simulate,R_Combine,C_Date,C_Simulate,C_Combine,Sapwood");
+</script>
+    <p>The type function Date() is used to specify a date - the internal date format should be used (see <a href="hlp_analysis_calend.html">calendar definition</a>) for numerical values; the likelihood functions described above can also be used. The Age() also performs the same task but is for expressing dates before some specific year. That year is assumed to be the middle of AD1950 (G1950.5) if no other value is given. Using the Year= statement you can set this to some other date (again using the format described in <a href="hlp_analysis_calend.html">calendar definition</a>) either for a specific function or on a more general basis.</p>
+    <p>The R_Date(), R_Simulate() and R_Combine() functions will be covered in the next section.</p>
+    <p>C_Date() is a legacy from previous versions of OxCal and specifies a normally distributed likelihood; depending on the options set the C_Date() function can use either BP or the internal Gregorian fractional years (G). C_Simulate() can be used for simulating dates for a method that produces normally distributed likelihoods. The Sapwood() function will be dealt with below.</p>
+    <p>The function C_Combine() can be used to directly combine dates of the form C_Date() or C_Simulate().</p>
+    <p>The following examples illustrate the range of different methods of expressing dates.</p><script type="text/javascript">
+startCode("Dates");
+</script>
+    <pre>
+    a1=Date(1066.5);       a2=Date(AD(1066));        a3=Age(884);       a4=Age(934){Year=AD(2000);};
+    b1=Date(N(1066.5,10)); b2=Date(N(AD(1066),10));  b3=Age(N(884,10)); b4=C_Date(AD(1066),10);
+    c1=Date(U(AD(1066),AD(1093))); Date("c2",U(AD(1066),AD(1093)));
+    d2=C_Simulate(AD(1066),10);    d3=Date(N(AD(1066)+randN()*10,10));
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>Date parameters are treated in exactly the same way as any other parameters and mathematically the Date() and Number() functions are identical. The Age() function assumes that any value or likelihood distribution relates to the time before present (defined by the Year attribute), Y.</p>
+        <p>The following show the effect of the Age() function on the likelihood:</p>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Likelihood</th>
+            </tr>
+            <tr>
+                <td>Age(N(r<sub>i</sub>,s<sub>i</sub>))</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; (1/(s<sub>i</sub>&radic;(2&pi;))) exp(-(Y-t<sub>i</sub> - r<sub>i</sub>)<sup>2</sup>/(2 s<sub>i</sub><sup>2</sup>))</td>
+            </tr>
+            <tr>
+                <td>Age(U(r<sub>i</sub>,s<sub>i</sub>))</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; H(Y-t<sub>i</sub>-r<sub>i</sub>)H(s<sub>i</sub>-Y+t<sub>i</sub>)</td>
+            </tr>
+            <tr>
+                <td>Age(Top_Hat(r<sub>i</sub>,s<sub>i</sub>))</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; H(Y-t<sub>i</sub>-r<sub>i</sub>+s<sub>i</sub>)H(r<sub>i</sub>+s<sub>i</sub>-Y+t<sub>i</sub>)</td>
+            </tr>
+        </table>
+        <p>The function C_Simulate() calculates a likelihood as:</p>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Likelihood</th>
+            </tr>
+            <tr>
+                <td>C_Simulate(r<sub>i</sub>,s<sub>i</sub>)</td>
+                <td>p(y<sub>i</sub>|t<sub>i</sub>) &prop; (1/(s<sub>i</sub>&radic;(2&pi;))) exp(-(t<sub>i</sub> - r<sub>i</sub>-&epsilon;)<sup>2</sup>/(2 s<sub>i</sub><sup>2</sup>))<br>
+                where &epsilon; is sampled from N(0,s<sub>i</sub>)</td>
+            </tr>
+        </table>
+        <p>The function C_Combine() function evaluates a combined error weighted mean and standard error following the method of <a href="javascript:go_bib('ward1978pcc')">Ward  and Wilson  1978</a>. If we have several determinations r<sub>i</sub> with standard errors s<sub>i</sub> we calculate a combined determination r<sub>c</sub> with standard error s<sub>c</sub>:</p>
+        <center>
+            r<sub>c</sub> = (&Sigma; r<sub>i</sub>/s<sub>i</sub><sup>2</sup>)/(&Sigma; 1/s<sub>i</sub><sup>2</sup>)<br>
+            s<sub>c</sub> = (&Sigma; 1/s<sub>i</sub><sup>2</sup>)<sup>-1/2</sup><br>
+            T = &Sigma; (r<sub>i</sub>-r<sub>c</sub>)<sup>2</sup>/s<sub>i</sub><sup>2</sup>
+        </center>
+        <p>The likelihood distribution is then as for the C_Date() function. The T value has a &chi;<sup>2</sup> distribution on n-1 degrees of freedom as discussed in <a href="javascript:go_bib('ward1978pcc')">Ward  and Wilson  1978</a>.</p>
+        <p>If there is an additional component of uncertainty s<sub>a</sub>, this is added as:</p>
+        <center>
+            s<sub>c</sub> = &radic;[(&Sigma; 1/s<sub>i</sub><sup>2</sup>)<sup>-1</sup>+s<sub>a</sub><sup>2</sup>]
+        </center>
+    </div>
+    <hr>
+    <h2><a name="calib" id="calib">Radiocarbon calibration</a></h2>
+    <p>The likelihood distribution for calibrated radiocarbon dates is more complicated than that for most dating methods because it is based on several different types of information:</p>
+    <ul>
+        <li>The radiocarbon measurement for the sample (r<sub>m</sub>) and its associated uncertainty (s<sub>m</sub>)</li>
+        <li>You may wish to combine several of these measurements together for one sample.</li>
+        <li>The array of radiocarbon measurements (<strong>r</strong>) and their uncertainties (<strong>s</strong>) that form the data for the radiocarbon calibration curve. This curve is normally formulated so that the radiocarbon content and it's uncertainty are functions of time (r(t) &#177; s(t))</li>
+        <li>In some cases the radiocarbon measurements are expected to be offset from this curve by &Delta;R, with a normally distributed likelihood.</li>
+        <li>Finally the sample may draw on more than one calibration curve if the carbon comes from a mixed reservoir (as for example in the case of humans with a mixed diet.</li>
+    </ul>
+    <p>OxCal provides functions for dealing with all of these scenarios. The functions are:</p><script type="text/javascript">
+    specList(document,"radiocarbon","R_Date,R_F14C,R_Combine,R_Simulate,Curve,Delta_R,Mix_Curves,Reservoir");
+</script>
+    <h3>Calibration likelihoods</h3>
+    <p>The R_Date() function provides the normal calibration against the default curve.</p>
+    <p>R_F14C() allows you to enter the radiocarbon concentration in terms of F14C as defined by <a href="javascript:go_bib('reimer2004drc')">Reimer  et al. 2004</a>. R_Simulate allows you to sample the date you would expect to get from a radiocarbon lab for a sample of a particular date; the 'Cal Date' parameter is either in Gregorian fractional years (default) or cal BP if that option is set.</p>
+    <p>R_Combine() allows you to combine dates and add in an additional component of systematic uncertainty (for example if you are dealing with short-lived material you may wish to add an additional uncertainty of about 8 <sup>14</sup>C years - see <a href="javascript:go_bib('stuiver1998irc')">Stuiver  et al. 1998</a>). A &chi;<sup>2</sup> test (<a href="javascript:go_bib('ward1978pcc')">Ward  and Wilson  1978</a>) will also be performed.</p>
+<script type="text/javascript">
+startCode("Calibration");
+</script>
+    <pre>
+  R_Date("OxA-2000",2000,20);
+  R_Combine("Jar 1a")
+  {
+   R_Date("OxA-2001",2010,20);
+   R_Date("OxA-2002",1970,20);
+   R_Date("OxA-2003",2020,20);
+  };
+  R_Simulate("Mid AD10",AD(10),20);
+</pre><script type="text/javascript">
+endCode();
+</script>
+<p>Here is an example of the use of the functions for post-bomb calibration.</p>
+<script type="text/javascript">
+startCode("Post-bomb calibration");
+</script>
+    <pre>
+ Options()
+ {
+  Resolution=0.2;
+  Curve="Bomb04NH1.14c";
+ };
+ Plot()
+ {
+  Curve("Bomb04NH1","Bomb04NH1.14c")
+  {
+   Reservoir(0.25,0.1);
+  };
+  R_F14C("OxA-8000",1.345,0.003);
+  R_Combine("Jar 1b")
+  {
+   R_F14C("OxA-8001",1.345,0.003);
+   R_F14C("OxA-8002",1.347,0.003);
+   R_F14C("OxA-8003",1.341,0.003);
+  };
+  R_Simulate("Mid 1980",AD(1980),20);
+ };
+</pre><script type="text/javascript">
+endCode();
+</script>
+
+<h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>If the curve function is defined as a radiocarbon concentration r(t) &#177; s(t) then the calibrated likelihood distribution for a radiocarbon determination of r<sub>i</sub> &#177; s<sub>i</sub> is proportional to:</p>
+        <center>
+            p(y<sub>i</sub>|t<sub>i</sub>) &prop; exp[-(r<sub>i</sub>-r(t<sub>i</sub>))<sup>2</sup>/(2(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>)))]/&radic;(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>))
+        </center>
+        <p>In practice this calculation is performed at increments defined by the resolution (which is every five years by default). If we have a &Delta;R defined to be r<sub>d</sub> &#177; s<sub>d</sub> the the likelihood for the reservoir offset is given by:</p>
+        <center>
+            p(y<sub>d</sub>|t<sub>d</sub>) &prop; exp[-(r<sub>d</sub>-t<sub>d</sub>)<sup>2</sup>/(2 s<sub>d</sub><sup>2</sup>))]/s<sub>d</sub>
+        </center>
+        <p>and the likelihood for the calibrated date r<sub>i</sub> &#177; s<sub>i</sub> is given by:</p>
+        <center>
+            p(y<sub>i</sub>|t<sub>i</sub>) &prop; exp[-(r<sub>i</sub>-r(t<sub>i</sub>)-t<sub>d</sub>)<sup>2</sup>/(2(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>)))]/&radic;(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>))
+        </center>
+        <p>This is the likelihood that is used in OxCal during all MCMC analysis in line with the recommendations of <a href="javascript:go_bib('jones2002rcs')">Jones  and Nicholls  2002</a>. If the &Delta;R applies to only one calibration we can combine the two distributions to arrive at:</p>
+        <center>
+            p(y<sub>i</sub>|t<sub>i</sub>,y<sub>d</sub>) &prop; exp[-(r<sub>i</sub>-r(t<sub>i</sub>)-r<sub>d</sub>)<sup>2</sup>/(2(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>)+s<sub>d</sub><sup>2</sup>))]/&radic;(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>)+s<sub>d</sub><sup>2</sup>)
+        </center>
+        <p>This is the distribution calculated in the calculation stage of the program, and if no MCMC analysis is required.</p>
+        <p>The function R_Simulate(r<sub>i</sub>,s<sub>i</sub>) calculates a likelihood as:</p>
+        <center>p(y<sub>i</sub>|t<sub>i</sub>) &prop; exp[-(r(r<sub>i</sub>)-r(t<sub>i</sub>)-&epsilon;)<sup>2</sup>/(2(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>)))]/&radic;(s<sub>i</sub><sup>2</sup>+s<sup>2</sup>(t<sub>i</sub>))<br>
+                where &epsilon; is sampled from N(0,s<sub>i</sub>)</center>
+        <p>The function R_Combine() function evaluates a combined error weighted mean and standard error following the method of <a href="javascript:go_bib('ward1978pcc')">Ward  and Wilson  1978</a>. If we have several determinations r<sub>i</sub> with standard errors s<sub>i</sub> we calculate a combined determination r<sub>c</sub> with standard error s<sub>c</sub>:</p>
+        <center>
+            r<sub>c</sub> = (&Sigma; r<sub>i</sub>/s<sub>i</sub><sup>2</sup>)/(&Sigma; 1/s<sub>i</sub><sup>2</sup>)<br>
+            s<sub>c</sub> = (&Sigma; 1/s<sub>i</sub><sup>2</sup>)<sup>-1/2</sup><br>
+            T = &Sigma; (r<sub>i</sub>-r<sub>c</sub>)<sup>2</sup>/s<sub>i</sub><sup>2</sup>
+        </center>
+        <p>The likelihood distribution is then as for the R_Date() function. The T value has a &chi;<sup>2</sup> distribution on n-1 degrees of freedom as discussed in <a href="javascript:go_bib('ward1978pcc')">Ward  and Wilson  1978</a>.</p>
+        <p>If there is an additional component of uncertainty s<sub>a</sub>, this is added as:</p>
+        <center>
+            s<sub>c</sub> = &radic;[(&Sigma; 1/s<sub>i</sub><sup>2</sup>)<sup>-1</sup>+s<sub>a</sub><sup>2</sup>]
+        </center>
+    </div>
+    <h3>Calibration curves</h3>
+    <p>The Curve() command allows you to specify the curve to use. See the section on <a href="hlp_curves.html">Calibration curves</a> for details of the data-sets. This can either be a calibration curve or a comparison data-set (in which case a comparison curve will be generated). Each point in the data-set has three values:</p>
+    <ul>
+        <li>t<sub>i</sub>: the calendar date</li>
+        <li>r<sub>i</sub>: the radiocarbon concentration</li>
+        <li>s<sub>i</sub>: the uncertainty in the concentration</li>
+    </ul>
+    <p>The default resolution is the same as the resolution of the IntCal curves (5 years) and so no interpolation or binning is needed. However, if the resolution is set to less than 5 the curve will be interpolated by a cubic (or linear if that option is set) function - the same is true for comparison data-sets where the resolution is usually coarser. If the data-points are closer together than the resolution (as is the case with much of the bomb data) the data points are binned together before the curve is generated.</p>
+    <p>The Delta_R() function is primarily intended for marine applications (with the marine curve). What it does is to offset the measurements before calibration. When used with Bayesian models the &Delta;R offset is treated as a parameter (common to all relevant samples) and with a Normal likelihood distribution. Given this, the function can also be used to allow for correlated uncertainties between samples. If the parameter associated with the Delta_R() function is d, then the r<sub>m</sub> is offset so that the likelihood is defined by R_Date(r<sub>m</sub>-d,s<sub>m</sub>).</p>
+    <p>The Mix_Curves() function allows two curves to be mixed together with an uncertainty in the mixing ratio. This allows for mixed reservoir dating. In principle this function can be used to mix mixed curves allowing any number of reservoirs to be mixed together. The use of this function always results in an MCMC analysis - in this the proportion for the second curve is not allowed to go out of the range 0-100% (even if for example the proportion is set at 10&#177;10%).</p>
+    <p>Note that all calculations are performed in terms of radiocarbon concentration (rather than BP date). This includes calibration. If you wish to override this you can do this by setting the option 'Use F14C space' to off. This only affects the calibration itself all other calculations, such as reservoir mixing etc will be performed in terms of radiocarbon concentration F14C.</p>
+    <p>For most purposes it is easiest to use the curve dialogue ([Options &gt; Curve] for single calibrations or [Tools &gt; Curves] for the main input window) to set the required curve. The following show some examples of use of these functions:</p><script type="text/javascript">
+startCode("Calibration curves");
+</script>
+    <pre>
+    Curve("Atmospheric","IntCal13.14c");
+    R_Date(2000,20);
+    Curve("Oceanic","Marine13.14c");
+    R_Date(2000,20);
+    Delta_R("Local Marine",200,30);
+    R_Date(2000,20);
+    Curve("Decadal Turnover","IntCal13.14c")
+    {
+     Reservoir(10,5);
+    };
+    R_Date(2000,20);
+    Mix_Curves("Mixed","Atmospheric","Local Marine",40,10);
+    R_Date(2000,20);
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>For MCMC analysis a non-normal distribution can be used for Delta_R() in place of the usual mean and standard deviation.  For example, to allow &Delta;R to take a value anywhere between 0 and 800 you could use the command:</p>
+<pre>
+    Delta_R("uniform",U(0,800));
+</pre>
+    <p>The same is true for Mix_Curves() and so, for example, to allow for any mixture of marine and atmospheric diet you could use:</p>
+<pre>
+    Mix_Curves("Mixed","Atmospheric","Local Marine",U(0,100));
+</pre>
+    <p>These uniform priors allow you to use unbiased priors for &Delta;R and diet allowing the model to find an unbiased estimate for these parameters.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <h4>Curve construction</h4>
+        <p>Where binning is required the method is as follows:</p>
+        <ul>
+            <li>All of the data-points are sorted into chronological order</li>
+            <li>The curve is required at a defined resolution, &delta; (typically 5 for pre-1950, or 0.2 for post-1950) and for each point (labelled i) on the curve n<sub>i</sub> data-points (labelled ij) within &#177;&delta;/2 are identified and allocated to a bin</li>
+        </ul>
+        <p>We need to take account of the fact theat there is often much real natural variability not reflected in the measurement uncertainty.  We have the individual measurements r<sub>ij</sub> with measurement uncertainties s<sub>ij</sub>. The error weighted estimate of the mean is:</p>
+        <center>&mu;'<sub>i</sub>=(&Sigma;<sub>j</sub> r<sub>ij</sub>/s<sub>ij</sub><sup>2</sup>)/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>))</center>
+        <p>And the average weighted variance (<a href="javascript:go_bib('bevington1992rea')">Bevington  and Robinson  1992</a>) is:</p>
+        <center>&sigma;<sub>i</sub><sup>2</sup>= [(&Sigma;<sub>j</sub> r<sub>ij</sub><sup>2</sup>/s<sub>ij</sub><sup>2</sup>)/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>)) - &mu;'<sub>i</sub><sup>2</sup>] [n<sub>i</sub>/(n<sub>i</sub>-1)]</center>
+        <p>The uncertainty of the mean is:</p>
+        <center>&sigma;<sub>&mu;i</sub><sup>2</sup> = 1/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>))</center>
+        <p>So we take the variance s<sub>i</sub><sup>2</sup> in the bin to be the larger of &sigma;<sub>&mu;i</sub><sup>2</sup> and &sigma;<sub>i</sub><sup>2</sup>.  Overall for each bin we have three values which are:</p>
+        <center>t<sub>i</sub>=(&Sigma;<sub>j</sub> t<sub>ij</sub>/s<sub>ij</sub><sup>2</sup>)/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>))</center>
+        <center>r<sub>i</sub>=(&Sigma;<sub>j</sub> r<sub>ij</sub>/s<sub>ij</sub><sup>2</sup>)/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>))</center>
+        <center>s<sub>i</sub>= &radic;max([(&Sigma;<sub>j</sub> r<sub>ij</sub><sup>2</sup>/s<sub>ij</sub><sup>2</sup>)/(&Sigma;<sub>j</sub> (1/s<sub>ij</sub><sup>2</sup>)) - r<sub>i</sub><sup>2</sup>]/[n<sub>i</sub>/(n<sub>i</sub>-1)] , 1/(&Sigma;<sub>j</sub>(1/s<sub>ij</sub><sup>2</sup>)))</center>
+       <p>The revised data-set is then interpolated onto the required points as described below.</li>
+        </p>
+        <p>If the data-points are more widely spread than the resolution requires, or they do not lie on the correct points, interpolation is performed. If linear interpolation is chosen (or if the interpolation is only for one point) then the function r(t) between two points (t<sub>i</sub>,r<sub>i</sub>,s<sub>i</sub>) and (t<sub>i+1</sub>,r<sub>i+1</sub>,s<sub>i+1</sub>) is given by:</p>
+        <center>
+            a<sub>i</sub> = (r<sub>i+1</sub> - r<sub>i</sub>)/(t<sub>i+1</sub>-t<sub>i</sub>)<br>
+            r(t) = t<sub>i</sub> + a<sub>i</sub>(t-t<sub>i</sub>)
+        </center>
+        <p>If cubic interpolation is used then the function is defined to pass through all data points and have a continuous value and first derivative. The interpolation is given by:</p>
+        <center>
+            a<sub>i</sub> = (r<sub>i+1</sub> - r<sub>i-1</sub>)/(t<sub>i+1</sub>-t<sub>i-1</sub>)<br>
+            a<sub>i+1</sub> = (r<sub>i+2</sub> - r<sub>i</sub>)/(t<sub>i+2</sub>-t<sub>i</sub>)<br>
+            &delta;r<sub>i</sub> = (r<sub>i+1</sub> - r<sub>i</sub>)<br>
+            &delta;t<sub>i</sub> = (t<sub>i+1</sub> - t<sub>i</sub>)<br>
+            c<sub>i</sub> = (3 &delta;r<sub>i</sub> - &delta;t<sub>i</sub>(2a<sub>i</sub> + a<sub>i+1</sub>))/&delta;t<sub>i</sub><sup>2</sup><br>
+            d<sub>i</sub> = ((a<sub>i+1</sub> - a<sub>i</sub>) - (2 c<sub>i</sub> &delta;t<sub>i</sub>))/(3 &delta;t<sub>i</sub><sup>2</sup>)<br>
+            r(t) = t<sub>i</sub> + a<sub>i</sub>(t-t<sub>i</sub>) + b<sub>i</sub>(t-t<sub>i</sub>)<sup>2</sup>+ c<sub>i</sub>(t-t<sub>i</sub>)<sup>3</sup>
+        </center>
+        <p>s(t) is interpolated in exactly the same way.</p>
+        <h4>Curve mixing</h4>
+        <p>The mixing ratio is treated as a parameter t<sub>m</sub>in Bayesian models. Where the mixing ratio is defined as r<sub>m</sub> &#177; s<sub>m</sub> this parameter is given a likelihood which is:</p>
+        <center>
+            p(y<sub>m</sub>|t<sub>m</sub>) &prop; H(t<sub>m</sub>)H(1-t<sub>m</sub>)exp(-(t<sub>m</sub>-r<sub>m</sub>)<sup>2</sup>/(2s<sub>m</sub><sup>2</sup>))
+        </center>
+        <p>in other words it is a normal distribution truncated at 0 and 1. A posterior distribution for the mixing ratio will be generated which is based on the global model. The combined curve is given by:</p>
+        <center>
+            r'(t) = (1-t<sub>m</sub>) r<sub>1</sub>(t) + t<sub>m</sub> r<sub>2</sub>(t)<br>
+            s'(t) = (1-t<sub>m</sub>) s<sub>1</sub>(t) + t<sub>m</sub> s<sub>2</sub>(t)
+        </center>
+        <h4>Curve reservoir</h4>
+        <p>If a reservoir time constant &tau; is set it is assumed that the reservoir contains carbon from a range of ages exponentially distributed with an average age of &tau;. If we assume that the atmospheric radiocarbon curve is given by r(t) and the reservoir curve by r'(t), we can see that:</p>
+        <center>
+            r'(t) = (1/&tau;) &int;<sup>t</sup> r(u) exp(-(t-u)/&tau;) du
+        </center>
+        <p>We also define the same relationship for the uncertainty:</p>
+        <center>
+            s'(t) = (1/&tau;) &int;<sup>t</sup> s(u) exp(-(t-u)/&tau;) du
+        </center>
+        <p>By numerical integration it is possible to calculate these functions. We assume a linear extrapolation of the curve to arrive at a starting point but with errors that are ten times higher than the first point in the curve. This approximation means that the resultant curve should not be relied upon within a few time constants of the start of the curve r(t).</p>
+        <p>Where there is an uncertainty in &tau; of &delta;<sub>&tau;</sub> the additional uncertainty is calculated by numerically determining dr'(t)/d&tau;.</p> 
+        <p>In order to give a representative result even when the errors are non-gaussian (as is the case with long time constants in the post-bomb period) we numerically evaluate the greater of:</p>
+        <center>
+            dr'(t)/d&tau; &asymp; [r'(t,&tau;+&delta;<sub>&tau;</sub>)-r'(t,&tau;-&delta;<sub>&tau;</sub>)]/(2&delta;<sub>&tau;</sub>)
+        <br>
+            dr'(t)/d&tau; &asymp; [r'(t,&tau;)-r'(t,&tau;-&delta;<sub>&tau;</sub>)]/&delta;<sub>&tau;</sub>
+        <br>
+            dr'(t)/d&tau; &asymp; [r'(t,&tau;+&delta;<sub>&tau;</sub>)-r'(t,&tau;)]/&delta;<sub>&tau;</sub>
+        </center>
+        <p>and r''(t) is found by averaging:</p>
+        <center>r''(t) &asymp; [r'(t,&tau;+&delta;<sub>&tau;</sub>) + r'(t,&tau;) + r'(t,&tau;-&delta;<sub>&tau;</sub>)]/3</center>
+        <p>and adding the additional uncertainty in quadrature to ds'(t) to give a revised curve r''(t) and s''(t) such that:</p>
+        <center>
+            r''(t)=r'(t)<br>
+            s''(t)= &radic;((s'(t))<sup>2</sup> + (&delta;<sub>&tau;</sub>dr'(t)/d&tau;)<sup>2</sup>)
+        </center>
+        <p>Note that this a slightly different way of calculating the uncertainty than in versions of OxCal prior to version 4. The differences are significant where the curve has rapid changes (such as with the post-1950 calibration curves).</p>
+    </div>
+    <hr>
+    <h2><a name="dendro" id="dendro">Sapwood estimates for dendrochronology</a></h2>
+    <p>Methods are included in OxCal for the estimation of the number of sapwood rings (S) present in a tree where the heartwood/sapwood boundary is present but where the bark edge is not. The underlying model is based on research reported in the thesis of Dan Miles (<a href="javascript:go_bib('miles2005did')">Miles  2005</a>). The factors on which the estimate are based are:</p>
+    <ul>
+        <li>R - the number of heartwood rings</li>
+        <li>M - the mean ring width of the heartwood</li>
+    </ul>
+    <p>You can find a linear dependency of ln(S) on ln(M) and ln(R).  Roughly speaking S increases with increasing R and S decreases with increasing M. The <a href="Sapwood.html">sapwood tool</a> enables you to perform a linear regression to define a model for a region.</p>
+    <h3>Calculating sapwood estimates</h3>
+    <p>Once a model has been worked out, this can be used to estimate sapwood for wood samples where the number of sapwood rings are unknown, but where we still retain the heartwood/sapwood transition. The two OxCal commands required for this are:</p><script type="text/javascript">
+    specList(document,"dendro","Sapwood_Model,Sapwood");
+</script>
+    <p>The Sapwood_Model() function defines the parameters to be used for the model. The Sapwood function takes four parameters after the optional name. These are:</p>
+    <ul>
+        <li>Hw/Sw date - the date of the last heartwood ring before the heartwood/sapwood transition (Oxcal date format)</li>
+        <li>Hw rings - the number of heartwood rings (R)</li>
+        <li>Sw rings - the number of sapwood rings actually present (this is used as a minimum constraint on S)</li>
+        <li>MRW - the mean ring width of the heartwood (M)</li>
+    </ul>
+    <p>The program then calculates a likelihood distribution based on the information provided.</p>
+    <p>Dan Miles has calculated a model for post-Roman mainland Britain (<a href="javascript:go_bib('miles2005did')">Miles  2005</a>), excluding Scotland, which can be used for dating oak in this area and period. It can be entered as in the example below:</p><script type="text/javascript">
+startCode("dendrochronology");
+</script>
+    <pre>
+  Sapwood_Model("Mainland Britain", 2.77292, 0.100001, -0.275445,0.314286377);
+  Sapwood("wa21", 1329, 243, 0, 1.06);
+  Sapwood("wa22", 1354, 58, 6, 2.74);
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The resolution of the program (found in [Tools &gt; Options]) should be set to 1 for this sort of analysis as five years (the default) is too coarse.</p>
+    <h4 class="maths" onclick="reveal('maths',this)">Maths &darr;</h4>
+    <div class="maths">
+        <p>We define variables based on the logarithms of S, M and R:</p>
+        <center>
+            s=ln(S), m=ln(M) and r=ln(R)
+        </center>
+        <p>You can find a linear dependency of s on m and r. The residuals are normally distributed in s. This linear regression can be performed using the <a href="Sapwood.html">sapwood tool</a> provided with this package, or any statistical package. The likelihood for S is given by:</p>
+        <center>
+            p(y<sub>i</sub>|S<sub>i</sub>,a,b<sub>r</sub>,b<sub>m</sub>) &prop; H(S) exp(-(a + b<sub>r</sub>ln(R<sub>i</sub>) + b<sub>m</sub>ln(M<sub>i</sub>) - ln(S<sub>i</sub>))<sup>2</sup>/(2&sigma;<sup>2</sup>))/S<sub>i</sub>
+        </center>
+        <p>or if we define q<sub>i</sub> as the heartwood/sapwood boundary date for a sample, the likelihood for the felling date is given by;</p>
+        <center>
+            p(y<sub>i</sub>|t<sub>i</sub>,a,b<sub>r</sub>,b<sub>m</sub>) &prop; H(t<sub>i</sub>-q<sub>i</sub>) exp(-(a + b<sub>r</sub>ln(R<sub>i</sub>) + b<sub>m</sub>ln(M<sub>i</sub>) - ln(t<sub>i</sub>-q<sub>i</sub>))<sup>2</sup>/(2&sigma;<sup>2</sup>))/(t<sub>i</sub>-q<sub>i</sub>)
+        </center>
+    </div>
+    <hr>
+    <h2><a name="paramdate" id="paramdate">Parameterisation of date information</a></h2>
+    <p>Specific functions are provided for radiocarbon dating and sapwood estimates because the functional forms of the likelihood distributions are unusual. For many dating methods, however normally distributed errors are appropriate that the <a href="#date">generic date functions</a> can be used.</p>
+    <p>For some methods however it is worth introducing extra common parameters to ensure that correlated uncertainties are correctly treated in any Bayesian analysis. An obvious example of this kind is Luminescence dating.</p>
+    <p>If we consider a simple case we might have four samples and two environmental dose rate readings. we might also estimate that the dose in the past was lower due to variations in water content.</p>
+    <p>We then introduce seven parameters to cover this situation:</p>
+    <ul>
+        <li>DE1 - DE4 - estimated dose for samples 1-4</li>
+        <li>R1 - measured dose rate in vicinity of samples 1 and 2</li>
+        <li>R2 - measured dose rate in vicinity of samples 3 and 4</li>
+        <li>F - factor in dose rate estimated for variation in water content</li>
+    </ul>
+    <p>We can put all of this into a model within OxCal in the following way:</p><script type="text/javascript">
+startCode("luminescence");
+</script>
+    <pre>
+  Year=2006;
+  // define the independent parameters and set the likelihoods
+  DE1=N(403.0,5);
+  DE2=N(447.5,3);
+  DE3=N(433.7,6);
+  DE4=N(462.3,8);
+  R1=N(0.08345,0.0009);
+  R2=N(0.08467,0.0012);
+  F=N(1.100,0.05);
+  // calculate the dependent parameters
+  D1=Age(DE1/(R1*F));
+  D2=Age(DE2/(R1*F));
+  D3=Age(DE3/(R2*F));
+  D4=Age(DE4/(R2*F));
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>This shows how the general <a href="#param">parameters</a> can be used to define chronological information.</p>
+    <p>Note that the independent variables (in this case DE1...DE4, R1, R2 and F) all have uniform priors.  The dependent parameters will not necessarily have uniform priors - though in this particular case this will not be significant unless the uncertainties are very large.</p> 
+    <hr>
+    <h2><a name="xref" id="xref">Cross referencing</a></h2>
+    <p>Versions of OxCal previous to v4, provided the XReference function which had limited capabilities, allowing an event to be in two phases. There are now much more general ways of dealing with cross references.</p>
+    <p>The previous section gives an example of a parameter being used explicitly more that once in a model. However, there are times when you need to be able to specify cross references in other ways. You might, for example wish to define that two events in a model are synchronous, or to use the same &Delta;R parameter in two different places within an analysis as in:</p><script type="text/javascript">
+startCode("Cross reference Delta_R");
+</script>
+    <pre>
+    Curve("Marine04","Marine04.14c");
+    Delta_R("Region 1",200,30);
+    R_Date("a",3000,30);
+    Delta_R("Region 2",100,30);
+    R_Date("b",3000,30);
+    Delta_R("=Region 1");
+    R_Date("c",3000,30);
+    Delta_R("=Region 2");
+    R_Date("d",3000,30);
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The general principle for cross referencing parameters is that the parameter should have one primary specification and then as many cross references to it as you wish. As in the example above the cross references are denoted by using the same name but starting with the '=' character.  You can also use the &= operator as in the final example in this section. The following example shows one way of specifying a model for two phases that both start at the same time, but end at different times:</p><script type="text/javascript">
+startCode("Cross reference 1");
+</script>
+    <pre>
+  Phase()
+  {
+   Sequence()
+   {
+    // first instance of the parameter "Start 1"
+    Boundary("Start 1");
+    Phase("1")
+    {
+     R_Date("a", 2000, 20);
+     R_Date("b", 2010, 20);
+     R_Date("c", 1920, 20);
+     R_Date("d", 1900, 20);
+     R_Date("e", 1903, 20);
+    };
+    Boundary("End 1");
+   };
+   Sequence()
+   {
+    // cross reference to the parameter "Start 1"
+    Boundary("=Start 1");
+    Phase("2")
+    {
+     R_Date("f", 2040, 20);
+     R_Date("g", 2020, 20);
+     R_Date("h", 1960, 20);
+     R_Date("i", 2000, 20);
+     R_Date("j", 1933, 20);
+    };
+    Boundary("End 2");
+   };
+  };
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>The following is equivalent (see the use of the s1=Boundary() to define the parameter and then the expression s1&=Boundary() to cross reference to it):</p><script type="text/javascript">
+startCode("Cross reference 2");
+</script>
+    <pre>
+  // define the likelihoods
+  a=R_Date(2000, 20);
+  b=R_Date(2010, 20);
+  c=R_Date(1920, 20);
+  d=R_Date(1900, 20);
+  e=R_Date(1903, 20);
+  f=R_Date(2040, 20);
+  g=R_Date(2020, 20);
+  h=R_Date(1960, 20);
+  i=R_Date(2000, 20);
+  j=R_Date(1933, 20);
+  // define the model
+  (s1=Boundary()) &lt; (a | b | c | d | e) &lt; (e1=Boundary());
+  (s1&amp;=Boundary()) &lt; (f | g | h | i | j) &lt; (e2=Boundary());
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>By using cross referencing you ensure that only one independent parameter is created in a Bayesian model which ensures that correlated uncertainties are treated correctly.  In some instances the program will generate a second dependent parameter which is equal to the first one.</p>
+    <hr>
+</body>
+</html>

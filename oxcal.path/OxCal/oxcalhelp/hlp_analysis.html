@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="" />
+    <title>OxCal Analysis</title>
+<script type="text/javascript" src="../oxcal/oc_commands.js">
+</script>
+<script type="text/javascript" src="oc_commhelp.js">
+</script>
+    <link rel="stylesheet" type="text/css" href="../style/OxCal.css" />
+</head>
+<body>
+    <p><a href="hlp_contents.html">OxCal</a> &gt; Analysis</p>
+    <h1>Analysis<br /></h1>
+    <hr>
+    <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#overview">Overview of analysis</a></li>
+        <li>
+            <a href="hlp_analysis_inform.html">Specification of information</a>
+            <ul>
+                <li><a href="hlp_analysis_inform.html#type">Parameter types</a></li>
+                <li><a href="hlp_analysis_inform.html#time">Definition of time-scale</a></li>
+                <li><a href="hlp_analysis_inform.html#param">Parameters</a></li>
+                <li><a href="hlp_analysis_inform.html#date">Date functions</a></li>
+                <li><a href="hlp_analysis_inform.html#calib">Radiocarbon calibration</a></li>
+                <li><a href="hlp_analysis_inform.html#dendro">Sapwood estimates for dendrochronology</a></li>
+                <li><a href="hlp_analysis_inform.html#paramdate">Parameterisation of date information</a></li>
+                <li><a href="hlp_analysis_inform.html#xref">Cross referencing</a></li>
+            </ul>
+        <li><a href="hlp_analysis_calend.html">Calendar definitions</a></li>
+        <li>
+            <a href="hlp_analysis_oper.html">Operations and models</a>
+            <ul>
+                <li><a href="hlp_analysis_oper.html#oper">Operations on probability distributions</a></li>
+                <li><a href="hlp_analysis_oper.html#constr">Constraints</a></li>
+                <li><a href="hlp_analysis_oper.html#group">Groupings</a></li>
+	            <li><a href="hlp_analysis_oper.html#deposit">Deposition models</a></li>
+                <li><a href="hlp_analysis_oper.html#query">Queries</a></li>
+                <li><a href="hlp_analysis_oper.html#outlier">Outlier analysis</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="hlp_analysis_detail.html">Analysis details</a>
+            <ul>
+            	<li><a href="hlp_analysis_detail.html#MCMC">MCMC Analysis</a></li>
+                <li><a href="hlp_analysis_detail.html#diag">Diagnostic tools</a></li>
+                <li><a href="hlp_analysis_detail.html#opt">Options</a></li>
+                <li><a href="hlp_analysis_detail.html#pre">Preprocessor calculations</a></li>
+            </ul>
+        <li><a href="hlp_analysis_file.html">File formats</a></li>
+        <li><a href="hlp_analysis_error.html">Errors</a></li>
+        <li><a href="hlp_analysis_eg.html">Examples</a></li>
+    </ul>
+    <hr />
+    <h2><a name="intro">Introduction</a></h2>
+    <p>This part of the manual covers the different forms of analysis which can be performed using OxCal. The details of how to enter this information in OxCal is covered in <a href="hlp_input.html">Input of information</a> and the data viewing tools are explained in <a href="hlp_output.html">Viewing output</a>. Throughout this portion of the manual all analysis functions are described in terms of the <a href="hlp_commands">CQL commands</a> that you need to enter in OxCal to perform the operations. The project manager is designed to help with putting together such code for specific purposes.</p>
+    <p>Throughout this document there are examples of code to perform certain operations. These are shown in a dialogue box which looks like this:</p><script type="text/javascript">
+startCode("Test");
+</script>
+    <pre>
+  R_Date("A",3000,30); 
+</pre><script type="text/javascript">
+endCode();
+</script>
+    <p>Assuming the help was opened from the OxCalInput utility, if you click on the <img src="../img/Green.gif" /> button the code will be inserted into the input window and can be run or incorporated into another model. This will enable you to see what the code looks like in the different views and the output can be viewed in the <a href="hlp_output.html">output viewer</a>.</p>
+    <hr />
+    <h2><a name="overview" id="overview">Overview of analysis</a></h2>
+    <p>OxCal is designed to be a flexible analysis program for application in a whole range of chronological research. The program is capable of performing simple calculations both on ordinary real numbers and on parameters which have an uncertainty associated with them. In this sense the program can act as an uncertainty calculator for any purpose. There are also specific functions designed for chronological applications, including most obviously the R_Date function for the calibration of radiocarbon radiocarbon dates. Finally there are models which can be applied to the data, such as sequences, deposition models <em>et cetera</em>. The program actually performs these in three stages:</p>
+    <ul>
+        <li><a href="hlp_analysis_detail.html#pre">Preprocessor</a> calculations and operations</li>
+        <li>Analytical manipulation of probability distributions</li>
+        <li>Markov Chain Monte Carlo analysis of models</li>
+    </ul>
+    <p>In considering the analysis process it is worth breaking down the operations into several different conceptual stages:</p>
+    <ul>
+        <li><a href="hlp_analysis_inform.html">Specification</a> of chronological information - that is setting out the direct information you have about ages</li>
+        <li>The <a href="hlp_analysis_oper.html#group">grouping</a> of events - which events belong together and how you would expect them to be distributed</li>
+        <li>The <a href="hlp_analysis_oper.html#constr">constraints</a> between events - which come before others and which are contemporary</li>
+        <li>The <a href="hlp_analysis_oper.html#query">queries</a> that you wish to answer through your analysis - the duration of phases, order of events etc.</li>
+    </ul>
+    <p>Once you have specified the analysis in this way the analysis is submitted to the OxCal analysis program and the three stage analysis is carried out. This generates output in three different files:</p>
+    <ul>
+        <li>A simple log file (.log) with numerical results and ranges for probability distributions</li>
+        <li>A tab delimited file (.tab) with a summary of this information for input to spreadsheets and databases</li>
+        <li>An ECMAScript/Javascript (.js) file which defines data structures containing all of the outputs of the analysis</li>
+    </ul>
+    <p>The <a href="hlp_output.html">output utility</a> provided with OxCal allows you to read these three files and to present the data in a number of different ways.</p>
+    <hr>
+</body>
+</html>

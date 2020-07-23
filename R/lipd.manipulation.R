@@ -1,49 +1,95 @@
+#' Create a random TSid
+#' @return TSid
+#' @export
+createTSid <- function(){
+  
+  return(paste(c("R",sample(c(letters,LETTERS,seq(0,9)),size = 10,replace=TRUE)),collapse = ""))
+}
+
+#' @export
+#' @family LiPD manipulation
+#' @title pull variable out of TS object
+#' @description pulls all instances of a single variable out of a TS
+#' @inheritParams binTS
+#' @param variable the name of variable in a TS object
+#' @return a vector of the values, with NA representing instances without this variable.
+pullTsVariable = function(TS,variable){
+  allNames <- unique(unlist(sapply(TS,names)))
+  
+  #test for exact match
+  which.var <- which(variable == allNames)
+  if(length(which.var) == 0){#try a fuzzier search
+    which.var <- which(grepl(pattern = variable,x = allNames,ignore.case = TRUE))
+    if(length(which.var) == 1){#
+      warning(paste0("Couldn't find exact match for '",variable,"', using ",allNames[which.var]," instead."))
+    }else if(length(which.var) == 0){
+      stop(paste0("Couldn't find any matches for '",variable,"', stopping"))
+    }else{
+      stop(paste0("Found no exact, but multiple near matches for '",variable,"'. Here they are: \n",paste0(allNames[which.var],collapse = "\n")))
+    }
+    variable <- allNames[which.var]  
+  }
+  
+  #pull out the variable
+  var <- sapply(TS,"[[",variable)
+  
+  
+  if(is.list(var) & !grepl("author",variable) &!grepl("inCompilationBeta[0-9]+_compilationVersion",variable)){#if it's a list, try to unpack it. Unless it's author then don't
+    if(length(unlist(var)) < length(var)){#there are some NULlS
+      newVar <- matrix(NA,nrow = length(var))
+      isNull <- sapply(var, is.null)
+      newVar[which(!isNull)] <- unlist(var)
+      var <- newVar
+    }
+  }
+  
+  return(var)
+  
+}
+
 #' @export
 #' @family LiPD manipulation
 #' @title Estimate uncertainty estimates from high/low range
 #' @description Estimate uncertainty (plus/minus values) from a range of values
 #' @importFrom crayon bold yellow cyan red green blue 
 #' @importFrom matrixStats rowDiffs
-#' @param range1 name of one of the range variables
-#' @param range2 name of the other range variable
-#' @param L A lipd dataset 
-#' @param where chron or paleo
-#' @param sigmaRange what sigma range are the measurement uncertainties (default is 2)
-#' @param which.mt which measurment table
-#' @param which.data which chron or paleoData?
+#' @inheritParams selectData
+#' @param range.1 name of one of the range variables
+#' @param range.2 name of the other range variable
+#' @param sigma.range what sigma range are the measurement uncertainties (default is 2)
 #'
 #' @return MT: a LiPD measurementTable with a new unc.estimate variable
 #'
 estimateUncertaintyFromRange = function(L,
-                                        range1=NA,
-                                        range2=NA,
-                                        chronPaleo = "chronData",
-                                        sigmaRange = 2,
-                                        which.mt = 1,
-                                        which.data = 1){
+                                        range.1=NA,
+                                        range.2=NA,
+                                        paleo.or.chron = "chronData",
+                                        sigma.range = 2,
+                                        meas.table.num = 1,
+                                        paleo.or.chron.num = 1){
   
   cat(crayon::bold("Finding the low end of the range"),"\n")
   v1 <- selectData(L,
-                   varName = range1,
-                   where = chronPaleo,
-                   which.mt = which.mt,
-                   which.data = which.data)
+                   var.name = range.1,
+                   paleo.or.chron = paleo.or.chron,
+                   meas.table.num = meas.table.num,
+                   paleo.or.chron.num = paleo.or.chron.num)
   
   cat(crayon::bold("Finding the high end of the range"),"\n")
   v2 <- selectData(L,
-                   varName = range2,
-                   where = chronPaleo,
-                   which.mt = which.mt,
-                   which.data = which.data)
+                   var.name = range.2,
+                   paleo.or.chron = paleo.or.chron,
+                   meas.table.num = meas.table.num,
+                   paleo.or.chron.num = paleo.or.chron.num)
   
   
   
   val1 <- v1$values
   val2 <- v2$values
   diffVals <- abs(matrixStats::rowDiffs(as.matrix(cbind(val1,val2)),na.rm=TRUE))
-  uncVal <-  diffVals/sigmaRange
+  uncVal <-  diffVals/sigma.range
   
-  MT <-L[[chronPaleo]][[which.data]][["measurementTable"]][[which.mt]]
+  MT <-L[[paleo.or.chron]][[paleo.or.chron.num]][["measurementTable"]][[meas.table.num]]
   MT$uncEstimate$values <-  uncVal
   MT$uncEstimate$variableName <-  "uncEstimate"
   MT$uncEstimate$TSid <- paste0("EUR", 
@@ -53,7 +99,7 @@ estimateUncertaintyFromRange = function(L,
   
   MT$uncEstimate$units <- v2$units
   
-  L[[chronPaleo]][[which.data]][["measurementTable"]][[which.mt]] <- MT
+  L[[paleo.or.chron]][[paleo.or.chron.num]][["measurementTable"]][[meas.table.num]] <- MT
   return(L)
 }
 
@@ -61,67 +107,65 @@ estimateUncertaintyFromRange = function(L,
 #' @title  Map an ageEnsemble variable from a chron model to a paleoMeasurement Table
 #' @family LiPD manipulation
 #' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
-#' @param L a lipd object
+#' @inheritParams selectData
 #' @param age.var name of the age ensemble variable to search for
 #' @param depth.var name of the depth variable to search for
-#' @param which.paleo an integer that corresponds to which paleoData object (L$paleoData[[?]]) has the measurementTable you want to modify
-#' @param which.pmt an integer that corresponds to which paleo measurementTable you want to add the ensemble to?
-#' @param which.chron  an integer that corresponds to which chronData object (L$crhonData[[?]]) has the model you want to get the ensemble from
-#' @param which.model an integer that corresponds to which chron model you want to get the ensemble from?
-#' @param which.ens an integer that corresponds to which chron model ensembleTable you want to get the ensemble from?
-#' @param max.ensemble.members Maximum number of ensemble members to map
-#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+#' @param paleo.num an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify
+#' @param paleo.meas.table.num an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?
+#' @param chron.num  an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from
+#' @param model.num an integer that corresponds to chron.num model you want to get the ensemble from?
+#' @param max.ens Maximum number of ensemble members to map
 #' @import pbapply
 #' @return L a lipd object
 #' @export
-mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which.paleo=NA,which.pmt=NA,which.chron=NA,which.model=NA,which.ens = NA,max.ensemble.members=NA,strictSearch=FALSE){
+mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo.num=NA,paleo.meas.table.num=NA,chron.num=NA,model.num=NA,ens.table.num = NA,max.ens=NA,strict.search=FALSE){
   print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
     stop("There's no chronData in this file")
   }
   
-  #initialize which.chron
-  if(is.na(which.chron)){
+  #initialize chron.num
+  if(is.na(chron.num)){
     if(length(L$chronData)==1){
-      which.chron=1
+      chron.num=1
     }else{
-      which.chron=as.integer(readline(prompt = "Which chronData do you want to pull this ensemble from? "))
+      chron.num=as.integer(readline(prompt = "Which chronData do you want to pull this ensemble from? "))
     }
   }
   
   #initialize model number
-  if(length(L$chronData[[which.chron]]$model)==0){
+  if(length(L$chronData[[chron.num]]$model)==0){
     stop("No model in this chronData")
   }
-  if(is.na(which.model)){
-    if(length(L$chronData[[which.chron]]$model)==1){
+  if(is.na(model.num)){
+    if(length(L$chronData[[chron.num]]$model)==1){
       #only one model
-      which.model=1
+      model.num=1
     }else{
-      print(paste("ChronData", which.chron, "has", length(L$chronData[[which.chron]]$model), "models"))
-      which.model=as.integer(readline(prompt = "Which chron model do you want to get the ensemble from? Enter an integer "))
+      print(paste("ChronData", chron.num, "has", length(L$chronData[[chron.num]]$model), "models"))
+      model.num=as.integer(readline(prompt = "Which chron model do you want to get the ensemble from? Enter an integer "))
     }
   }
   
   
-  #initialize which.paleo
-  if(is.na(which.paleo)){
+  #initialize paleo.num
+  if(is.na(paleo.num)){
     if(length(L$paleoData)==1){
-      which.paleo=1
+      paleo.num=1
     }else{
-      which.paleo=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? "))
+      paleo.num=as.integer(readline(prompt = "Which paleoData do you want to put this age ensemble in? "))
     }
   }
   
   #initialize measurement table number
-  if(is.na(which.pmt)){
-    if(length(L$paleoData[[which.paleo]]$measurementTable)==1){
+  if(is.na(paleo.meas.table.num)){
+    if(length(L$paleoData[[paleo.num]]$measurementTable)==1){
       #only one pmt
-      which.pmt=1
+      paleo.meas.table.num=1
     }else{
-      print(paste("PaleoData", which.paleo, "has", length(L$paleoData[[which.paleo]]$measurementTable), "measurement tables"))
-      which.pmt=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
+      print(paste("PaleoData", paleo.num, "has", length(L$paleoData[[paleo.num]]$measurementTable), "measurement tables"))
+      paleo.meas.table.num=as.integer(readline(prompt = "Which measurement table do you want to put the ensemble in? Enter an integer "))
     }
   }
   
@@ -130,8 +174,8 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
-  ensDepth = selectData(L,tableType = "ensemble",varName = depth.var,where = "chronData",which.data = which.chron,strictSearch = strictSearch,model.num = which.model)$values
-  ensAll = selectData(L,tableType = "ensemble",varName = age.var,altNames = c("age","ensemble","year"),where = "chronData",model.num = which.model,which.ens = which.ens,which.data = which.chron,strictSearch = strictSearch)
+  ensDepth = selectData(L,table.type = "ensemble",var.name = depth.var,paleo.or.chron = "chronData",paleo.or.chron.num = chron.num,strict.search = strict.search,model.num = model.num)$values
+  ensAll = selectData(L,table.type = "ensemble",var.name = age.var,alt.names = c("age","ensemble","year"),paleo.or.chron = "chronData",model.num = model.num,ens.table.num = ens.table.num,paleo.or.chron.num = chron.num,strict.search = strict.search)
   if(is.null(ensAll$values)){
     stop("Error: did not find the age ensemble.")
   }
@@ -139,15 +183,15 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
     #get year, age or depth from paleodata
-    pdya = selectData(L,which.data = which.paleo,varName = "year",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
+    pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = "year",always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = "age",always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
+      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = "age",always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = year.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
+      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = year.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,which.data = which.paleo,varName = depth.var,always.choose = FALSE,which.ens = which.ens,strictSearch = strictSearch,which.mt = which.pmt)$values
+      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = depth.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
       stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
@@ -165,18 +209,18 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   if(!copyAE){
     #get the depth from the paleo measurement table
     print("getting depth from the paleodata table...")
-    depth = selectData(L,which.data = which.paleo,varName = "depth",altNames = "position",always.choose = FALSE,which.ens = which.ens,which.mt = which.pmt)$values
+    depth = selectData(L,paleo.or.chron.num = paleo.num,var.name = "depth",alt.names = "position",always.choose = FALSE,ens.table.num = ens.table.num,meas.table.num = paleo.meas.table.num)$values
     
     #check that depth is numeric
     if(!is.numeric(depth)){
-      stop("Uh oh, paleo depth is not a numeric vector. That will cause problems - check paleoData[[p]]measurementTable[[m]]$depth$values (or similar if variable name is not depth)")
+      stop("Uh oh, paleo depth is not a numeric vector. That will cause problems - check paleoData[[p]]measurementTable[[m]]$depth$values (or similar if var.name is not depth)")
     }
     
     #restrict ensemble members
-    if(!is.na(max.ensemble.members)){
-      if(ncol(ens)>max.ensemble.members){
+    if(!is.na(max.ens)){
+      if(ncol(ens)>max.ens){
         #randomly select the appropriate number of ensemble members
-        ens = ens[,sample.int(ncol(ens),size = max.ensemble.members,replace = F)]
+        ens = ens[,sample.int(ncol(ens),size = max.ens,replace = F)]
       }
     }
     
@@ -200,16 +244,16 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",which
   }
   
   #guess
-  if(is.na(which.ens)){which.ens=1}
+  if(is.na(ens.table.num)){ens.table.num=1}
   
   
   #assign into measurementTable
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$variableName = ensAll$variableName
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$values = aei
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$units = ensAll$units
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$fromChronData = which.chron
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$frommodel = which.model
-  L$paleoData[[which.paleo]]$measurementTable[[which.pmt]]$ageEnsemble$description = paste("age ensemble pulled from chronData", which.chron,"model",which.model,"- fit to paleoData depth with linear interpolation")
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$variableName = ensAll$variableName
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$values = aei
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$units = ensAll$units
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$fromChronData = chron.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$frommodel = model.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
   
   
   return(L)
@@ -243,47 +287,58 @@ getOs <- function(){
 #' @title  Select a LiPD "variable list"
 #' @family LiPD manipulation
 #' @description Selects and extracts a LiPD "variable list"
-#' @param L a lipd object
-#' @param varName string name of the variable to extract
-#' @param where "paleoData" or "chronData"
-#' @param which.data an integer that corresponds to which paleo or chron Data object (L$<where>Data[[?]]) has the variable you want?
-#' @param which.mt an integer that corresponds to which paleo measurementTable has the variable you want?
-#' @param tableType What type of table do you want to select data from? ("measurement", "summary" or "ensemble")
+#' @param L A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`
+#' @param var.name string name of the variable to extract
+#' @param paleo.or.chron "paleoData" or "chronData"
+#' @param paleo.or.chron.num an integer that corresponds to paleo.num or chron Data object (L$<paleo.or.chron>[[?]]) has the variable you want?
+#' @param meas.table.num an integer that corresponds to paleo.num measurementTable has the variable you want?
+#' @param table.type What type of table do you want to select data from? ("measurement", "summary" or "ensemble")
 #' @param always.choose Force selection of the variable from a list
-#' @param altNames A vector of strings for alternative names to search for
-#' @param model.num an integer that corresponds to which model that has the variable you want
-#' @param which.ens an integer that corresponds to which ensembleTable you want to get the variable from?
-#' @param which.sum an integer that corresponds to which summaryTable you want to get the variable from?
-#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
+#' @param alt.names A vector of strings for alternative names to search for
+#' @param model.num an integer that corresponds to model.num that has the variable you want
+#' @param ens.table.num an integer that corresponds to ensembleTable you want to get the variable from?
+#' @param sum.table.num an integer that corresponds to which summaryTable you want to get the variable from?
+#' @param strict.search Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
 #' @return A LiPD "variable list" object
 #' @export
-selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "measurement", which.mt=NA,always.choose=FALSE,altNames=NA,model.num = 1,which.ens=1,which.sum = 1,strictSearch = FALSE){
+selectData = function(L,
+                      var.name=NA,
+                      paleo.or.chron="paleoData",
+                      paleo.or.chron.num=NA,
+                      table.type = "measurement",
+                      meas.table.num=NA,
+                      always.choose=FALSE,
+                      alt.names=NA,
+                      model.num = 1,
+                      ens.table.num=1,
+                      sum.table.num = 1,
+                      strict.search = FALSE){
   #paleo or chron
-  P = L[[where]]
+  P = L[[paleo.or.chron]]
   
-  #which <where>Data
+  #which <paleo.or.chron>
   
-  if(is.na(which.data)){
+  if(is.na(paleo.or.chron.num)){
     if(length(P)==1){
-      which.data=1
+      paleo.or.chron.num=1
     }else{
       print(names(P))
-      which.data=as.integer(readline(prompt = "Which do you want? Select a number "))
+      paleo.or.chron.num=as.integer(readline(prompt = "Which do you want? Select a number "))
     }
   }
   
-  if(is.na(tableType)){
-    tableType=readline(prompt = "Do you want a variable from a measurementTable (m), model summaryTable (s), or model ensembleTable (e)?")
+  if(is.na(table.type)){
+    table.type=readline(prompt = "Do you want a variable from a measurementTable (m), model summaryTable (s), or model ensembleTable (e)?")
   }
   
-  if(tolower(substr(tableType,1,1))=="m"){
-    MT = P[[which.data]]$measurementTable
-  }else{#check on which model
+  if(tolower(substr(table.type,1,1))=="m"){
+    MT = P[[paleo.or.chron.num]]$measurementTable
+  }else{#check on model.num
     if(is.na(model.num)){
-      if(length(P[[which.data]]$model)==1){
+      if(length(P[[paleo.or.chron.num]]$model)==1){
         model.num=1
       }else{
-        print(paste0("There are ",length(P[[which.data]]$model)," models. Which do you want?"))
+        print(paste0("There are ",length(P[[paleo.or.chron.num]]$model)," models. Which do you want?"))
         model.num=as.integer(readline(prompt = "Which model do you want? Select a number "))
       }
     }
@@ -291,30 +346,30 @@ selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "
   
   
   
-  if(tolower(substr(tableType,1,1))=="e"){MT = P[[which.data]]$model[[model.num]]$ensembleTable}
-  if(tolower(substr(tableType,1,1))=="s"){MT = P[[which.data]]$model[[model.num]]$summaryTable}
+  if(tolower(substr(table.type,1,1))=="e"){MT = P[[paleo.or.chron.num]]$model[[model.num]]$ensembleTable}
+  if(tolower(substr(table.type,1,1))=="s"){MT = P[[paleo.or.chron.num]]$model[[model.num]]$summaryTable}
   
   
   
   #initialize table number
-  if(is.na(which.mt)){
+  if(is.na(meas.table.num)){
     if(length(MT)==0){
-      stop(paste0("this object in ",where,"[[",as.character(which.data),"]] has ", as.character(length(MT)), " tables"))
+      stop(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
     }
     if(length(MT)==1){
       #only one pmt
-      which.mt=1
+      meas.table.num=1
     }else{
-      print(paste0("this object in ",where,"[[",as.character(which.data),"]] has ", as.character(length(MT)), " tables"))
-      which.mt=as.integer(readline(prompt = "Which table do you want? Enter an integer "))
+      print(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
+      meas.table.num=as.integer(readline(prompt = "Which table do you want? Enter an integer "))
     }
   }
   
   
   #this is the table of interest  
-  MTD=MT[[which.mt]]
+  MTD=MT[[meas.table.num]]
   
-  ind = getVariableIndex(MTD,varName = varName,always.choose = always.choose,altNames = altNames,strictSearch = strictSearch)
+  ind = getVariableIndex(MTD,var.name = var.name,always.choose = always.choose,alt.names = alt.names,strict.search = strict.search)
   
   varList = MTD[[ind]]
   
@@ -327,25 +382,27 @@ selectData = function(L,varName=NA,where="paleoData",which.data=NA,tableType = "
 #' @title Get the index of variable list
 #' @family LiPD manipulation
 #' @description Gets the index for a LiPD "variable list"
+#' @inheritParams selectData
 #' @param table a LiPD measurement, ensemble or summary Table
-#' @param varName string name of the variable to extract
-#' @param altNames A vector of strings for alternative names to search for
 #' @param ignore A vector of strings of variableNames to ignore
-#' @param always.choose Force selection of the variable from a list
-#' @param strictSearch Use a strictSearch to look for the ageEnsemble and depth variables. TRUE(default) or FALSE. 
 #' @return An integer index
 #' @export
-getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.choose=FALSE,strictSearch=FALSE){
+getVariableIndex = function(table,
+                            var.name=NA,
+                            alt.names=var.name,
+                            ignore=NA,
+                            always.choose=FALSE,
+                            strict.search=FALSE){
   
-  #check to see if varName is null, and return 0 if so
-  if(is.null(varName)){
+  #check to see if var.name is null, and return 0 if so
+  if(is.null(var.name)){
     return(NA)
   }
-  if(isTRUE(varName == "NULL")){
+  if(isTRUE(var.name == "NULL")){
     return(NA)
   }
   
-  varName <- tolower(varName)
+  var.name <- tolower(var.name)
   #restrict to lists  
   #find variables within the table, and their index
   allNames = tolower(names(table))
@@ -368,7 +425,7 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
       cnames=allNames
     }
   }
-  if(is.na(varName)){
+  if(is.na(var.name)){
     cat("Select a variable from this list", "\n")
     for(p in 1:length(cnames)){
       cat(paste(p,"-",cnames[p]), "\n")
@@ -376,14 +433,14 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
     n = readline(prompt="please type the number for the correct match, or a zero if there are no matches: ")
     idi=as.numeric(n)
   }else{
-    idi=which(cnames==varName)
-    if((length(idi)==0 | always.choose) & !strictSearch){
-      cat(paste0("No variable called ", varName, ", or choosing is enforced (always.choose = TRUE)\n"))
-      for(i in 1:(length(altNames)+1)){
+    idi=which(cnames==var.name)
+    if((length(idi)==0 | always.choose) & !strict.search){
+      cat(paste0("No variable called ", var.name, ", or choosing is enforced (always.choose = TRUE)\n"))
+      for(i in 1:(length(alt.names)+1)){
         if(i==1){
-          test = grepl(pattern = varName,cnames,ignore.case = TRUE)
+          test = grepl(pattern = var.name,cnames,ignore.case = TRUE)
         }else{
-          test = (grepl(pattern = altNames[i-1],cnames,ignore.case = TRUE) | test)
+          test = (grepl(pattern = alt.names[i-1],cnames,ignore.case = TRUE) | test)
         }
       }
       idi = which(test)
@@ -395,7 +452,7 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
         n = readline(prompt="please type the number for the correct match, or a zero if none match: ")
         idi=as.numeric(n)
       }else if(length(idi)>1){
-        cat(paste("Multiple possible matches for",varName), "\n")
+        cat(paste("Multiple possible matches for",var.name), "\n")
         for(p in 1:length(idi)){
           cat(paste(p,"-",cnames[idi[p]]), "\n")
         }
@@ -441,83 +498,83 @@ getVariableIndex = function(table,varName=NA,altNames=varName,ignore=NA,always.c
 #' @export
 #' @title Align and bin two timeseries into comparable bins
 #' @description Use this to put two timeseries on different timesteps onto equivalent bins
-#' @param timeX matrix of age/time ensembles, or single column
-#' @param valuesX matrix of values ensembles, or single column
-#' @param timeY matrix of age/time ensembles, or single column
-#' @param valuesY matrix of values ensembles, or single column
-#' @param binvec vector of bin edges for binning step
-#' @param binstep spacing of bins, used to build bin step
-#' @param binfun function to use during binning (mean, sd, and sum all work)
+#' @param time.1 matrix of age/time ensembles, or single column
+#' @param values.1 matrix of values ensembles, or single column
+#' @param time.2 matrix of age/time ensembles, or single column
+#' @param values.2 matrix of values ensembles, or single column
+#' @param bin.vec vector of bin edges for binning step
+#' @param bin.step spacing of bins, used to build bin step
+#' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to regress
-#' @param minObs minimum number of points required to calculate regression
+#' @param min.obs minimum number of points required to calculate regression
 #' @return list of binned data output:
 #' \itemize{
 #' \item binX: binned values from X
 #' \item binY: binned values from Y
-#' \item binstep: interval of the binning
+#' \item bin.step: interval of the binning
 #' \item yearBins: bins along time
 #' }
 #' @author Nick McKay
-alignTimeseriesBin = function(timeX,valuesX,timeY,valuesY,binvec = NA,binstep = NA ,binfun=mean,max.ens=NA,minObs=10){
+alignTimeseriesBin = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.step = NA ,bin.fun=mean,max.ens=NA,min.obs=10){
   #check to see if time and values are "column lists"
-  if(is.list(timeX)){
-    otx=timeX
-    timeX=timeX$values}
-  if(is.list(timeY)){
-    oty=timeY
-    timeY=timeY$values}
-  if(is.list(valuesX)){
-    ovx=valuesX
-    valuesX=valuesX$values}
-  if(is.list(valuesY)){
-    ovy=valuesY
-    valuesY=valuesY$values}
+  if(is.list(time.1)){
+    otx=time.1
+    time.1=time.1$values}
+  if(is.list(time.2)){
+    oty=time.2
+    time.2=time.2$values}
+  if(is.list(values.1)){
+    ovx=values.1
+    values.1=values.1$values}
+  if(is.list(values.2)){
+    ovy=values.2
+    values.2=values.2$values}
   
   
   #make them all matrices
-  timeX = as.matrix(timeX)
-  timeY = as.matrix(timeY)
-  valuesX = as.matrix(valuesX)
-  valuesY = as.matrix(valuesY)
+  time.1 = as.matrix(time.1)
+  time.2 = as.matrix(time.2)
+  values.1 = as.matrix(values.1)
+  values.2 = as.matrix(values.2)
   
-  if(nrow(timeX) != nrow(valuesX)){stop("timeX and valuesX must have the same number of rows (observations)")}
-  if(nrow(timeY) != nrow(valuesY)){stop("timeY and valuesY must have the same number of rows (observations)")}
+  if(nrow(time.1) != nrow(values.1)){stop("time.1 and values.1 must have the same number of rows (observations)")}
+  if(nrow(time.2) != nrow(values.2)){stop("time.2 and values.2 must have the same number of rows (observations)")}
   
-  if(all(is.na(binvec))){
-    if(is.na(binstep)){
-      stop("Either a binvec or binstep must be specified")
+  if(all(is.na(bin.vec))){
+    if(is.na(bin.step)){
+      stop("Either a bin.vec or bin.step must be specified")
     }else{
       #look for common overlap
-      binStart=max(c(min(timeX,na.rm=TRUE),min(timeY,na.rm=TRUE)))
-      binStop=min(c(max(timeX,na.rm=TRUE),max(timeY,na.rm=TRUE)))
-      binvec=seq(binStart,binStop,by=binstep)
+      binStart=max(c(min(time.1,na.rm=TRUE),min(time.2,na.rm=TRUE)))
+      binStop=min(c(max(time.1,na.rm=TRUE),max(time.2,na.rm=TRUE)))
+      bin.vec=seq(binStart,binStop,by=bin.step)
     }
   }
   
   #create ensemble bins
-  dum = binEns(time = timeX,values = valuesX,binvec = binvec,binfun=binfun,max.ens=max.ens)
+  dum = binEns(time = time.1,values = values.1,bin.vec = bin.vec,bin.fun=bin.fun,max.ens=max.ens)
   yearX = dum$time
   binX = dum$matrix
-  binY = binEns(time = timeY,values = valuesY,binvec = binvec,binfun=binfun,max.ens=max.ens)$matrix
+  binY = binEns(time = time.2,values = values.2,bin.vec = bin.vec,bin.fun=bin.fun,max.ens=max.ens)$matrix
   
-  #remove columns that have less than minObs datapoints
-  good = which(apply(!is.na(binX),2,sum)>=minObs)
+  #remove columns that have less than min.obs datapoints
+  good = which(apply(!is.na(binX),2,sum)>=min.obs)
   if(length(good)==0){
-    stop(paste("none of the columns have",minObs,"or more datapoints"))
+    stop(paste("none of the columns have",min.obs,"or more datapoints"))
   }
   binX = as.matrix(binX[,good])
   
   
-  good = which(apply(!is.na(binY),2,sum)>=minObs)
+  good = which(apply(!is.na(binY),2,sum)>=min.obs)
   if(length(good)==0){
-    stop(paste("none of the columns have",minObs,"or more datapoints"))
+    stop(paste("none of the columns have",min.obs,"or more datapoints"))
   }
   binY = as.matrix(binY[,good])
   
   
-  if(is.na(binstep)){#if the binstep isn't specified
-    binstep=abs(mean(diff(binvec,na.rm=TRUE)))
+  if(is.na(bin.step)){#if the bin.step isn't specified
+    bin.step=abs(mean(diff(bin.vec,na.rm=TRUE)))
   }
   
-  return(list(binX = binX, binY=binY,binstep=binstep,yearBins = yearX))
+  return(list(binX = binX, binY=binY,bin.step=bin.step,yearBins = yearX))
 }

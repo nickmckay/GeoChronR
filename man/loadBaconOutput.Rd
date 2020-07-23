@@ -8,11 +8,11 @@ loadBaconOutput(
   L,
   site.name = L$dataSetName,
   K = NA,
-  which.chron = NA,
-  baconDir = NA,
-  modelNum = NA,
-  makeNew = NA,
-  maxEns = 1000
+  chron.num = NA,
+  bacon.dir = NA,
+  model.num = NA,
+  make.new = NA,
+  max.ens = 1000
 )
 }
 \arguments{
@@ -20,13 +20,13 @@ loadBaconOutput(
 
 \item{site.name}{the name used for the bacon model (and directories)}
 
-\item{which.chron}{the number of the chronData object that you'll be working in}
+\item{chron.num}{the number of the chronData object that you'll be working in}
 
-\item{baconDir}{the directory where Bacon is installed on this computer.}
+\item{bacon.dir}{the directory where Bacon is installed on this computer.}
 
-\item{modelNum}{which chronModel do you want to use?}
+\item{model.num}{chron.numModel do you want to use?}
 
-\item{makeNew}{do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.}
+\item{make.new}{do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.}
 }
 \value{
 L the input LiPD file with methods and data added to the chronModel.
