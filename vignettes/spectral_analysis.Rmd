@@ -20,7 +20,7 @@ In this notebook we demonstrate how to use the spectral analysis features of Geo
   - Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.
   - Shackleton, N. J. (1995), New data on the evolution of Pliocene climate variability, in Paleoclimate and Evolution, With Emphasis on Human Origins, edited by E. S. Vrba et al., pp. 242-248, Yale Univ. Press, New Haven, CT.
 
-The data were aligned to the Benthic Stack of [Lisiecki & Raymo (2005)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004PA001071) using the [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713) algorithm [(Khider et al, 2017)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2016PA003057).  This is a probabilistic method that generates an esnsemble of 1000 possible age models compatible with the constraints. 
+The data were aligned to the Benthic Stack of [Lisiecki & Raymo (2005)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004PA001071) using the [HMM-Match](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2014PA002713) algorithm [(Khider et al, 2017)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2016PA003057).  This is a probabilistic method that generates an ensemble of 1000 possible age models compatible with the constraints. 
 
 We first remotely load the data using the LiPD utilities. Depending on your connectivity, this may take a minute as the file is fairly large (2.6Mb).
 
@@ -49,7 +49,7 @@ plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,color.low="orchid",color.high="da
 
 This paleoclimate record features:
 
-- a long-term cooling trend (d18O gets more positive over time) characteristic of late Neogene and Quaternary. 
+- a long-term cooling trend ($\delta^{18}\mathrm{O}$ gets more positive over time) characteristic of late Neogene and Quaternary. 
 - some quasi-periodic oscillations (the legendary [Pleistocene Ice Ages](https://www.ncdc.noaa.gov/abrupt-climate-change/Glacial-Interglacial%20Cycles))
 - nonstationary behavior, related to the well-known mid-Pleistocene transition from a "41k world" to a "100k world" somewhere around 0.8 Ma [(Paillard, 2001)](https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2000RG000091). 
 
@@ -151,9 +151,9 @@ Now let's compute the spectrum using MTM on the equally-spaced data stored in `d
 We continue to manually label Milankovitch frequencies (in orange) and label in green (technically, "chartreuse") the periodicities identified as significant by the test. Here, we start with the default option of a test against an AR(1) background.
 
 ```{r MTM, warning=F, message=F}
-spec.mtm <- astrochron::mtm(dfe,tbw=tbw,padfac=5,ar1=TRUE,genplot = F,output=1, verbose = F, detrend=T)  # tbw is the time-bandwidth product, p in the above
+spec.mtm <- computeSpectraEns(dfe$time,dfe$temp,method = 'mtm', tbw=tbw) # tbw is the time-bandwidth product, p in the above
 sig.freq <- astrochron::mtm(dfe,tbw=tbw, padfac=5,ar1=TRUE,genplot = F,output=2, verbose = F, detrend=T)
-mtm.df <- data.frame("freq" = spec.mtm$Frequency, "pwr" = spec.mtm$Power)
+mtm.df <- data.frame("freq" = spec.mtm$freqs, "pwr" = spec.mtm$power)
 
 # plot this 
 prange = c(5,1000)
@@ -177,18 +177,18 @@ Another factor to play with is the padding factor (`padfac`). In a nutshell, pad
 Most important of all is the choice of null [(Vaughan et al, 2011)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2011PA002195). Past work has shown that the continuum of climate variability is well described by power laws [Huybers & Curry (2006)](https://www.nature.com/articles/nature04745), so this should be a far better null against which to test the emergence of spectral peaks. Never fear! *Astrochron* has an app for that:
 
 ```{r}
-mtmPL.df <- astrochron::mtmPL(dfe,tbw=tbw,padfac=5,genplot = F,output=1, verbose = F, flow=f.low, fhigh=f.high)
+mtmPL.df <- computeSpectraEns(t,X,method = 'mtm', tbw=tbw, mtm_null = 'power_law') # tbw is the time-bandwidth product, p in the above
 sig.freqPL <- astrochron::mtmPL(dfe,tbw=tbw,padfac=5,genplot = F,output=2, verbose = F, flow=f.low, fhigh=f.high)
 mtm.df = mtmPL.df[c(1,2)]
 names(mtm.df)[1] <- "freq"
 names(mtm.df)[2] <- "pwr"
 
-cl.df <- data.frame(mtmPL.df[,union(1,c(5:7))]) # extract confidence limits 
+cl.df <- data.frame(mtmPL.df$freqs,mtmPL.df$power.CL) # extract confidence limits 
 # rename columns to be less silly
 names(cl.df)[1] <- "freq"
-names(cl.df)[2] <- "90% CL"
-names(cl.df)[3] <- "95% CL"
-names(cl.df)[4] <- "99% CL"
+#names(cl.df)[2] <- "90% CL"
+names(cl.df)[2] <- "95% CL"
+#names(cl.df)[4] <- "99% CL"
 
 
 # plot it 
@@ -203,7 +203,7 @@ p.mtmPL <- periodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,color = "cha
 show(p.mtmPL)
 ```
 
-Sure enough, this gets rid of a few cycles, but many remain. Taking the 95% level as a benchmak, we see that a few regions of the spectrum poke above it, but one should not be so foolish as to identify every single periodicity in these ranges to be equally significant. This is related to the [multiple hypothesis problem](https://en.wikipedia.org/wiki/Multiple_comparisons_problem). However, as pointed out by [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), even that misses the point: sedimentary processes (and many processes in other proxy archives) tend to smooth out the signal over the depth axis, making comparisons at neighboring frequencies highly dependent. One solution is to use predictions made by a physical model about the frequency and relative amplitude of astronomical cycles [Meyers & Sageman, 2007](http://www.ajsonline.org/content/307/5/773). However this may not be applicable to all spectral detection problems. We thus refrain from implementing "cookie-cutter" solutions in GeoChronR, to force the user to think deeply about the null hypothesis and the most sensible way to test it. 
+Sure enough, this gets rid of a few cycles, but many remain. A few regions of the spectrum poke above the 95% confidence limit, but one should not be so foolish as to identify every single periodicity in these ranges to be independent. This is related to the [multiple hypothesis problem](https://en.wikipedia.org/wiki/Multiple_comparisons_problem). However, as pointed out by [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307), even that misses the point: sedimentary processes (and many processes in other proxy archives) tend to smooth out the signal over the depth axis (hence, over time), making comparisons at neighboring frequencies highly dependent. One solution is to use predictions made by a physical model about the frequency and relative amplitude of astronomical cycles [Meyers & Sageman, 2007](http://www.ajsonline.org/content/307/5/773). However this may not be applicable to all spectral detection problems. We thus refrain from implementing "cookie-cutter" solutions in GeoChronR, to force the user to think deeply about the null hypothesis and the most sensible way to test it. 
 
 ### Weighted Wavelet Z-transform (*nuspectral*)
 An interpolation-free alternative to MTM is the Weighted Wavelet Z-transform of [Foster, (1996)](http://adsabs.harvard.edu/cgi-bin/bib_query?1996AJ....112.1709F). The idea of spectral analysis is to decompose the signal on an orthogonal basis of sines and cosines. Data gaps cause this basis to lose its orthogonality, creating energy leakage. WWZ mitigates this problem using an inverse approach. Because it is wavelet based, it does not rely on interpolation or detrending. WWZ was adapted  by [Kirchner & Neal (2013)](https://www.pnas.org/content/110/30/12213.short), who employed basis rotations to mitigate the numerical instability that occurs in pathological cases with the original algorithm. A paleoclimate example of its use is given in [Zhu et al (2019)](https://www.pnas.org/content/116/18/8728.short)). 
@@ -288,7 +288,7 @@ ar1.df <- data.frame(mtm.ens.spec$freqs,mtm.ens.spec$power.CL)
 names(ar1.df)[1] <- "freq"
 names(ar1.df)[2] <- "95% CL"
 
-p.mtm.ens <- plotSpectraEns(spec.ens = mtm.ens.spec, cl.df = ar1.df, x.ticks = c(10,150), y.lims = c(1e-5,1e-1),
+p.mtm.ens <- plotSpectraEns(spec.ens = mtm.ens.spec, cl.df = ar1.df, x.lims = c(10,150), y.lims = c(1e-5,1e-1),
                             color.line='darkorange',
                             color.low='darkorange2',
                             color.high='coral4',color.cl = 'white') + 
@@ -317,7 +317,7 @@ Do we get the same answer in REDFIT? Let's find out.
 
 ```{r ensemble-mode REDFIT}
 spec.redfit.ens <- computeSpectraEns(time,values,max.ens = 1000, method = 'redfit')
-cl.ens.df     <- data.frame("freq" = spec.redfit$freq, "pwr95" = spec.redfit$power.CL) # store confidence limits
+cl.ens.df     <- data.frame("freq" = spec.redfit.ens$freq, "pwr95" = spec.redfit.ens$power.CL) # store confidence limits
 names(cl.ens.df)[2] <- "95% CL"
 ```
 
