@@ -90,10 +90,13 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @description Calculates correlations and associated p-values for two ensemble matrices (or vectors) 
 #' @author Nick McKay
 #' @author Julien Emile-Geay
+#'
 #' @param ens.1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param ens.2 matrix of age-uncertain columns to correlate and calculate p-values
+#' @param max.ens optionally limit the number of ensembles calculated (default = NA)
+#'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
-corMatrix = function(ens.1,ens.2){
+corMatrix = function(ens.1,ens.2,max.ens = NA){
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
@@ -102,15 +105,16 @@ corMatrix = function(ens.1,ens.2){
   pAdj=p;
   r=p
   n.ens=nrow(p) # number of ensemble members
+  ncor <- ifelse(is.na(max.ens),n.ens,max.ens)
   pb <- txtProgressBar(min=0,max=n.ens,style=3)
-  print(paste("Calculating",n.ens,"correlations"))
+  print(paste("Calculating",ncor,"correlations"))
   
   for(i in 1:ncol(ens.1)){
     for(j in 1:ncol(ens.2)){
       #test for singularity
       effN = try(effectiveN(ens.1[,i],ens.2[,j]),silent = TRUE)
       if(is.numeric(effN)){
-        r[j+ncol(ens.2)*(i-1)] = cor(ens.1[,i],ens.2[,j],use="pairwise")
+        r[j+ncol(ens.2)*(i-1)] = cor(ens.1[,i],ens.2[,j],use="pairwise",method = "pearson")
         pAdj[j+ncol(ens.2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         p[j+ncol(ens.2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
       }
@@ -127,11 +131,13 @@ corMatrix = function(ens.1,ens.2){
  
     # Rmks:
     # 1) probably qlevel should be an optional parameter 
-    # 2) could silence the FDR screen output
   # export to data frame
-  out = data.frame("r"=r,"pSerial"=pAdj,"pRaw"=p,"sig_fdr"=sig_fdr)
+  out = na.omit(data.frame("r"=r,"pSerial"=pAdj,"pRaw"=p,"sig_fdr"=sig_fdr))
+  if(!is.na(max.ens)){
+    out <- out[seq_len(max.ens),]
+  }
   close(pb)
-  return(na.omit(out))
+  return(out)
 }
 
 #' @export
@@ -283,7 +289,16 @@ regressEns = function(time.x,values.x,time.y,values.y,bin.vec = NA,bin.step = NA
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param min.obs minimum number of points required to calculate regression
 #' @return list of ensemble output and percentile information
-corEns = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.step = NA ,bin.fun=mean,max.ens=NA,percentiles=c(.025,.25,.5,.75,.975),min.obs=10){
+corEns = function(time.1,
+                  values.1,
+                  time.2,
+                  values.2,
+                  bin.vec = NA,
+                  bin.step = NA,
+                  bin.fun=mean,
+                  max.ens=NA,
+                  percentiles=c(.025,.25,.5,.75,.975),
+                  min.obs=10){
   
   #check to see if time and values are "column lists"
   if(is.list(time.1)){time.1=time.1$values}
@@ -313,10 +328,10 @@ corEns = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.step = NA ,bi
   }
   
   #create ensemble bins
-  dum = binEns(time = time.1,values = values.1,bin.vec = bin.vec,bin.fun=bin.fun,max.ens=max.ens)
+  dum = binEns(time = time.1,values = values.1,bin.vec = bin.vec,bin.fun=bin.fun,max.ens=ceiling(sqrt(max.ens)))
   year = dum$time
   bin1 = dum$matrix
-  bin2 = binEns(time = time.2,values = values.2,bin.vec = bin.vec,bin.fun=bin.fun,max.ens=max.ens)$matrix
+  bin2 = binEns(time = time.2,values = values.2,bin.vec = bin.vec,bin.fun=bin.fun,max.ens= ceiling(sqrt(max.ens)))$matrix
   
   #remove columns that have less than min.obs datapoints
   good = which(apply(!is.na(bin1),2,sum)>=min.obs)
@@ -337,7 +352,7 @@ corEns = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.step = NA ,bi
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
-  cor.df = corMatrix(bin1,bin2)
+  cor.df = corMatrix(bin1,bin2,max.ens = max.ens)
 
   #and the significance
   #pairwise observations

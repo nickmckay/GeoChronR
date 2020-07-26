@@ -29,7 +29,7 @@ plotTimeseriesEnsRibbons(
 
 \item{Y}{A LiPD variable list to plot, including values, units, names, and more}
 
-\item{alp}{Line transparency}
+\item{alp}{alpha (transparency) parameter for the ribbons}
 
 \item{probs}{a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line.}
 
@@ -50,6 +50,15 @@ plotTimeseriesEnsRibbons(
 \item{line.width}{Width of the line}
 
 \item{export.quantiles}{If TRUE, teturn the plotted quantiles rather than the plot}
+
+\item{...}{
+  Arguments passed on to \code{\link[=quantile2d]{quantile2d}}
+  \describe{
+    \item{\code{x}}{n by m matrix where n is the number of observations and m is >= 1}
+    \item{\code{y}}{n by j matrix where n is the number of observations and j is >= 1}
+    \item{\code{seed}}{set a seed for reproducibility}
+    \item{\code{limit.outliers.x}}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
+  }}
 }
 \value{
 A ggplot object OR list of plotted quantiles, depending on export.quantiles

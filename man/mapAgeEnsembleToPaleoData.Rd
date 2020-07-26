@@ -18,7 +18,7 @@ mapAgeEnsembleToPaleoData(
 )
 }
 \arguments{
-\item{L}{a lipd object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{age.var}{name of the age ensemble variable to search for}
 

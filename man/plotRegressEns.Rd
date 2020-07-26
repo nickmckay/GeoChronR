@@ -4,7 +4,12 @@
 \alias{plotRegressEns}
 \title{Plot ensemble regression results}
 \usage{
-plotRegressEns(reg.ens, alp = 0.2, quantiles = c(0.025, 0.5, 0.975))
+plotRegressEns(
+  reg.ens,
+  alp = 0.2,
+  quantiles = c(0.025, 0.5, 0.975),
+  font.size = 10
+)
 }
 \arguments{
 \item{reg.ens}{output of regressEns()}

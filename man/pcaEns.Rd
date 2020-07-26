@@ -10,7 +10,8 @@ pcaEns(
   weights = NA,
   pca.type = "corr",
   n.pcs = 4,
-  nEns = 1000
+  nEns = 1000,
+  simulateTrendInNull = FALSE
 )
 }
 \arguments{

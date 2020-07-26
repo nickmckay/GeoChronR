@@ -10,7 +10,7 @@ createTSid <- function(){
 #' @family LiPD manipulation
 #' @title pull variable out of TS object
 #' @description pulls all instances of a single variable out of a TS
-#' @inheritParams binTS
+#' @inheritParams binTs
 #' @param variable the name of variable in a TS object
 #' @return a vector of the values, with NA representing instances without this variable.
 pullTsVariable = function(TS,variable){

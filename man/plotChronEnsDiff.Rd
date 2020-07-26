@@ -32,7 +32,7 @@ plotChronEnsDiff(
 )
 }
 \arguments{
-\item{L}{A LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{ageEnsVar}{name of the age ensemble variable in the chronData to search for}
 

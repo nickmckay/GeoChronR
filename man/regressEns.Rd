@@ -5,10 +5,10 @@
 \title{Ensemble regression}
 \usage{
 regressEns(
-  time.1,
-  values.1,
-  time.2,
-  values.2,
+  time.x,
+  values.x,
+  time.y,
+  values.y,
   bin.vec = NA,
   bin.step = NA,
   bin.fun = mean,
@@ -19,13 +19,11 @@ regressEns(
 )
 }
 \arguments{
-\item{time.1}{matrix of age/time ensembles, or single column}
+\item{time.x}{matrix of age/time ensembles, or single column}
 
-\item{values.1}{matrix of values ensembles, or single column}
+\item{values.x}{matrix of values ensembles, or single column}
 
-\item{time.2}{matrix of age/time ensembles, or single column}
-
-\item{values.2}{matrix of values ensembles, or single column}
+\item{time.y}{matrix of age/time ensembles, or single column}
 
 \item{bin.vec}{vector of bin edges for binning step}
 
@@ -40,6 +38,8 @@ regressEns(
 \item{recon.bin.vec}{bin vector to use for the modeled regression.}
 
 \item{min.obs}{minimum number of points required to calculate regression}
+
+\item{values.2}{matrix of values ensembles, or single column}
 }
 \value{
 list of ensemble output

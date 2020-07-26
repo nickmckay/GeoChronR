@@ -36,7 +36,7 @@ plotSpectraEns(
 
 \item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
 
-\item{alp}{Line transparency}
+\item{alp}{alpha (transparency) parameter for the ribbons}
 }
 \value{
 a ggplot object

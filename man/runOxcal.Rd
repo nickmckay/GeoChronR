@@ -27,7 +27,7 @@ runOxcal(
 )
 }
 \arguments{
-\item{L}{a single LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{chron.num}{the number of the chronData object that you'll be working in}
 
@@ -54,7 +54,7 @@ runOxcal(
     \item{\code{age.var}}{}
     \item{\code{age.uncertainty.var}}{}
     \item{\code{depth.var}}{}
-    \item{\code{reservoir.age.14C.var}}{}
+    \item{\code{reservoir.age.14c.var}}{}
     \item{\code{reservoir.age.14c.uncertainty.var}}{}
     \item{\code{rejected.ages.var}}{}
     \item{\code{split.ages}}{if there's an age_type column, and only one age column, intelligently split between age and age14C}

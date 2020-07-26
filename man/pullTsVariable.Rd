@@ -7,7 +7,7 @@
 pullTsVariable(TS, variable)
 }
 \arguments{
-\item{TS}{a LiPD Timeseries object}
+\item{TS}{LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}}
 
 \item{variable}{the name of variable in a TS object}
 }

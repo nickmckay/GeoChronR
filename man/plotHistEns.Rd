@@ -8,24 +8,31 @@ plotHistEns(
   ens.data,
   quantiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
   bins = 50,
-  line.labels = rownames(ensStats),
   add.to.plot = ggplot(),
   alp = 1,
-  fill = "grey50"
+  fill = "grey50",
+  font.size = 10,
+  add.labels = TRUE,
+  line.labels = NA,
+  label.vert.position = 0.1
 )
 }
 \arguments{
 \item{ens.data}{A data.frame of values to plot as a histogram}
 
-\item{bins}{Number of bins in the histogram}
+\item{quantiles}{a vecctor of quantiles to add the histogram}
 
-\item{line.labels}{Labels for the quantiles lines}
+\item{bins}{Number of bins in the histogram}
 
 \item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot()}
 
+\item{alp}{transparency (between 0 and 1)}
+
 \item{fill}{fill color of the histogram, following ggplot rules}
 
-\item{probs}{quantiles to calculate and plot}
+\item{font.size}{font size for the labels}
+
+\item{line.labels}{Labels for the quantiles lines}
 }
 \value{
 A ggplot object

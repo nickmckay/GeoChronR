@@ -20,7 +20,7 @@ runBchron(
   age.var = "age",
   age.uncertainty.var = "ageUnc",
   depth.var = "depth",
-  reservoir.age.14C.var = "reservoirAge",
+  reservoir.age.14c.var = "reservoirAge",
   reservoir.age.14c.uncertainty.var = "reservoirAge14C",
   rejected.ages.var = "rejected",
   depth.units = "cm",
@@ -28,7 +28,7 @@ runBchron(
 )
 }
 \arguments{
-\item{L}{a single LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{chron.num}{the number of the chronData object that you'll be working in}
 

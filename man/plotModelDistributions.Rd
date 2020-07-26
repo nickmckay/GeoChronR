@@ -23,7 +23,7 @@ plotModelDistributions(
 )
 }
 \arguments{
-\item{L}{A LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{dist.var}{Name of the distribution variable, will be plotted along the x-axis. Use coord_flip() after running the function if you want vertical distributions. "age" by default.}
 

@@ -9,13 +9,13 @@ plotTimeseriesStack(
   time.var = "year",
   color.var = "paleoData_TSid",
   fill.alpha = 0.2,
-  lineSize = 0.5,
+  line.size = 0.5,
   scale.factor = 1/3,
   scale.height = 0.75,
   lab.buff = 0.02,
   lab.size = 3,
   lab.space = 2,
-  colorRamp = function(nColors) {     RColorBrewer::brewer.pal(nColors, "Dark2") }
+  color.ramp = function(nColors) {     RColorBrewer::brewer.pal(nColors, "Dark2") }
 )
 }
 \arguments{

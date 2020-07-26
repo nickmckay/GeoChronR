@@ -4,7 +4,15 @@
 \alias{mapTs}
 \title{Map a TS object}
 \usage{
-mapTs(TS, color = "archiveType", size = 6, shape = 21, ...)
+mapTs(
+  TS,
+  color = "archiveType",
+  size = 6,
+  shape = 21,
+  lat.range = NA,
+  lon.range = NA,
+  ...
+)
 }
 \arguments{
 \item{TS}{A list of LiPD objects}
@@ -14,6 +22,10 @@ mapTs(TS, color = "archiveType", size = 6, shape = 21, ...)
 \item{size}{Size of the location marker}
 
 \item{shape}{Shape of the location marker}
+
+\item{lat.range}{Latitudes to use to create baseMap range (default = NA, which determines from TS)}
+
+\item{lon.range}{Longitudes to use to create baseMap range (default = NA, which determines from TS)}
 
 \item{...}{
   Arguments passed on to \code{\link[=baseMap]{baseMap}}

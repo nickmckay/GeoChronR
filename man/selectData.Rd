@@ -20,7 +20,7 @@ selectData(
 )
 }
 \arguments{
-\item{L}{a lipd object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{var.name}{string name of the variable to extract}
 

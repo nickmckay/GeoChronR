@@ -14,7 +14,7 @@ summaryPlotTs(
 )
 }
 \arguments{
-\item{TS}{}
+\item{TS}{LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}}
 
 \item{sort.var}{What variable in the TS should the map and histogram be organized by? (default = "archiveType)}
 

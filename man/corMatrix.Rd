@@ -4,12 +4,14 @@
 \alias{corMatrix}
 \title{Matrix correlation}
 \usage{
-corMatrix(ens.1, ens.2)
+corMatrix(ens.1, ens.2, max.ens = NA)
 }
 \arguments{
 \item{ens.1}{matrix of age-uncertain columns to correlate and calculate p-values}
 
 \item{ens.2}{matrix of age-uncertain columns to correlate and calculate p-values}
+
+\item{max.ens}{optionally limit the number of ensembles calculated (default = NA)}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)

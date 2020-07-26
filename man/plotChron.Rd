@@ -10,14 +10,14 @@ plotChron(
   meas.num = NA,
   depth.var = "depth",
   age.var = "age",
-  age.14C.var = "age14C",
+  age.14c.var = "age14C",
   dotSize = 5,
   legend.position = c(0.7, 0.3),
   ...
 )
 }
 \arguments{
-\item{L}{A LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{chron.number}{chron.numData object to use (NA by default, will ask if needed)}
 
@@ -27,7 +27,7 @@ plotChron(
 
 \item{age.var}{variableName to use for age ensemble ("age" by default)}
 
-\item{age.14C.var}{variableName to use for age ensemble ("age14C" by default)}
+\item{age.14c.var}{variableName to use for age ensemble ("age14C" by default)}
 
 \item{legend.position}{where to put the legend on the chron plot?}
 

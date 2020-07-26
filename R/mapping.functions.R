@@ -2,7 +2,7 @@
 #
 #' TS overview plot
 #'
-#' @inheritParams binTS
+#' @inheritParams binTs
 #' @param sort.var What variable in the TS should the map and histogram be organized by? (default = "archiveType)
 #' @param age.range a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
 #' @param age.var What age variable should be used (default = "age)

@@ -19,7 +19,7 @@ writeBacon(
 )
 }
 \arguments{
-\item{L}{a single LiPD object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{bacon.dir}{the directory where Bacon is installed on this computer.}
 

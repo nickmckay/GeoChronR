@@ -16,7 +16,7 @@ loadOxcalOutput(
 )
 }
 \arguments{
-\item{L}{a lipd object}
+\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
 \item{oxcal.result.file.path}{Path to oxcal output data (from oxcAAR::executeOxcalScript())}
 
