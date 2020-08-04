@@ -360,7 +360,7 @@ corEns = function(time.1,
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
-    pctl = quantile(cor.df$r,probs = percentiles)
+    pctl = quantile(cor.df$r,probs = percentiles,na.rm = T)
     cor.stats = data.frame(percentiles,"values" = pctl)
     #row.names(cor.stats)=format(cor.stats$percentiles,digits = 2) # it appears that the rows are already well formatted
     corEns.data=list(cor.df = cor.df,cor.stats = cor.stats)

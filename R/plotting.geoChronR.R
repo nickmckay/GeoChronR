@@ -896,20 +896,28 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' @title Plot the results of an ensemble correlation
 #' @description Plots the output of an ensemble correlation analysis.
 #' @import ggplot2
-#' @param cor.df A data.frame correlation r and p-values. Output from corEns()
-#' @param cor.stats A data.frame of correlation quantiles. Output from corEns()
+#' @param corEns output from corEns()
 #' @param bins Number of bins in the histogram
 #' @param line.labels Labels for the quantiles lines
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
 #' @param legend.position Where to put the map legend?
 #' @param significance.option Choose how handle significance. Options are:
 #'  \itemize{
-#'  \item "autocor" (default) for serial-autocorrelation corrected p-values
+#'  \item "FDR" (default) for autocorrelation and False-discovery-rate corrected p-values
+#'  \item "autocor" for serial-autocorrelation corrected p-values
 #'  \item "raw" for uncorrected p-values
-#'  \item "FDR" for autocorrelation and False-discovery-rate corrected p-values
 #'  }
+#' @param f.sig.lab.position x,y (0-1) position of the fraction of significant correlation labels
+#' 
+#'
 #' @return A ggplot object
-plotCorEns = function(corEns,bins=40,line.labels = rownames(cor.stats),add.to.plot=ggplot(),legend.position = c(0.2, 0.8),significance.option = "autocor"){
+plotCorEns = function(corEns,
+                      bins=40,
+                      line.labels = rownames(cor.stats),
+                      add.to.plot=ggplot(),
+                      legend.position = c(0.2, 0.8),
+                      f.sig.lab.position = c(0.15,0.4),
+                      significance.option = "FDR"){
   
   #pull data frames out of the list
   cor.df <- corEns$cor.df
@@ -922,23 +930,25 @@ plotCorEns = function(corEns,bins=40,line.labels = rownames(cor.stats),add.to.pl
   
   if(significance.option == "raw"){
     issig <- cor.df$pRaw<0.05
-  }else if(grepl("raw",significance.option,ignore.case = T)){
+  }else if(grepl("fdr",significance.option,ignore.case = T)){
     issig <- cor.df$sig_fdr
-  }else{#serial autocorrelation
+  }else if(grepl("auto",significance.option,ignore.case = T)){#serial autocorrelation
     issig <- cor.df$pSerial<0.05
+  }else{
+    stop("significance.option not recognized. Accepted values are 'fdr','autocor', or 'raw'")
   }
   
-  sig_frac <- sum(issig/dim(cor.df)[1]*100)
+  sig_frac <- sum(issig/dim(cor.df)[1]*100,na.rm = TRUE)
   
   sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
   # Now the plotting begins
   lbf = c("p >= 0.05","p < 0.05")
   
   #artificially introduce at least 1 sig/nonsig for plotting
-  if(sum(issig) == 0){
+  if(sum(issig,na.rm = TRUE) == 0){
     issig[which(abs(cor.df$pSerial)==max(abs(cor.df$pSerial)))[1]] <- TRUE
   }
-  if(sum(issig) == dim(cor.df)[1]){
+  if(sum(issig,na.rm = TRUE) == dim(cor.df)[1]){
     issig[which(abs(cor.df$pSerial)==min(abs(cor.df$pSerial)))[1]] <- FALSE
   }
   
@@ -967,7 +977,7 @@ plotCorEns = function(corEns,bins=40,line.labels = rownames(cor.stats),add.to.pl
   ymax = max(y.lims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
   h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=.90*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = 0.7*x.lims[2],y=0.4*y.lims[2], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
+    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
   #customize legend
   h = h + theme(legend.position = legend.position,
                 legend.title = element_text(size=10, face="bold"),
@@ -1118,7 +1128,7 @@ plotScreeEns <- function(pcaout,
                              ggplot2::geom_line(aes(x = seq_len(nPCs),y = nullLine),colour = null.color)+
                              ggplot2::scale_x_continuous("Component number",breaks = seq_len(nPCs))+
                              ggplot2::scale_y_continuous("Fraction of variance explained",limits=c(NA,NA))+
-                             ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",size = .1,linetype = 1))+
+                             ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",size = .05,linetype = 2))+
                              ggtitle("PCA Scree Plot")
                            
                            return(scree)
@@ -1750,7 +1760,11 @@ plotChronEns = function(L,age.var = "ageEnsemble",depth.var = "depth",chron.numb
   
   
   #Tidy up...
-  chronPlot = chronPlot + scale_y_reverse(name = axisLabel(depth)) + ggtitle(paste0(L$dataSetName)) + geoChronRPlotTheme()
+  chronPlot = chronPlot + 
+    scale_y_reverse(name = axisLabel(depth)) + 
+    ggtitle(paste0(L$dataSetName)) + 
+    theme(legend.position = "none")
+    geoChronRPlotTheme()
   
   return(chronPlot)
   

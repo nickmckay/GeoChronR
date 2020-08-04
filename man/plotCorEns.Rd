@@ -10,10 +10,13 @@ plotCorEns(
   line.labels = rownames(cor.stats),
   add.to.plot = ggplot(),
   legend.position = c(0.2, 0.8),
-  significance.option = "autocor"
+  f.sig.lab.position = c(0.15, 0.4),
+  significance.option = "FDR"
 )
 }
 \arguments{
+\item{corEns}{output from corEns()}
+
 \item{bins}{Number of bins in the histogram}
 
 \item{line.labels}{Labels for the quantiles lines}
@@ -22,16 +25,14 @@ plotCorEns(
 
 \item{legend.position}{Where to put the map legend?}
 
+\item{f.sig.lab.position}{x,y (0-1) position of the fraction of significant correlation labels}
+
 \item{significance.option}{Choose how handle significance. Options are:
 \itemize{
-\item "autocor" (default) for serial-autocorrelation corrected p-values
+\item "FDR" (default) for autocorrelation and False-discovery-rate corrected p-values
+\item "autocor" for serial-autocorrelation corrected p-values
 \item "raw" for uncorrected p-values
-\item "FDR" for autocorrelation and False-discovery-rate corrected p-values
 }}
-
-\item{cor.df}{A data.frame correlation r and p-values. Output from corEns()}
-
-\item{cor.stats}{A data.frame of correlation quantiles. Output from corEns()}
 }
 \value{
 A ggplot object
