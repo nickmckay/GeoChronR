@@ -988,7 +988,7 @@ plotCorEns = function(corEns,
   h = ggplot() + ggtitle("Correlation Distribution") # initialize plot
   
   if(use.fdr){
-    lbf = c(paste("p >=",sig.level),paste("p <=",sig.level,"(w/o FDR)"),paste("p <=",sig.level,"(with FDR)"))
+    lbf = c(paste("p >=",sig.level),paste("p <",sig.level,"(w/o FDR)"),paste("p <",sig.level,"(with FDR)"))
     
     #artificially introduce at least 1 sig/nonsig for plotting
     if(sum(fdrSigPlot == 2,na.rm = TRUE) == 0){
@@ -1047,7 +1047,8 @@ plotCorEns = function(corEns,
   ymax = max(y.lims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
   h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=.90*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color=bar.colors[length(bar.colors)])+geoChronRPlotTheme() # add fraction of significant correlations
+    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color=bar.colors[length(bar.colors)],size = 3)+
+    geoChronRPlotTheme() # add fraction of significant correlations
   #customize legend
   h = h + theme(legend.position = legend.position,
                 legend.title = element_text(size=10, face="bold"),
@@ -1055,7 +1056,8 @@ plotCorEns = function(corEns,
                 legend.key = element_rect(fill = "transparent",
                                           color = "transparent"),
                 legend.background = element_rect(fill=alpha('white', 0.3)))+
-    coord_cartesian(xlim = xs)
+    coord_cartesian(xlim = xs)+
+    xlab("r")
   
   return(h)
 }
