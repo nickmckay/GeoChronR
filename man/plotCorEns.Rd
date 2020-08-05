@@ -11,7 +11,10 @@ plotCorEns(
   add.to.plot = ggplot(),
   legend.position = c(0.2, 0.8),
   f.sig.lab.position = c(0.15, 0.4),
-  significance.option = "FDR"
+  sig.level = 0.05,
+  significance.option = "ebisuzaki",
+  use.fdr = TRUE,
+  bar.colors = c("grey50", "Chartreuse4", "DarkOrange")
 )
 }
 \arguments{

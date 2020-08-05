@@ -9,7 +9,8 @@ fdr(
   qlevel = 0.05,
   method = "original",
   adjustment.method = NULL,
-  adjustment.args = NULL
+  adjustment.args = NULL,
+  verbose = FALSE
 )
 }
 \arguments{

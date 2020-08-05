@@ -38,8 +38,9 @@
 #'   @examples
 #'  signif <- fdr(pvals,method="original",adjustment.method="mean")
 
-fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjustment.args=NULL){
-
+fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjustment.args=NULL,verbose = FALSE){
+  pvals <- pvals[is.finite(pvals)]
+  
   n <- length(pvals)
 
   a <- 0   # initialize proportion of alternative hypotheses
@@ -52,7 +53,9 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
     }
     if(adjustment.method=="mean" & is.null(adjustment.args)){
       adjustment.args <- list(edf.lower=0.8,num.steps=20)  # default arguments for "mean" method of Ventura et al. (2004)
+      if(verbose){
       cat(paste('Adjusting cutoff using mean method, with edf.lower=0.8 and num.steps=20\n',sep=""))
+      }
     }
     a <- propAlt(pvals,adjustment.method,adjustment.args)
   }

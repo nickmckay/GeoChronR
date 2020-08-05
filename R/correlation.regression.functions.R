@@ -10,40 +10,70 @@ ar1 = function(x){
 }
 
 #' @export
+#' @importFrom rEDM make_surrogate_data
 #' @title Correlations and their significance according to AR(1) benchmarks
 #' @description Fits AR(1) model to two series X & Y 
 #' @author Julien Emile-Geay
+#' @author Nick McKay
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
-#' @param alpha level of the test (probability of a type I error)
 #' @param nsim number of simulations
 #' @return output
-corrIsopersist = function(X,Y,alpha=0.05,nsim=100){
+pvalMonteCarlo = function(X,Y,n.sim=100,method = "ebisuzaki"){
+  if(is.matrix(X)){
+    if(min(dim(X)) != 1){
+      stop("the input to this function should be a vector, not a matrix")
+    }
+  }
+  if(is.matrix(Y)){
+    if(min(dim(Y)) != 1){
+      stop("the input to this function should be a vector, not a matrix")
+    }
+  }
+  
+  
   nx = length(X)
   ny = length(Y)
-  rhoXY = cor(X,Y)
-  # set warning if nx != ny  
   
-  tdum = 1:nx  # dummy time axis
-  # generate AR(1) surrogates
-  ar1X = ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=nsim)  
-  ar1Y = ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=nsim)
-  #  compute correlations
+  if(nx != ny){
+    stop("X and Y must be the same length")
+  }  
+  
+  rhoXY = cor(X,Y,use="pairwise.complete.obs")
+  
+  if(grepl(method,pattern = "iso",ignore.case = T)){
+    tdum = 1:nx  # dummy time axis
+    # generate AR(1) surrogates
+    ar1X <- try(ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
+    ar1Y <- try(ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
+  }else{
+    ix.good <- which(is.finite(X))
+    ar1X <- matrix(NA,nrow = length(X),ncol = n.sim)
+    ar1X[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = method,num_surr = n.sim),silent = TRUE)
+    
+    iy.good <- which(is.finite(Y))
+    ar1Y <- matrix(NA,nrow = length(Y),ncol = n.sim)
+    ar1Y[iy.good,] <- try(rEDM::make_surrogate_data(Y[iy.good],method = method,num_surr = n.sim),silent = TRUE)
+  }
+  
+  if(!is.matrix(ar1X) | !is.matrix(ar1Y)){
+    #surrogates failed, return NAs
+    return(matrix(NA,nrow = length(X)))
+  }
+  
+
   cor.mat1 = cor(X,ar1Y,use="pairwise.complete.obs") # X vs Y-like noise
   cor.mat2 = cor(Y,ar1X,use="pairwise.complete.obs") # Y vs X-like noise
   cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
-  rho = cor.mat[1,]  # take absolute value
+  rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
-  rho_dens <- stats::density(rho,from=-1,to=1) # estimate density
+  rho_dens <- stats::density(rho,from=0,to=1) # estimate density
   rho_cdf  <- spatstat::CDF.density(rho_dens) # turn into CDF
   #rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
   # estimate test p-value
   pval = 1-rho_cdf(abs(rhoXY))
-  # prepare output list
-  isopersist.out$p-value = pval
-  isopersist.out$rho = rhoXY
-  
-  return(isopersist.out)
+
+  return(pval)
 }
 
 
@@ -94,15 +124,23 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param ens.1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param ens.2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param max.ens optionally limit the number of ensembles calculated (default = NA)
+#' @param calculate.ebisuzaki estimate significance using the Ebisuzaki method (default = TRUE)?
+#' @param calculate.isopersistence estimate significance using the isopersistence method (default = FALSE)?
+#' @param p.ens number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
-corMatrix = function(ens.1,ens.2,max.ens = NA){
+corMatrix = function(ens.1,
+                     ens.2,
+                     max.ens = NA,
+                     calculate.ebisuzaki = TRUE, 
+                     calculate.isopersistence = FALSE,
+                     p.ens = 100){
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
   
   p=matrix(NA,nrow = ncol(ens.1)*ncol(ens.2))
-  pAdj=p;
+  pEbisuzaki <- pIso <- pAdj <- p
   r=p
   n.ens=nrow(p) # number of ensemble members
   ncor <- ifelse(is.na(max.ens),n.ens,max.ens)
@@ -114,9 +152,21 @@ corMatrix = function(ens.1,ens.2,max.ens = NA){
       #test for singularity
       effN = try(effectiveN(ens.1[,i],ens.2[,j]),silent = TRUE)
       if(is.numeric(effN)){
-        r[j+ncol(ens.2)*(i-1)] = cor(ens.1[,i],ens.2[,j],use="pairwise",method = "pearson")
-        pAdj[j+ncol(ens.2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
-        p[j+ncol(ens.2)*(i-1)] = pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
+        r[j+ncol(ens.2)*(i-1)] <- cor(ens.1[,i],ens.2[,j],use="pairwise",method = "pearson")
+        #calculate raw
+        p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
+        #calculate adjust p-value (Bretherton 1999)
+        pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
+        #calculate isopersist
+        if(calculate.isopersistence){
+        pIso[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "iso")
+        }
+        #calculate ebisuzaki
+        if(calculate.ebisuzaki){
+        pEbisuzaki[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "ebisuzaki")
+        }
+        
+
       }
       setTxtProgressBar(pb, j+ncol(ens.2)*(i-1))
     }
@@ -124,15 +174,20 @@ corMatrix = function(ens.1,ens.2,max.ens = NA){
   
   pAdj[!is.finite(pAdj)]=1#This is for instances whenn NEff <=2. I guess this is a reasonable solution?
   
-  # apply false discovery rate procedure to ADJUSTED p-values
-  fdrOut =  suppressMessages(fdr(pAdj,qlevel=0.05,method="original",adjustment.method='mean'))
-  sig_fdr = matrix(0,n.ens)
-  sig_fdr[fdrOut] = 1 
- 
-    # Rmks:
-    # 1) probably qlevel should be an optional parameter 
-  # export to data frame
-  out = na.omit(data.frame("r"=r,"pSerial"=pAdj,"pRaw"=p,"sig_fdr"=sig_fdr))
+  
+  out <- data.frame("r"=r,
+                    "pSerial"=pAdj,
+                    "pRaw"=p,
+                    "pIso" = pIso,
+                    "pEbisuzaki" = pEbisuzaki)
+  
+  if(!calculate.ebisuzaki){
+    out <- dplyr::select(out,-"pEbisuzaki")
+  }
+  if(!calculate.isopersistence){
+    out <- dplyr::select(out,-"pIso")
+  }
+  
   if(!is.na(max.ens)){
     out <- out[seq_len(max.ens),]
   }
@@ -285,9 +340,9 @@ regressEns = function(time.x,values.x,time.y,values.y,bin.vec = NA,bin.step = NA
 #' @param bin.vec vector of bin edges for binning step
 #' @param bin.step spacing of bins, used to build bin step
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
-#' @param max.ens maximum number of ensemble members to correlate
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param min.obs minimum number of points required to calculate regression
+#' @inheritDotParams corMatrix
 #' @return list of ensemble output and percentile information
 corEns = function(time.1,
                   values.1,
@@ -298,7 +353,9 @@ corEns = function(time.1,
                   bin.fun=mean,
                   max.ens=NA,
                   percentiles=c(.025,.25,.5,.75,.975),
-                  min.obs=10){
+                  min.obs=10,
+                  fdr.qlevel = 0.05,
+                  ...){
   
   #check to see if time and values are "column lists"
   if(is.list(time.1)){time.1=time.1$values}
@@ -352,12 +409,18 @@ corEns = function(time.1,
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
-  cor.df = corMatrix(bin1,bin2,max.ens = max.ens)
+  cor.df = corMatrix(bin1,bin2,...)
 
-  #and the significance
-  #pairwise observations
-  
-  
+#calculate the FDR adjusted values
+  for(co in 2:ncol(cor.df)){
+    cn <- names(cor.df)[co]
+    ncn <- paste0(cn,"FDR")
+    fdrOut <- fdr(cor.df[,co],qlevel=fdr.qlevel,method="original",adjustment.method='mean')
+    sig_fdr = matrix(0,nrow(cor.df))
+    sig_fdr[fdrOut] = 1
+    cor.df[ncn] <- sig_fdr
+  }
+
   #calculate some default statistics
   if(!all(is.na(percentiles))){
     pctl = quantile(cor.df$r,probs = percentiles,na.rm = T)

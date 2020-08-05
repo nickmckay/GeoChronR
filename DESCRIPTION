@@ -39,7 +39,8 @@ Imports:
     oxcAAR,
     Hmisc,
     glue,
-    BiocManager
+    BiocManager,
+    rEDM
 Suggests: knitr,
     rmarkdown,
     testthat,

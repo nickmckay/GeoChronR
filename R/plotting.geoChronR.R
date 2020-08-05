@@ -917,7 +917,10 @@ plotCorEns = function(corEns,
                       add.to.plot=ggplot(),
                       legend.position = c(0.2, 0.8),
                       f.sig.lab.position = c(0.15,0.4),
-                      significance.option = "FDR"){
+                      sig.level = 0.05,
+                      significance.option = "ebisuzaki",
+                      use.fdr = TRUE,
+                      bar.colors = c("grey50","Chartreuse4","DarkOrange")){
   
   #pull data frames out of the list
   cor.df <- corEns$cor.df
@@ -929,38 +932,105 @@ plotCorEns = function(corEns,
   bw = (rng[2]-rng[1])/bins
   
   if(significance.option == "raw"){
-    issig <- cor.df$pRaw<0.05
-  }else if(grepl("fdr",significance.option,ignore.case = T)){
-    issig <- cor.df$sig_fdr
-  }else if(grepl("auto",significance.option,ignore.case = T)){#serial autocorrelation
-    issig <- cor.df$pSerial<0.05
+    p <- cor.df$pRaw
+  }else if(grepl("breth",significance.option,ignore.case = T)){#bretherton
+    p <- cor.df$pSerial
+  }else if(grepl("ebi",significance.option,ignore.case = T)){#ebisuzaki
+    p <- cor.df$pEbisuzaki
+  }else if(grepl("iso",significance.option,ignore.case = T)){#isopersistent
+    p <- cor.df$pIso
   }else{
-    stop("significance.option not recognized. Accepted values are 'fdr','autocor', or 'raw'")
+    stop("significance.option not recognized. Accepted values are 'ebisuzaki','isopersistent','bretherton', or 'raw'")
   }
   
-  sig_frac <- sum(issig/dim(cor.df)[1]*100,na.rm = TRUE)
+  #check that p-values exist
+  if(is.null(p)){
+    stop("It doesn't look like the values you calculated for significance exist. Make sure you had the right options selected in corEns().")
+  }
+  
+  #remove missing values
+  goodp <- is.finite(p)
+  
+  cor.df <- cor.df[goodp,]
+  p <- p[goodp]
+  
+  #is it signficant?
+  issig <- p < sig.level
+  
+  if(use.fdr){
+    fdrOut <- fdr(p,qlevel=sig.level,method="original",adjustment.method='mean')
+    sig_fdr <- matrix(FALSE,nrow = length(p))
+    sig_fdr[fdrOut] <- TRUE
+    
+    #assign for plotting
+    fdrSigPlot <- matrix(NA,nrow(sig_fdr))
+    #sig before FDR
+    fdrSigPlot[which(issig & !sig_fdr)] <- 1
+    #sig after FDR
+    fdrSigPlot[which(sig_fdr)] <- 2
+    #always insignificant
+    fdrSigPlot[which(!issig & !sig_fdr)] <- 0
+    sig_frac <- sum(sig_fdr,na.rm = TRUE)/length(sig_fdr)*100
+    
+  }else{
+    sig_frac <- sum(issig,na.rm = TRUE)/length(issig)*100
+    
+  }
+  
   
   sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
   # Now the plotting begins
-  lbf = c("p >= 0.05","p < 0.05")
   
-  #artificially introduce at least 1 sig/nonsig for plotting
-  if(sum(issig,na.rm = TRUE) == 0){
-    issig[which(abs(cor.df$pSerial)==max(abs(cor.df$pSerial)))[1]] <- TRUE
+#pick a good x scale
+  xs <- range(corout$cor.df$r)+c(-diff(range(corout$cor.df$r)*.05),diff(range(corout$cor.df$r)*.05))
+  plotR <- cor.df$r
+  
+  h = ggplot() + ggtitle("Correlation Distribution") # initialize plot
+  
+  if(use.fdr){
+    lbf = c(paste("p >=",sig.level),paste("p <=",sig.level,"(w/o FDR)"),paste("p <=",sig.level,"(with FDR)"))
+    
+    #artificially introduce at least 1 sig/nonsig for plotting
+    if(sum(fdrSigPlot == 2,na.rm = TRUE) == 0){
+      fdrSigPlot <- c(fdrSigPlot,2)
+      plotR <- c(plotR,3)
+      
+    }
+    if(sum(fdrSigPlot == 1,na.rm = TRUE) == 0){
+      fdrSigPlot <- c(fdrSigPlot,1)
+      plotR <- c(plotR,3)
+      
+    }
+    if(sum(issig,na.rm = TRUE) == dim(cor.df)[1]){
+      fdrSigPlot <- c(fdrSigPlot,0)
+      plotR <- c(plotR,3)
+      
+    }
+    
+    h <- h+geom_histogram(aes(x=plotR,y=..count..,fill = factor(fdrSigPlot)), position = 'stack', color = "white", binwidth = bw) +
+      scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6,0.6)), labels=lbf, guide = guide_legend(title = NULL))
+    
+  }else{
+    bar.colors <- bar.colors[1:2]
+    lbf = c(paste("p >=",sig.level),paste("p <=",sig.level))
+    
+    #artificially introduce at least 1 sig/nonsig for plotting
+    if(sum(issig,na.rm = TRUE) == 0){
+      issig <- c(issig,TRUE)
+      plotR <- c(plotR,3)
+    }
+    if(sum(issig,na.rm = TRUE) == nrow(cor.df)){
+      issig <- c(issig,FALSE)
+      plotR <- c(plotR,3)
+    }
+    
+    h <- h+geom_histogram(aes(x=plotR,y=..count..,fill = factor(issig)), position = 'stack', color = "white", binwidth = bw) +
+    scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
   }
-  if(sum(issig,na.rm = TRUE) == dim(cor.df)[1]){
-    issig[which(abs(cor.df$pSerial)==min(abs(cor.df$pSerial)))[1]] <- FALSE
-  }
-  
-  
-  h = ggplot() + ggtitle("Correlation Distribution") + # initialize plot
-    geom_histogram(data=cor.df,aes(x=r,y=..count..,fill = factor(issig)), position = 'stack', color = "white", binwidth = bw) +
-    scale_fill_manual(values=alpha(c("grey50","Chartreuse4"),c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
-  
   
   ranges <- getPlotRanges(h)
   
-  x.lims <- ranges$x.lims
+  x.lims <- xs
   y.lims <- ranges$y.lims
   
   #how many lines?
@@ -977,14 +1047,15 @@ plotCorEns = function(corEns,
   ymax = max(y.lims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
   h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=.90*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color="Chartreuse4")+geoChronRPlotTheme() # add fraction of significant correlations
+    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color=bar.colors[length(bar.colors)])+geoChronRPlotTheme() # add fraction of significant correlations
   #customize legend
   h = h + theme(legend.position = legend.position,
                 legend.title = element_text(size=10, face="bold"),
                 legend.text = element_text(size=8),
                 legend.key = element_rect(fill = "transparent",
                                           color = "transparent"),
-                legend.background = element_rect(fill=alpha('white', 0.3)))
+                legend.background = element_rect(fill=alpha('white', 0.3)))+
+    coord_cartesian(xlim = xs)
   
   return(h)
 }

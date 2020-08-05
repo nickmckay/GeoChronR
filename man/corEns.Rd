@@ -14,7 +14,9 @@ corEns(
   bin.fun = mean,
   max.ens = NA,
   percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
-  min.obs = 10
+  min.obs = 10,
+  fdr.qlevel = 0.05,
+  ...
 )
 }
 \arguments{
@@ -32,11 +34,18 @@ corEns(
 
 \item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
-\item{max.ens}{maximum number of ensemble members to correlate}
-
 \item{percentiles}{quantiles to calculate for regression parameters}
 
 \item{min.obs}{minimum number of points required to calculate regression}
+
+\item{...}{
+  Arguments passed on to \code{\link[=corMatrix]{corMatrix}}
+  \describe{
+    \item{\code{ens.1}}{matrix of age-uncertain columns to correlate and calculate p-values}
+    \item{\code{ens.2}}{matrix of age-uncertain columns to correlate and calculate p-values}
+    \item{\code{max.ens}}{optionally limit the number of ensembles calculated (default = NA)}
+    \item{\code{p.ens}}{number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)}
+  }}
 }
 \value{
 list of ensemble output and percentile information
