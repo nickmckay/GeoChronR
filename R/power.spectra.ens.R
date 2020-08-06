@@ -2,7 +2,7 @@
 #' @name createSyntheticTimeseries
 #' @family spectra
 #' @family pca
-#' @title Create a synthetic timeseries that emulates the characteristics of a variable
+#' @title Create a synthetic timeseries that emulates the characteristics of a timeseries
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values

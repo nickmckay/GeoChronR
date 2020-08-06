@@ -17,9 +17,10 @@ ar1 = function(x){
 #' @author Nick McKay
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
-#' @param nsim number of simulations
+#' @param n.sim number of simulations
+#' @param method the method applies. Possible choices are "isospectral" (default) and "isopersistent"
 #' @return output
-pvalMonteCarlo = function(X,Y,n.sim=100,method = "ebisuzaki"){
+pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
   if(is.matrix(X)){
     if(min(dim(X)) != 1){
       stop("the input to this function should be a vector, not a matrix")
@@ -41,29 +42,29 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "ebisuzaki"){
   
   rhoXY = cor(X,Y,use="pairwise.complete.obs")
   
-  if(grepl(method,pattern = "iso",ignore.case = T)){
+  if(grepl(method,pattern = "isopersistent",ignore.case = T)){
     tdum = 1:nx  # dummy time axis
     # generate AR(1) surrogates
-    ar1X <- try(ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
-    ar1Y <- try(ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
+    X.surr <- try(ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE) # replace with 
+    Y.surr <- try(ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
   }else{
     ix.good <- which(is.finite(X))
-    ar1X <- matrix(NA,nrow = length(X),ncol = n.sim)
-    ar1X[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = method,num_surr = n.sim),silent = TRUE)
+    X.surr <- matrix(NA,nrow = length(X),ncol = n.sim)
+    X.surr[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
     
     iy.good <- which(is.finite(Y))
-    ar1Y <- matrix(NA,nrow = length(Y),ncol = n.sim)
-    ar1Y[iy.good,] <- try(rEDM::make_surrogate_data(Y[iy.good],method = method,num_surr = n.sim),silent = TRUE)
+    Y.surr <- matrix(NA,nrow = length(Y),ncol = n.sim)
+    Y.surr[iy.good,] <- try(rEDM::make_surrogate_data(Y[iy.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
   }
   
-  if(!is.matrix(ar1X) | !is.matrix(ar1Y)){
+  if(!is.matrix(X.surr) | !is.matrix(Y.surr)){
     #surrogates failed, return NAs
     return(matrix(NA,nrow = length(X)))
   }
   
 
-  cor.mat1 = cor(X,ar1Y,use="pairwise.complete.obs") # X vs Y-like noise
-  cor.mat2 = cor(Y,ar1X,use="pairwise.complete.obs") # Y vs X-like noise
+  cor.mat1 = cor(X,Y.surr,use="pairwise.complete.obs") # X vs Y-like noise
+  cor.mat2 = cor(Y,X.surr,use="pairwise.complete.obs") # Y vs X-like noise
   cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
