@@ -978,11 +978,11 @@ plotCorEns = function(corEns,
   }
   
   
-  sig_lbl = paste0("Fraction significant: ", signif(sig_frac,3), "%")
+  sig_lbl = paste0("Fraction significant: ", round(sig_frac,1), "%")
   # Now the plotting begins
   
 #pick a good x scale
-  xs <- range(corout$cor.df$r)+c(-diff(range(corout$cor.df$r)*.05),diff(range(corout$cor.df$r)*.05))
+  xs <- rng+c(-diff(rng)*.05,diff(rng)*.05)
   plotR <- cor.df$r
   
   h = ggplot() + ggtitle("Correlation Distribution") # initialize plot
@@ -1001,7 +1001,7 @@ plotCorEns = function(corEns,
       plotR <- c(plotR,3)
       
     }
-    if(sum(issig,na.rm = TRUE) == dim(cor.df)[1]){
+    if(sum(fdrSigPlot == 0,na.rm = TRUE) == 0){
       fdrSigPlot <- c(fdrSigPlot,0)
       plotR <- c(plotR,3)
       
@@ -1019,7 +1019,7 @@ plotCorEns = function(corEns,
       issig <- c(issig,TRUE)
       plotR <- c(plotR,3)
     }
-    if(sum(issig,na.rm = TRUE) == nrow(cor.df)){
+    if(sum(!issig,na.rm = TRUE) == 0){
       issig <- c(issig,FALSE)
       plotR <- c(plotR,3)
     }
@@ -1046,8 +1046,7 @@ plotCorEns = function(corEns,
     ylim(c(y.lims[1],y.lims[2]*1.1)) # expand vertical range
   ymax = max(y.lims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
-  h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=.90*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    annotate("text",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], label = sig_lbl,color=bar.colors[length(bar.colors)],size = 3)+
+  h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=1.05*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
     geoChronRPlotTheme() # add fraction of significant correlations
   #customize legend
   h = h + theme(legend.position = legend.position,
@@ -1057,7 +1056,15 @@ plotCorEns = function(corEns,
                                           color = "transparent"),
                 legend.background = element_rect(fill=alpha('white', 0.3)))+
     coord_cartesian(xlim = xs)+
-    xlab("r")
+    xlab("r")+
+    annotate("label",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],
+             y=diff(range(y.lims))*f.sig.lab.position[2]+y.lims[1], 
+             label = sig_lbl,
+             color=bar.colors[length(bar.colors)],
+             fill = "white",
+             alpha = .3,
+             label.size = 0,
+             size = 3)
   
   return(h)
 }
