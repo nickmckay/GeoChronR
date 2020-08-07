@@ -343,6 +343,8 @@ regressEns = function(time.x,values.x,time.y,values.y,bin.vec = NA,bin.step = NA
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param min.obs minimum number of points required to calculate regression
+#' @param fdr.qlevel target false discovery rate (most users won't want to change this)
+#' @param gauss  Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis
 #' @inheritDotParams corMatrix
 #' @return list of ensemble output and percentile information
 corEns = function(time.1,
@@ -356,6 +358,7 @@ corEns = function(time.1,
                   percentiles=c(.025,.25,.5,.75,.975),
                   min.obs=10,
                   fdr.qlevel = 0.05,
+                  gauss = TRUE,
                   ...){
   
   #check to see if time and values are "column lists"
@@ -405,14 +408,17 @@ corEns = function(time.1,
   }
   bin2 = as.matrix(bin2[,good])
   
-  
+  # apply mapping to standard Gaussian [optional]
+  if(gauss==TRUE){
+    bin1 = gaussianize(bin1)
+    bin2 = gaussianize(bin2)
+  }
   
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
-  
   cor.df = corMatrix(bin1,bin2,...)
 
-#calculate the FDR adjusted values
+  #calculate the FDR adjusted values
   for(co in 2:ncol(cor.df)){
     cn <- names(cor.df)[co]
     ncn <- paste0(cn,"FDR")
