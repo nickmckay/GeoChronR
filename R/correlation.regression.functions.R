@@ -12,7 +12,7 @@ ar1 = function(x){
 #' @export
 #' @importFrom rEDM make_surrogate_data
 #' @title Correlations and their significance according to AR(1) benchmarks
-#' @description Fits AR(1) model to two series X & Y 
+#' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
 #' @param X a 1-column vector
@@ -125,16 +125,16 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param ens.1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param ens.2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param max.ens optionally limit the number of ensembles calculated (default = NA)
-#' @param calculate.ebisuzaki estimate significance using the Ebisuzaki method (default = TRUE)?
-#' @param calculate.isopersistence estimate significance using the isopersistence method (default = FALSE)?
-#' @param p.ens number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)
+#' @param isospectral estimate significance using the Ebisuzaki method (default = TRUE)
+#' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
+#' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
                      ens.2,
                      max.ens = NA,
-                     calculate.ebisuzaki = TRUE, 
-                     calculate.isopersistence = FALSE,
+                     isospectral = TRUE, 
+                     isopersistent = FALSE,
                      p.ens = 100){
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
@@ -159,12 +159,12 @@ corMatrix = function(ens.1,
         #calculate adjust p-value (Bretherton 1999)
         pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         #calculate isopersist
-        if(calculate.isopersistence){
-        pIso[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "iso")
+        if(isopersist){
+        pIso[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent")
         }
-        #calculate ebisuzaki
-        if(calculate.ebisuzaki){
-        pEbisuzaki[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "ebisuzaki")
+        #calculate ebisuzaki 
+        if(isospectral){
+        pEbisuzaki[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral")
         }
         
 
@@ -182,10 +182,10 @@ corMatrix = function(ens.1,
                     "pIso" = pIso,
                     "pEbisuzaki" = pEbisuzaki)
   
-  if(!calculate.ebisuzaki){
+  if(!isospectral){
     out <- dplyr::select(out,-"pEbisuzaki")
   }
-  if(!calculate.isopersistence){
+  if(!isopersistent){
     out <- dplyr::select(out,-"pIso")
   }
   
