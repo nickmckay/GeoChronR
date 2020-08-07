@@ -133,10 +133,10 @@ convertAD2BP = function(X){
 #' @name gaussianize
 #' @author Julien Emile-Geay 
 #' @author Nick McKay
-#' @param X data matrix
+#' @param X data matrix (2D array)
 #' @param jitter boolean variable ; if TRUE, add jitter to data to prevent ties
-#' @return gaussianized data matrix
-#' @description Transforms each column of data matrix X to normality using the inverse Rosenblatt transform
+#' @return gaussianized data matrix, Xn
+#' @description Transforms each column of data matrix X to normality using the inverse Rosenblatt transform. Tolerant to missing values (NA entries).
 #' @references Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp-12-31-2016.
 #' @references Van Albada, S.J., Robinson P.A. (2006), Transformation of arbitrary distributions to the normal distribution with application to EEG test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004 
 #' @export
@@ -153,7 +153,7 @@ gaussianize <- function(X,jitter=FALSE){
   
   Xn    = matrix(data = NA,nrow = n,ncol = p)
   for (j in 1:p){
-    nz  <- !is.na(X)
+    nz  <- !is.na(X[:,j])
     N   <- sum(nz)
     R   <- rank(X[nz,j]) # Sort the data in ascending order and retain permutation indices
     CDF <-R/N - 1/(2*N) # Obtain cumulative distribution function
