@@ -153,7 +153,7 @@ gaussianize <- function(X,jitter=FALSE){
   
   Xn    = matrix(data = NA,nrow = n,ncol = p)
   for (j in 1:p){
-    nz  <- !is.na(X[:,j])
+    nz  <- !is.na(X[,j])
     N   <- sum(nz)
     R   <- rank(X[nz,j]) # Sort the data in ascending order and retain permutation indices
     CDF <-R/N - 1/(2*N) # Obtain cumulative distribution function
