@@ -131,6 +131,7 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param isospectral estimate significance using the Ebisuzaki method (default = TRUE)
 #' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
 #' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
+#' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
@@ -237,6 +238,7 @@ regress=function (X,Y){
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param recon.bin.vec bin vector to use for the modeled regression.
 #' @param min.obs minimum number of points required to calculate regression
+#' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
 #' @return list of ensemble output
 #' @author Nick McKay
 #' @family regress
