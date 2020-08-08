@@ -12,7 +12,7 @@ ar1 = function(x){
 #' @export
 #' @importFrom rEDM make_surrogate_data
 #' @title Correlations and their significance according to AR(1) benchmarks
-#' @description Fits AR(1) model to two series X & Y 
+#' @description Estimates correlation p-values for two timeseries using a Monte Carlo based method
 #' @author Julien Emile-Geay
 #' @author Nick McKay
 #' @param X a 1-column vector
@@ -42,12 +42,13 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
   
   rhoXY = cor(X,Y,use="pairwise.complete.obs")
   
-  if(grepl(method,pattern = "isopersistent",ignore.case = T)){
+  if(grepl(method,pattern = "persis",ignore.case = T)){
     tdum = 1:nx  # dummy time axis
     # generate AR(1) surrogates
     X.surr <- try(ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE) # replace with 
     Y.surr <- try(ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
-  }else{
+  }else if(grepl(method,pattern = "spectra",ignore.case = T)){
+
     ix.good <- which(is.finite(X))
     X.surr <- matrix(NA,nrow = length(X),ncol = n.sim)
     X.surr[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
@@ -55,6 +56,8 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
     iy.good <- which(is.finite(Y))
     Y.surr <- matrix(NA,nrow = length(Y),ncol = n.sim)
     Y.surr[iy.good,] <- try(rEDM::make_surrogate_data(Y[iy.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
+  }else{
+    stop("method must be 'isopersistent' or 'isospectral'")
   }
   
   if(!is.matrix(X.surr) | !is.matrix(Y.surr)){
@@ -125,23 +128,30 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param ens.1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param ens.2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param max.ens optionally limit the number of ensembles calculated (default = NA)
-#' @param calculate.ebisuzaki estimate significance using the Ebisuzaki method (default = TRUE)?
-#' @param calculate.isopersistence estimate significance using the isopersistence method (default = FALSE)?
-#' @param p.ens number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)
+#' @param calculate.isospectral estimate significance using the isospectral method (default = TRUE)?
+#' @param calculate.isopersistent estimate significance using the isopersistent method (default = FALSE)?
+#' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
                      ens.2,
                      max.ens = NA,
-                     calculate.ebisuzaki = TRUE, 
-                     calculate.isopersistence = FALSE,
-                     p.ens = 100){
+                     calculate.isospectral = TRUE, 
+                     calculate.isopersistent = FALSE,
+                     p.ens = 100,
+                     gaussianize = TRUE
+                     ){
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
   
+  if(gaussianize){
+    ens.1 <- gaussianize(ens.1)
+    ens.2 <- gaussianize(ens.2)
+  }
+  
   p=matrix(NA,nrow = ncol(ens.1)*ncol(ens.2))
-  pEbisuzaki <- pIso <- pAdj <- p
+  pIsospectral <- pIsopersistent <- pAdj <- p
   r=p
   n.ens=nrow(p) # number of ensemble members
   ncor <- ifelse(is.na(max.ens),n.ens,max.ens)
@@ -159,12 +169,12 @@ corMatrix = function(ens.1,
         #calculate adjust p-value (Bretherton 1999)
         pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         #calculate isopersist
-        if(calculate.isopersistence){
-        pIso[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "iso")
+        if(calculate.isopersistent){
+          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent")
         }
-        #calculate ebisuzaki
-        if(calculate.ebisuzaki){
-        pEbisuzaki[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "ebisuzaki")
+        #calculate isospectral
+        if(calculate.isospectral){
+        pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral")
         }
         
 
@@ -179,14 +189,14 @@ corMatrix = function(ens.1,
   out <- data.frame("r"=r,
                     "pSerial"=pAdj,
                     "pRaw"=p,
-                    "pIso" = pIso,
-                    "pEbisuzaki" = pEbisuzaki)
+                    "pIsopersistent" = pIsopersistent,
+                    "pIsospectral" = pIsospectral)
   
-  if(!calculate.ebisuzaki){
-    out <- dplyr::select(out,-"pEbisuzaki")
+  if(!calculate.isospectral){
+    out <- dplyr::select(out,-"pIsospectral")
   }
-  if(!calculate.isopersistence){
-    out <- dplyr::select(out,-"pIso")
+  if(!calculate.isopersistent){
+    out <- dplyr::select(out,-"pIsopersistent")
   }
   
   if(!is.na(max.ens)){
@@ -230,16 +240,32 @@ regress=function (X,Y){
 #' @author Nick McKay
 #' @family regress
 
-regressEns = function(time.x,values.x,time.y,values.y,bin.vec = NA,bin.step = NA ,bin.fun=mean,max.ens=NA,percentiles=c(.025,.25,.50,.75,0.975),recon.bin.vec=NA,min.obs=10){
+regressEns = function(time.x,
+                      values.x,
+                      time.y,
+                      values.y,
+                      bin.vec = NA,
+                      bin.step = NA,
+                      bin.fun=mean,
+                      max.ens=NA,
+                      percentiles=c(.025,.25,.50,.75,0.975),
+                      recon.bin.vec=NA,
+                      min.obs=10,
+                      gaussianize = TRUE){
   #time and values must be "column lists"
   if(!is.list(time.x) | !is.list(time.y) | !is.list(values.x) | !is.list(values.y)){
-    stop("TimeX and Y and values X and Y must all be ``variable lists'' (output of selectData)")
+    stop("time.x, time.y, values.x and values.y must all be ``variable lists'' (output of selectData)")
   }
   
     otx=time.x
     oty=time.y
     ovx=values.x
     ovy=values.y
+    
+    if(gaussianize){
+      values.x$values <- gaussianize(values.x$values)
+      values.y$values <- gaussianize(values.y$values)
+    }
 
     aligned = alignTimeseriesBin(time.x,values.x,time.y,values.y,bin.vec = bin.vec,bin.step = bin.step ,bin.fun=bin.fun,max.ens=max.ens,min.obs=min.obs)
       
@@ -410,7 +436,7 @@ corEns = function(time.1,
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
-  cor.df = corMatrix(bin1,bin2,...)
+  cor.df = corMatrix(bin1,bin2,max.ens = max.ens,...)
 
 #calculate the FDR adjusted values
   for(co in 2:ncol(cor.df)){

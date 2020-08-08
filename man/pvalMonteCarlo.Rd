@@ -4,20 +4,22 @@
 \alias{pvalMonteCarlo}
 \title{Correlations and their significance according to AR(1) benchmarks}
 \usage{
-pvalMonteCarlo(X, Y, n.sim = 100, method = "ebisuzaki")
+pvalMonteCarlo(X, Y, n.sim = 100, method = "isospectral")
 }
 \arguments{
 \item{X}{a 1-column vector}
 
 \item{Y}{a 1-column vector of the same}
 
-\item{nsim}{number of simulations}
+\item{n.sim}{number of simulations}
+
+\item{method}{the method applies. Possible choices are "isospectral" (default) and "isopersistent"}
 }
 \value{
 output
 }
 \description{
-Fits AR(1) model to two series X & Y
+Estimates correlation p-values for two timeseries using a Monte Carlo based method
 }
 \author{
 Julien Emile-Geay

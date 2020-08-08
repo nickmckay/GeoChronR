@@ -15,7 +15,8 @@ regressEns(
   max.ens = NA,
   percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
   recon.bin.vec = NA,
-  min.obs = 10
+  min.obs = 10,
+  gaussianize = TRUE
 )
 }
 \arguments{

@@ -9,8 +9,9 @@ pcaEns(
   method = "ppca",
   weights = NA,
   pca.type = "corr",
-  n.pcs = 4,
-  nEns = 1000,
+  gaussianize = TRUE,
+  n.pcs = 8,
+  n.ens = 1000,
   simulateTrendInNull = FALSE
 )
 }
@@ -23,12 +24,16 @@ pcaEns(
 
 \item{pca.type}{Correlation ("corr" - default) or Covariance ("cov"), matrix}
 
+\item{gaussianize}{Gaussianize the input data? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)}
+
 \item{n.pcs}{number of PCs/EOFs to calculate}
 
-\item{n.ens}{how many ensemble members?}
+\item{n.ens}{how many ensemble members to calculate}
+
+\item{simulateTrendInNull}{Should the null include the trend?}
 }
 \description{
-Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
+Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions
 }
 \seealso{
 Other pca: 

@@ -918,7 +918,7 @@ plotCorEns = function(corEns,
                       legend.position = c(0.2, 0.8),
                       f.sig.lab.position = c(0.15,0.4),
                       sig.level = 0.05,
-                      significance.option = "ebisuzaki",
+                      significance.option = "isospectral",
                       use.fdr = TRUE,
                       bar.colors = c("grey50","Chartreuse4","DarkOrange")){
   
@@ -933,14 +933,14 @@ plotCorEns = function(corEns,
   
   if(significance.option == "raw"){
     p <- cor.df$pRaw
-  }else if(grepl("breth",significance.option,ignore.case = T)){#bretherton
+  }else if(grepl("eff",significance.option,ignore.case = T)){#bretherton
     p <- cor.df$pSerial
-  }else if(grepl("ebi",significance.option,ignore.case = T)){#ebisuzaki
-    p <- cor.df$pEbisuzaki
-  }else if(grepl("iso",significance.option,ignore.case = T)){#isopersistent
-    p <- cor.df$pIso
+  }else if(grepl("spect",significance.option,ignore.case = T)){#isospectral
+    p <- cor.df$pIsospectral
+  }else if(grepl("persis",significance.option,ignore.case = T)){#isopersistent
+    p <- cor.df$pIsopersistent
   }else{
-    stop("significance.option not recognized. Accepted values are 'ebisuzaki','isopersistent','bretherton', or 'raw'")
+    stop("significance.option not recognized. Accepted values are 'isospectral','isopersistent','eff-n', or 'raw'")
   }
   
   #check that p-values exist

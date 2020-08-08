@@ -4,7 +4,15 @@
 \alias{corMatrix}
 \title{Matrix correlation}
 \usage{
-corMatrix(ens.1, ens.2, max.ens = NA, p.ens = 100)
+corMatrix(
+  ens.1,
+  ens.2,
+  max.ens = NA,
+  calculate.isospectral = TRUE,
+  calculate.isopersistent = FALSE,
+  p.ens = 100,
+  gaussianize = TRUE
+)
 }
 \arguments{
 \item{ens.1}{matrix of age-uncertain columns to correlate and calculate p-values}
@@ -13,11 +21,11 @@ corMatrix(ens.1, ens.2, max.ens = NA, p.ens = 100)
 
 \item{max.ens}{optionally limit the number of ensembles calculated (default = NA)}
 
-\item{p.ens}{number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)}
+\item{calculate.isospectral}{estimate significance using the isospectral method (default = TRUE)?}
 
-\item{calculate.ebisuzaki}{estimate significance using the Ebisuzaki method (default = TRUE)?}
+\item{calculate.isopersistent}{estimate significance using the isopersistent method (default = FALSE)?}
 
-\item{calculate.isopersistence}{estimate significance using the isopersistence method (default = FALSE)?}
+\item{p.ens}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)

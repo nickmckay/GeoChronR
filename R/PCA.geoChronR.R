@@ -1,17 +1,26 @@
 #' @export
 #' @family pca
 #' @title Perform principle components analysis (PCA) across an ensemble
-#' @description Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions as described in Anchukaitis and Tierney 2012.
+#' @description Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions
 #' @param bin.list A list of binned data, the output of binTs()
 #' @param method What method to use for PCA? pcaMethods::listPcaMethods() for options. "ppca" is default. Other options may not work in GeoChronR.
 #' @param weights Vector of weights to apply to timeseries in the bin.list
 #' @param pca.type Correlation ("corr" - default) or Covariance ("cov"), matrix
+#' @param gaussianize Gaussianize the input data? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)
+#' @param n.ens how many ensemble members to calculate
+#' @param simulateTrendInNull Should the null include the trend?
 #' @param n.pcs number of PCs/EOFs to calculate
-#' @param n.ens how many ensemble members?
 #' @import BiocManager
 #' 
 
-pcaEns <-  function(bin.list,method='ppca',weights=NA,pca.type="corr",n.pcs=4,nEns=1000,simulateTrendInNull = FALSE){
+pcaEns <-  function(bin.list,
+                    method='ppca',
+                    weights=NA,
+                    pca.type="corr",
+                    gaussianize = TRUE,
+                    n.pcs=8,
+                    n.ens=1000,
+                    simulateTrendInNull = FALSE){
   
   #this may not be needed anymore now that we're using biocview in the description
   #check for the pcaMethods package
@@ -30,23 +39,23 @@ pcaEns <-  function(bin.list,method='ppca',weights=NA,pca.type="corr",n.pcs=4,nE
   time = bin.list[[1]]$time
   
   nD = length(bin.list) #how many sites?
-  nEnsSite = sapply(bin.list,function(x) ncol(x$matrix)) #how many ensembles at each site
+  n.ensSite = sapply(bin.list,function(x) ncol(x$matrix)) #how many ensembles at each site
   
   
   #dat.mat[[1]]$record.density <- rowSums(!is.na(dat.mat[[1]]$matrix))/NCOL(dat.mat[[1]]$matrix)
   #dat.mat <- tmat2
   
   #setup output
-  nullloads <- loads <-  array(data = NA,dim = c(nD,n.pcs,nEns))
-  nullPCs <- PCs <-  array(data = NA,dim = c(length(time),n.pcs,nEns))
-  nullvarExp <- varExp <- array(data = NA,dim = c(n.pcs,nEns))
-  dataDensity = matrix(data = NA, nrow = length(time),ncol=nEns)
-  pb=txtProgressBar(min=1,max=nEns,style = 3)
-  for(n in 1:nEns){#for each ensemble member
+  nullloads <- loads <-  array(data = NA,dim = c(nD,n.pcs,n.ens))
+  nullPCs <- PCs <-  array(data = NA,dim = c(length(time),n.pcs,n.ens))
+  nullvarExp <- varExp <- array(data = NA,dim = c(n.pcs,n.ens))
+  dataDensity = matrix(data = NA, nrow = length(time),ncol=n.ens)
+  pb=txtProgressBar(min=1,max=n.ens,style = 3)
+  for(n in 1:n.ens){#for each ensemble member
     #build a matrix from the list
     NULLMAT <- PCAMAT <- matrix(NA,nrow=length(time),ncol = nD)
     for(j in 1:nD){
-      rn <- sample.int(nEnsSite[j],size=1)
+      rn <- sample.int(n.ensSite[j],size=1)
       PCAMAT[,j] = bin.list[[j]]$matrix[,rn]
       NULLMAT[,j] = createSyntheticTimeseries(time,bin.list[[j]]$matrix[,rn],n.ens = 1,sameTrend = simulateTrendInNull)
     }
@@ -76,6 +85,10 @@ pcaEns <-  function(bin.list,method='ppca',weights=NA,pca.type="corr",n.pcs=4,nE
     
     #remove means, and scale if correlation matrix
     if(pca.type=="corr"){
+      if(gaussianize){
+        PCAMAT <- gaussianize(PCAMAT)
+        NULLMAT <- gaussianize(NULLMAT)
+      }
       pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="vector",nPcs=n.pcs)
       null.out=pcaMethods::pca(NULLMAT,method,center=TRUE,scale="vector",nPcs=n.pcs)
       

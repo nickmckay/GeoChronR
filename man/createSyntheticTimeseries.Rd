@@ -2,7 +2,7 @@
 % Please edit documentation in R/power.spectra.ens.R
 \name{createSyntheticTimeseries}
 \alias{createSyntheticTimeseries}
-\title{Create a synthetic timeseries that emulates the characteristics of a variable}
+\title{Create a synthetic timeseries that emulates the characteristics of a timeseries}
 \usage{
 createSyntheticTimeseries(
   time,

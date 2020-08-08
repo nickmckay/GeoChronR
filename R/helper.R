@@ -153,8 +153,8 @@ gaussianize <- function(X,jitter=FALSE){
   
   Xn    = matrix(data = NA,nrow = n,ncol = p)
   for (j in 1:p){
-    nz  <- !is.na(X)
-    N   <- sum(nz)
+    nz  <- which(!is.na(X[,j]))
+    N   <- length(nz)
     R   <- rank(X[nz,j]) # Sort the data in ascending order and retain permutation indices
     CDF <-R/N - 1/(2*N) # Obtain cumulative distribution function
     Xn[nz,j] <- qnorm(CDF)  # Apply the inverse Rosenblatt transformation

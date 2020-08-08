@@ -44,7 +44,9 @@ corEns(
     \item{\code{ens.1}}{matrix of age-uncertain columns to correlate and calculate p-values}
     \item{\code{ens.2}}{matrix of age-uncertain columns to correlate and calculate p-values}
     \item{\code{max.ens}}{optionally limit the number of ensembles calculated (default = NA)}
-    \item{\code{p.ens}}{number of ensemble members to use for Ebisuzaki and/or isopersistence methods (default = 100)}
+    \item{\code{calculate.isospectral}}{estimate significance using the isospectral method (default = TRUE)?}
+    \item{\code{calculate.isopersistent}}{estimate significance using the isopersistent method (default = FALSE)?}
+    \item{\code{p.ens}}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
   }}
 }
 \value{

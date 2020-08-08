@@ -168,7 +168,7 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
 #' @export
 #' @family spectra
-computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gauss=TRUE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
+computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaussianize=TRUE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"
   if(is.list(time)){time=time$values}
@@ -179,7 +179,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
   values = as.matrix(values)
   
   # apply mapping to standard Gaussian?
-  if(gauss==TRUE){vals = gaussianize(values)}else{vals=values}
+  if(gaussianize){vals = gaussianize(values)}else{vals=values}
   
   if(nrow(time) != nrow(values)){stop("time and values must have the same number of rows (observations)")}
   

@@ -10,7 +10,7 @@ computeSpectraEns(
   max.ens = NA,
   method = "mtm",
   probs = 0.95,
-  gauss = TRUE,
+  gaussianize = TRUE,
   ofac = 4,
   padfac = 2,
   tbw = 3,
