@@ -12,7 +12,7 @@ ar1 = function(x){
 #' @export
 #' @importFrom rEDM make_surrogate_data
 #' @title Correlations and their significance according to AR(1) benchmarks
-#' @description Estimates correlation p-values for two timeseries using a Monte Carlo based method
+#' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
 #' @param X a 1-column vector
@@ -128,19 +128,20 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param ens.1 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param ens.2 matrix of age-uncertain columns to correlate and calculate p-values
 #' @param max.ens optionally limit the number of ensembles calculated (default = NA)
-#' @param calculate.isospectral estimate significance using the isospectral method (default = TRUE)?
-#' @param calculate.isopersistent estimate significance using the isopersistent method (default = FALSE)?
+#' @param isospectral estimate significance using the Ebisuzaki method (default = TRUE)
+#' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
 #' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
                      ens.2,
                      max.ens = NA,
-                     calculate.isospectral = TRUE, 
-                     calculate.isopersistent = FALSE,
+                     isospectral = TRUE, 
+                     isopersistent = FALSE,
                      p.ens = 100,
                      gaussianize = TRUE
                      ){
+
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
@@ -169,11 +170,11 @@ corMatrix = function(ens.1,
         #calculate adjust p-value (Bretherton 1999)
         pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         #calculate isopersist
-        if(calculate.isopersistent){
+        if(isopersistent){
           pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent")
         }
         #calculate isospectral
-        if(calculate.isospectral){
+        if(isospectral){
         pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral")
         }
         
@@ -192,10 +193,10 @@ corMatrix = function(ens.1,
                     "pIsopersistent" = pIsopersistent,
                     "pIsospectral" = pIsospectral)
   
-  if(!calculate.isospectral){
+  if(!isospectral){
     out <- dplyr::select(out,-"pIsospectral")
   }
-  if(!calculate.isopersistent){
+  if(!isopersistent){
     out <- dplyr::select(out,-"pIsopersistent")
   }
   
@@ -369,6 +370,8 @@ regressEns = function(time.x,
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param min.obs minimum number of points required to calculate regression
+#' @param fdr.qlevel target false discovery rate (most users won't want to change this)
+#' @param gauss  Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis
 #' @inheritDotParams corMatrix
 #' @return list of ensemble output and percentile information
 corEns = function(time.1,
@@ -382,6 +385,7 @@ corEns = function(time.1,
                   percentiles=c(.025,.25,.5,.75,.975),
                   min.obs=10,
                   fdr.qlevel = 0.05,
+                  gauss = TRUE,
                   ...){
   
   #check to see if time and values are "column lists"
@@ -431,14 +435,18 @@ corEns = function(time.1,
   }
   bin2 = as.matrix(bin2[,good])
   
-  
+  # apply mapping to standard Gaussian [optional]
+  if(gauss==TRUE){
+    bin1 = gaussianize(bin1)
+    bin2 = gaussianize(bin2)
+  }
   
   #calculate the correlations
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
   cor.df = corMatrix(bin1,bin2,max.ens = max.ens,...)
 
-#calculate the FDR adjusted values
+  #calculate the FDR adjusted values
   for(co in 2:ncol(cor.df)){
     cn <- names(cor.df)[co]
     ncn <- paste0(cn,"FDR")

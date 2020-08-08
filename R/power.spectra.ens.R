@@ -153,6 +153,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @param wgtrad radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)
 #' @param sigma decay parameter of the nuspectral::nuwaveletcoeff wavelets
 #' @param probs vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.
+#' @param gauss Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
+#' @param mtm_mull null hypothesis for the detectiion of significant peaks in `astrochron::mtm()`. Possible choices: AR(1), power_law, or ML96.
 #' @return a list of ensemble spectra results
 #' \itemize{
 #' \item freqs: vector of frequencies
