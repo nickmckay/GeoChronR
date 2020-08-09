@@ -87,5 +87,5 @@ If you are having issues, please let me know at [heiser@nau.edu](mailto:heiser@n
 
 ## License
 
-The project is licensed under the [GNU Public License](https://github.com/nickmckay/GeoChronR/blob/master/Python/LICENSE)
+The project is licensed under the [MIT License](https://github.com/nickmckay/GeoChronR/blob/master/LICENSE)
 
