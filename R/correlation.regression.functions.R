@@ -387,7 +387,7 @@ corEns = function(time.1,
                   percentiles=c(.025,.25,.5,.75,.975),
                   min.obs=10,
                   fdr.qlevel = 0.05,
-                  gauss = TRUE,
+                  gaussianize = TRUE,
                   ...){
   
   #check to see if time and values are "column lists"
@@ -438,7 +438,7 @@ corEns = function(time.1,
   bin2 = as.matrix(bin2[,good])
   
   # apply mapping to standard Gaussian [optional]
-  if(gauss==TRUE){
+  if(gaussianize==TRUE){
     bin1 = gaussianize(bin1)
     bin2 = gaussianize(bin2)
   }
