@@ -19,7 +19,7 @@ pvalMonteCarlo(X, Y, n.sim = 100, method = "isospectral")
 output
 }
 \description{
-Estimates correlation p-values for two timeseries using a Monte Carlo based method
+Generate parametric or non-parametric surrogates of two series X & Y
 }
 \author{
 Julien Emile-Geay

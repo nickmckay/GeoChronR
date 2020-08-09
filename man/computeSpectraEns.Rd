@@ -37,6 +37,10 @@ computeSpectraEns(
 \item{wgtrad}{radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)}
 
 \item{sigma}{decay parameter of the nuspectral::nuwaveletcoeff wavelets}
+
+\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
+
+\item{mtm_mull}{null hypothesis for the detectiion of significant peaks in `astrochron::mtm()`. Possible choices: AR(1), power_law, or ML96.}
 }
 \value{
 a list of ensemble spectra results

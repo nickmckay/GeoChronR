@@ -16,6 +16,7 @@ corEns(
   percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
   min.obs = 10,
   fdr.qlevel = 0.05,
+  gauss = TRUE,
   ...
 )
 }
@@ -38,14 +39,18 @@ corEns(
 
 \item{min.obs}{minimum number of points required to calculate regression}
 
+\item{fdr.qlevel}{target false discovery rate (most users won't want to change this)}
+
+\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis}
+
 \item{...}{
   Arguments passed on to \code{\link[=corMatrix]{corMatrix}}
   \describe{
     \item{\code{ens.1}}{matrix of age-uncertain columns to correlate and calculate p-values}
     \item{\code{ens.2}}{matrix of age-uncertain columns to correlate and calculate p-values}
     \item{\code{max.ens}}{optionally limit the number of ensembles calculated (default = NA)}
-    \item{\code{calculate.isospectral}}{estimate significance using the isospectral method (default = TRUE)?}
-    \item{\code{calculate.isopersistent}}{estimate significance using the isopersistent method (default = FALSE)?}
+    \item{\code{isospectral}}{estimate significance using the Ebisuzaki method (default = TRUE)}
+    \item{\code{isopersistent}}{estimate significance using the isopersistence method (default = FALSE)}
     \item{\code{p.ens}}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
   }}
 }

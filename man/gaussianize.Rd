@@ -7,15 +7,15 @@
 gaussianize(X, jitter = FALSE)
 }
 \arguments{
-\item{X}{data matrix}
+\item{X}{data matrix (2D array)}
 
 \item{jitter}{boolean variable ; if TRUE, add jitter to data to prevent ties}
 }
 \value{
-gaussianized data matrix
+gaussianized data matrix, Xn
 }
 \description{
-Transforms each column of data matrix X to normality using the inverse Rosenblatt transform
+Transforms each column of data matrix X to normality using the inverse Rosenblatt transform. Tolerant to missing values (NA entries).
 }
 \references{
 Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlinear proxies: application to palaeo-enso studies, Climate of the Past, 12 (1), 31–50, doi:10.5194/cp-12-31-2016.
