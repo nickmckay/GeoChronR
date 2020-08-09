@@ -6,7 +6,7 @@
 #' @param method What method to use for PCA? pcaMethods::listPcaMethods() for options. "ppca" is default. Other options may not work in GeoChronR.
 #' @param weights Vector of weights to apply to timeseries in the bin.list
 #' @param pca.type Correlation ("corr" - default) or Covariance ("cov"), matrix
-#' @param gaussianize Gaussianize the input data? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)
+#' @param gaussianize Map input data to a standard Gaussian distribution? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)
 #' @param n.ens how many ensemble members to calculate
 #' @param simulateTrendInNull Should the null include the trend?
 #' @param n.pcs number of PCs/EOFs to calculate

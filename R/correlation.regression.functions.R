@@ -131,6 +131,7 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param isospectral estimate significance using the Ebisuzaki method (default = TRUE)
 #' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
 #' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
+#' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
@@ -237,6 +238,7 @@ regress=function (X,Y){
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param recon.bin.vec bin vector to use for the modeled regression.
 #' @param min.obs minimum number of points required to calculate regression
+#' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
 #' @return list of ensemble output
 #' @author Nick McKay
 #' @family regress
@@ -385,7 +387,7 @@ corEns = function(time.1,
                   percentiles=c(.025,.25,.5,.75,.975),
                   min.obs=10,
                   fdr.qlevel = 0.05,
-                  gauss = TRUE,
+                  gaussianize = TRUE,
                   ...){
   
   #check to see if time and values are "column lists"
@@ -436,7 +438,7 @@ corEns = function(time.1,
   bin2 = as.matrix(bin2[,good])
   
   # apply mapping to standard Gaussian [optional]
-  if(gauss==TRUE){
+  if(gaussianize==TRUE){
     bin1 = gaussianize(bin1)
     bin2 = gaussianize(bin2)
   }
