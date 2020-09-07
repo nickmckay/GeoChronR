@@ -16,37 +16,22 @@ LiPD file analysis and manipulation in R
 
 Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. 
 
-## Requirements
-
-R - v3.3.3
-
-R Studio - v1.1.453
-
-R devtools package - v1.12.0+
+GeoChronR is currently under review as a discussion paper in Geochronology, [check it out here](https://doi.org/10.5194/gchron-2020-25)
 
 ##
 
 ## Pre - Installation
 
-Install the devtools package: 
+Install the remotes package: 
 ```
- install.packages("devtools")
-```
-
-The packages below do not install automatically through geoChronR, so you need to install them manually.
-
-Install lipdR and nuspectral from github:
-
-```
-devtools::install_github("nickmckay/lipd-utilities",subdir = "R")
-devtools::install_github("nickmckay/nuspectral")
+ install.packages("remotes")
 ```
 
-Install the rBacon package:
+In addition, the packages are not required, but may be useful, and will not install automatically through geoChronR so if you're interested install lipdR and nuspectral from github:
 
 ```
-  install.packages("rbacon")
- 
+remotes::install_github("nickmckay/lipd-utilities",subdir = "R")
+remotes::install_github("nickmckay/nuspectral")
 ```
 
 ## Installation
@@ -54,7 +39,7 @@ Install the rBacon package:
 Install package in R Studio:
 
 ```
-devtools::install_github("nickmckay/geoChronR")
+remotes::install_github("nickmckay/geoChronR")
 ```
 
 Load the package into the environment:
@@ -65,9 +50,9 @@ library("geoChronR")
 
 ## How to Cite this Code
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60812.svg)](http://doi.org/10.5281/zenodo.60812)
+McKay, N. P., Emile-Geay, J., and Khider, D.: GeoChronR – an R package to model, analyze and visualize age-uncertain paleoscientific data, Geochronology Discuss., https://doi.org/10.5194/gchron-2020-25, in review, 2020.
 
-Use this link to visit the Zenodo website. It provides citation information in many popular formats.
+[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://doi.org/10.5194/gchron-2020-25)
 
 
 ## Additional Resources 
@@ -83,7 +68,7 @@ Use this link to visit the Zenodo website. It provides citation information in m
 
 ## Contact
 
-If you are having issues, please let me know at [heiser@nau.edu](mailto:heiser@nau.edu).
+If you are having issues, please [create an issue here](https://github.com/nickmckay/GeoChronR/issues), or if for some reason it's not appropriate for the Github issue tracker let us know at [nick@nau.edu](mailto:nick@nau.edu).
 
 ## License
 
