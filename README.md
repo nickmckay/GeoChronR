@@ -4,19 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
-LiPD file analysis and manipulation in R
-
-[About the Project](https://nickmckay.github.io/GeoChronR/about)
-
-[Community](https://nickmckay.github.io/GeoChronR/community)
-
 ## What is it?
 
 Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. 
 
 GeoChronR is currently under review as a discussion paper in Geochronology, [check it out here](https://doi.org/10.5194/gchron-2020-25)
 
-##
 
 ## Pre - Installation
 
