@@ -1,6 +1,5 @@
-# [GeoChronR](https://nickmckay.github.io/LiPD-utilities/)
-
-[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://doi.org/10.5194/gchron-2020-25)
+# [GeoChronR](https://nickmckay.github.io/GeoChronR/)
+[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)
 [![R](https://img.shields.io/badge/R-3.3.3-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -51,7 +50,7 @@ library("geoChronR")
 
 McKay, N. P., Emile-Geay, J., and Khider, D.: GeoChronR – an R package to model, analyze and visualize age-uncertain paleoscientific data, Geochronology Discuss., https://doi.org/10.5194/gchron-2020-25, in review, 2020.
 
-[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://doi.org/10.5194/gchron-2020-25)
+[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)
 
 
 ## Additional Resources 
