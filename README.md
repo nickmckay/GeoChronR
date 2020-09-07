@@ -1,9 +1,8 @@
 # [GeoChronR](https://nickmckay.github.io/LiPD-utilities/)
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.60812.svg)](http://doi.org/10.5281/zenodo.60812)
+[![DOI](https://doi.org/10.5194/gchron-2020-25)](https://doi.org/10.5194/gchron-2020-25)
 [![R](https://img.shields.io/badge/R-3.3.3-blue.svg)]()
-[![R Studio](https://img.shields.io/badge/RStudio-1.1.453-yellow.svg)]()
-[![license](https://img.shields.io/badge/license-GPL-brightgreen.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
 LiPD file analysis and manipulation in R
