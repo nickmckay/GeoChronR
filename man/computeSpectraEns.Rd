@@ -28,6 +28,8 @@ computeSpectraEns(
 
 \item{probs}{vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.}
 
+\item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
+
 \item{ofac}{oversampling factor for lomb::lsp and dplR::redfit}
 
 \item{padfac}{padding factor for astrochron::mtm___ functions}
@@ -37,8 +39,6 @@ computeSpectraEns(
 \item{wgtrad}{radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)}
 
 \item{sigma}{decay parameter of the nuspectral::nuwaveletcoeff wavelets}
-
-\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
 
 \item{mtm_mull}{null hypothesis for the detectiion of significant peaks in `astrochron::mtm()`. Possible choices: AR(1), power_law, or ML96.}
 }

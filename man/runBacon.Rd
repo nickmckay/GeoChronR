@@ -95,13 +95,13 @@ allow for a large range of posterior memory values.}
     \item{\code{hiatus.max}}{The prior for the maximum length of the hiatus. Hiatus length is a uniform distribution, with equal probabilities between 0 and \code{hiatus.max} yr (or whatever other \code{age.unit} is chosen).}
     \item{\code{add}}{Add a value to the maximum hiatus length if a boundary is chosen. Defaults to 100 yr (or whatever other age unit is chosen). Can be adapted if Bacon complains that the parameters are out of support.}
     \item{\code{after}}{Sets a short section above and below hiatus.depths within which to calculate ages. For internal calculations - do not change.}
-    \item{\code{cc1}}{For northern hemisphere terrestrial 14C dates (IntCal13).}
-    \item{\code{cc2}}{For marine 14C dates (Marine13).}
-    \item{\code{cc3}}{For southern hemisphere 14C dates (SHCal13).}
+    \item{\code{cc1}}{For northern hemisphere terrestrial 14C dates (IntCal20).}
+    \item{\code{cc2}}{For marine 14C dates (Marine20).}
+    \item{\code{cc3}}{For southern hemisphere 14C dates (SHCal20).}
     \item{\code{cc4}}{Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See \code{ccdir}.}
     \item{\code{ccdir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default \code{ccdir=""} since they are loaded into R's memory.
 For example, use \code{ccdir="."} to choose current working directory, or \code{ccdir="Curves/"} to choose sub-folder \code{Curves/}. Note that all calibration curves should reside in the same directory. If you want to add a custom-built curve, put it in the directory where the default calibration curves are (probably \code{list.files(paste0(.libPaths(), "/rbacon/extdata/Curves/"))}).
-Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(copyCalibrationCurve(1), "./3Col_intcal13.14C", sep="\t")}.)}
+Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(copyCalibrationCurve(1), "./3Col_intcal20.14C", sep="\t")}.)}
     \item{\code{postbomb}}{Use a postbomb curve for negative (i.e. postbomb) 14C ages. \code{0 = none, 1 = NH1, 2 = NH2, 3 = NH3, 4 = SH1-2, 5 = SH3}}
     \item{\code{delta.R}}{Mean of core-wide age offsets (e.g., regional marine offsets).}
     \item{\code{delta.STD}}{Error of core-wide age offsets (e.g., regional marine offsets).}

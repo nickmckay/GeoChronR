@@ -40,6 +40,8 @@ regressEns(
 
 \item{min.obs}{minimum number of points required to calculate regression}
 
+\item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
+
 \item{values.2}{matrix of values ensembles, or single column}
 }
 \value{

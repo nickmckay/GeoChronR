@@ -16,7 +16,7 @@ corEns(
   percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975),
   min.obs = 10,
   fdr.qlevel = 0.05,
-  gauss = TRUE,
+  gaussianize = TRUE,
   ...
 )
 }
@@ -41,8 +41,6 @@ corEns(
 
 \item{fdr.qlevel}{target false discovery rate (most users won't want to change this)}
 
-\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis}
-
 \item{...}{
   Arguments passed on to \code{\link[=corMatrix]{corMatrix}}
   \describe{
@@ -52,7 +50,10 @@ corEns(
     \item{\code{isospectral}}{estimate significance using the Ebisuzaki method (default = TRUE)}
     \item{\code{isopersistent}}{estimate significance using the isopersistence method (default = FALSE)}
     \item{\code{p.ens}}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
+    \item{\code{gaussianize}}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
   }}
+
+\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis}
 }
 \value{
 list of ensemble output and percentile information

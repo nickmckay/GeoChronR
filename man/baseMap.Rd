@@ -13,7 +13,8 @@ baseMap(
   projection = "mollweide",
   bound.circ = FALSE,
   global = FALSE,
-  extend.range = 5
+  extend.range = 5,
+  ...
 )
 }
 \arguments{
@@ -34,6 +35,168 @@ baseMap(
 \item{global}{Should the scope of the map be global? TRUE or FALSE(default).}
 
 \item{extend.range}{increase the span of the map by this much (lat/long degrees)}
+
+\item{...}{
+  Arguments passed on to \code{\link[maps:map]{maps::map}}
+  \describe{
+    \item{\code{database}}{
+    character string naming a geographical database, a list of
+    \code{x}, \code{y}, and \code{names} obtained from a previous call to
+    \code{map} or a spatial object of class \code{SpatialPolygons} or \code{SpatialLines}.
+    The string choices include a \code{\link[maps]{world}} map,
+    three USA databases (\code{\link[maps]{usa}}, \code{\link[maps]{state}},
+    \code{\link[maps]{county}}), and more (type \code{help(package='maps')} to see the package index). If the requied database is in a different package that has not been attached, the string may be started with "packagename::". The
+    location of the map databases may be overridden by setting the
+    \code{R_MAP_DATA_DIR} environment variable.
+  }
+    \item{\code{regions}}{
+    character vector that names the polygons to draw.
+    Each database is composed of a collection of polygons, and each polygon has
+    a unique name.
+    When a region is composed of more than one polygon, the individual polygons
+    have the name of the region, followed by a colon and a qualifier,
+    as in \code{michigan:north} and \code{michigan:south}.
+    Each element of \code{regions} is matched
+    against the polygon names in the database and, according to
+    \code{exact}, a subset is selected for drawing. The regions may also be 
+    defined using (perl) regular expressions. This makes it possible to use 
+    'negative' expressions like \code{"Norway(?!:Svalbard)"}, which means Norway
+    and all islands except Svalbard. All entries are case insensitive.
+    The default selects all polygons in the database.
+  }
+    \item{\code{exact}}{
+    If \code{TRUE}, only exact matches with \code{regions} are
+    selected for drawing.
+    If \code{FALSE}, each element of \code{regions} is matched
+    as a regular expression
+    against the polygon names in the database and all matches are selected
+    for drawing.
+  }
+    \item{\code{boundary}}{
+    If \code{FALSE}, boundary segments are not drawn.
+    A boundary segment is a line segment of the map that bounds only
+    one of the polygons to be drawn.
+    This argument is ignored if \code{fill} is \code{TRUE}.
+  }
+    \item{\code{interior}}{
+    If \code{FALSE}, interior segments are not drawn.
+    An interior segment is a line segment of the map that bounds two
+    of the polygons to be drawn.
+    This argument is ignored if \code{fill} is \code{TRUE}.
+  }
+    \item{\code{parameters}}{
+    numeric vector of parameters for use with the
+    \code{projection} argument.
+    This argument is optional only in the sense that certain
+    projections do not require additional parameters.
+    If a projection does require additional parameters, these
+    must be given in the \code{parameters} argument.
+  }
+    \item{\code{orientation}}{
+    a vector \code{c(latitude, longitude, rotation)} describing where
+    the map should be centered and a clockwise rotation (in degrees)
+    about this center.
+  }
+    \item{\code{fill}}{
+    logical flag that says whether to draw lines or fill areas.
+    If \code{FALSE}, the lines bounding each region will be drawn (but
+    only once, for interior lines).
+    If \code{TRUE}, each region will be filled using colors from the
+    \code{col =} argument, and bounding lines are drawn by default using \code{par("fg")}.
+    To hide the bounding lines, use \code{border=NA} (see \code{...}).
+  }
+    \item{\code{col}}{
+    vector of colors.
+    If \code{fill} is \code{FALSE}, the first color is used for plotting
+    all lines, and any other colors are ignored.
+    Otherwise, the colors are matched one-one with the polygons
+    that get selected by the \code{region} argument (and are reused
+    cyclically, if necessary). If \code{fill = TRUE}, the default boundary line colour 
+    is given by \code{par("fg")}. To change this, you can use the \code{border} 
+    argument (see '...').
+    A color of \code{NA} causes the corresponding region to be deleted
+    from the list of polygons to be drawn.
+    Polygon colors are assigned \emph{after} polygons are deleted due to values
+    of the \code{xlim} and \code{ylim} arguments.
+  }
+    \item{\code{plot}}{
+    logical flag that specifies whether plotting
+    should be done.
+    If \code{plot} is \code{TRUE} the return value of \code{map} will
+    not be printed automatically .
+  }
+    \item{\code{add}}{
+    logical flag that specifies whether to add to the
+    current plot.
+    If \code{FALSE}, a new plot is begun, and a new coordinate
+    system is set up.
+  }
+    \item{\code{namesonly}}{
+    If \code{TRUE}, the return value will be a character vector of
+    the names of the selected polygons.  See the Value section below.
+  }
+    \item{\code{xlim}}{
+    two element numeric
+    vector giving a range of longitudes, expressed
+    in degrees, to which drawing
+    should be restricted.
+    Longitude is measured in degrees east of Greenwich, so that, in particular,
+    locations in the USA have negative longitude.
+    If \code{fill = TRUE}, polygons selected by \code{region} must be entirely inside
+    the \code{xlim} range.
+    The default value of this argument spans the entire longitude range
+    of the \code{database}.
+  }
+    \item{\code{ylim}}{
+    two element 
+    numeric vector giving a range of latitudes,
+    expressed in degrees, to which drawing
+    should be restricted.
+    Latitude is measured in degrees north of the
+    equator, so that, in particular,
+    locations in the USA have positive latitude.
+    If \code{fill = TRUE}, polygons selected by \code{region} must be entirely inside
+    the \code{ylim} range.
+    The default value of this argument spans the entire latitude range
+    of the \code{database}.
+  }
+    \item{\code{wrap}}{Boolean or a numeric vector. If TRUE, lines that cross too far across the map
+    (due to a strange projection) are omitted. If wrap is a vector of length 2 or more, it is interpreted as the longitude range to be used for a global map, e.g. \code{c(-180,180)} or \code{c(0,360)}. This wrapping even works when \code{fill=TRUE} and is performed before any projection (so the range must always be in degrees). However, the wrapping is performed \emph{after} \code{xlim, ylim} are applied, so these options should probably never be combined. If there is a third component, this signifies the latitude at which Antarctica will be "closed". The default value is -89.9. Special values are \code{NA} (don't draw Antarctica at all) and 0 (draw the line at the latitude of the extremal points, not at a fixed lower latitude). }
+    \item{\code{resolution}}{
+    number that specifies the resolution with which
+    to draw the map.
+    Resolution 0 is the full resolution of the database.
+    Otherwise, just before polylines are plotted they are thinned:
+    roughly speaking, successive points on the polyline that are
+    within \code{resolution} device pixels of one another are collapsed
+    to a single point (see the Reference for further details).
+    Thinning is not performed if \code{plot = FALSE} or when polygons are drawn (\code{fill = TRUE} or \code{database} is a list of polygons).
+  }
+    \item{\code{type}}{
+    character string that controls drawing of the map.
+    Aside from the default \code{type = "l"}, the value \code{type = "n"}
+    can be used
+    to set up the coordinate system and projection for a map that will
+    be added to in later calls.
+  }
+    \item{\code{bg}}{
+    background color.
+  }
+    \item{\code{mar}}{
+    margins, as in \code{\link{par}}.  Defaults allow for map.axes().
+  }
+    \item{\code{myborder}}{
+    scalar or vector of length 2 specifying the porportion of the plot
+    to add to the defined or computed limits as borders.
+  }
+    \item{\code{namefield}}{
+    A vector of column names to be used as region name if \code{database} is a \code{SpatialPolygonsDataFrame}. Ignored in all other cases.
+  }
+    \item{\code{lforce}}{Limit enforcement. Only taken into account if \code{xlim} and/or \code{ylim} are defined and (for "s" and "l") a projection is used. Possible values are \code{"n"} (none) \code{"e"} (exact),\code{"s"} (small),\code{"l"} (large). 
+If \code{lforce="e"}, map data is restricted exactly to the given limits prior to projection. This option affects the output value of the map, not only the plot window.
+If \code{lforce="s"}, the four corners defined by \code{xlim} and \code{ylim} are projected and the plot window is restricted to the largest rectangle inside this region. 
+\code{"l"} will result in a larger rectangle that includes the four corners. However, the parts that fall outside the original limits may not be complete (only polygons that partially fall inside the boundaries are included). This will also work with \code{fill=TRUE}. In this case the output value of the data is not changed, only the plot window is affected. These options are only useful for some projections.}
+  }}
 }
 \value{
 ggmap base map

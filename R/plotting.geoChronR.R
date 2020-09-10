@@ -903,9 +903,10 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' @param legend.position Where to put the map legend?
 #' @param significance.option Choose how handle significance. Options are:
 #'  \itemize{
-#'  \item "FDR" (default) for autocorrelation and False-discovery-rate corrected p-values
-#'  \item "autocor" for serial-autocorrelation corrected p-values
 #'  \item "raw" for uncorrected p-values
+#'  \item "eff-n" to adjust the test's sample size to reflect the reduction in degrees of freedom due to autocorrelation
+#'  \item "isopersistent" to estimate significance by generating surrogates, or random synthetic timeseries, that emulate the persistence characteristics of the series.
+#'  \item "isospectral" A non-parametric alternative which estimates significance by generating surrogates by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal. This is the recommended (and default) option.
 #'  }
 #' @param f.sig.lab.position x,y (0-1) position of the fraction of significant correlation labels
 #' 
@@ -913,7 +914,7 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' @return A ggplot object
 plotCorEns = function(corEns,
                       bins=40,
-                      line.labels = rownames(cor.stats),
+                      line.labels = cor.stats$percentiles,
                       add.to.plot=ggplot(),
                       legend.position = c(0.2, 0.8),
                       f.sig.lab.position = c(0.15,0.4),
@@ -1012,7 +1013,7 @@ plotCorEns = function(corEns,
     
   }else{
     bar.colors <- bar.colors[1:2]
-    lbf = c(paste("p >=",sig.level),paste("p <=",sig.level))
+    lbf = c(paste("p >=",sig.level),paste("p <",sig.level))
     
     #artificially introduce at least 1 sig/nonsig for plotting
     if(sum(issig,na.rm = TRUE) == 0){
@@ -1034,22 +1035,23 @@ plotCorEns = function(corEns,
   y.lims <- ranges$y.lims
   
   #how many lines?
+  if(!is.null(cor.stats)){
   lineType= rep("dashed",times = nrow(cor.stats))
   lineType[cor.stats$percentiles==.5]="solid"
   lineType[cor.stats$percentiles==.975 | cor.stats$percentiles==.025]="dotted"
   
   
-  
   # add vertical lines at the quantiles specified in cor.stats. 
-  h = h + geom_vline(data = cor.stats, aes(xintercept = values), color="red", size = 1,
+  h = h + geom_vline(data = cor.stats, aes(xintercept = r), color="red", size = 1,
                      linetype=lineType, show.legend = FALSE) +
     ylim(c(y.lims[1],y.lims[2]*1.1)) # expand vertical range
   ymax = max(y.lims)
   # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
-  h = h + geom_text(data = cor.stats, mapping = aes(x=values, y=1.05*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)+
-    geoChronRPlotTheme() # add fraction of significant correlations
-  #customize legend
-  h = h + theme(legend.position = legend.position,
+  h = h + geom_text(data = cor.stats, mapping = aes(x=r, y=1.05*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)
+  }
+    #customize legend
+  h = h + geoChronRPlotTheme() +
+    theme(legend.position = legend.position,
                 legend.title = element_text(size=10, face="bold"),
                 legend.text = element_text(size=8),
                 legend.key = element_rect(fill = "transparent",

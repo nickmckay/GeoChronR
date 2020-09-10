@@ -264,6 +264,7 @@ mapLipd <- function(D,
 #' @param global Should the scope of the map be global? TRUE or FALSE(default).
 #' @param projection Map project. All options on: ?mapproject
 #' @param extend.range increase the span of the map by this much (lat/long degrees)
+#' @inheritDotParams maps::map
 #' @return ggmap base map 
 baseMap = function(lon,
                    lat,
@@ -273,7 +274,8 @@ baseMap = function(lon,
                    projection="mollweide",
                    bound.circ=FALSE,
                    global=FALSE,
-                   extend.range=5){
+                   extend.range=5,
+                   ...){
   
   #if there's only one location, extend the range. 
   if(length(lat)==1 & length(lon)==1){
@@ -362,12 +364,12 @@ baseMap = function(lon,
     
     
     if(global){
-      dum = maps::map(plot = FALSE)
+      dum = maps::map(plot = FALSE,...)
       x_lim = c(-190,190)
       y_lim = c(-91,91)
       
     }else{
-      dum = maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE)
+      dum = maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE,...)
     }
     
     #dum = map(xlim = x_cell_lim, ylim = y_cell_lim, plot = FALSE)

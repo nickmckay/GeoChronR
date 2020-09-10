@@ -7,7 +7,7 @@
 plotCorEns(
   corEns,
   bins = 40,
-  line.labels = rownames(cor.stats),
+  line.labels = cor.stats$percentiles,
   add.to.plot = ggplot(),
   legend.position = c(0.2, 0.8),
   f.sig.lab.position = c(0.15, 0.4),
@@ -32,9 +32,10 @@ plotCorEns(
 
 \item{significance.option}{Choose how handle significance. Options are:
 \itemize{
-\item "FDR" (default) for autocorrelation and False-discovery-rate corrected p-values
-\item "autocor" for serial-autocorrelation corrected p-values
 \item "raw" for uncorrected p-values
+\item "eff-n" to adjust the test's sample size to reflect the reduction in degrees of freedom due to autocorrelation
+\item "isopersistent" to estimate significance by generating surrogates, or random synthetic timeseries, that emulate the persistence characteristics of the series.
+\item "isospectral" A non-parametric alternative which estimates significance by generating surrogates by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal. This is the recommended (and default) option.
 }}
 }
 \value{

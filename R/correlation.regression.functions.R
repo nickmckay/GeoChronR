@@ -363,6 +363,9 @@ regressEns = function(time.x,
 #' @title Ensemble correlation
 #' @description Primary function for calculating correlation ensembles
 #' @author Nick McKay
+#' @importFrom dplyr select bind_cols
+#' @importFrom magrittr %>% 
+#' @importFrom purrr map_dfc map_dfr
 #' @param time.1 matrix of age/time ensembles, or single column
 #' @param values.1 matrix of values ensembles, or single column
 #' @param time.2 matrix of age/time ensembles, or single column
@@ -460,11 +463,18 @@ corEns = function(time.1,
 
   #calculate some default statistics
   if(!all(is.na(percentiles))){
-    pctl = quantile(cor.df$r,probs = percentiles,na.rm = T)
-    cor.stats = data.frame(percentiles,"values" = pctl)
-    #row.names(cor.stats)=format(cor.stats$percentiles,digits = 2) # it appears that the rows are already well formatted
-    corEns.data=list(cor.df = cor.df,cor.stats = cor.stats)
+    stats <- cor.df %>% 
+      dplyr::select(-ends_with("FDR")) %>% 
+      purrr::map_dfc(quantile,probs = percentiles,na.rm = T)
     
+    fdrStats <-  cor.df %>% 
+      dplyr::select(ends_with("FDR")) %>%
+      purrr::map_dfr(mean,na.rm = T)
+    
+    cor.stats <- dplyr::bind_cols(percentiles = percentiles,stats)
+    #row.names(cor.stats)=format(cor.stats$percentiles,digits = 2) # it appears that the rows are already well formatted
+    corEns.data <- list(cor.df = cor.df,cor.stats = cor.stats,cor.fdr.stats = fdrStats)
+
   }else{
     cor.stats=NA
     corEns.data=list(cor.df = cor.df)

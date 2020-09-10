@@ -24,7 +24,7 @@ pcaEns(
 
 \item{pca.type}{Correlation ("corr" - default) or Covariance ("cov"), matrix}
 
-\item{gaussianize}{Gaussianize the input data? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)}
+\item{gaussianize}{Map input data to a standard Gaussian distribution? This is only relevant for correlation matrices, covariance matrices will not be gaussianized. (default = TRUE)}
 
 \item{n.pcs}{number of PCs/EOFs to calculate}
 

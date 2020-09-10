@@ -26,6 +26,8 @@ corMatrix(
 \item{isopersistent}{estimate significance using the isopersistence method (default = FALSE)}
 
 \item{p.ens}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
+
+\item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)

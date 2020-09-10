@@ -40,7 +40,8 @@ Imports:
     Hmisc,
     glue,
     BiocManager,
-    rEDM
+    rEDM,
+    inline
 Suggests: knitr,
     rmarkdown,
     testthat,
