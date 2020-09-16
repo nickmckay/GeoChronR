@@ -7,10 +7,10 @@
 #' @param h a ggplot object
 #' @return a list of x and y ranges
 getPlotRanges <- function(h){
-  if(compareVersion(as.character(packageVersion("ggplot2")),"2") >=0){ #deal with ggplot versions
-    if(compareVersion(as.character(packageVersion("ggplot2")),"3") >=0){#then version > 3
-      y.lims = ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits()
-      x.lims = ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits()
+  if(packageVersion("ggplot2") >= 2){ #deal with ggplot versions
+    if(packageVersion("ggplot2") >= 3){#then version > 3
+      y.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits())
+      x.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits())
     }else{#version 2
       y.lims = ggplot_build(h)$layout$panel_scales$y[[1]]$get_limits()
       x.lims = ggplot_build(h)$layout$panel_scales$x[[1]]$get_limits()
@@ -265,12 +265,12 @@ quantile2d = function(x,
   }
   
   if(all(is.na(x.bin))){
-    x.bin <- approx(1:length(sx),sx,seq(1,length(sx),length.out = n.bins))$y #adjust it along y
+    x.bin <- approx(1:length(sx),sx,seq(1,length(sx),length.out = n.bins),ties = min)$y #adjust it along y
   }
   y.int = matrix(NA,ncol = n.ens,nrow= length(x.bin))
   
   for(int in 1:n.ens){
-    y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin )$y
+    y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin,ties = min)$y
   }
   
   x = x.bin
@@ -572,19 +572,23 @@ plotLine = function(add.to.plot=ggplot(),X,Y,color="black",alp = 1){
 #' @description Plot an ensemble timeseries as a set of lines. Useful for displaying a handful of ensemble members to characterize individual paths. 
 #' @import ggplot2 dplyr RColorBrewer
 #' @importFrom tidyr pivot_longer
+#'
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
 #' @param color Either 1) A line color (following ggplot rules) to use for all lines (e.g., "blue"), 2) An RColorBrewer pallette to repeat over the lines (e.g. "Blues") or 3) a vector specifying the color for all lines (e.g., c("red","white","blue"))
 #' @param n.ens.plot Whats the maximum number of lines to plot?
 #' @param alp Line transparency
+#' @param na.rm Remove NAs from X and Y? Set to FALSE to preserve line breaks where data are missing. (default = TRUE)
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#'
 #' @return A ggplot object
 plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
                                   X,
                                   Y,
                                   alp=.2,
                                   color = "blue",
-                                  n.ens.plot=100){
+                                  n.ens.plot=100,
+                                  na.rm = TRUE){
   #check to see if time and values are "column lists"
   
   oX = X
@@ -606,13 +610,18 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   pX = sample.int(ncol(X),size = np,replace = TRUE)
   pY = sample.int(ncol(Y),size = np,replace = TRUE)
   
-  Xplot <- tidyr::pivot_longer(X[,pX],cols = everything())
-  Yplot <- tidyr::pivot_longer(Y[,pY],cols = everything())
+  Xplot <- tidyr::pivot_longer(X[,pX],cols = everything(),names_to = "xEns",values_to = "x")
+  Yplot <- tidyr::pivot_longer(Y[,pY],cols = everything(),names_to = "yEns",values_to = "y")
   
   dfXY <- dplyr::bind_cols(Xplot,Yplot)
   
-  names(dfXY) <- c("xEns","x","yEns","y")
+#  names(dfXY) <- c("xEns","x","yEns","y")
   dfXY <- dplyr::arrange(dfXY,xEns)
+  
+  if(na.rm){
+    dfXY <- filter(dfXY,!is.na(x)) %>% 
+      filter(!is.na(y))
+  }
   
   #deal with colors
   if(color %in% rownames(RColorBrewer::brewer.pal.info)){#
@@ -632,6 +641,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   
   linePlot = add.to.plot+
     geom_path(data=dfXY,
+              stat = "identity",
               aes(x=x,y=y,color = xEns),
               alpha=alp)+
     scale_color_manual(values = colorScale)+
@@ -896,7 +906,7 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' @title Plot the results of an ensemble correlation
 #' @description Plots the output of an ensemble correlation analysis.
 #' @import ggplot2
-#' @param corEns output from corEns()
+#' @param corout output from corEns()
 #' @param bins Number of bins in the histogram
 #' @param line.labels Labels for the quantiles lines
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot()
@@ -912,10 +922,10 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' 
 #'
 #' @return A ggplot object
-plotCorEns = function(corEns,
+plotCorEns = function(corout,
                       bins=40,
-                      line.labels = cor.stats$percentiles,
-                      add.to.plot=ggplot(),
+                      line.labels = corout$cor.stats$percentiles,
+                      add.to.plot=ggplot2::ggplot(),
                       legend.position = c(0.2, 0.8),
                       f.sig.lab.position = c(0.15,0.4),
                       sig.level = 0.05,
@@ -924,8 +934,8 @@ plotCorEns = function(corEns,
                       bar.colors = c("grey50","Chartreuse4","DarkOrange")){
   
   #pull data frames out of the list
-  cor.df <- corEns$cor.df
-  cor.stats <- corEns$cor.stats
+  cor.df <- filter(corout$cor.df,!is.na(r))
+  cor.stats <- corout$cor.stats
   
   
   # evaluate preliminary quantities
@@ -1347,6 +1357,9 @@ plotPcaEns = function(ens.pc.out,
     #assign colors
     scaleColors <- c(low.color,high.color)
     
+    #get color range
+    crange <- c(-max(abs(medianLoadings[,which.pcs[i]])),max(abs(medianLoadings[,which.pcs[i]])))
+    
     
     
     
@@ -1357,7 +1370,10 @@ plotPcaEns = function(ens.pc.out,
       theme(legend.box = "horizontal",legend.position=legend.position) + 
       scale_shape_manual(name = "Archive Type",values = archiveShapes) +
       scale_size(name = "Loading uncertainty",range = c(dot.size,1)) +
-      scale_fill_gradient2(name="Loadings",low=scaleColors[1],high=scaleColors[2],guide="colorbar")
+      scale_fill_gradient2(name="Loadings",
+                           low=scaleColors[1],
+                           high=scaleColors[2],
+                           guide="colorbar",limits = crange)
     
     
     leglist[[i]] <- getLegend(testMap)
@@ -1745,7 +1761,34 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
 #' @param meas.num which measurement Table for the paleoData age-depth
 #' @param color.line.paleo line color of the paleoData age-depth (following ggplot rules)
 #' @return A ggplot object
-plotChronEns = function(L,age.var = "ageEnsemble",depth.var = "depth",chron.number=NA,model.num = NA,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,n.bins=100,color.low="white",color.high="grey70",alp=1,color.line="Black",line.width=1,add.to.plot=ggplot2::ggplot(),n.ens.plot = 5, color.ens.line = "red",alp.ens.line = 0.7,distAlp = 0.3,dist.type = "violin",dist.color = "purple",dist.thick = 0.1,dist.scale = 0.02,truncate.dist = NA,add.paleo.age.depth = FALSE, paleo.number = NA, meas.num = NA,color.line.paleo = "cyan"){
+plotChronEns = function(L,
+                        age.var = "ageEnsemble",
+                        depth.var = "depth",
+                        chron.number=NA,
+                        model.num = NA,
+                        probs=c(0.025,.25,.5,.75,.975),
+                        x.bin=NA,
+                        y.bin=NA,
+                        n.bins=100,
+                        color.low="white",
+                        color.high="grey70",
+                        alp=1,
+                        color.line="Black",
+                        line.width=1,
+                        add.to.plot=ggplot2::ggplot(),
+                        n.ens.plot = 5,
+                        color.ens.line = "red",
+                        alp.ens.line = 0.7,
+                        distAlp = 0.3,
+                        dist.type = "violin",
+                        dist.color = "purple",
+                        dist.thick = 0.1,
+                        dist.scale = 0.02,
+                        truncate.dist = NA,
+                        add.paleo.age.depth = FALSE, 
+                        paleo.number = NA, 
+                        meas.num = NA,
+                        color.line.paleo = "cyan"){
   
   C = L$chronData
   if(is.na(chron.number)){

@@ -1,5 +1,5 @@
 ---
-title: "Introduction to geoChronR -- Correlations"
+title: "Introduction to geoChronR"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -38,7 +38,7 @@ In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a
 if(requireNamespace("lipdR")){
   hulu <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd")
 }else{
-  load("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.RData")
+  hulu <- loadRemote("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.RData")
 }
 ```
 
@@ -136,7 +136,7 @@ Let's compare these data to the GISP2 ice core.
 if(requireNamespace("lipdR")){
   gisp2 <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd")
 }else{
-  load("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.RData")
+  gisp2 <- loadRemote("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.RData")
 }
 ```
 

@@ -1,6 +1,8 @@
 ---
 title: "Correlation"
 output: rmarkdown::html_vignette
+date: "`r Sys.Date()`"
+author: "Nick McKay"
 vignette: >
   %\VignetteIndexEntry{correlation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,6 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
 ```
 
 # Table of contents
@@ -37,8 +40,7 @@ library(gridExtra)
 And the data we generated in the [introduction](Introduction.html).
 
 ```{r load data}
-load("~/Documents/introductionOutput.RData")
-#load("http://lipdvere.org/geochronr-examples/introductionOutput.RData")
+loadRemote("http://lipdverse.org/geochronr-examples/introductionOutput.RData",useSavedNames = TRUE)
 ```
 
 ## The corEns() function
@@ -56,7 +58,7 @@ corout <- corEns(time.1 = gisp2.ens,
                  time.2 = hulu.ae,
                  values.2 = hulu.d18O,
                  bin.step = 200,
-                 max.ens = 1000,
+                 max.ens = 100,
                  isopersistent  = TRUE,
                  isospectral = TRUE,
                  gaussianize = TRUE)

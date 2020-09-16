@@ -23,8 +23,8 @@ createSyntheticTimeseries <- function(time,values,n.ens=1,sameTrend=TRUE,index.t
   values = as.matrix(values[index.to.model])
   
   #find the NAs...
-  tnai = which(is.na(time))
-  vnai = which(is.na(values))
+  tnai = which(!is.finite(time))
+  vnai = which(!is.finite(values))
   
   
   

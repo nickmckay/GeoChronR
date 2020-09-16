@@ -11,7 +11,7 @@ vignette: >
   
   
 ```{r,echo = FALSE}
-knitr::opts_chunk$set(fig.retina = 2, fig.width = 8,fig.height = 6) 
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
 ## Introduction

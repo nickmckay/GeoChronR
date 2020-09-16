@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r,echo = FALSE}
-knitr::opts_chunk$set(fig.retina = 2, fig.width = 8,fig.height = 6) 
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
 ```
 
 
@@ -58,7 +58,7 @@ mts <- filterTs(TS, "paleoData_useInGlobalTemperatureAnalysis == TRUE") %>%
 The `tidyTs()` function will take a timeseries object and turn it into a long, "tidy", data frame, where each row is an observation, and each column a variable. This will play very nicely with the [tidyverse](https://www.tidyverse.org/) and facilitate efficient data analysis and visualzation. *With large TS objects, this can result in data.frames with millions of rows, and can be quite slow to create*. 
 
 ```{r, results='hide'}
-tidyData <- tidyTs(mts)
+tidyData <- tidyTs(mts,age.var = "year")
 ```
 
 ## Now we can filter and structure our tidy data frame with just what we want using tidyverse tools
@@ -84,13 +84,16 @@ plotTimeseriesStack(plot.df)
 
 OK! We have a plot! It looks decent, and by default it colors it by the TSid, but we might rather color it by archiveType. We do that simply:
 ```{r}
-plotTimeseriesStack(plot.df,colorVar =  "archiveType")
+plotTimeseriesStack(plot.df,color.var =  "archiveType")
 ```
 
 Better. But we need to make the axis labels smaller, and want to give it some more intuitive colors for each archive
 
 ```{r}
-plotTimeseriesStack(plot.df,colorVar =  "archiveType",labSize = 2,colorRamp = c("coral","black","blue","magenta","dark green"))
+plotTimeseriesStack(plot.df,
+                    color.var =  "archiveType",
+                    lab.size = 2,
+                    color.ramp = c("coral","black","blue","magenta","dark green"))
 ```
 
 That looks pretty good! Perhaps we think this is too colorful for a journal submission, and we don't want the shading along each line. And we also want to arrange the lines by latitude instead of archive.
@@ -99,11 +102,11 @@ That looks pretty good! Perhaps we think this is too colorful for a journal subm
 plot.df <- arrange(plot.df,geo_latitude) #order by latitude
                    
 myPlot <- plotTimeseriesStack(plot.df, #create another plot, storing the output
-                    labSize = 2,
-                    colorRamp = "black",#if we specify one color, all the records will get that
-                    fillAlpha = 0, #make the fill transparent
-                    labSpace = 3, #add it a bit more space between the axis labels and ticks
-                    lineSize = 0.4) #make the lines a bit thinner
+                    lab.size = 2,
+                    color.ramp = "black",#if we specify one color, all the records will get that
+                    fill.alpha = 0, #make the fill transparent
+                    lab.space = 3, #add it a bit more space between the axis labels and ticks
+                    line.size = 0.4) #make the lines a bit thinner
 print(myPlot)                   
                    
 ```

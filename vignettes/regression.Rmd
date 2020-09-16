@@ -4,14 +4,14 @@ author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ensemble regression and calibration-in-time}
+  %\VignetteIndexEntry{Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
   
   
 ```{r,echo = FALSE}
-knitr::opts_chunk$set(fig.retina = 2, fig.width = 8,fig.height = 6) 
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
 
@@ -34,7 +34,11 @@ library(ggplot2) #for plotting
 ## Load the LiPD file
 OK, we'll begin by loading in the Kurupa Lake record from Boldt et al., 2015. `The system.file(...)` part of this pulls the example file from the package directory. You'd like just enter the path as a string for typical use.
 ```{r}
+if(requireNamespace("lipdR")){
 K <- lipdR::readLipd("http://lipdverse.org/geochronr-examples/Kurupa.Boldt.2015.lpd")
+}else{
+K <- loadRemote("http://lipdverse.org/geochronr-examples/Kurupa.Boldt.2015.Rdata")
+}
 ```
 
 ## Check out the contents
@@ -46,7 +50,7 @@ print(sp)
 
 ## Create an age model with Bacon
 
-```{r,results="hide",fig.keep="all"}
+```{r,results="hide",fig.keep="all",cache=TRUE}
 K <- runBacon(K,
               lab.id.var = 'labID', 
               age.14c.var = 'age14C', 
@@ -61,7 +65,8 @@ K <- runBacon(K,
               bacon.thick = 7,
               ask = FALSE,
               bacon.dir = "~/Cores",
-              suggest = FALSE)
+              suggest = FALSE,
+              close.connection = FALSE)
 ```
 
 ## And plot the ensemble output
@@ -101,33 +106,33 @@ kae$units
 yep, we need to convert the units from BP to AD
 
 ```{r}
-kae = convertBP2AD(kae)
+kae <- convertBP2AD(kae)
 ```
 
 ## Create a "variable list" for the instrumental data
 
 ```{r}
-kyear = list()
-kyear$values = kurupa.instrumental[,1]
-kyear$variableName = "year"
-kyear$units = "AD"
+kyear <- list()
+kyear$values <- kurupa.instrumental[,1]
+kyear$variableName <- "year"
+kyear$units <- "AD"
 
-kinst = list()
-kinst$values = kurupa.instrumental[,2]
-kinst$variableName = "Temperature"
-kinst$units = "deg (C)"
+kinst <- list()
+kinst$values <- kurupa.instrumental[,2]
+kinst$variableName <- "Temperature"
+kinst$units <- "deg (C)"
 ```
 
 
 ## Calculate an ensmeble correlation between the RABD and local summer temperature data
-```{r,results="hide",fig.keep="all"}
-corout = corEns(kae,rabd,kyear,kinst,bin.step=2,percentiles = c(.05,.5,.95 ))
+```{r,results="hide",warning=FALSE}
+corout <- corEns(kae,rabd,kyear,kinst,bin.step=2,percentiles = c(.05,.5,.95 ))
 ```
 
 ## And plot the output
-
+Note that here we use the "Effective-N" significance option as we mimic the Boldt et al. (2015) paper.
 ```{r}
-plotCorEns(corout)
+plotCorEns(corout,significance.option = "eff-n")
 ```
 
 Mixed results. But encouraging enough to move forward.
@@ -135,13 +140,19 @@ Mixed results. But encouraging enough to move forward.
 ## Perform ensemble regression
 OK, you've convinced yourself that you want to use RABD to model temperature back through time. We can do this simply (perhaps naively) with regession, and lets do it with age uncertainty, both in the building of the model, and the reconstructing
 ```{r,results="hide",fig.keep="all"}
-regout = regressEns(time.x = kae,values.x = rabd,time.y =kyear,values.y =kinst,bin.step=3,recon.bin.vec = seq(-4010,2010,by=20),percentiles = c(5,50,95))
+regout <- regressEns(time.x = kae,
+                    values.x = rabd,
+                    time.y =kyear,
+                    values.y =kinst,
+                    bin.step=3,
+                    gaussianize = FALSE,
+                    recon.bin.vec = seq(-4010,2010,by=20))
 ```
 
 ## And plot the output
 
 ```{r}
-regPlots = plotRegressEns(regout,alp = 0.01)
+regPlots <- plotRegressEns(regout,alp = 0.01,font.size = 8)
 ```
 
 This result is consistent with that produced by Boldt et al., (2015), and was much simpler to produce with GeoChronR.

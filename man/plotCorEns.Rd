@@ -5,10 +5,10 @@
 \title{Plot the results of an ensemble correlation}
 \usage{
 plotCorEns(
-  corEns,
+  corout,
   bins = 40,
-  line.labels = cor.stats$percentiles,
-  add.to.plot = ggplot(),
+  line.labels = corout$cor.stats$percentiles,
+  add.to.plot = ggplot2::ggplot(),
   legend.position = c(0.2, 0.8),
   f.sig.lab.position = c(0.15, 0.4),
   sig.level = 0.05,
@@ -18,7 +18,7 @@ plotCorEns(
 )
 }
 \arguments{
-\item{corEns}{output from corEns()}
+\item{corout}{output from corEns()}
 
 \item{bins}{Number of bins in the histogram}
 

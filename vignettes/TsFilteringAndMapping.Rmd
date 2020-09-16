@@ -1,19 +1,13 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
----
----
 title: "Filtering, mapping and plotting LiPD objects"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{FilteringAndMapping}
+  %\VignetteIndexEntry{Filtering and mapping}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
 #LiPD filtering and mappings
 
 

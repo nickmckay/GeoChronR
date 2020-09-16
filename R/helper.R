@@ -1,3 +1,21 @@
+#' Load a remote RData file
+#'
+#' @param url the url of a remote data file 
+#'
+#' @return the loadeds object
+#' @export
+loadRemote <- function(url,useSavedNames = FALSE){
+  download.file(url,destfile = file.path(tempdir(),"downloadData.RData"))
+  varName <- load(file.path(tempdir(),"downloadData.RData"))
+  if(useSavedNames){
+    for(i in 1:length(varName)){
+      assign(varName[i],get(varName[i]),envir = .GlobalEnv)
+    }
+  }else{
+    return(get(varName))
+  }
+}
+
 #' @export
 #' @title Makes a guess about the units of a time vector based on the values
 #' @description Guesses year units based on some simple heuristics
