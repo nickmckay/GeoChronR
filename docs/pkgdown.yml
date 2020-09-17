@@ -1,0 +1,14 @@
+pandoc: 2.3.1
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  Introduction: Introduction.html
+  PCA: PCA.html
+  PlotTimeseriesStack: PlotTimeseriesStack.html
+  TsFilteringAndMapping: TsFilteringAndMapping.html
+  correlation: correlation.html
+  oxCal: oxCal.html
+  regression: regression.html
+  spectral_analysis: spectral_analysis.html
+last_built: 2020-09-16T19:02Z
+

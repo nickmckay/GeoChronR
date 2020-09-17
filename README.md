@@ -36,7 +36,7 @@ remotes::install_github("nickmckay/geoChronR")
 Load the package into the environment:
 
 ```
-library("geoChronR")
+library(geoChronR)
 ```
 
 ## How to Cite this Code
