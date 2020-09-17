@@ -52,13 +52,13 @@ Correlating the two age-uncertain datasets will characterize the relationship, b
 Still, it illustrates how age uncertainty can affect apparent alignment between two datasets, which is the purpose of this example.
 
 
-```{r, echo=FALSE,results='hide',warning = FALSE, message = FALSE,cache = TRUE}
+```{r, results='hide',warning = FALSE, message = FALSE,cache = TRUE}
 corout <- corEns(time.1 = gisp2.ens,
                  values.1 = gisp2.d18O,
                  time.2 = hulu.ae,
                  values.2 = hulu.d18O,
                  bin.step = 200,
-                 max.ens = 100,
+                 max.ens = 1000,
                  isopersistent  = TRUE,
                  isospectral = TRUE,
                  gaussianize = TRUE)
