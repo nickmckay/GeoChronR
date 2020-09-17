@@ -170,6 +170,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
 #' @export
 #' @family spectra
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/spectral_analysis.html}{View a full-fledged example of how to use this function.}
 computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaussianize=TRUE,ofac=4,padfac=2,tbw=3,wgtrad=1,sigma=0.02,mtm_null='power_law'){
   
   #check to see if time and values are "column lists"

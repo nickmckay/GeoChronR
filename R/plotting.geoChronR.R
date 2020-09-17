@@ -2077,7 +2077,9 @@ plotRegressEns = function(reg.ens,
 #' @param lab.size Font size for the ylabels
 #' @param lab.space Multiplier on lab.buff for the axis label separation from the y-scale
 #' @param color.fun A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))
-#' @return A ggplot object of the plot 
+#' @return A ggplot object of the plot
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/PlotTimeseriesStack.html}{View a full-fledged example of how to use this function.} 
 plotTimeseriesStack <- function(plot.df,
                                 time.var = "year", 
                                 color.var = "paleoData_TSid", 

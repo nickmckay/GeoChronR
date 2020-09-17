@@ -66,6 +66,11 @@ L The single LiPD object that was entered, with methods, ensembleTable, summaryT
 \description{
 This is a high-level function that uses oxcal to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Bronk Ramsey et al. 2008 doi:10.1016/j.quascirev.2007.01.019
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/oxCal.html}{View a full-fledged example of how to use this function.}
+}
+
 \examples{
 \dontrun{
 #Run in interactive mode:
@@ -74,7 +79,6 @@ L = runOxcal(L)
 #Run in noninteractive mode, describing everything:
 L = runOxcal(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 }
-
 }
 \seealso{
 Other oxcal: 

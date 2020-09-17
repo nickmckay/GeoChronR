@@ -61,6 +61,11 @@ list of ensemble output and percentile information
 \description{
 Primary function for calculating correlation ensembles
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/correlation.html}{View a full-fledged example of how to use this function.}
+}
+
 \author{
 Nick McKay
 }

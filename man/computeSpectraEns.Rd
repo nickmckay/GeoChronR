@@ -65,6 +65,11 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
 \details{
 Calculate ensemble power spectra
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/spectral_analysis.html}{View a full-fledged example of how to use this function.}
+}
+
 \references{
 Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
 

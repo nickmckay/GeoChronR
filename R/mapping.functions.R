@@ -131,6 +131,8 @@ return(densityPlot)
 #'
 #' @inheritDotParams baseMap
 #' @return ggmap object
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/TsFilteringAndMapping.html}{View a full-fledged example of how to use this function.}
 mapTs <- function(TS,
                     color = "archiveType",
                     size=6,

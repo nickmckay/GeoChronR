@@ -248,6 +248,8 @@ regress=function (X,Y){
 #' @return list of ensemble output
 #' @author Nick McKay
 #' @family regress
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/regression.html}{View a full-fledged example of how to use this function.}
 
 regressEns = function(time.x,
                       values.x,
@@ -367,6 +369,7 @@ regressEns = function(time.x,
 
 #' @export
 #' @title Ensemble correlation
+#' 
 #' @description Primary function for calculating correlation ensembles
 #' @author Nick McKay
 #' @importFrom dplyr select bind_cols
@@ -385,6 +388,8 @@ regressEns = function(time.x,
 #' @param gauss  Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis
 #' @inheritDotParams corMatrix
 #' @return list of ensemble output and percentile information
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/correlation.html}{View a full-fledged example of how to use this function.}
 corEns = function(time.1,
                   values.1,
                   time.2,

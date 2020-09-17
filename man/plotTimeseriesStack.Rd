@@ -45,6 +45,11 @@ A ggplot object of the plot
 \description{
 Creates a suite of plots to characterize the results of an ensemble regression.
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/PlotTimeseriesStack.html}{View a full-fledged example of how to use this function.}
+}
+
 \seealso{
 Other plot: 
 \code{\link{plotChronEnsDiff}()},

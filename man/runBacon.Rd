@@ -154,6 +154,11 @@ L The single LiPD object that was entered, with methods, ensembleTable, summaryT
 \description{
 This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/Introduction.html}{View a full-fledged example of how to use this function.}
+}
+
 \examples{
 \dontrun{
 Run in interactive mode:

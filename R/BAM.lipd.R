@@ -30,12 +30,16 @@
 #' }
 #' @return L The single LiPD object that was entered, with ageEnsemble and chronData model added.
 #' @examples 
+#' \dontrun{
 #' Run in interactive mode:
 #' L = runBam(L)
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBam(L,paleo.num = 1, paleo.meas.table.num = 1, model.num = 3, make.new = TRUE,
 #' nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
+#' }
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/Introduction.html}{View a full-fledged example of how to use this function.}
 
 
 

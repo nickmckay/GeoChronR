@@ -35,6 +35,11 @@ pcaEns(
 \description{
 Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/PCA.html}{View a full-fledged example of how to use this function.}
+}
+
 \seealso{
 Other pca: 
 \code{\link{ar1Surrogates}()},

@@ -375,7 +375,8 @@ loadOxcalOutput <- function(L,
 #' #Run in noninteractive mode, describing everything:
 #' L = runOxcal(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 #' }
-#' 
+#' @section Long-form example:
+#' \href{http://nickmckay.github.io/GeoChronR/articles/oxCal.html}{View a full-fledged example of how to use this function.}
 runOxcal <-  function(L,
                       chron.num=NA,
                       meas.table.num = NA,

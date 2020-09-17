@@ -55,13 +55,20 @@ L The single LiPD object that was entered, with ageEnsemble and chronData model 
 \description{
 This is a high-level function that uses BAM to simulate age uncertainty in layer counted records, and stores this as an age-ensemble in a paleoData measurementTable, and in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. BAM produces reasonable results for non-layer counted data, and can generate ensembles for unevenly spaced data, and thus is useful for generating ensembles for tie-point chronologies that are missing the necessary data to calculate ensembles properly. See Comboul et al. (2015) doi:10.5194/cp-10-825-2014 for details.
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/Introduction.html}{View a full-fledged example of how to use this function.}
+}
+
 \examples{
+\dontrun{
 Run in interactive mode:
 L = runBam(L)
 
 Run in noninteractive mode, describing everything:
 L = runBam(L,paleo.num = 1, paleo.meas.table.num = 1, model.num = 3, make.new = TRUE,
 nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
+}
 }
 \seealso{
 Other BAM: 

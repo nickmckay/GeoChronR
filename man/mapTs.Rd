@@ -47,6 +47,11 @@ ggmap object
 \description{
 Create a stamen or line map of the location of a list of LiPD objects
 }
+\section{Long-form example}{
+
+\href{http://nickmckay.github.io/GeoChronR/articles/TsFilteringAndMapping.html}{View a full-fledged example of how to use this function.}
+}
+
 \seealso{
 Other mapping: 
 \code{\link{baseMap}()},
