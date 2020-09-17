@@ -2,7 +2,7 @@ Package: geoChronR
 Type: Package
 Title: Tools to analyze and visualize time-uncertain geoscientific data
 Version: 1.0.1
-Date: 2020-07-01
+Date: 2020-09-16
 Author: Nick McKay, Julien Emile-Geay, Deborah Khider, Chris Heiser
 Maintainer: Nick McKay <nick@nau.edu>
 Description: Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
