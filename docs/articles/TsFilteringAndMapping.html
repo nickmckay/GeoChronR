@@ -53,23 +53,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
+<li class="divider">
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
+    <li>
       <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">ensemble PCA</a>
-    </li>
-    <li>
-      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
-    </li>
-    <li>
-      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
-    </li>
-    <li>
-      <a href="../articles/correlation.html">Correlation</a>
-    </li>
-    <li>
-      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+      <a href="../articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
       <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
@@ -77,7 +67,24 @@
     <li>
       <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
+    <li>
+      <a href="../articles/PCA.html">Ensemble PCA</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">More examples</li>
+    <li>
+      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+    </li>
+    <li>
+      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
+    </li>
+    <li>
+      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -96,7 +103,7 @@
       <h1 data-toc-skip>Filtering, mapping and plotting LiPD objects</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2020-09-16</h4>
+            <h4 class="date">2020-09-17</h4>
       
       
       <div class="hidden name"><code>TsFilteringAndMapping.Rmd</code></div>
@@ -120,19 +127,21 @@
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span>(<span class="kw">iso</span>, global = <span class="fl">TRUE</span>,size = <span class="fl">3</span>) <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"iso2k"</span>)
 </pre></div>
+<pre><code>## Warning in baseMap(dfp$lon, dfp$lat, ...): global and restrict.map.range can't
+## both be true - setting restrict.map.range to FALSE</code></pre>
 <p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>Now we’ve seen an overview of all the files we’ve loaded, but now we’d like to filter the data.</p>
 <p>First, we’ll extract a TS object, the primary way to work with multiple LiPD files. A TS is a list object that has an entry for each, column, and is readily queryable.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/extractTs.html">extractTs</a></span>(<span class="kw">iso</span>)
 </pre></div>
 <p>Now we’ll filter it based on a range of criteria. For simple filtering, that include queries like <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code> <code><a href="https://rdrr.io/r/base/Comparison.html">&lt;</a></code> or <code><a href="https://rdrr.io/r/base/Comparison.html">==</a></code>, you can use <code>filterTs</code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
+<div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="kw">iTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html">filterTs</a></span>(<span class="kw">TS</span>, <span class="st">"paleoData_iso2kPrimaryTimeseries == TRUE"</span>)
 </pre></div>
 <pre><code>## [1] "606 results after query: paleoData_iso2kPrimaryTimeseries == TRUE"</code></pre>
 <p>For more complex queries, however, it’s often more efficient to pull vectors of the metadata that you’d like to query and build and index</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="kw">lat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span>(<span class="kw">iTS</span>,<span class="st">"geo_latitude"</span>)
 <span class="kw">lon</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span>(<span class="kw">iTS</span>,<span class="st">"geo_longitude"</span>)
 <span class="kw">var.name</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span>(<span class="kw">iTS</span>,<span class="st">"paleoData_variableName"</span>)
@@ -142,16 +151,18 @@
 <span class="kw">gTS</span> <span class="op">&lt;-</span> <span class="kw">iTS</span>[<span class="kw">index</span>]
 </pre></div>
 <p>OK, now we’ve filtered down to what we’d like to map. We can use <code><a href="../reference/mapTs.html">mapTs()</a></code> to map this.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
+<div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="fu"><a href="../reference/mapTs.html">mapTs</a></span>(<span class="kw">gTS</span>)
 </pre></div>
 <p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>You can change the mapping options by passing options to <code>basemap()</code> which creates the base map. Try <code>?basemap</code> for options.</p>
 <p>##Time availability</p>
 <p>You can also quickly make a plot of availability through time:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="fu"><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs</a></span>(<span class="kw">gTS</span>,age.range = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2000</span>),age.var = <span class="st">"year"</span>)
 </pre></div>
+<pre><code>## Warning in if (is.na(age.range)) {: the condition has length &gt; 1 and only the
+## first element will be used</code></pre>
 <pre><code>## New names:
 ## * NA -&gt; ...1
 ## * NA -&gt; ...2
@@ -160,10 +171,12 @@
 ## * NA -&gt; ...5
 ## * ...</code></pre>
 <p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>Finally, if you just want a quick overview, <code><a href="../reference/summaryPlotTs.html">summaryPlotTs()</a></code> will quickly combine these two plots, but with fewer options</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="../reference/summaryPlotTs.html">summaryPlotTs</a></span>(<span class="kw">gTS</span>,age.var = <span class="st">"year"</span>, age.range = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">2000</span>))
+<p>Finally, if you just want a quick overview, <code><a href="../reference/plotSummaryTs.html">plotSummaryTs()</a></code> will quickly combine these two plots, but with fewer options</p>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="fu"><a href="../reference/plotSummaryTs.html">plotSummaryTs</a></span>(<span class="kw">gTS</span>,age.var = <span class="st">"year"</span>, age.range = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">2000</span>))
 </pre></div>
+<pre><code>## Warning in if (is.na(age.range)) {: the condition has length &gt; 1 and only the
+## first element will be used</code></pre>
 <pre><code>## New names:
 ## * NA -&gt; ...1
 ## * NA -&gt; ...2

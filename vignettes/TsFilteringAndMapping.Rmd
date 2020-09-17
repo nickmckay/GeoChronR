@@ -80,10 +80,10 @@ plotTimeAvailabilityTs(gTS,age.range = c(1,2000),age.var = "year")
 ```
 
 
-Finally, if you just want a quick overview, `summaryPlotTs()` will quickly combine these two plots, but with fewer options
+Finally, if you just want a quick overview, `plotSummaryTs()` will quickly combine these two plots, but with fewer options
 
 ```{r}
-summaryPlotTs(gTS,age.var = "year", age.range = c(0,2000))
+plotSummaryTs(gTS,age.var = "year", age.range = c(0,2000))
 ```
 
 

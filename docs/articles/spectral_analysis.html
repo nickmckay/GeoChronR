@@ -53,23 +53,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
+<li class="divider">
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
+    <li>
       <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">ensemble PCA</a>
-    </li>
-    <li>
-      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
-    </li>
-    <li>
-      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
-    </li>
-    <li>
-      <a href="../articles/correlation.html">Correlation</a>
-    </li>
-    <li>
-      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+      <a href="../articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
       <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
@@ -77,7 +67,24 @@
     <li>
       <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
+    <li>
+      <a href="../articles/PCA.html">Ensemble PCA</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">More examples</li>
+    <li>
+      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+    </li>
+    <li>
+      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
+    </li>
+    <li>
+      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -96,7 +103,7 @@
       <h1 data-toc-skip>Spectral estimation with and without age uncertainties</h1>
                         <h4 class="author">Julien Emile-Geay</h4>
             
-            <h4 class="date">2020-09-16</h4>
+            <h4 class="date">2020-09-17</h4>
       
       
       <div class="hidden name"><code>spectral_analysis.Rmd</code></div>
@@ -105,9 +112,20 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div id="table-of-contents" class="section level1">
+<h1 class="hasAnchor">
+<a href="#table-of-contents" class="anchor"></a>Table of contents</h1>
+<ol style="list-style-type: decimal">
+<li><a href="Introduction.html">Introduction to GeoChronR</a></li>
+<li><a href="correlation.html">Age-uncertain correlation</a></li>
+<li><a href="regression.html">Age-uncertain regression and calibration-in-time</a></li>
+<li><a href="spectral.html"><strong>Age-uncertain spectral analysis</strong></a></li>
+<li><a href="pca.html">Age-uncertain PCA analysis</a></li>
+</ol>
+</div>
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>In this notebook we demonstrate how to use the spectral analysis features of GeoChronR using the record of:</p>
 <ul>
 <li>Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.</li>
@@ -394,7 +412,6 @@
 <p>Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the <span class="math inline">\(\sigma\)</span> parameter ; the default (0.05) would have overly damped the peaks. We note that this default value is not backed by good theoretical arguments or Monte Carlo simulation – undoubtedly a weakness of this method. Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100k rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming two degrees of freedom (DOFs) at each frequency, which is most likely violated with wavelets. Internally, <code>nuwavelet_psd</code> does use variable DOFs, but this is not easy to export. You can tweak the range over which this power law is fit and it will not change the story much.</p>
 <p>Readers interested in a more robust implementation of WWZ may want to consider <a href="http://linkedearth.github.io/Pyleoclim_util/Introduction.html">Pyleoclim</a>, a Python package. This can be called in R via the <a href="https://rstudio.github.io/reticulate/">Reticulate</a> package.</p>
 </div>
-</div>
 <div id="time-uncertain-spectral-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#time-uncertain-spectral-analysis" class="anchor"></a>Time-uncertain spectral analysis</h2>
@@ -670,6 +687,7 @@
 <p><img src="spectral_analysis_files/figure-html/ensemble-mode%20REDFIT%20plot-1.png" width="768"></p>
 <p>The result is quite a bit smoother here, perhaps because of the choice of parameters.</p>
 </div>
+</div>
 <div id="conclusion" class="section level1">
 <h1 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h1>
@@ -687,6 +705,7 @@
 <li><a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2015PA002850">Meyers, 2015</a></li>
 <li><a href="www.pnas.org/cgi/doi/10.1073/pnas.1717689115">Meyers &amp; Malinverno 2018</a></li>
 </ul>
+<p><a href="PCA.html">In the final tutorial vignette</a>, we’ll perform ensemble Principal Components Analysis on multiple sites in the North Atlantic.</p>
 </div>
   </div>
 
