@@ -1,5 +1,5 @@
 ---
-title: "ensemble PCA"
+title: "Ensemble PCA"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -14,7 +14,13 @@ knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 
 ```
-
+# Table of contents
+  
+  1. [Introduction to GeoChronR](Introduction.html)
+  2. [Age-uncertain correlation](correlation.html)
+  3. [Age-uncertain regression and calibration-in-time](regression.html)
+  4. [Age-uncertain spectral analysis](spectral.html)
+  5. [**Age-uncertain PCA analysis**](pca.html)
 
   
 ```{r, results = FALSE, warning = FALSE, message= FALSE }
@@ -207,5 +213,4 @@ plotPCA2 <-  plotPcaEns(pcout2,
                         f=.2)
 ```
 
-
-
+Using only the $\delta^{18}O$ data and a covariance matrix, we get somewhat different results. The first PC timeseries looks similar to the first one, but the spatial pattern is somewhat difference, with stronger loadings in the northeast. The second PC looks to be a new pattern, although the third resembles PC2 from the first analysis. 

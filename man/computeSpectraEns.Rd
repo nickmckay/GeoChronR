@@ -77,7 +77,6 @@ Other spectra:
 \code{\link{ar1Surrogates}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
 }

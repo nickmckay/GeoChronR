@@ -1,7 +1,7 @@
 #' Load a remote RData file
 #'
 #' @param url the url of a remote data file 
-#'
+#' @family utility
 #' @return the loadeds object
 #' @export
 loadRemote <- function(url,useSavedNames = FALSE){
@@ -17,6 +17,7 @@ loadRemote <- function(url,useSavedNames = FALSE){
 }
 
 #' @export
+#' @family utility
 #' @title Makes a guess about the units of a time vector based on the values
 #' @description Guesses year units based on some simple heuristics
 #' @param X A LiPD variable list or a vector of years BP 
@@ -71,6 +72,7 @@ heuristicUnits = function(X,range.min = 25){
 
 
 #' @export
+#' @family utility
 #' @title Convert years BP to Calendar year (AD/BC or CE)
 #' @description Converts a LiPD variable list, or vector from BP to AD/BC/CE/BCE. Also deals with the lack of a year 0.
 #' @param X A LiPD variable list or a vector of years BP 
@@ -111,6 +113,7 @@ convertBP2AD = function(X){
 
 
 #' @export
+#' @family utility
 #' @title Convert years Calendar year (AD/BC or CE) to BP (1950)
 #' @description Converts a LiPD variable list, or vector from AD/BC/CE/BCE to BP (1950). Also deals with the lack of a year 0.
 #' @param X A LiPD variable list or a vector of years AD/BC/CE/BCE
@@ -151,6 +154,7 @@ convertAD2BP = function(X){
 #' @name gaussianize
 #' @author Julien Emile-Geay 
 #' @author Nick McKay
+#' @family utility
 #' @param X data matrix (2D array)
 #' @param jitter boolean variable ; if TRUE, add jitter to data to prevent ties
 #' @return gaussianized data matrix, Xn
@@ -183,6 +187,7 @@ gaussianize <- function(X,jitter=FALSE){
 
 #' @title ModeSelektor
 #' @name modeSelektor
+#' @family plot help
 #' @author Julien Emile-Geay 
 #' @param x data vector
 #' @return mode value and index. 

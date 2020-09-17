@@ -17,6 +17,16 @@ p-value based on two-tailed t-test
 \description{
 Calculate Pearson p-values accounting for effective sample size
 }
+\seealso{
+Other correlation: 
+\code{\link{ar1Surrogates}()},
+\code{\link{ar1}()},
+\code{\link{corMatrix}},
+\code{\link{effectiveN}()},
+\code{\link{plotCorEns}()},
+\code{\link{pvalMonteCarlo}()}
+}
 \author{
 Nick McKay
 }
+\concept{correlation}

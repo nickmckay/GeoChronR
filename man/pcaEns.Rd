@@ -39,7 +39,7 @@ Ensemble PCA, or Monte Carlo Empirical Orthogonal Functions
 Other pca: 
 \code{\link{ar1Surrogates}()},
 \code{\link{createSyntheticTimeseries}()},
-\code{\link{getLegend}()},
-\code{\link{plotPcaEns}()}
+\code{\link{plotPcaEns}()},
+\code{\link{plotScreeEns}()}
 }
 \concept{pca}

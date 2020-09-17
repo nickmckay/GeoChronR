@@ -36,3 +36,10 @@ loadOxcalOutput(
 \description{
 Load oxcal output
 }
+\seealso{
+Other oxcal: 
+\code{\link{createOxcalModel}()},
+\code{\link{oxCalDateExpression}()},
+\code{\link{runOxcal}()}
+}
+\concept{oxcal}

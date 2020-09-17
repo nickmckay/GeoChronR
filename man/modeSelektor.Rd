@@ -20,6 +20,22 @@ https://www.modeselektor.com
 
 https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode
 }
+\seealso{
+Other plot help: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{axisLabel}()},
+\code{\link{bin2d}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{kde2d}()},
+\code{\link{meltDistributionTable}()},
+\code{\link{periodAnnotate}()},
+\code{\link{quantile2d}()},
+\code{\link{reverselog10_trans}()}
+}
 \author{
 Julien Emile-Geay
 }
+\concept{plot help}

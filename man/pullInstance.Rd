@@ -15,3 +15,18 @@ a vector randomly drawn from the matrix
 \description{
 Pull one instance from an ensemble
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

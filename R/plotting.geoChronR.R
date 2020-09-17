@@ -1,7 +1,7 @@
 
 #get ggplot x and y ranges
 #' @export
-#' @family plot
+#' @family plot help
 #' @title Get ggplot x and y ranges
 #' @description Use this to extract x and y ranges from ggplot, dealing with changes in version
 #' @param h a ggplot object
@@ -24,7 +24,7 @@ getPlotRanges <- function(h){
 
 
 #' @export
-#' @family plot
+#' @family plot help
 #' @title Define a plot theme for GeoChronR
 #' @description Use this to define a theme across geoChronR
 #' @import ggplot2
@@ -34,14 +34,14 @@ geoChronRPlotTheme = ggthemes::theme_hc
 
 
 #' @export
-#' @family plot
+#' @family plot help
 #' @importFrom scales trans_new
 #' @title convert a BP age scale to AD
 #' @description a ggplot scale to convert a BP axis to AD
 BP2AD_trans <- function() scales::trans_new("BP2AD",convertBP2AD,convertAD2BP)
 
 #' @export
-#' @family plot
+#' @family plot help
 #' @importFrom scales trans_new
 #' @title convert an AD age scale to BP
 #' @description a ggplot scale to convert a BP axis to AD
@@ -52,7 +52,6 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @description Plot the output of `computeSpectraEns` as a ribbon plot of distributions, with specified confidence levels
 #' @details `plotSpectraEns` re-uses `plotTimeseriesRibbons` and therefore the same graphical conventions. Spectra are plotted on a log-log scale, with the x-axis labeled by periods instead of frequencies, for improved intelligibility. 
 #' @family plot
-#' @family spectra
 #' @inheritParams plotTimeseriesEnsRibbons
 #' @param spec.ens list or dataframe containing frequency (freq) and power (pwr); typically output of computeSpectraEns
 #' @param cl.df list or dataframe containing confidence limits (90, 95 and 99\%) as well as frequency (freq)
@@ -179,7 +178,7 @@ plotSpectrum = function (spec.df,cl.df = NULL,x.lims=NULL,x.ticks= c(10, 20, 50,
 #' @export
 #' @title Annotate plot of spectra with given periodicities
 #' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
-#' @family plot
+#' @family plot help
 #' @family spectra
 #' @param specPlot ggplot handle to figure containing spectrum
 #' @param periods the periods to highlight in the spectrum
@@ -206,7 +205,7 @@ periodAnnotate = function (specPlot, periods, color = "orange",log10scale = T, y
 #' @import scales
 #' @title Reverse axis in log10 scale
 #' @description Reverse axis in log10 scale
-#' @family plot
+#' @family plot help
 #' @family spectra
 #' @author Nick McKay, Julien Emile-Geay
 reverselog10_trans <- function(){
@@ -220,6 +219,7 @@ reverselog10_trans <- function(){
 
 #' @export
 #' @title Find quantiles across an ensemble
+#' @family plot help
 #' @family gridding
 #' @description Determine quantiles across ensembles of x and/or y, as a function of x, using interpolation
 #'
@@ -290,6 +290,8 @@ quantile2d = function(x,
 #' @export
 #' @title Two dimensional binning
 #' @family gridding
+#' @family bin
+#' @family plot help
 #' @description Calculate the density of samples along a 2-dimensional grid
 #' @param x n by m matrix where n is the number of observations and m is >= 1
 #' @param y n by j matrix where n is the number of observations and j is >= 1 
@@ -394,6 +396,7 @@ bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate =
 
 #' @export
 #' @family gridding
+#' @family plot help
 #' @title Two dimensional kernel density estimation
 #' @description Use a kernel density estimator to model the density of samples along a 2-dimensional grid
 #' @param x n by m matrix where n is the number of observations and m is >= 1
@@ -901,6 +904,7 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 
 #' @export
 #' @family plot
+#' @family correlation
 #' @author Julien Emile-Geay
 #' @author Nick McKay
 #' @title Plot the results of an ensemble correlation
@@ -1183,8 +1187,7 @@ plotHistEns = function(ens.data,
 
 #' @export
 #' @title get a ggplot legend object
-#' @family plot
-#' @family pca
+#' @family plot help
 #' @author Nick McKay
 #' @import ggplot2
 #' @param a.gplot ggplot object
@@ -1204,6 +1207,8 @@ getLegend<-function(a.gplot){
 #' @param null.significance Significance level to of the null to plot (default = 0.05).
 #' @inheritDotParams plotTimeseriesEnsRibbons
 #' @return a ggplot plot
+#' @family pca
+#' @family plot
 #' @export
 plotScreeEns <- function(pcaout,
                          null.color = "red",
@@ -1896,7 +1901,7 @@ plotChronEns = function(L,
 }
 
 #' @export
-#' @family plot
+#' @family plot help
 #' @author Nick McKay
 #' @title Label axes
 #' @description Create an axis label string from a LiPD column vector 
@@ -1924,6 +1929,7 @@ axisLabel = function(varList){
 }
 
 #' @author Nick McKay
+#' @family plot help
 #' @title Melt distribution
 #' @description Takes a LiPD model distribution and melt it into a single data.frame
 #' @param this.dist LiPD "distributionTable" object

@@ -47,6 +47,14 @@ list of binned data output:
 \description{
 Use this to put two timeseries on different timesteps onto equivalent bins
 }
+\seealso{
+Other bin: 
+\code{\link{bin2d}()},
+\code{\link{binEns}()},
+\code{\link{binTs}()},
+\code{\link{bin}()}
+}
 \author{
 Nick McKay
 }
+\concept{bin}

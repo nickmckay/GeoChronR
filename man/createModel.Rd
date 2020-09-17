@@ -56,3 +56,15 @@ createModel(
 \description{
 This function will create a model in a LiPD object, adding ensemble data
 }
+\seealso{
+Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{createTSid}()},
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
+\code{\link{selectData}()}
+}
+\concept{LiPD manipulation}

@@ -7,6 +7,7 @@ geoChronREnv <- new.env()
 #' @description This is a mostly internal function that returns the core directory. Interactive if given a NA
 #' @param bacon.dir if you already have it, it just returns this, (default=NA)
 #' @return bacon.dir the bacon core directory
+#' @family Bacon
 getBaconDir <- function(bacon.dir = NA){
   #initialize bacon directory
   if(is.na(bacon.dir) | !is.character(bacon.dir)){
@@ -39,6 +40,7 @@ getBaconDir <- function(bacon.dir = NA){
 #' @title Set the name of bacon core directory
 #' @description Use this to programmatically set the bacon.dir 
 #' @param bacon.dir if you already have it
+#' @family Bacon
 #' @return bacon.dir the bacon core directory
 setBaconDir <- function(bacon.dir){
       assign("bacon.dir",value = bacon.dir,envir = geoChronREnv)
@@ -58,11 +60,13 @@ setBaconDir <- function(bacon.dir){
 #' @inheritDotParams rbacon::Bacon
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 
+#' \dontrun{
 #' Run in interactive mode:
 #' L = runBacon(L)
 #' 
 #' Run in noninteractive mode, describing everything:
 #' L = runBacon(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+#' }
 runBacon <-  function(L,
                       chron.num=NA,
                       meas.table.num = NA,

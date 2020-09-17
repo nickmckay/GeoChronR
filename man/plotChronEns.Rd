@@ -98,13 +98,6 @@ Plot creates an age model plot with all the bells and whistles, including a spre
 }
 \seealso{
 Other plot: 
-\code{\link{AD2BP_trans}()},
-\code{\link{BP2AD_trans}()},
-\code{\link{axisLabel}()},
-\code{\link{geoChronRPlotTheme}()},
-\code{\link{getLegend}()},
-\code{\link{getPlotRanges}()},
-\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChron}()},
 \code{\link{plotCorEns}()},
@@ -115,14 +108,15 @@ Other plot:
 \code{\link{plotPvalsEnsFdr}()},
 \code{\link{plotRegressEns}()},
 \code{\link{plotScatterEns}()},
+\code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()},
-\code{\link{reverselog10_trans}()}
+\code{\link{plotTrendLinesEns}()}
 
 Other chron: 
 \code{\link{plotChronEnsDiff}()},

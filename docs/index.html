@@ -53,23 +53,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-<li>
+<li class="divider">
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
+    <li>
       <a href="articles/Introduction.html">Introduction to geoChronR</a>
     </li>
     <li>
-      <a href="articles/PCA.html">ensemble PCA</a>
-    </li>
-    <li>
-      <a href="articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
-    </li>
-    <li>
-      <a href="articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
-    </li>
-    <li>
-      <a href="articles/correlation.html">Correlation</a>
-    </li>
-    <li>
-      <a href="articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+      <a href="articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
       <a href="articles/regression.html">Ensemble regression and calibration-in-time</a>
@@ -77,7 +67,24 @@
     <li>
       <a href="articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
+    <li>
+      <a href="articles/PCA.html">Ensemble PCA</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">More examples</li>
+    <li>
+      <a href="articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+    </li>
+    <li>
+      <a href="articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
+    </li>
+    <li>
+      <a href="articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -118,7 +125,7 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 <p>Install package in R Studio:</p>
 <pre><code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("nickmckay/geoChronR")</a></code></pre>
 <p>Load the package into the environment:</p>
-<pre><code>library("geoChronR")</code></pre>
+<pre><code>library(geoChronR)</code></pre>
 </div>
 <div id="how-to-cite-this-code" class="section level2">
 <h2 class="hasAnchor">
@@ -151,7 +158,8 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
     <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>GNU Public License</li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php">MIT</a> License</li>
 </ul>
 </div>
 <div class="developers">

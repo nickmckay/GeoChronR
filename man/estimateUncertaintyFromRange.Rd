@@ -37,6 +37,10 @@ Estimate uncertainty (plus/minus values) from a range of values
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createModel}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{createTSid}()},
 \code{\link{getVariableIndex}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
 \code{\link{pullTsVariable}()},

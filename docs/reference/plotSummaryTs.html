@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>High-level chron plotting — plotChron • geoChronR</title>
+<title>TS overview plot — plotSummaryTs • geoChronR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="High-level chron plotting — plotChron" />
-<meta property="og:description" content="Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model" />
+<meta property="og:title" content="TS overview plot — plotSummaryTs" />
+<meta property="og:description" content="TS overview plot" />
 
 
 
@@ -139,24 +139,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>High-level chron plotting</h1>
+    <h1>TS overview plot</h1>
     
-    <div class="hidden name"><code>plotChron.Rd</code></div>
+    <div class="hidden name"><code>plotSummaryTs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot a chronology, either from a chron model (preferred) or from a chron measurement table if there is no model</p>
+    <p>TS overview plot</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotChron</span>(
-  <span class='kw'>L</span>,
-  chron.number = <span class='fl'>NA</span>,
-  meas.num = <span class='fl'>NA</span>,
-  depth.var = <span class='st'>"depth"</span>,
+    <pre class="usage"><span class='fu'>plotSummaryTs</span>(
+  <span class='kw'>TS</span>,
+  sort.var = <span class='st'>"archiveType"</span>,
+  age.range = <span class='fl'>NA</span>,
   age.var = <span class='st'>"age"</span>,
-  age.14c.var = <span class='st'>"age14C"</span>,
-  dotSize = <span class='fl'>5</span>,
-  legend.position = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.7</span>, <span class='fl'>0.3</span>),
+  step = <span class='fl'>NA</span>,
   <span class='kw'>...</span>
 )</pre>
 
@@ -164,75 +161,36 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>L</th>
-      <td><p>A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`</p></td>
+      <th>TS</th>
+      <td><p>LiPD timeseries object See <a href='http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series'>http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series</a></p></td>
     </tr>
     <tr>
-      <th>chron.number</th>
-      <td><p>chron.numData object to use (NA by default, will ask if needed)</p></td>
+      <th>sort.var</th>
+      <td><p>What variable in the TS should the map and histogram be organized by? (default = "archiveType)</p></td>
     </tr>
     <tr>
-      <th>meas.num</th>
-      <td><p>chron.numData model to use (NA by default, will ask if needed)</p></td>
-    </tr>
-    <tr>
-      <th>depth.var</th>
-      <td><p>variableName to use for depth ("depth" by default)</p></td>
+      <th>age.range</th>
+      <td><p>a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)</p></td>
     </tr>
     <tr>
       <th>age.var</th>
-      <td><p>variableName to use for age ensemble ("age" by default)</p></td>
+      <td><p>What age variable should be used (default = "age)</p></td>
     </tr>
     <tr>
-      <th>age.14c.var</th>
-      <td><p>variableName to use for age ensemble ("age14C" by default)</p></td>
-    </tr>
-    <tr>
-      <th>legend.position</th>
-      <td><p>where to put the legend on the chron plot?</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code><a href='plotChronEns.html'>plotChronEns</a></code></p><dl>
-    <dt><code>model.num</code></dt><dd><p>chron.numData model to use (NA by default, will ask if needed)</p></dd>
-    <dt><code>probs</code></dt><dd><p>quantiles to calculate and plot</p></dd>
-    <dt><code>n.bins</code></dt><dd><p>number bins over which to calculate intervals. Used to calculate x.bin if not provided.</p></dd>
-    <dt><code>x.bin</code></dt><dd><p>vector of bin edges over which to bin.</p></dd>
-    <dt><code>y.bin</code></dt><dd><p>vector of bin edges over which to bin.</p></dd>
-    <dt><code>color.low</code></dt><dd><p>Band color of the outer most band.</p></dd>
-    <dt><code>color.high</code></dt><dd><p>Band color of the inner most band.</p></dd>
-    <dt><code>alp</code></dt><dd><p>Transparency of the band plot</p></dd>
-    <dt><code>color.line</code></dt><dd><p>Line color (following ggplot rules)</p></dd>
-    <dt><code>line.width</code></dt><dd><p>Width of the line</p></dd>
-    <dt><code>add.to.plot</code></dt><dd><p>A ggplot object to add this plot to. Default is ggplot() .</p></dd>
-    <dt><code>n.ens.plot</code></dt><dd><p>Number of ensemble members to plot</p></dd>
-    <dt><code>color.ens.line</code></dt><dd><p>color of the ensemble lines</p></dd>
-    <dt><code>alp.ens.line</code></dt><dd><p>transparency of the lines</p></dd>
-    <dt><code>dist.color</code></dt><dd><p>distribution color (following ggplot rules)</p></dd>
-    <dt><code>dist.type</code></dt><dd><p>"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down</p></dd>
-    <dt><code>dist.thick</code></dt><dd><p>thickness of the line around the distribution</p></dd>
-    <dt><code>truncate.dist</code></dt><dd><p>truncate probability density values below this number. NA (default) means no truncation</p></dd>
-    <dt><code>dist.scale</code></dt><dd><p>controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.</p></dd>
-    <dt><code>add.paleo.age.depth</code></dt><dd><p>add a line that shows the paleoData age depth.</p></dd>
-    <dt><code>paleo.number</code></dt><dd><p>paleo.num number for the paleoData age-depth</p></dd>
-    <dt><code>color.line.paleo</code></dt><dd><p>line color of the paleoData age-depth (following ggplot rules)</p></dd>
-  
-</dl></td>
-    </tr>
-    <tr>
-      <th>dot.size</th>
-      <td><p>what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)</p></td>
+      <th>step</th>
+      <td><p>What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the age.range)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a ggplot object, or NA if there's chronData to plot</p>
+    <p>a gridExtra ggplot output</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other plot: 
 <code><a href='plotChronEnsDiff.html'>plotChronEnsDiff</a>()</code>,
 <code><a href='plotChronEns.html'>plotChronEns</a>()</code>,
+<code><a href='plotChron.html'>plotChron</a>()</code>,
 <code><a href='plotCorEns.html'>plotCorEns</a>()</code>,
 <code><a href='plotHistEns.html'>plotHistEns</a>()</code>,
 <code><a href='plotLine.html'>plotLine</a>()</code>,
@@ -244,19 +202,11 @@
 <code><a href='plotScreeEns.html'>plotScreeEns</a>()</code>,
 <code><a href='plotSpectraEns.html'>plotSpectraEns</a>()</code>,
 <code><a href='plotSpectrum.html'>plotSpectrum</a>()</code>,
-<code><a href='plotSummaryTs.html'>plotSummaryTs</a>()</code>,
 <code><a href='plotSummary.html'>plotSummary</a>()</code>,
 <code><a href='plotTimeseriesEnsLines.html'>plotTimeseriesEnsLines</a>()</code>,
 <code><a href='plotTimeseriesEnsRibbons.html'>plotTimeseriesEnsRibbons</a>()</code>,
 <code><a href='plotTimeseriesStack.html'>plotTimeseriesStack</a>()</code>,
-<code><a href='plotTrendLinesEns.html'>plotTrendLinesEns</a>()</code></p>
-<p>Other chron: 
-<code><a href='plotChronEnsDiff.html'>plotChronEnsDiff</a>()</code>,
-<code><a href='plotChronEns.html'>plotChronEns</a>()</code>,
-<code><a href='plotModelDistributions.html'>plotModelDistributions</a>()</code></p></div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Nick McKay</p>
+<code><a href='plotTrendLinesEns.html'>plotTrendLinesEns</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

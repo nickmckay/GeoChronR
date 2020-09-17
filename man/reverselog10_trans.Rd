@@ -10,43 +10,29 @@ reverselog10_trans()
 Reverse axis in log10 scale
 }
 \seealso{
-Other plot: 
+Other plot help: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
 \code{\link{axisLabel}()},
+\code{\link{bin2d}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
 \code{\link{getPlotRanges}()},
+\code{\link{kde2d}()},
+\code{\link{meltDistributionTable}()},
+\code{\link{modeSelektor}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
-\code{\link{plotChron}()},
-\code{\link{plotCorEns}()},
-\code{\link{plotHistEns}()},
-\code{\link{plotLine}()},
-\code{\link{plotModelDistributions}()},
-\code{\link{plotPcaEns}()},
-\code{\link{plotPvalsEnsFdr}()},
-\code{\link{plotRegressEns}()},
-\code{\link{plotScatterEns}()},
-\code{\link{plotSpectraEns}()},
-\code{\link{plotSpectrum}()},
-\code{\link{plotSummary}()},
-\code{\link{plotTimeseriesEnsLines}()},
-\code{\link{plotTimeseriesEnsRibbons}()},
-\code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()}
+\code{\link{quantile2d}()}
 
 Other spectra: 
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()}
 }
 \author{
 Nick McKay, Julien Emile-Geay
 }
-\concept{plot}
+\concept{plot help}
 \concept{spectra}

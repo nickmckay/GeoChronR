@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load oxcal output — loadOxcalOutput • geoChronR</title>
+<title>Changelog • geoChronR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,7 @@
 
 
 
-<meta property="og:title" content="Load oxcal output — loadOxcalOutput" />
-<meta property="og:description" content="Load oxcal output" />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -59,7 +58,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -94,29 +93,33 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li class="divider"></li>
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
     <li>
-      <a href="../articles/Introduction.html">1. Introduction to geoChronR</a>
+      <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">5. Ensemble PCA</a>
+      <a href="../articles/correlation.html">Ensemble Correlation</a>
+    </li>
+    <li>
+      <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
+    </li>
+    <li>
+      <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
+    </li>
+    <li>
+      <a href="../articles/PCA.html">Ensemble PCA</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">More examples</li>
+    <li>
+      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
     </li>
     <li>
       <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
     </li>
     <li>
       <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
-    </li>
-    <li>
-      <a href="../articles/correlation.html">2. Correlation</a>
-    </li>
-    <li>
-      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
-    </li>
-    <li>
-      <a href="../articles/regression.html">3. Ensemble regression and calibration-in-time</a>
-    </li>
-    <li>
-      <a href="../articles/spectral_analysis.html">4. Spectral estimation with and without age uncertainties</a>
     </li>
   </ul>
 </li>
@@ -139,77 +142,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load oxcal output</h1>
-    
-    <div class="hidden name"><code>loadOxcalOutput.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      
     </div>
 
-    <div class="ref-description">
-    <p>Load oxcal output</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>loadOxcalOutput</span>(
-  <span class='kw'>L</span>,
-  <span class='kw'>oxcal.result.file.path</span>,
-  <span class='kw'>model.parameters</span>,
-  depth.units = <span class='st'>"cm"</span>,
-  chron.num = <span class='fl'>NA</span>,
-  model.num = <span class='fl'>NA</span>,
-  make.new = <span class='fl'>NA</span>,
-  max.ens = <span class='fl'>1000</span>
-)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>L</th>
-      <td><p>A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`</p></td>
-    </tr>
-    <tr>
-      <th>oxcal.result.file.path</th>
-      <td><p>Path to oxcal output data (from oxcAAR::executeOxcalScript())</p></td>
-    </tr>
-    <tr>
-      <th>model.parameters</th>
-      <td><p>model parameters to write into the lipd file</p></td>
-    </tr>
-    <tr>
-      <th>depth.units</th>
-      <td><p>Depth units to assign in (default = "cm")</p></td>
-    </tr>
-    <tr>
-      <th>model.num</th>
-      <td><p>an integer that corresponds to model.num that has the variable you want</p></td>
-    </tr>
-    <tr>
-      <th>make.new</th>
-      <td><p>Create a new model?</p></td>
-    </tr>
-    <tr>
-      <th>max.ens</th>
-      <td><p>Maximum number of ensemble members to import (default = 1000)</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-
-
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other oxcal: 
-<code><a href='createOxcalModel.html'>createOxcalModel</a>()</code>,
-<code><a href='oxCalDateExpression.html'>oxCalDateExpression</a>()</code>,
-<code><a href='runOxcal.html'>runOxcal</a>()</code></p></div>
-
+    <div id="geochronr-1-0-1" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.1">
+<a href="#geochronr-1-0-1" class="anchor"></a>geoChronR 1.0.1</h1>
+<ul>
+<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+<li>Added pkgdown documentation, website available at nickmckay.github.io/GeoChronR</li>
+<li>Updated vignettes for consistency with Geochronology manuscript and version 1.0.0</li>
+<li>Fixed typo in <code><a href="../reference/plotCorEns.html">plotCorEns()</a></code> legend when using <code>use.fdr = FALSE</code>
+</li>
+</ul>
+</div>
+    <div id="geochronr-1-0-0" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.0">
+<a href="#geochronr-1-0-0" class="anchor"></a>geoChronR 1.0.0</h1>
+<ul>
+<li>This release marks the submission of the manuscript describing GeoChronR to “Geochronology”, the manuscript, which is under discussion, <a href="https://doi.org/10.5194/gchron-2020-25">is available here</a>.</li>
+<li>Major changes to parameter names (terms within functions) were made for version 1.0.0, standardizing them all to lower case, period separated terminology. If you’ve been using geoChronR for awhile, this will almost certainly break some of your code, sorry.</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 

@@ -14,7 +14,16 @@ vignette: >
 knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
-## Introduction
+
+# Table of contents
+  
+  1. [Introduction to GeoChronR](Introduction.html)
+  2. [Age-uncertain correlation](correlation.html)
+  3. [Age-uncertain regression and calibration-in-time](regression.html)
+  4. [**Age-uncertain spectral analysis**](spectral.html)
+  5. [Age-uncertain PCA analysis](pca.html)
+
+# Introduction
 In this notebook we demonstrate how to use the spectral analysis features of GeoChronR using the record of:
 
   - Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.
@@ -355,7 +364,7 @@ There are several takeways from this example:
 - [Meyers, 2015](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2015PA002850)
 - [Meyers & Malinverno 2018](www.pnas.org/cgi/doi/10.1073/pnas.1717689115)
 
-
+[In the final tutorial vignette](PCA.html), we'll perform ensemble Principal Components Analysis on multiple sites in the North Atlantic.
 
 
 

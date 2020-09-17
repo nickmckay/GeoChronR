@@ -27,5 +27,20 @@ Use a kernel density estimator to model the density of samples along a 2-dimensi
 Other gridding: 
 \code{\link{bin2d}()},
 \code{\link{quantile2d}()}
+
+Other plot help: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{axisLabel}()},
+\code{\link{bin2d}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{meltDistributionTable}()},
+\code{\link{modeSelektor}()},
+\code{\link{periodAnnotate}()},
+\code{\link{quantile2d}()},
+\code{\link{reverselog10_trans}()}
 }
 \concept{gridding}
+\concept{plot help}

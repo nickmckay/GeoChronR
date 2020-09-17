@@ -35,8 +35,18 @@ out list of correlation coefficients (r) p-values (p) and autocorrelation correc
 \description{
 Calculates correlations and associated p-values for two ensemble matrices (or vectors)
 }
+\seealso{
+Other correlation: 
+\code{\link{ar1Surrogates}()},
+\code{\link{ar1}()},
+\code{\link{effectiveN}()},
+\code{\link{plotCorEns}()},
+\code{\link{pvalMonteCarlo}()},
+\code{\link{pvalPearsonSerialCorrected}()}
+}
 \author{
 Nick McKay
 
 Julien Emile-Geay
 }
+\concept{correlation}

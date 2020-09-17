@@ -12,3 +12,15 @@ TSid
 \description{
 Create a random TSid
 }
+\seealso{
+Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createModel}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
+\code{\link{selectData}()}
+}
+\concept{LiPD manipulation}

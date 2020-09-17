@@ -34,6 +34,10 @@ Gets the index for a LiPD "variable list"
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createModel}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{createTSid}()},
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
 \code{\link{pullTsVariable}()},

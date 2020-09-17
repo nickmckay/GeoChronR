@@ -1,5 +1,5 @@
 ---
-title: "Correlation"
+title: "Ensemble Correlation"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 author: "Nick McKay"

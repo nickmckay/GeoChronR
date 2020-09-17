@@ -15,6 +15,15 @@ bacon.dir the bacon core directory
 \description{
 This is a mostly internal function that returns the core directory. Interactive if given a NA
 }
+\seealso{
+Other Bacon: 
+\code{\link{loadBaconOutput}()},
+\code{\link{runBacon}()},
+\code{\link{sampleBaconAges}()},
+\code{\link{setBaconDir}()},
+\code{\link{writeBacon}()}
+}
 \author{
 Nick McKay
 }
+\concept{Bacon}

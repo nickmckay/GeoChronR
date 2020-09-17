@@ -15,6 +15,16 @@ ar coefficient estimate of ar1
 \description{
 estimates ar1 using the arima() function
 }
+\seealso{
+Other correlation: 
+\code{\link{ar1Surrogates}()},
+\code{\link{corMatrix}},
+\code{\link{effectiveN}()},
+\code{\link{plotCorEns}()},
+\code{\link{pvalMonteCarlo}()},
+\code{\link{pvalPearsonSerialCorrected}()}
+}
 \author{
 Julien Emile-Geay
 }
+\concept{correlation}

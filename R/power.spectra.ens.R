@@ -72,7 +72,7 @@ createSyntheticTimeseries <- function(time,values,n.ens=1,sameTrend=TRUE,index.t
 #' @import dplR
 #' @family spectra
 #' @family pca
-#' @family correlations
+#' @family correlation
 #' @title Create a synthetic timeseries that emulates the characteristics of a variable
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
 #' @param time LiPD "variable list" or vector of year/age values

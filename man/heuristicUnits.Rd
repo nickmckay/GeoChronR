@@ -15,3 +15,18 @@ A *guessed* string unit label
 \description{
 Guesses year units based on some simple heuristics
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

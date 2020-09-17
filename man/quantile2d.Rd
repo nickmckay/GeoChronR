@@ -45,6 +45,20 @@ quantiles <- quantile2d(ageEnsemble,paleoEnsemble)
 
 }
 \seealso{
+Other plot help: 
+\code{\link{AD2BP_trans}()},
+\code{\link{BP2AD_trans}()},
+\code{\link{axisLabel}()},
+\code{\link{bin2d}()},
+\code{\link{geoChronRPlotTheme}()},
+\code{\link{getLegend}()},
+\code{\link{getPlotRanges}()},
+\code{\link{kde2d}()},
+\code{\link{meltDistributionTable}()},
+\code{\link{modeSelektor}()},
+\code{\link{periodAnnotate}()},
+\code{\link{reverselog10_trans}()}
+
 Other gridding: 
 \code{\link{bin2d}()},
 \code{\link{kde2d}()}
@@ -53,3 +67,4 @@ Other gridding:
 Nick McKay
 }
 \concept{gridding}
+\concept{plot help}

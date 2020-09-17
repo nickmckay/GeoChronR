@@ -1,5 +1,6 @@
 #' Create a random TSid
 #' @return TSid
+#' @family LiPD manipulation
 #' @export
 createTSid <- function(){
   
@@ -264,6 +265,7 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo
 #' @title  What OS is this?
 #' @description Returns the OS
 #' @return A string ("osx","linux",or "windows")
+#' @family utility
 #' @export
 getOs <- function(){
   sysinf <- Sys.info()
@@ -507,6 +509,7 @@ getVariableIndex = function(table,
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to regress
 #' @param min.obs minimum number of points required to calculate regression
+#' @family bin
 #' @return list of binned data output:
 #' \itemize{
 #' \item binX: binned values from X

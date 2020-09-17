@@ -41,3 +41,15 @@ A LiPD object with an added ensemble table
 \description{
 Create a summary table from an ensemble table
 }
+\seealso{
+Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createModel}()},
+\code{\link{createTSid}()},
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
+\code{\link{selectData}()}
+}
+\concept{LiPD manipulation}

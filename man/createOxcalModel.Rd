@@ -50,3 +50,10 @@ createOxcalModel(
 \description{
 Create the oxcal model script
 }
+\seealso{
+Other oxcal: 
+\code{\link{loadOxcalOutput}()},
+\code{\link{oxCalDateExpression}()},
+\code{\link{runOxcal}()}
+}
+\concept{oxcal}

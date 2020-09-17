@@ -56,9 +56,11 @@ writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected
 }
 \seealso{
 Other Bacon: 
+\code{\link{getBaconDir}()},
 \code{\link{loadBaconOutput}()},
 \code{\link{runBacon}()},
-\code{\link{sampleBaconAges}()}
+\code{\link{sampleBaconAges}()},
+\code{\link{setBaconDir}()}
 }
 \author{
 Nick McKay

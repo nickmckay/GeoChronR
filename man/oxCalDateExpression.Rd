@@ -26,3 +26,10 @@ oxCalDateExpression(
 \description{
 write oxcal expression for each date.
 }
+\seealso{
+Other oxcal: 
+\code{\link{createOxcalModel}()},
+\code{\link{loadOxcalOutput}()},
+\code{\link{runOxcal}()}
+}
+\concept{oxcal}

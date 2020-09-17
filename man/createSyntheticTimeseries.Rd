@@ -30,15 +30,14 @@ Other spectra:
 \code{\link{ar1Surrogates}()},
 \code{\link{computeSpectraEns}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
 
 Other pca: 
 \code{\link{ar1Surrogates}()},
-\code{\link{getLegend}()},
 \code{\link{pcaEns}()},
-\code{\link{plotPcaEns}()}
+\code{\link{plotPcaEns}()},
+\code{\link{plotScreeEns}()}
 }
 \concept{pca}
 \concept{spectra}

@@ -1,7 +1,7 @@
 
 
 #' Convert var.names to strings
-#'
+#' @family utility
 #' @inheritParams selectData 
 #' @param used.value 
 #' @return the var.name as a string
@@ -21,6 +21,7 @@ stringifyVariables <- function(var.name,used.value){
 #' askUser
 #' @description Helper function to consistently get user input
 #' @param query 
+#' @family utility
 #' @importFrom crayon bold
 #' @return user input
 #' @export
@@ -31,6 +32,7 @@ askUser <- function(query){
 
 #' Create a data frame for chron measurement data
 #' @inheritParams selectData
+#' @family utility
 #' @param chron.num 
 #' @param overwrite 
 #' @param site.name 
@@ -316,6 +318,7 @@ createChronMeasInputDf <- function(L,
 #' Get the last set of parameters you used in createChronMeasInputDf()
 #'
 #' @return
+#' @family utility
 #' @export
 getLastVarString <- function(){
   if(exists("chron_varUsedStr",envir = geoChronREnv)){

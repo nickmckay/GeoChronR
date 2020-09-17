@@ -2,7 +2,7 @@
 #' Pull one instance from an ensemble
 #'
 #' @param X A LiPD column object
-#'
+#' @family utility
 #' @return a vector randomly drawn from the matrix
 #' @export
 pullInstance <- function(X){
@@ -22,6 +22,7 @@ pullInstance <- function(X){
 #' @param paleo.data.2 Paleo data  list for the second dataset (ensembles optional)
 #' @description This "shuffles" together two *independent* ensemble datasets, making no assumptions about stratigraphic order, but assuming that each dataset is representing the same phenomenon.
 #' @return a matrix with one instance of concatenate ensemble data
+#' @family utility
 #' @export
 concatEnsembleTimeseries <- function(age.ens.1,paleo.data.1,age.ens.2,paleo.data.2){
   #option 1. dont enforce stratigraphic order
@@ -45,6 +46,7 @@ return(cbind(sa,sp))
 #' @param n.ens How many ensemble members?
 #' @description This "shuffles" together two *independent* ensemble datasets, making no assumptions about stratigraphic order, but assuming that each dataset is representing the same phenomenon.
 #' @return
+#' @family LiPD manipulation
 #' @export
 #'
 #' @examples

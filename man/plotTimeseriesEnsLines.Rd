@@ -10,7 +10,8 @@ plotTimeseriesEnsLines(
   Y,
   alp = 0.2,
   color = "blue",
-  n.ens.plot = 100
+  n.ens.plot = 100,
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plotTimeseriesEnsLines(
 \item{color}{Either 1) A line color (following ggplot rules) to use for all lines (e.g., "blue"), 2) An RColorBrewer pallette to repeat over the lines (e.g. "Blues") or 3) a vector specifying the color for all lines (e.g., c("red","white","blue"))}
 
 \item{n.ens.plot}{Whats the maximum number of lines to plot?}
+
+\item{na.rm}{Remove NAs from X and Y? Set to FALSE to preserve line breaks where data are missing. (default = TRUE)}
 }
 \value{
 A ggplot object
@@ -34,13 +37,6 @@ Plot an ensemble timeseries as a set of lines. Useful for displaying a handful o
 }
 \seealso{
 Other plot: 
-\code{\link{AD2BP_trans}()},
-\code{\link{BP2AD_trans}()},
-\code{\link{axisLabel}()},
-\code{\link{geoChronRPlotTheme}()},
-\code{\link{getLegend}()},
-\code{\link{getPlotRanges}()},
-\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -52,13 +48,14 @@ Other plot:
 \code{\link{plotPvalsEnsFdr}()},
 \code{\link{plotRegressEns}()},
 \code{\link{plotScatterEns}()},
+\code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()},
-\code{\link{reverselog10_trans}()}
+\code{\link{plotTrendLinesEns}()}
 }
 \author{
 Nick McKay

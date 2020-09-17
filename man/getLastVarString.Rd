@@ -12,3 +12,18 @@ getLastVarString()
 \description{
 Get the last set of parameters you used in createChronMeasInputDf()
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

@@ -15,3 +15,18 @@ X A LiPD variable list or a vector of BP
 \description{
 Converts a LiPD variable list, or vector from AD/BC/CE/BCE to BP (1950). Also deals with the lack of a year 0.
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

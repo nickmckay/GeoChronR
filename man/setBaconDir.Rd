@@ -15,6 +15,15 @@ bacon.dir the bacon core directory
 \description{
 Use this to programmatically set the bacon.dir
 }
+\seealso{
+Other Bacon: 
+\code{\link{getBaconDir}()},
+\code{\link{loadBaconOutput}()},
+\code{\link{runBacon}()},
+\code{\link{sampleBaconAges}()},
+\code{\link{writeBacon}()}
+}
 \author{
 Nick McKay
 }
+\concept{Bacon}

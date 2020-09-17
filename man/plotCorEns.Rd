@@ -46,13 +46,6 @@ Plots the output of an ensemble correlation analysis.
 }
 \seealso{
 Other plot: 
-\code{\link{AD2BP_trans}()},
-\code{\link{BP2AD_trans}()},
-\code{\link{axisLabel}()},
-\code{\link{geoChronRPlotTheme}()},
-\code{\link{getLegend}()},
-\code{\link{getPlotRanges}()},
-\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -63,18 +56,28 @@ Other plot:
 \code{\link{plotPvalsEnsFdr}()},
 \code{\link{plotRegressEns}()},
 \code{\link{plotScatterEns}()},
+\code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()},
-\code{\link{reverselog10_trans}()}
+\code{\link{plotTrendLinesEns}()}
+
+Other correlation: 
+\code{\link{ar1Surrogates}()},
+\code{\link{ar1}()},
+\code{\link{corMatrix}},
+\code{\link{effectiveN}()},
+\code{\link{pvalMonteCarlo}()},
+\code{\link{pvalPearsonSerialCorrected}()}
 }
 \author{
 Julien Emile-Geay
 
 Nick McKay
 }
+\concept{correlation}
 \concept{plot}

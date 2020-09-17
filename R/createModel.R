@@ -4,7 +4,7 @@
 #' @param probs A vector of probabilites (quantiles) should be computed for the summary? (default = c(0.025,0.25,.5,.75,.975))
 #' @param prob.vars A vector of variableNames for the probabilites in probs (default =  c("unc2.5","unc25","ageMedian","unc75","unc97.5"))
 #' @param depth.var The name of the depth (or position) variable in the ensemble table (default = "depth")
-#'
+#' @family LiPD manipulation
 #' @return A LiPD object with an added ensemble table
 #' @export
 createSummaryTableFromEnsembleTable <- function(L,
@@ -102,6 +102,7 @@ createSummaryTableFromEnsembleTable <- function(L,
 #' Create a chron or paleo model including adding ensemble data
 #' @description This function will create a model in a LiPD object, adding ensemble data
 #' @inheritParams selectData
+#' @family LiPD manipulation
 #' @param depth.or.age.vector A vector of data for the ensemble data that records the position
 #' @param ensemble.data A matrix or data.frame of ensemble data, with ensemble members in separate columns
 #' @param depth.or.age.var A string describing the name of the depth or age vector (default = "depth")

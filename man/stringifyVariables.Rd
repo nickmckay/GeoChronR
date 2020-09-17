@@ -17,3 +17,18 @@ the var.name as a string
 \description{
 Convert var.names to strings
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()}
+}
+\concept{utility}

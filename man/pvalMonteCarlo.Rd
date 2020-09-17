@@ -21,8 +21,18 @@ output
 \description{
 Generate parametric or non-parametric surrogates of two series X & Y
 }
+\seealso{
+Other correlation: 
+\code{\link{ar1Surrogates}()},
+\code{\link{ar1}()},
+\code{\link{corMatrix}},
+\code{\link{effectiveN}()},
+\code{\link{plotCorEns}()},
+\code{\link{pvalPearsonSerialCorrected}()}
+}
 \author{
 Julien Emile-Geay
 
 Nick McKay
 }
+\concept{correlation}

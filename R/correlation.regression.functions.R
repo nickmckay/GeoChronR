@@ -4,6 +4,7 @@
 #' @author Julien Emile-Geay
 #' @param x a 1-column matrix or numeric dataset
 #' @return ar coefficient estimate of ar1
+#' @family correlation
 ar1 = function(x){
   fit = arima(x = x, order = c(1, 0, 0))
   return(fit$coef[[1]])
@@ -20,6 +21,7 @@ ar1 = function(x){
 #' @param n.sim number of simulations
 #' @param method the method applies. Possible choices are "isospectral" (default) and "isopersistent"
 #' @return output
+#' @family correlation
 pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
   if(is.matrix(X)){
     if(min(dim(X)) != 1){
@@ -89,6 +91,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
 #' @param X a 1-column matrix or numeric dataset
 #' @param Y a 1-column matrix or numeric dataset of the same length as X
 #' @return estimate of the effective sample size
+#' @family correlation
 effectiveN = function(X,Y){
   #from Bretherton 1999
   arX = ar1(X)
@@ -110,6 +113,7 @@ effectiveN = function(X,Y){
 #' @param r correlation coefficient
 #' @param n sample size
 #' @return p-value based on two-tailed t-test
+#' @family correlation
 pvalPearsonSerialCorrected = function(r,n){
   #r is the correlation coeffient
   #n is the number of pairwise observations
@@ -120,6 +124,7 @@ pvalPearsonSerialCorrected = function(r,n){
   return(p)
 }
 #' @export
+#' @family correlation
 #' @title Matrix correlation
 #' @description Calculates correlations and associated p-values for two ensemble matrices (or vectors) 
 #' @author Nick McKay
@@ -215,6 +220,7 @@ corMatrix = function(ens.1,
 #' @param X a matrix of predictor data
 #' @param Y a vector of predictand data
 #' @return model coefficients
+#' @family regress
 regress=function (X,Y){
   g=which(!apply(is.na(X),1,any) & !is.na(Y))
   X=X[g,]
@@ -495,6 +501,7 @@ corEns = function(time.1,
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to regress
 #' @return list that includes matrix of binned data and binned time
+#' @family bin
 
 binEns = function(time,values,bin.vec,bin.fun=mean,max.ens=NA){
   
@@ -555,6 +562,7 @@ binEns = function(time,values,bin.vec,bin.fun=mean,max.ens=NA){
 #' @param bin.vec vector of bin edges for describing where to bin
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @author Nick McKay
+#' @family bin
 #' @return A data.frame of (x) binned time, and (y) binned values
 bin = function(time,values,bin.vec,bin.fun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
@@ -577,6 +585,7 @@ bin = function(time,values,bin.vec,bin.fun = mean){
 
 
 #' @export
+#' @family bin
 #' @title Bin every entry in a Timeseries object
 #' @description Aggregate data from a timeseries object into the same timeline through binning. 
 #' @param TS LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}

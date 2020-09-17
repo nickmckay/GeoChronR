@@ -28,16 +28,23 @@ Other spectra:
 \code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
 
 Other pca: 
 \code{\link{createSyntheticTimeseries}()},
-\code{\link{getLegend}()},
 \code{\link{pcaEns}()},
-\code{\link{plotPcaEns}()}
+\code{\link{plotPcaEns}()},
+\code{\link{plotScreeEns}()}
+
+Other correlation: 
+\code{\link{ar1}()},
+\code{\link{corMatrix}},
+\code{\link{effectiveN}()},
+\code{\link{plotCorEns}()},
+\code{\link{pvalMonteCarlo}()},
+\code{\link{pvalPearsonSerialCorrected}()}
 }
-\concept{correlations}
+\concept{correlation}
 \concept{pca}
 \concept{spectra}

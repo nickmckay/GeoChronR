@@ -27,8 +27,10 @@ ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
 }
 \seealso{
 Other Bacon: 
+\code{\link{getBaconDir}()},
 \code{\link{loadBaconOutput}()},
 \code{\link{runBacon}()},
+\code{\link{setBaconDir}()},
 \code{\link{writeBacon}()}
 }
 \author{

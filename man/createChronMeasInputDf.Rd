@@ -59,3 +59,18 @@ a standardized dataframe of chron measurements
 \description{
 Create a data frame for chron measurement data
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

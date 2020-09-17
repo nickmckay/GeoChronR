@@ -1,6 +1,6 @@
 
 #' write oxcal expression for each date.
-#'
+#' @family oxcal
 #' @param ... 
 #' @param default.outlier.prob Outlier Probability
 #' @param cal.curve Calibration curve
@@ -117,6 +117,7 @@ return(dateExp)
 #' @import dplyr tidyr
 #' @importFrom magrittr %>% 
 #' @importFrom purrr pmap_chr
+#' @family oxcal
 #' @return
 #' @export
 createOxcalModel <- function(cdf,
@@ -212,7 +213,7 @@ createOxcalModel <- function(cdf,
 #' @param depth.units Depth units to assign in (default = "cm")
 #' @param make.new Create a new model?
 #' @param max.ens Maximum number of ensemble members to import (default = 1000)
-#'
+#' @family oxcal
 #' @return
 #' @export
 loadOxcalOutput <- function(L,
@@ -353,8 +354,6 @@ loadOxcalOutput <- function(L,
   
 }
 
-
-
 #' @export
 #' @author Nick McKay
 #' @family oxcal
@@ -369,11 +368,14 @@ loadOxcalOutput <- function(L,
 #' @inheritDotParams createChronMeasInputDf
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 
-#' Run in interactive mode:
+#' \dontrun{
+#' #Run in interactive mode:
 #' L = runOxcal(L)
 #' 
-#' Run in noninteractive mode, describing everything:
+#' #Run in noninteractive mode, describing everything:
 #' L = runOxcal(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+#' }
+#' 
 runOxcal <-  function(L,
                       chron.num=NA,
                       meas.table.num = NA,

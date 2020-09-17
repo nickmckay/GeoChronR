@@ -11,7 +11,8 @@
 #' @importFrom gridExtra grid.arrange
 #' @return a gridExtra ggplot output
 #' @export
-summaryPlotTs <- function(TS,sort.var = "archiveType", age.range = NA, age.var = "age", step = NA,... ){
+#' @family plot
+plotSummaryTs <- function(TS,sort.var = "archiveType", age.range = NA, age.var = "age", step = NA,... ){
 
 
 #make a map

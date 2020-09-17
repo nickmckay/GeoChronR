@@ -54,7 +54,8 @@ This is the primary function for ensemble regression. It will take ensemble valu
 Other regress: 
 \code{\link{plotRegressEns}()},
 \code{\link{plotScatterEns}()},
-\code{\link{plotTrendLinesEns}()}
+\code{\link{plotTrendLinesEns}()},
+\code{\link{regress}()}
 }
 \author{
 Nick McKay

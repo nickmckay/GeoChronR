@@ -21,3 +21,18 @@ a matrix with one instance of concatenate ensemble data
 \description{
 This "shuffles" together two *independent* ensemble datasets, making no assumptions about stratigraphic order, but assuming that each dataset is representing the same phenomenon.
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
+\concept{utility}

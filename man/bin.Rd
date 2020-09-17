@@ -21,6 +21,14 @@ A data.frame of (x) binned time, and (y) binned values
 \description{
 function that puts data into appropriate bins, based on the time and the binning vector the bin vector describes the edges of the bins
 }
+\seealso{
+Other bin: 
+\code{\link{alignTimeseriesBin}()},
+\code{\link{bin2d}()},
+\code{\link{binEns}()},
+\code{\link{binTs}()}
+}
 \author{
 Nick McKay
 }
+\concept{bin}

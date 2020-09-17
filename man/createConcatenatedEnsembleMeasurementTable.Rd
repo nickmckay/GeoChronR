@@ -55,3 +55,15 @@ plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,n.ens.plot = 
 
 
 }
+\seealso{
+Other LiPD manipulation: 
+\code{\link{createModel}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{createTSid}()},
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
+\code{\link{selectData}()}
+}
+\concept{LiPD manipulation}

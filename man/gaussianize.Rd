@@ -22,8 +22,23 @@ Emile-Geay, J., and M. Tingley (2016), Inferring climate variability from nonlin
 
 Van Albada, S.J., Robinson P.A. (2006), Transformation of arbitrary distributions to the normal distribution with application to EEG test-retest reliability. J Neurosci Meth, doi:10.1016/j.jneumeth.2006.11.004
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()}
+}
 \author{
 Julien Emile-Geay
 
 Nick McKay
 }
+\concept{utility}

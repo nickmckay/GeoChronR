@@ -35,13 +35,6 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 }
 \seealso{
 Other plot: 
-\code{\link{AD2BP_trans}()},
-\code{\link{BP2AD_trans}()},
-\code{\link{axisLabel}()},
-\code{\link{geoChronRPlotTheme}()},
-\code{\link{getLegend}()},
-\code{\link{getPlotRanges}()},
-\code{\link{periodAnnotate}()},
 \code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
@@ -52,19 +45,21 @@ Other plot:
 \code{\link{plotPcaEns}()},
 \code{\link{plotPvalsEnsFdr}()},
 \code{\link{plotScatterEns}()},
+\code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()},
-\code{\link{reverselog10_trans}()}
+\code{\link{plotTrendLinesEns}()}
 
 Other regress: 
 \code{\link{plotScatterEns}()},
 \code{\link{plotTrendLinesEns}()},
-\code{\link{regressEns}()}
+\code{\link{regressEns}()},
+\code{\link{regress}()}
 }
 \author{
 Nick McKay

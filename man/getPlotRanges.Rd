@@ -16,31 +16,18 @@ a list of x and y ranges
 Use this to extract x and y ranges from ggplot, dealing with changes in version
 }
 \seealso{
-Other plot: 
+Other plot help: 
 \code{\link{AD2BP_trans}()},
 \code{\link{BP2AD_trans}()},
 \code{\link{axisLabel}()},
+\code{\link{bin2d}()},
 \code{\link{geoChronRPlotTheme}()},
 \code{\link{getLegend}()},
+\code{\link{kde2d}()},
+\code{\link{meltDistributionTable}()},
+\code{\link{modeSelektor}()},
 \code{\link{periodAnnotate}()},
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
-\code{\link{plotChron}()},
-\code{\link{plotCorEns}()},
-\code{\link{plotHistEns}()},
-\code{\link{plotLine}()},
-\code{\link{plotModelDistributions}()},
-\code{\link{plotPcaEns}()},
-\code{\link{plotPvalsEnsFdr}()},
-\code{\link{plotRegressEns}()},
-\code{\link{plotScatterEns}()},
-\code{\link{plotSpectraEns}()},
-\code{\link{plotSpectrum}()},
-\code{\link{plotSummary}()},
-\code{\link{plotTimeseriesEnsLines}()},
-\code{\link{plotTimeseriesEnsRibbons}()},
-\code{\link{plotTimeseriesStack}()},
-\code{\link{plotTrendLinesEns}()},
+\code{\link{quantile2d}()},
 \code{\link{reverselog10_trans}()}
 }
-\concept{plot}
+\concept{plot help}

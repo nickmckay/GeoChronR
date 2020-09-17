@@ -40,8 +40,10 @@ loadBaconOutput(L)
 }
 \seealso{
 Other Bacon: 
+\code{\link{getBaconDir}()},
 \code{\link{runBacon}()},
 \code{\link{sampleBaconAges}()},
+\code{\link{setBaconDir}()},
 \code{\link{writeBacon}()}
 }
 \author{

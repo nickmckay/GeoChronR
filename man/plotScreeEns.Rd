@@ -38,3 +38,33 @@ a ggplot plot
 \description{
 create a scree plot for PCA analysis
 }
+\seealso{
+Other pca: 
+\code{\link{ar1Surrogates}()},
+\code{\link{createSyntheticTimeseries}()},
+\code{\link{pcaEns}()},
+\code{\link{plotPcaEns}()}
+
+Other plot: 
+\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChron}()},
+\code{\link{plotCorEns}()},
+\code{\link{plotHistEns}()},
+\code{\link{plotLine}()},
+\code{\link{plotModelDistributions}()},
+\code{\link{plotPcaEns}()},
+\code{\link{plotPvalsEnsFdr}()},
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotSpectraEns}()},
+\code{\link{plotSpectrum}()},
+\code{\link{plotSummaryTs}()},
+\code{\link{plotSummary}()},
+\code{\link{plotTimeseriesEnsLines}()},
+\code{\link{plotTimeseriesEnsRibbons}()},
+\code{\link{plotTimeseriesStack}()},
+\code{\link{plotTrendLinesEns}()}
+}
+\concept{pca}
+\concept{plot}

@@ -17,6 +17,14 @@ model coefficients
 \description{
 Simple regression function. Faster than lm()
 }
+\seealso{
+Other regress: 
+\code{\link{plotRegressEns}()},
+\code{\link{plotScatterEns}()},
+\code{\link{plotTrendLinesEns}()},
+\code{\link{regressEns}()}
+}
 \author{
 Nick McKay
 }
+\concept{regress}

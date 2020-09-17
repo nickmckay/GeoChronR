@@ -1,1 +1,92 @@
 destination: docs
+reference:
+- title: Creating age ensembles
+- subtitle: High-level age modelling functions
+  desc:  Primary functions used to create and store age models into LiPD objects
+- contents:
+  - starts_with("run")
+- subtitle: Bacon-related functions
+- contents:
+  - has_concept("Bacon")
+- subtitle: BChron-related functions
+- contents:
+  - has_concept("Bchron")
+- subtitle: OxCal-related functions
+- contents:
+  - has_concept("oxcal")
+- subtitle: BAM-related functions
+- contents:
+  - has_concept("BAM")
+
+- title: Ensemble Analysis
+- subtitle: Primary ensemble analysis functions
+  desc:  Primary functions used to run ensemble analysis in GeoChronR
+- contents:
+  - corEns
+  - regressEns
+  - computeSpectraEns
+  - pcaEns
+- subtitle: Correlation-related functions
+- contents:
+  - has_concept("correlation")
+  - has_concept("FDR")
+- subtitle: Regression-related functions
+- contents:
+  - has_concept("regress")
+- subtitle: Spectral-analyis-related functions
+- contents:
+  - has_concept("spectra")
+- subtitle: PCA-related functions
+- contents:
+  - has_concept("pca")
+
+- title: Visualization
+- subtitle: Plotting functions
+  desc: Primary functions to visualize data in GeoChronR
+- contents: 
+  - starts_with("plot")
+  
+- subtitle: Mapping functions
+- contents: 
+  - has_concept("mapping")
+  
+- subtitle: Plotting helper functions
+- contents: 
+  - has_concept("plot help")
+
+- title: Other functions
+- subtitle: Binning
+  desc: Functions used to bin data into regular intervals
+- contents: 
+  - has_concept("bin")  
+  
+- subtitle: LiPD manipulations
+  desc: Functions useful for manupulating LiPD objects
+- contents: 
+  - has_concept("LiPD manipulation")  
+
+- subtitle: Utility functions
+  desc: Functions useful for a variety of internal, and potentially external, applications
+- contents: 
+  - has_concept("utility")
+
+articles:
+- title: Getting Started With GeoChronR
+  navbar: Getting Started With GeoChronR
+  contents:
+  - Introduction
+  - correlation
+  - regression
+  - spectral_analysis
+  - PCA
+
+- title: More examples
+  navbar: More examples
+  desc: Vignettes highlighting additional GeoChronR use cases
+  contents:
+  - oxCal
+  - PlotTimeseriesStack
+  - TsFilteringAndMapping
+
+
+  

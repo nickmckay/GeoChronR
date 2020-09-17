@@ -30,6 +30,14 @@ A list of binned years and values.
 \description{
 Aggregate data from a timeseries object into the same timeline through binning.
 }
+\seealso{
+Other bin: 
+\code{\link{alignTimeseriesBin}()},
+\code{\link{bin2d}()},
+\code{\link{binEns}()},
+\code{\link{bin}()}
+}
 \author{
 Nick McKay
 }
+\concept{bin}

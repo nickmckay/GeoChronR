@@ -155,16 +155,20 @@ L The single LiPD object that was entered, with methods, ensembleTable, summaryT
 This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
 }
 \examples{
+\dontrun{
 Run in interactive mode:
 L = runBacon(L)
 
 Run in noninteractive mode, describing everything:
 L = runBacon(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 }
+}
 \seealso{
 Other Bacon: 
+\code{\link{getBaconDir}()},
 \code{\link{loadBaconOutput}()},
 \code{\link{sampleBaconAges}()},
+\code{\link{setBaconDir}()},
 \code{\link{writeBacon}()}
 }
 \author{

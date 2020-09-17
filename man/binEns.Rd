@@ -25,3 +25,11 @@ list that includes matrix of binned data and binned time
 \description{
 takes ensembles in time and/or values and creates a matrix of data for future analysis
 }
+\seealso{
+Other bin: 
+\code{\link{alignTimeseriesBin}()},
+\code{\link{bin2d}()},
+\code{\link{binTs}()},
+\code{\link{bin}()}
+}
+\concept{bin}

@@ -93,23 +93,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li class="divider"></li>
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
     <li>
       <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">ensemble PCA</a>
-    </li>
-    <li>
-      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
-    </li>
-    <li>
-      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
-    </li>
-    <li>
-      <a href="../articles/correlation.html">Correlation</a>
-    </li>
-    <li>
-      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+      <a href="../articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
       <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
@@ -117,7 +107,24 @@
     <li>
       <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
+    <li>
+      <a href="../articles/PCA.html">Ensemble PCA</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">More examples</li>
+    <li>
+      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+    </li>
+    <li>
+      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
+    </li>
+    <li>
+      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -149,7 +156,7 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-creating-age-ensembles" class="hasAnchor"><a href="#section-creating-age-ensembles" class="anchor"></a>Creating age ensembles</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -157,26 +164,236 @@
       
     </tbody><tbody>
       
+      <tr>
+        <th colspan="2">
+          <h3 id="section-high-level-age-modelling-functions" class="hasAnchor"><a href="#section-high-level-age-modelling-functions" class="anchor"></a>High-level age modelling functions</h3>
+          <p class="section-desc"><p>Primary functions used to create and store age models into LiPD objects</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
       
       <tr>
         
         <td>
-          <p><code><a href="AD2BP_trans.html">AD2BP_trans()</a></code> </p>
+          <p><code><a href="runBacon.html">runBacon()</a></code> </p>
         </td>
-        <td><p>convert an AD age scale to BP</p></td>
+        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="BP2AD_trans.html">BP2AD_trans()</a></code> </p>
+          <p><code><a href="runBam.html">runBam()</a></code> </p>
         </td>
-        <td><p>convert a BP age scale to AD</p></td>
+        <td><p>Generate a Banded Age Model (BAM) and add it into a LiPD object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="alignTimeseriesBin.html">alignTimeseriesBin()</a></code> </p>
+          <p><code><a href="runBchron.html">runBchron()</a></code> </p>
         </td>
-        <td><p>Align and bin two timeseries into comparable bins</p></td>
+        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="runOxcal.html">runOxcal()</a></code> </p>
+        </td>
+        <td><p>Generate an oxcal Age Model and add it into a LiPD object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-bacon-related-functions" class="hasAnchor"><a href="#section-bacon-related-functions" class="anchor"></a>Bacon-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="getBaconDir.html">getBaconDir()</a></code> </p>
+        </td>
+        <td><p>Get the name of bacon core directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="loadBaconOutput.html">loadBaconOutput()</a></code> </p>
+        </td>
+        <td><p>Load the ensemble, summary and distribution data from a Bacon simulation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runBacon.html">runBacon()</a></code> </p>
+        </td>
+        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sampleBaconAges.html">sampleBaconAges()</a></code> </p>
+        </td>
+        <td><p>Sample ensemble ages from Bacon</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="setBaconDir.html">setBaconDir()</a></code> </p>
+        </td>
+        <td><p>Set the name of bacon core directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="writeBacon.html">writeBacon()</a></code> </p>
+        </td>
+        <td><p>Create the input file for a Bacon model from a LiPD object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-bchron-related-functions" class="hasAnchor"><a href="#section-bchron-related-functions" class="anchor"></a>BChron-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="runBchron.html">runBchron()</a></code> </p>
+        </td>
+        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-oxcal-related-functions" class="hasAnchor"><a href="#section-oxcal-related-functions" class="anchor"></a>OxCal-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="createOxcalModel.html">createOxcalModel()</a></code> </p>
+        </td>
+        <td><p>Create the oxcal model script</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="loadOxcalOutput.html">loadOxcalOutput()</a></code> </p>
+        </td>
+        <td><p>Load oxcal output</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="oxCalDateExpression.html">oxCalDateExpression()</a></code> </p>
+        </td>
+        <td><p>write oxcal expression for each date.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runOxcal.html">runOxcal()</a></code> </p>
+        </td>
+        <td><p>Generate an oxcal Age Model and add it into a LiPD object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-bam-related-functions" class="hasAnchor"><a href="#section-bam-related-functions" class="anchor"></a>BAM-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="bamCorrect.html">bamCorrect()</a></code> </p>
+        </td>
+        <td><p>Corrects a Banded Age Model (BAM)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runBam.html">runBam()</a></code> </p>
+        </td>
+        <td><p>Generate a Banded Age Model (BAM) and add it into a LiPD object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="simulateBam.html">simulateBam()</a></code> </p>
+        </td>
+        <td><p>Simulate a Banded Age Model (BAM)</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-ensemble-analysis" class="hasAnchor"><a href="#section-ensemble-analysis" class="anchor"></a>Ensemble Analysis</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-primary-ensemble-analysis-functions" class="hasAnchor"><a href="#section-primary-ensemble-analysis-functions" class="anchor"></a>Primary ensemble analysis functions</h3>
+          <p class="section-desc"><p>Primary functions used to run ensemble analysis in GeoChronR</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="corEns.html">corEns()</a></code> </p>
+        </td>
+        <td><p>Ensemble correlation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="regressEns.html">regressEns()</a></code> </p>
+        </td>
+        <td><p>Ensemble regression</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="computeSpectraEns.html">computeSpectraEns()</a></code> </p>
+        </td>
+        <td><p>Calculate ensemble power spectra</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pcaEns.html">pcaEns()</a></code> </p>
+        </td>
+        <td><p>Perform principle components analysis (PCA) across an ensemble</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-correlation-related-functions" class="hasAnchor"><a href="#section-correlation-related-functions" class="anchor"></a>Correlation-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="ar1.html">ar1()</a></code> </p>
@@ -191,129 +408,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="askUser.html">askUser()</a></code> </p>
-        </td>
-        <td><p>askUser</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="axisLabel.html">axisLabel()</a></code> </p>
-        </td>
-        <td><p>Label axes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bamCorrect.html">bamCorrect()</a></code> </p>
-        </td>
-        <td><p>Corrects a Banded Age Model (BAM)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="baseMap.html">baseMap()</a></code> </p>
-        </td>
-        <td><p>Make a base map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bin.html">bin()</a></code> </p>
-        </td>
-        <td><p>Bin Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bin2d.html">bin2d()</a></code> </p>
-        </td>
-        <td><p>Two dimensional binning</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="binEns.html">binEns()</a></code> </p>
-        </td>
-        <td><p>Bin ensemble data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="binTs.html">binTs()</a></code> </p>
-        </td>
-        <td><p>Bin every entry in a Timeseries object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="computeSpectraEns.html">computeSpectraEns()</a></code> </p>
-        </td>
-        <td><p>Calculate ensemble power spectra</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="concatEnsembleTimeseries.html">concatEnsembleTimeseries()</a></code> </p>
-        </td>
-        <td><p>Concatenate two independent ensemble timeseries</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convertAD2BP.html">convertAD2BP()</a></code> </p>
-        </td>
-        <td><p>Convert years Calendar year (AD/BC or CE) to BP (1950)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convertBP2AD.html">convertBP2AD()</a></code> </p>
-        </td>
-        <td><p>Convert years BP to Calendar year (AD/BC or CE)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="corEns.html">corEns()</a></code> </p>
-        </td>
-        <td><p>Ensemble correlation</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="corMatrix.html">corMatrix()</a></code> </p>
         </td>
         <td><p>Matrix correlation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createChronMeasInputDf.html">createChronMeasInputDf()</a></code> </p>
-        </td>
-        <td><p>Create a data frame for chron measurement data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createConcatenatedEnsembleMeasurementTable.html">createConcatenatedEnsembleMeasurementTable()</a></code> </p>
-        </td>
-        <td><p>Create a measurementTable from concatenated ensembles</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createModel.html">createModel()</a></code> </p>
-        </td>
-        <td><p>Create a chron or paleo model including adding ensemble data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createOxcalModel.html">createOxcalModel()</a></code> </p>
-        </td>
-        <td><p>Create the oxcal model script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createSummaryTableFromEnsembleTable.html">createSummaryTableFromEnsembleTable()</a></code> </p>
-        </td>
-        <td><p>Create a summary table from an ensemble table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createSyntheticTimeseries.html">createSyntheticTimeseries()</a></code> </p>
-        </td>
-        <td><p>Create a synthetic timeseries that emulates the characteristics of a timeseries</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="createTSid.html">createTSid()</a></code> </p>
-        </td>
-        <td><p>Create a random TSid</p></td>
       </tr><tr>
         
         <td>
@@ -323,9 +420,21 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="estimateUncertaintyFromRange.html">estimateUncertaintyFromRange()</a></code> </p>
+          <p><code><a href="plotCorEns.html">plotCorEns()</a></code> </p>
         </td>
-        <td><p>Estimate uncertainty estimates from high/low range</p></td>
+        <td><p>Plot the results of an ensemble correlation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pvalMonteCarlo.html">pvalMonteCarlo()</a></code> </p>
+        </td>
+        <td><p>Correlations and their significance according to AR(1) benchmarks</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pvalPearsonSerialCorrected.html">pvalPearsonSerialCorrected()</a></code> </p>
+        </td>
+        <td><p>Calculate correlation p-value given sample size.</p></td>
       </tr><tr>
         
         <td>
@@ -347,117 +456,132 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="gaussianize.html">gaussianize()</a></code> </p>
+          <p><code><a href="propAlt.html">propAlt()</a></code> </p>
         </td>
-        <td><p>Gaussianize</p></td>
+        <td><p>Proportion of alternate hypotheses</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="geoChronRPlotTheme.html">geoChronRPlotTheme()</a></code> </p>
+          <p><code><a href="storey.html">storey()</a></code> </p>
         </td>
-        <td><p>Define a plot theme for GeoChronR</p></td>
+        <td><p>Storey estimator</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-regression-related-functions" class="hasAnchor"><a href="#section-regression-related-functions" class="anchor"></a>Regression-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="plotRegressEns.html">plotRegressEns()</a></code> </p>
+        </td>
+        <td><p>Plot ensemble regression results</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getBaconDir.html">getBaconDir()</a></code> </p>
+          <p><code><a href="plotScatterEns.html">plotScatterEns()</a></code> </p>
         </td>
-        <td><p>Get the name of bacon core directory</p></td>
+        <td><p>Plot an ensemble of data as a scatterplot</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getLastVarString.html">getLastVarString()</a></code> </p>
+          <p><code><a href="plotTrendLinesEns.html">plotTrendLinesEns()</a></code> </p>
         </td>
-        <td><p>Get the last set of parameters you used in createChronMeasInputDf()</p></td>
+        <td><p>Plot an ensemble of trendlines</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getLegend.html">getLegend()</a></code> </p>
+          <p><code><a href="regress.html">regress()</a></code> </p>
         </td>
-        <td><p>get a ggplot legend object</p></td>
+        <td><p>Simple ordinary least squeares regression</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getOs.html">getOs()</a></code> </p>
+          <p><code><a href="regressEns.html">regressEns()</a></code> </p>
         </td>
-        <td><p>What OS is this?</p></td>
+        <td><p>Ensemble regression</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-spectral-analyis-related-functions" class="hasAnchor"><a href="#section-spectral-analyis-related-functions" class="anchor"></a>Spectral-analyis-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="ar1Surrogates.html">ar1Surrogates()</a></code> </p>
+        </td>
+        <td><p>Create a synthetic timeseries that emulates the characteristics of a variable</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getPlotRanges.html">getPlotRanges()</a></code> </p>
+          <p><code><a href="computeSpectraEns.html">computeSpectraEns()</a></code> </p>
         </td>
-        <td><p>Get ggplot x and y ranges</p></td>
+        <td><p>Calculate ensemble power spectra</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getVariableIndex.html">getVariableIndex()</a></code> </p>
+          <p><code><a href="createSyntheticTimeseries.html">createSyntheticTimeseries()</a></code> </p>
         </td>
-        <td><p>Get the index of variable list</p></td>
+        <td><p>Create a synthetic timeseries that emulates the characteristics of a timeseries</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="heuristicUnits.html">heuristicUnits()</a></code> </p>
+          <p><code><a href="periodAnnotate.html">periodAnnotate()</a></code> </p>
         </td>
-        <td><p>Makes a guess about the units of a time vector based on the values</p></td>
+        <td><p>Annotate plot of spectra with given periodicities</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="kde2d.html">kde2d()</a></code> </p>
+          <p><code><a href="plotSpectrum.html">plotSpectrum()</a></code> </p>
         </td>
-        <td><p>Two dimensional kernel density estimation</p></td>
+        <td><p>Plot spectrum with confidence limits</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="loadBaconOutput.html">loadBaconOutput()</a></code> </p>
+          <p><code><a href="reverselog10_trans.html">reverselog10_trans()</a></code> </p>
         </td>
-        <td><p>Load the ensemble, summary and distribution data from a Bacon simulation</p></td>
+        <td><p>Reverse axis in log10 scale</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-pca-related-functions" class="hasAnchor"><a href="#section-pca-related-functions" class="anchor"></a>PCA-related functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="ar1Surrogates.html">ar1Surrogates()</a></code> </p>
+        </td>
+        <td><p>Create a synthetic timeseries that emulates the characteristics of a variable</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="loadOxcalOutput.html">loadOxcalOutput()</a></code> </p>
+          <p><code><a href="createSyntheticTimeseries.html">createSyntheticTimeseries()</a></code> </p>
         </td>
-        <td><p>Load oxcal output</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="loadRemote.html">loadRemote()</a></code> </p>
-        </td>
-        <td><p>Load a remote RData file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code> </p>
-        </td>
-        <td><p>Map an ageEnsemble variable from a chron model to a paleoMeasurement Table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mapLipd.html">mapLipd()</a></code> </p>
-        </td>
-        <td><p>Map a list of LiPD objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mapTs.html">mapTs()</a></code> </p>
-        </td>
-        <td><p>Map a TS object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="meltDistributionTable.html">meltDistributionTable()</a></code> </p>
-        </td>
-        <td><p>Melt distribution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="modeSelektor.html">modeSelektor()</a></code> </p>
-        </td>
-        <td><p>ModeSelektor</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="oxCalDateExpression.html">oxCalDateExpression()</a></code> </p>
-        </td>
-        <td><p>write oxcal expression for each date.</p></td>
+        <td><p>Create a synthetic timeseries that emulates the characteristics of a timeseries</p></td>
       </tr><tr>
         
         <td>
@@ -467,10 +591,38 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="periodAnnotate.html">periodAnnotate()</a></code> </p>
+          <p><code><a href="plotPcaEns.html">plotPcaEns()</a></code> </p>
         </td>
-        <td><p>Annotate plot of spectra with given periodicities</p></td>
+        <td><p>Map ensemble pca loadings and plot PC timeseries</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="plotScreeEns.html">plotScreeEns()</a></code> </p>
+        </td>
+        <td><p>create a scree plot for PCA analysis</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-visualization" class="hasAnchor"><a href="#section-visualization" class="anchor"></a>Visualization</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-plotting-functions" class="hasAnchor"><a href="#section-plotting-functions" class="anchor"></a>Plotting functions</h3>
+          <p class="section-desc"><p>Primary functions to visualize data in GeoChronR</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="plotChron.html">plotChron()</a></code> </p>
@@ -563,6 +715,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="plotSummaryTs.html">plotSummaryTs()</a></code> </p>
+        </td>
+        <td><p>TS overview plot</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="plotTimeAvailabilityTs.html">plotTimeAvailabilityTs()</a></code> </p>
         </td>
         <td><p>Create a Time availability plot</p></td>
@@ -590,36 +748,116 @@
           <p><code><a href="plotTrendLinesEns.html">plotTrendLinesEns()</a></code> </p>
         </td>
         <td><p>Plot an ensemble of trendlines</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-mapping-functions" class="hasAnchor"><a href="#section-mapping-functions" class="anchor"></a>Mapping functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="baseMap.html">baseMap()</a></code> </p>
+        </td>
+        <td><p>Make a base map</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="propAlt.html">propAlt()</a></code> </p>
+          <p><code><a href="mapLipd.html">mapLipd()</a></code> </p>
         </td>
-        <td><p>Proportion of alternate hypotheses</p></td>
+        <td><p>Map a list of LiPD objects</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pullInstance.html">pullInstance()</a></code> </p>
+          <p><code><a href="mapTs.html">mapTs()</a></code> </p>
         </td>
-        <td><p>Pull one instance from an ensemble</p></td>
+        <td><p>Map a TS object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-plotting-helper-functions" class="hasAnchor"><a href="#section-plotting-helper-functions" class="anchor"></a>Plotting helper functions</h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="AD2BP_trans.html">AD2BP_trans()</a></code> </p>
+        </td>
+        <td><p>convert an AD age scale to BP</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pullTsVariable.html">pullTsVariable()</a></code> </p>
+          <p><code><a href="BP2AD_trans.html">BP2AD_trans()</a></code> </p>
         </td>
-        <td><p>pull variable out of TS object</p></td>
+        <td><p>convert a BP age scale to AD</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pvalMonteCarlo.html">pvalMonteCarlo()</a></code> </p>
+          <p><code><a href="axisLabel.html">axisLabel()</a></code> </p>
         </td>
-        <td><p>Correlations and their significance according to AR(1) benchmarks</p></td>
+        <td><p>Label axes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="pvalPearsonSerialCorrected.html">pvalPearsonSerialCorrected()</a></code> </p>
+          <p><code><a href="bin2d.html">bin2d()</a></code> </p>
         </td>
-        <td><p>Calculate correlation p-value given sample size.</p></td>
+        <td><p>Two dimensional binning</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="geoChronRPlotTheme.html">geoChronRPlotTheme()</a></code> </p>
+        </td>
+        <td><p>Define a plot theme for GeoChronR</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getLegend.html">getLegend()</a></code> </p>
+        </td>
+        <td><p>get a ggplot legend object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getPlotRanges.html">getPlotRanges()</a></code> </p>
+        </td>
+        <td><p>Get ggplot x and y ranges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kde2d.html">kde2d()</a></code> </p>
+        </td>
+        <td><p>Two dimensional kernel density estimation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="meltDistributionTable.html">meltDistributionTable()</a></code> </p>
+        </td>
+        <td><p>Melt distribution</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="modeSelektor.html">modeSelektor()</a></code> </p>
+        </td>
+        <td><p>ModeSelektor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="periodAnnotate.html">periodAnnotate()</a></code> </p>
+        </td>
+        <td><p>Annotate plot of spectra with given periodicities</p></td>
       </tr><tr>
         
         <td>
@@ -629,93 +867,213 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="regress.html">regress()</a></code> </p>
-        </td>
-        <td><p>Simple ordinary least squeares regression</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="regressEns.html">regressEns()</a></code> </p>
-        </td>
-        <td><p>Ensemble regression</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="reverselog10_trans.html">reverselog10_trans()</a></code> </p>
         </td>
         <td><p>Reverse axis in log10 scale</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-other-functions" class="hasAnchor"><a href="#section-other-functions" class="anchor"></a>Other functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-binning" class="hasAnchor"><a href="#section-binning" class="anchor"></a>Binning</h3>
+          <p class="section-desc"><p>Functions used to bin data into regular intervals</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="alignTimeseriesBin.html">alignTimeseriesBin()</a></code> </p>
+        </td>
+        <td><p>Align and bin two timeseries into comparable bins</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="runBacon.html">runBacon()</a></code> </p>
+          <p><code><a href="bin.html">bin()</a></code> </p>
         </td>
-        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
+        <td><p>Bin Data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="runBam.html">runBam()</a></code> </p>
+          <p><code><a href="bin2d.html">bin2d()</a></code> </p>
         </td>
-        <td><p>Generate a Banded Age Model (BAM) and add it into a LiPD object</p></td>
+        <td><p>Two dimensional binning</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="runBchron.html">runBchron()</a></code> </p>
+          <p><code><a href="binEns.html">binEns()</a></code> </p>
         </td>
-        <td><p>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</p></td>
+        <td><p>Bin ensemble data</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="runOxcal.html">runOxcal()</a></code> </p>
+          <p><code><a href="binTs.html">binTs()</a></code> </p>
         </td>
-        <td><p>Generate an oxcal Age Model and add it into a LiPD object</p></td>
+        <td><p>Bin every entry in a Timeseries object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-lipd-manipulations" class="hasAnchor"><a href="#section-lipd-manipulations" class="anchor"></a>LiPD manipulations</h3>
+          <p class="section-desc"><p>Functions useful for manupulating LiPD objects</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="createConcatenatedEnsembleMeasurementTable.html">createConcatenatedEnsembleMeasurementTable()</a></code> </p>
+        </td>
+        <td><p>Create a measurementTable from concatenated ensembles</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="sampleBaconAges.html">sampleBaconAges()</a></code> </p>
+          <p><code><a href="createModel.html">createModel()</a></code> </p>
         </td>
-        <td><p>Sample ensemble ages from Bacon</p></td>
+        <td><p>Create a chron or paleo model including adding ensemble data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="createSummaryTableFromEnsembleTable.html">createSummaryTableFromEnsembleTable()</a></code> </p>
+        </td>
+        <td><p>Create a summary table from an ensemble table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="createTSid.html">createTSid()</a></code> </p>
+        </td>
+        <td><p>Create a random TSid</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="estimateUncertaintyFromRange.html">estimateUncertaintyFromRange()</a></code> </p>
+        </td>
+        <td><p>Estimate uncertainty estimates from high/low range</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getVariableIndex.html">getVariableIndex()</a></code> </p>
+        </td>
+        <td><p>Get the index of variable list</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code> </p>
+        </td>
+        <td><p>Map an ageEnsemble variable from a chron model to a paleoMeasurement Table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pullTsVariable.html">pullTsVariable()</a></code> </p>
+        </td>
+        <td><p>pull variable out of TS object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="selectData.html">selectData()</a></code> </p>
         </td>
         <td><p>Select a LiPD "variable list"</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-utility-functions" class="hasAnchor"><a href="#section-utility-functions" class="anchor"></a>Utility functions</h3>
+          <p class="section-desc"><p>Functions useful for a variety of internal, and potentially external, applications</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="askUser.html">askUser()</a></code> </p>
+        </td>
+        <td><p>askUser</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="setBaconDir.html">setBaconDir()</a></code> </p>
+          <p><code><a href="concatEnsembleTimeseries.html">concatEnsembleTimeseries()</a></code> </p>
         </td>
-        <td><p>Set the name of bacon core directory</p></td>
+        <td><p>Concatenate two independent ensemble timeseries</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="simulateBam.html">simulateBam()</a></code> </p>
+          <p><code><a href="convertAD2BP.html">convertAD2BP()</a></code> </p>
         </td>
-        <td><p>Simulate a Banded Age Model (BAM)</p></td>
+        <td><p>Convert years Calendar year (AD/BC or CE) to BP (1950)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="storey.html">storey()</a></code> </p>
+          <p><code><a href="convertBP2AD.html">convertBP2AD()</a></code> </p>
         </td>
-        <td><p>Storey estimator</p></td>
+        <td><p>Convert years BP to Calendar year (AD/BC or CE)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="createChronMeasInputDf.html">createChronMeasInputDf()</a></code> </p>
+        </td>
+        <td><p>Create a data frame for chron measurement data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gaussianize.html">gaussianize()</a></code> </p>
+        </td>
+        <td><p>Gaussianize</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getLastVarString.html">getLastVarString()</a></code> </p>
+        </td>
+        <td><p>Get the last set of parameters you used in createChronMeasInputDf()</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getOs.html">getOs()</a></code> </p>
+        </td>
+        <td><p>What OS is this?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="heuristicUnits.html">heuristicUnits()</a></code> </p>
+        </td>
+        <td><p>Makes a guess about the units of a time vector based on the values</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="loadRemote.html">loadRemote()</a></code> </p>
+        </td>
+        <td><p>Load a remote RData file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pullInstance.html">pullInstance()</a></code> </p>
+        </td>
+        <td><p>Pull one instance from an ensemble</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="stringifyVariables.html">stringifyVariables()</a></code> </p>
         </td>
         <td><p>Convert var.names to strings</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summaryPlotTs.html">summaryPlotTs()</a></code> </p>
-        </td>
-        <td><p>TS overview plot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="writeBacon.html">writeBacon()</a></code> </p>
-        </td>
-        <td><p>Create the input file for a Bacon model from a LiPD object</p></td>
       </tr>
     </tbody>
     </table>
