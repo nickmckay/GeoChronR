@@ -26,6 +26,7 @@ Other plot help:
 
 Other spectra: 
 \code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{periodAnnotate}()},
 \code{\link{plotSpectrum}()}

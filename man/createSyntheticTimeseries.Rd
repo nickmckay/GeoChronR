@@ -28,6 +28,7 @@ create synthetic timeseries based on a timeseries. Useful for null hypothesis te
 \seealso{
 Other spectra: 
 \code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
 \code{\link{periodAnnotate}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}

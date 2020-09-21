@@ -187,7 +187,7 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #'VanderPlas, J. T.: Understanding the Lomb–Scargle Periodogram, The Astrophysical Journal Supplement Series, 236, 16, https://doi.org/10.3847/1538-4365/aab766, 2018.
 #'
 #'Mann, M. and Lees, J.: Robust Estimation of Background Noise and Signal Detection in Climatic Time Series, Clim. Change, 33, 409–445.
-#'#' @export
+#' @export
 #' @family spectra
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/spectral_analysis.html}{View a full-fledged example of how to use this function.}

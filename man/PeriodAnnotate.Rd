@@ -43,6 +43,7 @@ Other plot help:
 
 Other spectra: 
 \code{\link{ar1Surrogates}()},
+\code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{plotSpectrum}()},
 \code{\link{reverselog10_trans}()}
