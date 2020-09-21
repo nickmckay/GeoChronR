@@ -25,7 +25,6 @@ create synthetic timeseries based on a timeseries. Useful for null hypothesis te
 }
 \seealso{
 Other spectra: 
-\code{\link{computeSpectraEns}()},
 \code{\link{createSyntheticTimeseries}()},
 \code{\link{periodAnnotate}()},
 \code{\link{plotSpectrum}()},

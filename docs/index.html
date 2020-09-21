@@ -87,7 +87,14 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/nickmckay/GeoChronR/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -110,10 +117,12 @@
 <p>Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform.</p>
 <p>GeoChronR is currently under review as a discussion paper in Geochronology, <a href="https://doi.org/10.5194/gchron-2020-25">check it out here</a></p>
 </div>
-<div id="pre---installation" class="section level2">
+<div id="pre-installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#pre---installation" class="anchor"></a>Pre - Installation</h2>
-<p>Install the remotes package:</p>
+<a href="#pre-installation" class="anchor"></a>Pre-Installation</h2>
+<p>GeoChronR is a package for R, and so you’ll need R to run and install it. GeoChronR should work with any version newer than 3.5.0. You can download R for your operating system <a href="https://www.r-project.org/">here</a>.</p>
+<p>You’ll also need an interface to use R. Although many can work, I strongly recommend RStudio. You can download RStudio for your operating system <a href="https://rstudio.com/">here</a>.</p>
+<p>Once you have R and your interface up and running, you’ll need to install some packages. Most of this will be handled automatically, but to get started install the remotes package:</p>
 <pre><code><a href="https://rdrr.io/r/utils/install.packages.html"> install.packages("remotes")</a></code></pre>
 <p>In addition, the packages are not required, but may be useful, and will not install automatically through geoChronR so if you’re interested install lipdR and nuspectral from github:</p>
 <pre><code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("nickmckay/lipd-utilities",subdir = "R")
@@ -125,7 +134,7 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 <p>Install package in R Studio:</p>
 <pre><code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("nickmckay/geoChronR")</a></code></pre>
 <p>Load the package into the environment:</p>
-<pre><code>library(geoChronR)</code></pre>
+<pre><code><a href="https://github.com/nickmckay/GeoChronR">library(geoChronR)</a></code></pre>
 </div>
 <div id="how-to-cite-this-code" class="section level2">
 <h2 class="hasAnchor">
@@ -155,7 +164,16 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/nickmckay/GeoChronR/">https://​github.com/​nickmckay/​GeoChronR/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/nickmckay/GeoChronR/issues">https://​github.com/​nickmckay/​GeoChronR/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li>
@@ -165,7 +183,9 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Nick McKay <br><small class="roles"> Maintainer </small>  </li>
+<li>Nicholas McKay <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-3598-5113" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Julien Emile-Geay <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5920-4751" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Deborah Khider <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-7501-8430" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 
@@ -173,7 +193,7 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://doi.org/10.5194/gchron-2020-25"><img src="https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg" alt="DOI:10.5194/gchron-2020-25)"></a></li>
-<li><a href=""><img src="https://img.shields.io/badge/R-3.3.3-blue.svg" alt="R"></a></li>
+<li><a href=""><img src="https://img.shields.io/badge/R-3.5.0-blue.svg" alt="R"></a></li>
 <li><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></li>
 </ul>
 </div>
@@ -182,7 +202,7 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick McKay.</p>
+  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
 </div>
 
 <div class="pkgdown">
