@@ -92,7 +92,12 @@ if(hgroups == 0){
 countMat <- matrix(0,nrow = nrow(tfmat),ncol = hgroups)
 
 for(i in 1:hgroups){
-  countMat[,i] <- rowSums(tfmat[ ,ugv[i]==gv])
+  ind <- which(ugv[i]==gv)
+  if(length(ind)==1){
+    countMat[,i] <- sum(tfmat[ ,ind])
+  }else{
+    countMat[,i] <- rowSums(tfmat[ ,ind])
+  }
 }
 
 dcm <- data.frame(cbind(yvec,countMat))

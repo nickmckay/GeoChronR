@@ -1,3 +1,7 @@
+# geoChronR 1.0.2
+
+* Fixed a bug in `plotTimeAvailabililyTs()` where if `group.var` had a variable with a single instance it would fail. 
+
 # geoChronR 1.0.1
 
 * Added a `NEWS.md` file to track changes to the package.
