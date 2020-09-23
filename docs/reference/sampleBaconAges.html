@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -109,7 +109,7 @@
       <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">Ensemble PCA</a>
+      <a href="../articles/PCA.html">ensemble PCA</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">More examples</li>
@@ -129,7 +129,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/nickmckay/GeoChronR/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -144,7 +149,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Sample ensemble ages from Bacon</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/bacon.lipd.R'><code>R/bacon.lipd.R</code></a></small>
     <div class="hidden name"><code>sampleBaconAges.Rd</code></div>
     </div>
 
@@ -193,7 +198,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>ensTable</span> <span class='op'>=</span> <span class='fu'>sampleBaconAges</span>(<span class='st'>"MSB2K"</span>,max.ens = <span class='fl'>1000</span>)
-</div><div class='output co'>#&gt; <span class='error'>Error in setwd(corename): cannot change working directory</span></div><div class='input'>
+</div><div class='output co'>#&gt; please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory </div><div class='output co'>#&gt; <span class='error'>Error in setwd(corename): cannot change working directory</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -206,7 +211,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Nick McKay.</p>
+  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
 </div>
 
 <div class="pkgdown">
