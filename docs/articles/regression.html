@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -87,7 +87,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/nickmckay/GeoChronR/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -103,9 +110,9 @@
       <h1 data-toc-skip>Ensemble regression and calibration-in-time</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2020-09-17</h4>
+            <h4 class="date">2020-09-23</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/regression.Rmd"><code>vignettes/regression.Rmd</code></a></small>
       <div class="hidden name"><code>regression.Rmd</code></div>
 
     </div>
@@ -127,7 +134,7 @@
 <p>Let’s start by loading the packages we’ll need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">lipdR</span>) <span class="co">#to read and write LiPD files</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">geoChronR</span>) <span class="co">#of course</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>) <span class="co">#of course</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://readr.tidyverse.org">readr</a></span>) <span class="co">#to load in the instrumental data we need</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>) <span class="co">#for plotting</span>
 </pre></div>
@@ -331,7 +338,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick McKay.</p>
+  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
 </div>
 
 <div class="pkgdown">

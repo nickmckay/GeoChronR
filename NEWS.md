@@ -1,3 +1,8 @@
+## geoChronR 1.0.3
+
+* Added interoperability with "tidyTs" objects, that is, TS objects expressed as tidy (or nested) tibbles.
+* Fixed binding warning in `plotTimeAvailabililyTs()`
+
 ## geoChronR 1.0.2
 
 * Fixed a bug in `plotTimeAvailabililyTs()` where if `group.var` had a variable with a single instance it would fail. 

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -87,7 +87,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/nickmckay/GeoChronR/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -103,9 +110,9 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2020-09-17</h4>
+            <h4 class="date">2020-09-23</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/correlation.Rmd"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
 
     </div>
@@ -128,7 +135,7 @@
 <a href="#age-uncertain-correlation" class="anchor"></a>Age-uncertain correlation</h1>
 <p>This vignette picks up where the <a href="Introduction.html">introduction</a> leaves off, we’ve generated age ensembles for two datasets, and now want to explore the relationship between these two datasets. First we’ll load the packages we need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">geoChronR</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">gridExtra</span>)
 </pre></div>
@@ -160,9 +167,6 @@
 <p><code>corEns</code> returns a list that has the key correlation and significance results for all the selected methods. If percentiles are provided to corEns, and they are by default, the function will output a data.frame that summarizes the output.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">corout</span><span class="op">$</span><span class="kw">cor.stats</span>
-<span class="co">#&gt; Registered S3 method overwritten by 'cli':</span>
-<span class="co">#&gt;   method     from    </span>
-<span class="co">#&gt;   print.boxx spatstat</span>
 <span class="co">#&gt; # A tibble: 5 x 6</span>
 <span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span>
 <span class="co">#&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;</span>
@@ -273,7 +277,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Nick McKay.</p>
+  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
 </div>
 
 <div class="pkgdown">

@@ -13,25 +13,29 @@
 #' @export
 #' @family plot
 plotSummaryTs <- function(TS,sort.var = "archiveType", age.range = NA, age.var = "age", step = NA,... ){
-
-
-#make a map
-tsMap <- mapTs(TS,color = sort.var,...)
-
-#make a time availability plot
-ta <- plotTimeAvailabilityTs(TS,age.range = age.range, age.var = age.var, group.var = sort.var, step = step)+theme(legend.position = "none")
-
-#define the layout
-lay <- rbind(c(1,1,1),
-             c(1,1,1),
-             c(1,1,1),
-             c(2,2,2),
-             c(2,2,2))
-
-out <- gridExtra::grid.arrange(grobs = list(tsMap,ta),
-                        layout_matrix=lay)  
-
-return(out)
+  
+  #check to see if TS is a tibble
+  if(tibble::is_tibble(TS)){#convert back to TS
+    TS <- lipdR::untidyTs(TS)
+  }
+  
+  #make a map
+  tsMap <- mapTs(TS,color = sort.var,...)
+  
+  #make a time availability plot
+  ta <- plotTimeAvailabilityTs(TS,age.range = age.range, age.var = age.var, group.var = sort.var, step = step)+theme(legend.position = "none")
+  
+  #define the layout
+  lay <- rbind(c(1,1,1),
+               c(1,1,1),
+               c(1,1,1),
+               c(2,2,2),
+               c(2,2,2))
+  
+  out <- gridExtra::grid.arrange(grobs = list(tsMap,ta),
+                                 layout_matrix=lay)  
+  
+  return(out)
 }
 
 #' 
@@ -46,78 +50,82 @@ return(out)
 #' @return a ggplot object
 #' @export
 plotTimeAvailabilityTs <- function(TS,
-                                 age.range = NA,
-                                 age.var = "age",
-                                 group.var = "archiveType",
-                                 step = NA){ 
+                                   age.range = NA,
+                                   age.var = "age",
+                                   group.var = "archiveType",
+                                   step = NA){ 
   
-  
+  #check to see if TS is a tibble
+  if(tibble::is_tibble(TS)){#convert back to TS
+    TS <- lipdR::untidyTs(TS)
+  }
   #estimate age range
-if(is.na(age.range)){
-  age.range <- c(min(purrr::map_dbl(TS,function(x) min(x[[age.var]],na.rm = TRUE))),
-                max(purrr::map_dbl(TS,function(x) max(x[[age.var]],na.rm = TRUE))))
+  if(is.na(age.range)){
+    age.range <- c(min(purrr::map_dbl(TS,function(x) min(x[[age.var]],na.rm = TRUE))),
+                   max(purrr::map_dbl(TS,function(x) max(x[[age.var]],na.rm = TRUE))))
+    
+  }
   
-}
-
-#estimate step
-if(is.na(step)){
-step <- round(.005 * abs(diff(age.range)))
-}
-
-gv <- pullTsVariable(TS,group.var)
+  #estimate step
+  if(is.na(step)){
+    step <- round(.005 * abs(diff(age.range)))
+  }
+  
+  gv <- pullTsVariable(TS,group.var)
   
   gv[is.na(gv)] <- "missing metadata"
-ugv <- sort(unique(gv))
-
-
-y1 <- min(age.range)
-y2 <- max(age.range)
-
-yvec <- seq(floor(y1),
-            ceiling(y2),
-            by = step)
-
-tvf <- function(ts,age.var,yvec){
-  return(yvec >= min(ts[[age.var]],na.rm = T) & yvec <= max(ts[[age.var]],na.rm = T))
-}
-
-tfmat <- as.matrix(purrr::map_dfc(TS,tvf,age.var,yvec))
-
-hgroups <- length(ugv)
-
-if(hgroups == 0){
-  stop("no variables in group.var")
-}
-
-countMat <- matrix(0,nrow = nrow(tfmat),ncol = hgroups)
-
-for(i in 1:hgroups){
-  ind <- which(ugv[i]==gv)
-  if(length(ind)==1){
-    countMat[,i] <- sum(tfmat[ ,ind])
-  }else{
-    countMat[,i] <- rowSums(tfmat[ ,ind])
+  ugv <- sort(unique(gv))
+  
+  
+  y1 <- min(age.range)
+  y2 <- max(age.range)
+  
+  yvec <- seq(floor(y1),
+              ceiling(y2),
+              by = step)
+  
+  tvf <- function(ts,age.var,yvec){
+    return(yvec >= min(ts[[age.var]],na.rm = T) & yvec <= max(ts[[age.var]],na.rm = T))
   }
-}
-
-dcm <- data.frame(cbind(yvec,countMat))
-names(dcm) <- c("yvec",ugv)
-
-longCount <- tidyr::pivot_longer(dcm,-yvec,names_to = "group")
-
-densityPlot <- ggplot2::ggplot(longCount)+ggplot2::geom_area(ggplot2::aes(x = yvec,y = value, fill = group ))+
-  ggplot2::labs(fill = group.var)  +
-  ggplot2::ylab("count")+
-  geoChronRPlotTheme()+
-  ggtitle("Data availability")
-
-if(grepl("age",age.var,ignore.case = T)){
-  densityPlot <- densityPlot+scale_x_reverse(age.var)
-}else{
-  densityPlot <- densityPlot+scale_x_continuous(age.var)
-}
-
-return(densityPlot)
+  
+  names(TS) <- paste0("col",seq_along(TS))#get rid of name warning.
+  tfmat <- as.matrix(purrr::map_dfc(TS,tvf,age.var,yvec))
+  
+  hgroups <- length(ugv)
+  
+  if(hgroups == 0){
+    stop("no variables in group.var")
+  }
+  
+  countMat <- matrix(0,nrow = nrow(tfmat),ncol = hgroups)
+  
+  for(i in 1:hgroups){
+    ind <- which(ugv[i]==gv)
+    if(length(ind)==1){
+      countMat[,i] <- sum(tfmat[ ,ind])
+    }else{
+      countMat[,i] <- rowSums(tfmat[ ,ind])
+    }
+  }
+  
+  dcm <- data.frame(cbind(yvec,countMat))
+  names(dcm) <- c("yvec",ugv)
+  
+  longCount <- tidyr::pivot_longer(dcm,-yvec,names_to = "group")
+  
+  densityPlot <- ggplot2::ggplot(longCount)+ggplot2::geom_area(ggplot2::aes(x = yvec,y = value, fill = group ))+
+    ggplot2::labs(fill = group.var)  +
+    ggplot2::ylab("count")+
+    geoChronRPlotTheme()+
+    ggtitle("Data availability")
+  
+  if(grepl("age",age.var,ignore.case = T)){
+    densityPlot <- densityPlot+scale_x_reverse(age.var)
+  }else{
+    densityPlot <- densityPlot+scale_x_continuous(age.var)
+  }
+  
+  return(densityPlot)
 }
 
 #' @export
@@ -126,37 +134,54 @@ return(densityPlot)
 #' @title Map a TS object
 #' @author Nick McKay
 #' @description Create a stamen or line map of the location of a list of LiPD objects
-#'
+#' @importFrom tibble is_tibble
 #' @param TS A list of LiPD objects
-#' @param color variable by which to color
+#' @param color variable (in TS) by which to color, or a string specifying a static ggplot color
 #' @param size Size of the location marker
 #' @param lat.range Latitudes to use to create baseMap range (default = NA, which determines from TS)
 #' @param lon.range Longitudes to use to create baseMap range (default = NA, which determines from TS)
-#' @param shape Shape of the location marker
+#' @param shape variable (in TS) by which to adjust shape, or an integer specifying a static ggplot shape
 #'
 #' @inheritDotParams baseMap
 #' @return ggmap object
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/TsFilteringAndMapping.html}{View a full-fledged example of how to use this function.}
 mapTs <- function(TS,
-                    color = "archiveType",
-                    size=6,
-                    shape= 21,
-                    lat.range = NA,
-                    lon.range = NA,
-                    ...){
+                  color = "archiveType",
+                  size=6,
+                  shape= 21,
+                  lat.range = NA,
+                  lon.range = NA,
+                  ...){
   
+  
+  #check to see if TS is a tibble
+  if(tibble::is_tibble(TS)){#convert back to TS
+    TS <- lipdR::untidyTs(TS)
+  }
   
   lat <- pullTsVariable(TS,"geo_latitude")
   lon <- pullTsVariable(TS,"geo_longitude")
   
   #get the color variable if possible
-  cvar <- try(pullTsVariable(TS,color))
+  cvar <- try(pullTsVariable(TS,color),silent = TRUE)
   if(class(cvar) == "try-error"){
+    man.color = TRUE
     cvar <- color
+  }else{
+    man.color = FALSE
   }
   
-  dfp <- data.frame(lon = lon,lat = lat, color = cvar)
+  #get the color variable if possible
+  shapevar <- try(pullTsVariable(TS,shape),silent = TRUE)
+  if(class(shapevar) == "try-error"){
+    man.shape = TRUE
+    shapevar <- shape
+  }else{
+    man.shape = FALSE
+  }
+  
+  dfp <- dplyr::distinct(data.frame(lon = lon,lat = lat, color = cvar, shape = shapevar))
   
   #omit NAs
   dfp <- dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
@@ -181,10 +206,23 @@ mapTs <- function(TS,
   basemap <-  baseMap(lon = blon,lat = blat,...)
   
   #add the dots
-  map <-  basemap  + 
-    geom_point(data=dfp,aes(x=lon,y=lat, fill = color),color = "black",shape = shape,size=size) + 
-labs(fill = color)  
-
+  if(!man.color & man.shape){
+    map <-  basemap  + 
+      geom_point(data=dfp,aes(x=lon,y=lat, color = color),shape = shape,size = size) + 
+      labs(color = color)  
+  }else if(man.color & !man.shape){
+    map <-  basemap  + 
+      geom_point(data=dfp,aes(x=lon,y=lat, shape = shape),color = "black",fill = cvar,size = size) + 
+      labs(shape = shape)  
+  }else if(man.color & man.shape){
+    map <-  basemap  + 
+      geom_point(data=dfp,aes(x=lon,y=lat), shape = shapevar,color = "black",fill = cvar,size = size) 
+  }else if(!man.color & !man.shape){
+    map <-  basemap  + 
+      geom_point(data=dfp,aes(x=lon,y=lat, shape = shape,color = color),size = size) + 
+      labs(color = color,shape = shape) 
+  }
+  
   return(map)
 }
 
@@ -317,7 +355,7 @@ baseMap = function(lon,
   
   bbnew <- ggmap::make_bbox(lon,lat,f=f)
   
-
+  
   
   if(all(bbnew==bb)){
     lnp=TRUE
@@ -386,7 +424,7 @@ baseMap = function(lon,
       badLines = which(ant_ggplot$y <= min(y_lim) | ant_ggplot$y >= max(y_lim))
       
     }else{
-    badLines = which(ant_ggplot$x <= min(x_lim) | ant_ggplot$x >= max(x_lim) | ant_ggplot$y <= min(y_lim) | ant_ggplot$y >= max(y_lim))
+      badLines = which(ant_ggplot$x <= min(x_lim) | ant_ggplot$x >= max(x_lim) | ant_ggplot$y <= min(y_lim) | ant_ggplot$y >= max(y_lim))
     }
     ant_ggplot[badLines,]=NA
     
@@ -397,7 +435,7 @@ baseMap = function(lon,
     
     if(restrict.map.range){
       baseMap  = baseMap  +  geom_rect(aes(xmax=bb[3]-.1,xmin=bb[1]+.1,ymax=bb[4]-.1,ymin=bb[2]+.1),fill=NA, colour="black",data=bbdf)
-    
+      
     }else if(bound.circ){ #this is only for polar projections
       wbb=which(min(abs(bb[c(2,4)]))==abs(bb[c(2,4)]))
       wbb=c(2,4)[wbb]
@@ -422,6 +460,6 @@ baseMap = function(lon,
   }
   
   return(baseMap )
-
-
+  
+  
 }

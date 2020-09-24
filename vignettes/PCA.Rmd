@@ -1,10 +1,10 @@
 ---
-title: "ensemble PCA"
+title: "Ensemble PCA"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ensemble PCA}
+  %\VignetteIndexEntry{Ensemble PCA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,10 +14,16 @@ knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 
 ```
-
+# Table of contents
+  
+  1. [Introduction to GeoChronR](Introduction.html)
+  2. [Age-uncertain correlation](correlation.html)
+  3. [Age-uncertain regression and calibration-in-time](regression.html)
+  4. [Age-uncertain spectral analysis](spectral.html)
+  5. [**Age-uncertain PCA analysis**](pca.html)
 
   
-```{r, results = "hide", warning = FALSE, message= FALSE }
+```{r, results = 'hide', warning = FALSE, message= FALSE }
 library(lipdR)
 library(geoChronR)
 library(magrittr)
@@ -25,18 +31,16 @@ library(dplyr)
 library(purrr)
 ```
   
+# Age-Uncertain Principal Component Analysis
+  
 This vignette showcases the ability to perform principal component analysis (PCA, also known as empirical orthogonal function (EOF) analysis. Data are from the [Arctic 2k](https://www.nature.com/articles/sdata201426) compilation, which we load here:    
 
 ```{r}
-if(requireNamespace("lipdR")){
-FD <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
-}else{
-  FD <- loadRemote("http://lipdverse.org/geoChronR-examples/arc2k.RData") 
-}
+  FD <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
 ```
 
-##Make a map
-
+## Make a map
+First, let's take a quick look at where these records are located. GeoChronR's `mapLipd` function can create quick maps:
 
 ```{r,results="hide",fig.keep="all"}
 mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
@@ -45,9 +49,11 @@ mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
 More map projections are available too. A list is available here:
 `?mapproject`
 
-##Grab the age ensembles for each record. 
-We need to "map"" the age ensembles to paleo for all of these datasets. We'll use purrr::map for this, but you could also do it with sapply(). In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth variable because they're layer counted.
-```{r,results="hide"}
+## Prepare the data for PCA
+
+### Grab the age ensembles for each record. 
+Now we need to "map" (I know, a different kind of mapping) the age ensembles to paleo for all of these datasets. We'll use purrr::map for this, but you could also do it with sapply(). In this case we're going to specify that all of the age ensembles are named "ageEnsemble", and that they don't have a depth variable because they're layer counted.
+```{r,results="hide",message=FALSE}
 FD2 = purrr::map(FD,
                  mapAgeEnsembleToPaleoData,
                  strict.search = TRUE,
@@ -56,19 +62,25 @@ FD2 = purrr::map(FD,
 ```
 
 Now extract all the "timeseries" into at "TS object" that will facilitate working with multiple records.
+
 ```{r}
 TS <- extractTs(FD2)
 ```
 
-and filter the TS object to only include variables that have been interepreted as temperature:
+and filter the TS object to only include variables that have been interpreted as temperature. Here we'll use `lipdR::filterTs` to filter the TS object.
+
 ```{r,results="hide",fig.keep="all"}
 TS.filtered <- filterTs(TS,"interpretation1_variable == T")
 ```
 OK, let's make a quick plot stack to see what we're dealing with.
 
+The `lipdR::tidyTs` function will convert a TS into a long, "tidy" data.frame, where each observation has a row in a data.frame. This can be verbose, but is also useful for data analysis in the tidyverse framework. 
+
 ```{r,results="hide",fig.keep="all"}
-tidyDf <- tidyTs(TS.filtered,age.var = "year")
+tidyDf <- lipdR::tidyTs(TS.filtered,age.var = "year")
 ```
+
+A tidy data.frame is also the input for the `plotTimeseriesStack` function in GeoChronR.
 
 
 ```{r}
@@ -82,47 +94,44 @@ plotTimeseriesStack(tidyDf,
 ```
 
 
-
-
 Now bin all the data in the TS from 1400 to 2000, an interval of pretty good data coverage, into 5 year bins. 
+
 ```{r,results="hide",cache=TRUE}
-binned.TS = binTs(TS.filtered,bin.vec = seq(1400,2000,by=5),time.var = "ageEnsemble")
+binned.TS <- binTs(TS.filtered,bin.vec = seq(1400,2000,by=5),time.var = "ageEnsemble")
 ```
 
+We're now ready to calculate the PCA!
 
-and calculate PCA on each ensemble member:
+## Calculate the ensemble PCA
+
+Calculate PCA on each ensemble member:
 ```{r,results="hide",warning=FALSE}
-pcout = pcaEns(binned.TS)
+pcout <- pcaEns(binned.TS)
 ```
 
-OK! Let's plot the results. 
+That was easy (because of all the work we did beforehand). But before we look at the results let's take a look at a scree plot to get a sense of how many significant components we should expect. 
 
 ```{r}
-plotPCA = plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",bound.circ = T,restrict.map.range = T,f=.1,legend.position = c(0.5,.6),which.pcs = 1:2,which.leg = 2)
+plotScreeEns(pcout)
+```
+
+
+It looks like the first two components, shown in black with gray uncertainty shading, stand out above the null model (in red), but the third and beyond look marginal to insignficant. Let's focus on the first two components.
+
+### Plot the ensemble PCA results
+
+Now let's visualize the results. The `plotPcaEns` function will create multiple diagnostic figures of the results, and stitch them together. 
+
+```{r}
+plotPCA <-  plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "stereo",bound.circ = T,restrict.map.range = T,f=.1,legend.position = c(0.5,.6),which.pcs = 1:2,which.leg = 2)
 ```
 
 Nice! A summary plot that combines the major features is produced, but all of the components, are included in the "plotPCA" list that was exported. 
 
-Here's the first map
-```{r}
-plotPCA$maps[[1]]
-```
+## Ensemble PCA take two - using a covariance matrix.
+Let's repeat much of this analysis, but this time we're only going to analyze the $\delta^{18}O$ data, keep them in their native values, and use a covariance matrix in the PCA analysis. 
 
-The second timeseries
-```{r}
-plotPCA$lines[[2]]
-```
-
-A 
-
-```{r}
-plotPCA$sampleDepth
-```
-
-
-
-this time - grab only those that are d18O, and use a covariance matrix
-let's look at all the names in the TS
+First, it looks like let's look at all the names in the TS
 ```{r}
 var.names <- pullTsVariable(TS, "variableName")
 ```
@@ -138,30 +147,34 @@ and take a look at the unique variableNames in the TS
 unique(var.names)
 ```
 
-OK. Let's filter the timeseries again, this time pulling all the d18O data.
+OK. Let's filter the timeseries again, this time pulling all the $\delta^{18}O$ data.
 
 ```{r,results="hide"}
 d18OTS = filterTs(TS,"paleoData_variableName == d18O")
 ```
 
+And we'll tidy up the data for a plotStack
+
 ```{r,results="hide"}
-tidyd18O <- tidyTs(d18OTS)
+tidyd18O <- tidyTs(d18OTS,age.var = "year")
 
 ```
+
+Before plotting, let's do some tidyverse gymnastics to reorder the data by the length of the observations
 ```{r}
 #arrange the tidy dataframe by record length
-tidyd18O <- tidyd18O %>% 
-  group_by(paleoData_TSid) %>% 
-  mutate(range = max(year) - min(year)) %>% 
-  arrange(range)
+tidyd18O <- tidyd18O %>% #use the magrittr pipe for clarity
+  group_by(paleoData_TSid) %>% #group the data by column
+  mutate(duration = max(year) - min(year)) %>% #create a new column for the duration
+  arrange(duration) # and arrange the data by duration
 
 ```
 
-
+Again we'll use `plotTimeseriesStack` to show all the data, now nicely arranged.
 ```{r}
 plotTimeseriesStack(tidyd18O, 
-                    color.var = "paleoData_variableName", 
-                    color.ramp = c("DarkBlue"),
+                    color.var = "paleoData_variableName", # Color the data by the variable name (all the same in the case)
+                    color.ramp = "DarkBlue", #colors to use
                     line.size = .1, 
                     fill.alpha = .05,
                     lab.size = 2,
@@ -169,20 +182,35 @@ plotTimeseriesStack(tidyd18O,
                     lab.buff = 0.03)
 ```
 
-Now, we'll bin again.
+Well that sure is nice and tidy. Again, it looks like binning from 1400-2000 will give us good data coverage. 
+
 ```{r,results="hide"}
-binned.TS2 = binTs(d18OTS,bin.vec = seq(1400,2000,by=5),na.col.rm = T)
+binned.TS2 <- binTs(d18OTS,bin.vec = seq(1400,2000,by=5),na.col.rm = T)
 ```
 
-And calculate the ensemble PCA, this time using a covariance matrix
+And calculate the ensemble PCA, this time using a covariance matrix. By using a covariance, we'll allow records that have larger variability in $\delta^{18}O$ to influence the PCA more, and those that have little variability will have little impact. This may or may not be a good idea, but it's an important option to consider when possible. 
+
 ```{r,results="hide"}
-pcout2 = pcaEns(binned.TS2,pca.type = "cov")
+pcout2 <- pcaEns(binned.TS2,pca.type = "cov")
 ```
 
+Once again, let's take a look at the scree plot:
 
-```{r}
-plotPCA2 = plotPcaEns(pcout2,TS = d18OTS,map.type = "line",projection = "stereo",bound.circ = T,restrict.map.range = T,f=.2)
+```{r,fig.width = 4,fig.height = 4}
+plotScreeEns(pcout2)
+```
+```
+Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
+
+```{r,fig.width = 8,fig.height = 6}
+plotPCA2 <-  plotPcaEns(pcout2,
+                        TS = d18OTS,
+                        which.pcs = 1:3,  
+                        map.type = "line",
+                        projection = "stereo",
+                        bound.circ = T,
+                        restrict.map.range = T,
+                        f=.2)
 ```
 
-
-
+Using only the $\delta^{18}O$ data and a covariance matrix, we get somewhat different results. The first PC timeseries looks similar to the first one, but the spatial pattern is somewhat difference, with stronger loadings in the northeast. The second PC looks to be a new pattern, although the third resembles PC2 from the first analysis. 
