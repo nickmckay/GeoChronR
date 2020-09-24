@@ -1,3 +1,5 @@
+# geoChronR 1.0.3
+
 ## geoChronR 1.0.3
 
 * Added interoperability with "tidyTs" objects, that is, TS objects expressed as tidy (or nested) tibbles.
