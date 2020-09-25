@@ -2,7 +2,7 @@
 [![DOI:10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)](https://doi.org/10.5194/gchron-2020-25)
 [![R](https://img.shields.io/badge/R-3.5.0-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
+# geoChronR <img src='man/figures/logo.png' align="right" height="139" />
 
 ## What is it?
 

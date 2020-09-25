@@ -8,8 +8,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-#LiPD filtering and mappings
 
+```{r,echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
+knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
+```
+
+# LiPD filtering and mapping
 
 ```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR)
@@ -18,27 +23,34 @@ library(ggplot2)
 library(tidyverse)
 ```
 
+First let's load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset [Earth System Science Data](https://essd.copernicus.org/articles/12/2261/2020/).
 
-First let's load some data
+
 ```{r, results = 'hide', cache=TRUE}
 iso <- readLipd("http://lipdverse.org/iso2k/1_0_0/iso2k1_0_0.zip")
 ```
 
-To quickly map a bunch of LiPD files, use `mapLipd()`
+That was easy - note that readLipd() can take individual LiPD files (ending in .lpd), or zip files full of LiPD files, directly from the web. 
 
-```{r}
-mapLipd(iso, global = TRUE,size = 3) + ggtitle("iso2k")
+Now that the data are loaded, we can quickly map a bunch of LiPD files using `mapLipd()`.
+
+```{r,warning = FALSE,message = 'hide'}
+mapLipd(iso, global = TRUE,size = 3) + ggtitle("iso2k v1.0.0")
 ```
 
 Now we've seen an overview of all the files we've loaded, but now we'd like to filter the data.
 
-First, we'll extract a TS object, the primary way to work with multiple LiPD files. A TS is a list object that has an entry for each, column, and is readily queryable. 
+First, we'll extract a TS object, the primary way to work with multiple LiPD files. 
+A TS is a list object that has an entry for each, column, and is readily queryable. 
 
 ```{r}
 TS <- extractTs(iso)
 ```
 
-Now we'll filter it based on a range of criteria. For simple filtering, that include queries like `>` `<` or `==`, you can use `filterTs`
+
+If you're used to working in the [tidyverse](http://tidyverse.org) paradigm, check out this vignette, which shows an example of working with iso2k data in a tidy manner. 
+
+For this vignette, we'll keep the data as a list and show some examples this way. Now we'll filter it based on a range of criteria. For simple filtering, that include queries like `>` `<` or `==`, you can use `filterTs`
 
 ```{r}
 
@@ -47,7 +59,7 @@ iTS <- filterTs(TS, "paleoData_iso2kPrimaryTimeseries == TRUE")
 ```
 
 
-For more complex queries, however, it's often more efficient to pull vectors of the metadata that you'd like to query and build and index
+For more complex queries, however, you have a couple of options. it's often more efficient to pull vectors of the metadata that you'd like to query and build and index
 
 ```{r}
 lat <- pullTsVariable(iTS,"geo_latitude")
@@ -63,7 +75,7 @@ gTS <- iTS[index]
 
 OK, now we've filtered down to what we'd like to map. We can use `mapTs()` to map this. 
 
-```{r}
+```{r,warning = FALSE,message = 'hide'}
 mapTs(gTS)
 ```
 
@@ -75,14 +87,14 @@ You can change the mapping options by passing options to `basemap()` which creat
 
 You can also quickly make a plot of availability through time:
 
-```{r}
+```{r,warning = FALSE}
 plotTimeAvailabilityTs(gTS,age.range = c(1,2000),age.var = "year")
 ```
 
 
 Finally, if you just want a quick overview, `plotSummaryTs()` will quickly combine these two plots, but with fewer options
 
-```{r}
+```{r,warnings = FALSE,message = 'hide'}
 plotSummaryTs(gTS,age.var = "year", age.range = c(0,2000))
 ```
 

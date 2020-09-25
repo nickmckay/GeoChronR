@@ -60,14 +60,14 @@ plotTimeAvailabilityTs <- function(TS,
     TS <- lipdR::untidyTs(TS)
   }
   #estimate age range
-  if(is.na(age.range)){
+  if(any(is.na(age.range))){
     age.range <- c(min(purrr::map_dbl(TS,function(x) min(x[[age.var]],na.rm = TRUE))),
                    max(purrr::map_dbl(TS,function(x) max(x[[age.var]],na.rm = TRUE))))
     
   }
   
   #estimate step
-  if(is.na(step)){
+  if(all(is.na(step))){
     step <- round(.005 * abs(diff(age.range)))
   }
   
@@ -149,7 +149,7 @@ plotTimeAvailabilityTs <- function(TS,
 mapTs <- function(TS,
                   color = "archiveType",
                   size=6,
-                  shape= 21,
+                  shape= 16,
                   lat.range = NA,
                   lon.range = NA,
                   ...){
@@ -320,14 +320,19 @@ baseMap = function(lon,
                    projection="mollweide",
                    bound.circ=FALSE,
                    global=FALSE,
-                   extend.range=5,
+                   extend.range=1,
                    ...){
   
   #if there's only one location, extend the range. 
   if(length(lat)==1 & length(lon)==1){
+    extend.range <- extend.range*5
+    #extend the range more
     lon = lon + c(-extend.range,extend.range)
     lat = lat + c(-extend.range,extend.range)
   }
+  
+
+  
   
   #bound.circ and restrict.map.range can't both be true
   if(bound.circ & restrict.map.range){
@@ -397,12 +402,16 @@ baseMap = function(lon,
     low.lat <- min(lat)-5
     
     if(restrict.map.range){
-      x_lim = bb[c(1,3)]
-      y_lim = bb[c(2,4)]
-    }else{
+      x_lim = bb[c(1,3)] + c(-extend.range,extend.range)
+      y_lim = bb[c(2,4)] + c(-extend.range,extend.range)
+    }else if(global){
       x_lim = c(-190,190)
       y_lim = c(-91,91)
+    }else if(bound.circ){
+      x_lim = c(-190,190)
+      y_lim = bb[c(2,4)] + c(-extend.range,extend.range)
     }
+    
     
     x_cell_lim <- x_lim + c(1, -1) * res/2
     y_cell_lim <- y_lim + c(1, -1) * res/2
@@ -415,7 +424,11 @@ baseMap = function(lon,
       y_lim = c(-91,91)
       
     }else{
-      dum = maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE,...)
+      dum = try(maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE,...),silent = TRUE)
+      if(class(dum) == "try-error"){
+        stop("It looks like the region defined by your coordinates might be too small to draw with a line map.\n
+             You should either specify a larger region with `extend.range` or change the map type.")
+      }
     }
     
     #dum = map(xlim = x_cell_lim, ylim = y_cell_lim, plot = FALSE)
@@ -434,12 +447,13 @@ baseMap = function(lon,
     baseMap <- ggplot() +  geom_path(aes(x = x, y = y), data = ant_ggplot)
     
     if(restrict.map.range){
-      baseMap  = baseMap  +  geom_rect(aes(xmax=bb[3]-.1,xmin=bb[1]+.1,ymax=bb[4]-.1,ymin=bb[2]+.1),fill=NA, colour="black",data=bbdf)
+      baseMap  = baseMap  +  geom_rect(aes(xmax=x_lim[2]-.1,xmin=x_lim[1]+.1,ymax=y_lim[2]-.1,ymin=y_lim[1]+.1),fill=NA, colour="black",data=bbdf)
       
     }else if(bound.circ){ #this is only for polar projections
-      wbb=which(min(abs(bb[c(2,4)]))==abs(bb[c(2,4)]))
-      wbb=c(2,4)[wbb]
-      bound.circ = data.frame(x = seq(-180,180),y=rep(bb[wbb]+.1,length.out=length(seq(-180,180))))
+      wbb=which(min(abs(y_lim))==abs(y_lim))
+      my <- y_lim[wbb]
+      bound.circ = data.frame(x = seq(-180,180),
+                              y=rep(my+.1,length.out=length(seq(-180,180))))
       baseMap  = baseMap  + geom_path(aes(x = x, y = y), data = bound.circ)
     }
     

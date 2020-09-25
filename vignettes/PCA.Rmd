@@ -35,7 +35,7 @@ library(purrr)
   
 This vignette showcases the ability to perform principal component analysis (PCA, also known as empirical orthogonal function (EOF) analysis. Data are from the [Arctic 2k](https://www.nature.com/articles/sdata201426) compilation, which we load here:    
 
-```{r}
+```{r,cache=TRUE}
   FD <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip") 
 ```
 

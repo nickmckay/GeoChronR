@@ -53,7 +53,7 @@ Finally, there are two more key parameters, the `depth.interval` and the `events
 
 Optionally, you can set `events.per.unit.length.uncertainty` to a positive number to indicate a prior uncertainty estimate (in orders of magnitude) on `events.per.unit.length`. This will tell OxCal to treat `events.per.unit.length` as a variable and optimize it to fit the data. This often returns better results, especially in the absence of an informed prior on `events.per.unit.length`, but **greatly** increases the run time (expect a run to take multiple hours). 
 
-```{r,message=FALSE,warning=FALSE}
+```{r,message=FALSE,warning=FALSE,cache=TRUE}
 L <- runOxcal(L,
               lab.id.var = 'id', 
               age.14c.var = 'age14c', 
