@@ -17,8 +17,8 @@
    sodipodi:docname="logo.svg"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    inkscape:export-filename="/Users/nicholas/GitHub/geoChronR/logo.png"
-   inkscape:export-xdpi="74.260002"
-   inkscape:export-ydpi="74.260002">
+   inkscape:export-xdpi="74.150002"
+   inkscape:export-ydpi="74.150002">
   <metadata
      id="metadata90">
     <rdf:RDF>
@@ -44,11 +44,11 @@
      inkscape:window-height="860"
      id="namedview88"
      showgrid="false"
-     inkscape:zoom="1.5383625"
-     inkscape:cx="221.40396"
-     inkscape:cy="208.28847"
-     inkscape:window-x="115"
-     inkscape:window-y="823"
+     inkscape:zoom="1.6710601"
+     inkscape:cx="266.58481"
+     inkscape:cy="195.18022"
+     inkscape:window-x="16"
+     inkscape:window-y="711"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg86"
      fit-margin-top="0"
@@ -286,6 +286,16 @@
     }
   ]]></style>
   </defs>
+  <ellipse
+     style="opacity:1;fill:#feffff;fill-opacity:1;stroke:none;stroke-width:0.5161463;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+     id="path71257"
+     cx="200.77081"
+     cy="184.83705"
+     rx="166.32945"
+     ry="166.65915"
+     inkscape:export-filename="/Users/nicholas/GitHub/geoChronR/logo.png"
+     inkscape:export-xdpi="74.150002"
+     inkscape:export-ydpi="74.150002" />
   <g
      id="g52072"
      transform="rotate(-99.090007,200.63532,194.59582)">
@@ -14304,7 +14314,7 @@
      height="21.480026"
      x="-267.35791"
      y="-54.62719" />
-  <ellipse
+  <circle
      style="opacity:1;fill:#000000;fill-opacity:1;stroke:#7d7d7d;stroke-width:7.02053785;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
      id="path33598"
      cx="203.93753"
@@ -14333,13 +14343,30 @@
      ry="83.07235" />
   <path
      inkscape:connector-curvature="0"
-     style="opacity:0;fill:none;stroke:#7d7d7d;stroke-width:0.40000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-     d="M 94.436699,192.66493 A 109.58497,109.58497 0 0 1 200.13045,79.322253 109.58497,109.58497 0 0 1 313.47311,185.01601 109.58497,109.58497 0 0 1 207.77937,298.35868 109.58497,109.58497 0 0 1 94.436699,192.66493 Z"
+     style="opacity:1;fill:none;stroke:none;stroke-width:0.40000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+     d="M 313.53987,188.84047 A 109.58497,109.58497 0 0 1 203.9549,298.42544 109.58497,109.58497 0 0 1 94.369943,188.84047 109.58497,109.58497 0 0 1 203.9549,79.255497 109.58497,109.58497 0 0 1 313.53987,188.84047 Z"
      id="path2907" />
-  <text
-     xml:space="preserve"
-     style="font-style:normal;font-weight:normal;font-size:63.30065918px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.58251655"
-     id="text34809"><textPath
-       xlink:href="#path2907"
-       id="textPath58311">geoChronR</textPath></text>
+  <g
+     id="g68641"
+     transform="rotate(2.1526498,200.63368,105.84614)">
+    <path
+       style="fill:#1f65b7;fill-opacity:1;fill-rule:evenodd;stroke:#2369bd;stroke-width:0.10102016;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1"
+       id="path49212"
+       d="m 332.88391,165.17206 c 0,0 -0.2363,2.2905 -0.63043,3.67068 -0.13681,0.47889 -0.43199,1.31874 -0.90562,1.97476 -0.46387,0.64262 -0.98792,1.01329 -0.98792,1.01329 l -12.7405,11.30124 -2.66155,-13.78725 10.86633,-8.77986 c 0,0 2.01425,-1.75724 2.51554,-2.69635 0.41814,-0.78339 0.55781,-1.10997 0.42875,-1.78004 -0.0898,-0.46643 -0.63098,-3.27608 -0.63098,-3.27608 l -15.76917,3.04021 -2.35489,-12.20029 40.28274,-7.75849 4.71905,24.50167 c 0,0 1.94809,11.19843 -8.66928,13.24335 -10.61736,2.04491 -13.46149,-8.46656 -13.46149,-8.46656 z m 12.46627,-7.90491 -1.41774,-7.38747 -6.85031,1.31531 1.42533,7.38981 c 0,0 0.66973,3.42025 4.14343,2.75122 3.54352,-0.6825 2.69898,-4.06908 2.69898,-4.06908 z"
+       inkscape:connector-curvature="0" />
+    <text
+       y="-2.9974669e-06"
+       x="-6.7049241e-06"
+       id="text34809"
+       style="font-style:normal;font-weight:normal;font-size:63.30065918px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.58251655"
+       xml:space="preserve"><textPath
+         style="font-size:74.66666412px;letter-spacing:-5.27000046px"
+         id="textPath52102"
+         xlink:href="#path52080">geoChron</textPath></text>
+  </g>
+  <path
+     style="opacity:0.53399999;fill:none;fill-opacity:1;stroke:none;stroke-width:0.37649786;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+     d="M 89.248092,196.26568 A 114.90546,114.90546 0 0 1 197.43337,75.011964 114.90546,114.90546 0 0 1 318.68711,183.19724 114.90546,114.90546 0 0 1 210.50182,304.45098 114.90546,114.90546 0 0 1 89.248092,196.26568 Z"
+     id="path52080"
+     inkscape:connector-curvature="0" />
 </svg>

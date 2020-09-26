@@ -332,6 +332,20 @@ baseMap = function(lon,
   }
   
 
+  bbnew <- ggmap::make_bbox(lon,lat,f=f)
+  
+  #check to make sure no too big.
+  bbmax <- c(-179,-89,179,89)
+  bbdiff <- bbnew-bbmax
+  bbdiff[3:4] <- bbmax[3:4]-bbnew[3:4]
+  
+  
+  if(!global & any(bbdiff > 0)){
+    global <- TRUE
+    restrict.map.range <- FALSE
+    bound.circ <- FALSE
+    warning("Defined area too large for restrict.map.range = TRUE\n To force map restriction pass additional arguments to maps::map() in the function call. You probably want at least xlim, ylim, and wrap = TRUE")
+  }
   
   
   #bound.circ and restrict.map.range can't both be true
@@ -358,8 +372,7 @@ baseMap = function(lon,
     bb=1000
   }
   
-  bbnew <- ggmap::make_bbox(lon,lat,f=f)
-  
+
   
   
   if(all(bbnew==bb)){
@@ -426,8 +439,7 @@ baseMap = function(lon,
     }else{
       dum = try(maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE,...),silent = TRUE)
       if(class(dum) == "try-error"){
-        stop("It looks like the region defined by your coordinates might be too small to draw with a line map.\n
-             You should either specify a larger region with `extend.range` or change the map type.")
+        stop("It looks like the region defined by your coordinates might be too small to draw with a line map.\n You should either specify a larger region with `extend.range` or change the map type.")
       }
     }
     

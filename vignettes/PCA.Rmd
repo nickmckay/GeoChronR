@@ -190,7 +190,7 @@ binned.TS2 <- binTs(d18OTS,bin.vec = seq(1400,2000,by=5),na.col.rm = T)
 
 And calculate the ensemble PCA, this time using a covariance matrix. By using a covariance, we'll allow records that have larger variability in $\delta^{18}O$ to influence the PCA more, and those that have little variability will have little impact. This may or may not be a good idea, but it's an important option to consider when possible. 
 
-```{r,results="hide"}
+```{r,results="hide",warning = FALSE}
 pcout2 <- pcaEns(binned.TS2,pca.type = "cov")
 ```
 
