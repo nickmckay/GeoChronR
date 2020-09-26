@@ -82,12 +82,37 @@ articles:
 
 - title: More examples
   navbar: More examples
-  desc: Vignettes highlighting additional GeoChronR use cases
+  desc: Vignettes highlighting additional geoChronR use cases
   contents:
   - oxCal
   - PlotTimeseriesStack
   - TsFilteringAndMapping
   - tidyIso2k
 
-
-  
+navbar:
+  components:
+    articles:
+      text: Tutorials
+      menu:
+      - text: -------
+      - text: Getting Started With geoChronR
+      - text: Introduction to geoChronR
+        href: articles/Introduction.html
+      - text: Ensemble Correlation
+        href: articles/correlation.html
+      - text: Ensemble Regression
+        href: articles/regression.html
+      - text: Spectral Analysis
+        href: articles/spectral_analysis.html
+      - text: Ensemble Principal Components Analysis
+        href: articles/PCA.html
+      - text: -------
+      - text: Tutorials highlighting additional geoChronR use cases
+      - text: Introduction to oxCal in geoChronR
+        href: articles/oxCal.html
+      - text: Plot a stack of timeseries
+        href: articles/PlotTimeseriesStack.html
+      - text: Dataset filtering and mapping (with iso2k)
+        href: articles/TsFilteringAndMapping.html
+      - text: Tidy filtering and mapping (with tidyverse & iso2k)
+        href: articles/spectral_analysis.html
