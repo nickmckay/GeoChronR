@@ -15,7 +15,7 @@ knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
 
-  1. [Introduction to GeoChronR](Introduction.html)
+  1. [Introduction to geoChronR](Introduction.html)
   2. [Age-uncertain correlation](correlation.html)
   3. [**Age-uncertain regression and calibration-in-time**](regression.html)
   4. [Age-uncertain spectral analysis](spectral.html)
@@ -161,10 +161,10 @@ regout <- regressEns(time.x = kae,
 regPlots <- plotRegressEns(regout,alp = 0.01,font.size = 8)
 ```
 
-This result is consistent with that produced by Boldt et al., (2015), and was much simpler to produce with GeoChronR.
+This result is consistent with that produced by Boldt et al., (2015), and was much simpler to produce with geoChronR.
 
 
-In the next vignette learn about [spectral analysis in GeoChronR](spectral_analysis.html). 
+In the next vignette learn about [spectral analysis in geoChronR](spectral_analysis.html). 
 
 
 

@@ -58,7 +58,7 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-URL: https://github.com/nickmckay/GeoChronR
-BugReports: https://github.com/nickmckay/GeoChronR/issues
+URL: https://github.com/nickmckay/geoChronR
+BugReports: https://github.com/nickmckay/geoChronR/issues
 Remotes: 
     nickmckay/nuspectral

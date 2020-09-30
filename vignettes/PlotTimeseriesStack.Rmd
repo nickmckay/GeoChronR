@@ -16,7 +16,7 @@ knitr::opts_chunk$set(fig.width = 8,fig.height = 6)
 
 # Plotting a stack of proxy timeseries
 
-A stalwart of paleoclimate data visualization, for good or bad, is stacking a bunch of timeseries vertically to examine similarities and differences. Although comparing timeseries in this way can be problematic, it remains a space-efficient way to visualize many records. It is straightforward to create such a plot with LiPD data in GeoChronR.
+A stalwart of paleoclimate data visualization, for good or bad, is stacking a bunch of timeseries vertically to examine similarities and differences. Although comparing timeseries in this way can be problematic, it remains a space-efficient way to visualize many records. It is straightforward to create such a plot with LiPD data in geoChronR.
 
 Here we'll load in a handful of data from PAGES2k v2.1.0 database, and explore some of these options.
 

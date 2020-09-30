@@ -44,10 +44,16 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 
 <meta property="og:title" content="Changelog" />
-<meta property="og:image" content="/logo.svg" />
+<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg" />
 
 
 
@@ -130,7 +136,7 @@
       <a href="../articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
     </li>
     <li>
-      <a href="../articles/spectral_analysis.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
+      <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
   </ul>
 </li>
@@ -140,12 +146,18 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/GeoChronR/">
+  <a href="https://github.com/nickmckay/geoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -159,7 +171,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      <small>Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="geochronr-1-0-4" class="section level1">
@@ -202,7 +214,7 @@
 <h1 class="page-header" data-toc-text="1.0.0">
 <a href="#geochronr-1-0-0" class="anchor"></a>geoChronR 1.0.0</h1>
 <ul>
-<li>This release marks the submission of the manuscript describing GeoChronR to “Geochronology”, the manuscript, which is under discussion, <a href="https://doi.org/10.5194/gchron-2020-25">is available here</a>.</li>
+<li>This release marks the submission of the manuscript describing geoChronR to “Geochronology”, the manuscript, which is under discussion, <a href="https://doi.org/10.5194/gchron-2020-25">is available here</a>.</li>
 <li>Major changes to parameter names (terms within functions) were made for version 1.0.0, standardizing them all to lower case, period separated terminology. If you’ve been using geoChronR for awhile, this will almost certainly break some of your code, sorry.</li>
 </ul>
 </div>
@@ -230,6 +242,23 @@
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: 'apiKey',
+    indexName: 'lipd-utilities',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
 
   </body>

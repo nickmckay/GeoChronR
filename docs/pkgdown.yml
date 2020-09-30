@@ -11,5 +11,8 @@ articles:
   regression: regression.html
   spectral_analysis: spectral_analysis.html
   tidyIso2k: tidyIso2k.html
-last_built: 2020-09-26T18:33Z
+last_built: 2020-09-30T20:35Z
+urls:
+  reference: https://nickmckay.github.io/geoChronR/reference
+  article: https://nickmckay.github.io/geoChronR/articles
 

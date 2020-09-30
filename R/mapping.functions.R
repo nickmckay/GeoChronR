@@ -156,10 +156,27 @@ mapTs <- function(TS,
   
   
   #check to see if TS is a tibble
-  if(tibble::is_tibble(TS)){#convert back to TS
-    TS <- lipdR::untidyTs(TS)
-  }
+  if(tibble::is_tibble(TS)){#
+    lat <- TS$geo_latitude
+    lon <- TS$geo_longitude
+    
+    cvar <- TS[[color]]
+    if(is.null(cvar)){
+      man.color = TRUE
+      cvar <- color
+    }else{
+      man.color = FALSE
+    }
+    
+    shapevar <- TS[[shape]]
+    if(is.null(shapevar)){
+      man.shape = TRUE
+      shapevar <- shape
+    }else{
+      man.shape = FALSE
+    }
   
+  }else{
   lat <- pullTsVariable(TS,"geo_latitude")
   lon <- pullTsVariable(TS,"geo_longitude")
   
@@ -180,6 +197,8 @@ mapTs <- function(TS,
   }else{
     man.shape = FALSE
   }
+  
+}
   
   dfp <- dplyr::distinct(data.frame(lon = lon,lat = lat, color = cvar, shape = shapevar))
   
@@ -315,7 +334,7 @@ mapLipd <- function(D,
 baseMap = function(lon,
                    lat,
                    map.type="line",
-                   f=.1,
+                   f=0,
                    restrict.map.range=TRUE,
                    projection="mollweide",
                    bound.circ=FALSE,
@@ -340,10 +359,10 @@ baseMap = function(lon,
   bbdiff[3:4] <- bbmax[3:4]-bbnew[3:4]
   
   
-  if(!global & any(bbdiff > 0)){
+  if(!global & any(bbdiff < 0)){
     global <- TRUE
     restrict.map.range <- FALSE
-    bound.circ <- FALSE
+  #  bound.circ <- FALSE
     warning("Defined area too large for restrict.map.range = TRUE\n To force map restriction pass additional arguments to maps::map() in the function call. You probably want at least xlim, ylim, and wrap = TRUE")
   }
   

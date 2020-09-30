@@ -16,7 +16,7 @@ knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
 # Table of contents
   
-  1. [Introduction to GeoChronR](Introduction.html)
+  1. [Introduction to geoChronR](Introduction.html)
   2. [Age-uncertain correlation](correlation.html)
   3. [Age-uncertain regression and calibration-in-time](regression.html)
   4. [Age-uncertain spectral analysis](spectral.html)
@@ -40,7 +40,7 @@ This vignette showcases the ability to perform principal component analysis (PCA
 ```
 
 ## Make a map
-First, let's take a quick look at where these records are located. GeoChronR's `mapLipd` function can create quick maps:
+First, let's take a quick look at where these records are located. geoChronR's `mapLipd` function can create quick maps:
 
 ```{r,results="hide",fig.keep="all"}
 mapLipd(FD,map.type = "line",projection = "stereo",f = 0.1)
@@ -80,7 +80,7 @@ The `lipdR::tidyTs` function will convert a TS into a long, "tidy" data.frame, w
 tidyDf <- lipdR::tidyTs(TS.filtered,age.var = "year")
 ```
 
-A tidy data.frame is also the input for the `plotTimeseriesStack` function in GeoChronR.
+A tidy data.frame is also the input for the `plotTimeseriesStack` function in geoChronR.
 
 
 ```{r}

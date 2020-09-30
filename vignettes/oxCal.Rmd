@@ -1,5 +1,5 @@
 ---
-title: "Intro to OxCal in GeoChronR"
+title: "Intro to OxCal in geoChronR"
 author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -43,7 +43,7 @@ OK, let's get a LiPD file from the LinkedEarth Wiki:
 ```
 
 
-Now we can run it through oxcal. First, we specify our oxcal path, then use the `runOxcal` function. Like the other `run{AgeModel}` functions in GeoChronR, you can leave the parameters empty and specify the choicecs interactively, or you can specify everything for replicability. For choosing the variable names, if you did it interactively and would like to recall those choices, try the `getLastVarString` function.
+Now we can run it through oxcal. First, we specify our oxcal path, then use the `runOxcal` function. Like the other `run{AgeModel}` functions in geoChronR, you can leave the parameters empty and specify the choicecs interactively, or you can specify everything for replicability. For choosing the variable names, if you did it interactively and would like to recall those choices, try the `getLastVarString` function.
 
 Here, in addition to the variable choices, there are a few key parameters to note. First, we specify a "static" reservoir age and uncertainty. You can use this if you want to apply the same deltaR (and uncertainty) to all the ages. Alternatively, these can be columns in the chron measurement tables. 
 

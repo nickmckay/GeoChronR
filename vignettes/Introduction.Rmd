@@ -11,9 +11,9 @@ vignette: >
   
 # Welcome to geoChronR!
   
-  This is the introductory vignette that showcases the functionality of GeoChronR to solve real problems with age uncertain data. Here is a table of contents of the other guides included here:
+  This is the introductory vignette that showcases the functionality of geoChronR to solve real problems with age uncertain data. Here is a table of contents of the other guides included here:
   
-  1. [**Introduction to GeoChronR**](Introduction.html)
+  1. [**Introduction to geoChronR**](Introduction.html)
   2. [Age-uncertain correlation](correlation.html)
   3. [Age-uncertain regression and calibration-in-time](regression.html)
   4. [Age-uncertain spectral analysis](spectral.html)

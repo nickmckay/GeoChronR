@@ -44,11 +44,17 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 
 <meta property="og:title" content="Generate an oxcal Age Model and add it into a LiPD object — runOxcal" />
 <meta property="og:description" content="This is a high-level function that uses oxcal to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Bronk Ramsey et al. 2008 doi:10.1016/j.quascirev.2007.01.019" />
-<meta property="og:image" content="/logo.svg" />
+<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg" />
 
 
 
@@ -131,7 +137,7 @@
       <a href="../articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
     </li>
     <li>
-      <a href="../articles/spectral_analysis.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
+      <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
   </ul>
 </li>
@@ -141,12 +147,18 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/GeoChronR/">
+  <a href="https://github.com/nickmckay/geoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -160,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate an oxcal Age Model and add it into a LiPD object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/oxcal.R'><code>R/oxcal.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/oxcal.R'><code>R/oxcal.R</code></a></small>
     <div class="hidden name"><code>runOxcal.Rd</code></div>
     </div>
 
@@ -296,6 +308,23 @@
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: 'apiKey',
+    indexName: 'lipd-utilities',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
 
   </body>

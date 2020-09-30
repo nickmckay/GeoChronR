@@ -20,7 +20,7 @@ reference:
 
 - title: Ensemble Analysis
 - subtitle: Primary ensemble analysis functions
-  desc:  Primary functions used to run ensemble analysis in GeoChronR
+  desc:  Primary functions used to run ensemble analysis in geoChronR
 - contents:
   - corEns
   - regressEns
@@ -42,7 +42,7 @@ reference:
 
 - title: Visualization
 - subtitle: Plotting functions
-  desc: Primary functions to visualize data in GeoChronR
+  desc: Primary functions to visualize data in geoChronR
 - contents: 
   - starts_with("plot")
   
@@ -71,8 +71,8 @@ reference:
   - has_concept("utility")
 
 articles:
-- title: Getting Started With GeoChronR
-  navbar: Getting Started With GeoChronR
+- title: Getting Started With geoChronR
+  navbar: Getting Started With geoChronR
   contents:
   - Introduction
   - correlation
@@ -115,4 +115,12 @@ navbar:
       - text: Dataset filtering and mapping (with iso2k)
         href: articles/TsFilteringAndMapping.html
       - text: Tidy filtering and mapping (with tidyverse & iso2k)
-        href: articles/spectral_analysis.html
+        href: articles/tidyIso2k.html
+        
+template:
+  params:
+    docsearch: 
+      api_key: apiKey
+      index_name: lipd-utilities
+
+url: https://nickmckay.github.io/geoChronR

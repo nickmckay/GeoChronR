@@ -68,10 +68,11 @@ We can use `mapTs()` to map the data coverage represented in `iTS`.
 ```{r,warning = FALSE,fig.width=8,fig.height=6}
 tm <- mapTs(iTS,
       projection = "stereographic",#for polar projections
-      bound.circ = TRUE, # to put a circle around the bottom and avoid issues with restrict.map.range
+      global = FALSE,
       color = "archiveType", #color by the archiveType
       shape = "paleoData_inferredMaterialGroup", #shape by the inferredMaterialGroup
-      size = 4
+      size = 4,
+      bound.circ = TRUE
       )
 
 print(tm)

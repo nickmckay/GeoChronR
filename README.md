@@ -44,6 +44,12 @@ Load the package into the environment:
 library(geoChronR)
 ```
 
+## Getting started with geoChronR
+
+A great way to get started with geoChronR is to work through [some of the tutorials on the geoChronR documentation page](http://nickmckay.github.io/geoChronR). These are also provided as "vignettes" that come installed with geoChronR, which you can access by running `browseVignettes("geoChronR")`. These examples run through how to create an age model ensemble, perform ensemble correlation, regression, spectral and principal components analysis, and visualize the results. They also show off some of the tools we've built for efficiently working with and visualizing LiPD datasets. 
+
+Once you're ready to start applying these techniques to your new data, you'll need one more LiPD files. [Thousands of LiPD datasets are available at lipdverse.org](http://lipdverse.org) and the [World Data Service for Paleoclimatology](https://www.ncdc.noaa.gov/data-access/paleoclimatology-data). If you'd like to create your own dataset, the easiest way is using the [lipd.net/playground](http://lipd.net/playground). This can be a bit daunting at first, but check out the tutorial on the playground, and/or this [youtube tutorial](https://youtu.be/rHZ1oZXmF84) to get started.
+
 ## How to Cite this Code
 
 McKay, N. P., Emile-Geay, J., and Khider, D.: GeoChronR – an R package to model, analyze and visualize age-uncertain paleoscientific data, Geochronology Discuss., https://doi.org/10.5194/gchron-2020-25, in review, 2020.

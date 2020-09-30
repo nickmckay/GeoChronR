@@ -17,9 +17,11 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Spectral estimation with and without age uncertainties">
+<script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Spectral estimation with and without age uncertainties">
 <meta property="og:description" content="geoChronR">
-<meta property="og:image" content="/logo.svg">
+<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -89,7 +91,7 @@
       <a href="../articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
     </li>
     <li>
-      <a href="../articles/spectral_analysis.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
+      <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
   </ul>
 </li>
@@ -99,13 +101,19 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/GeoChronR/">
+  <a href="https://github.com/nickmckay/geoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
+      </form>
+      
+    </div>
 <!--/.nav-collapse -->
   </div>
 <!--/.container -->
@@ -120,9 +128,9 @@
       <h1 data-toc-skip>Spectral estimation with and without age uncertainties</h1>
                         <h4 class="author">Julien Emile-Geay</h4>
             
-            <h4 class="date">2020-09-26</h4>
+            <h4 class="date">2020-09-30</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/spectral_analysis.Rmd"><code>vignettes/spectral_analysis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/spectral_analysis.Rmd"><code>vignettes/spectral_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>spectral_analysis.Rmd</code></div>
 
     </div>
@@ -133,7 +141,7 @@
 <h1 class="hasAnchor">
 <a href="#table-of-contents" class="anchor"></a>Table of contents</h1>
 <ol style="list-style-type: decimal">
-<li><a href="Introduction.html">Introduction to GeoChronR</a></li>
+<li><a href="Introduction.html">Introduction to geoChronR</a></li>
 <li><a href="correlation.html">Age-uncertain correlation</a></li>
 <li><a href="regression.html">Age-uncertain regression and calibration-in-time</a></li>
 <li><a href="spectral.html"><strong>Age-uncertain spectral analysis</strong></a></li>
@@ -143,7 +151,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>In this notebook we demonstrate how to use the spectral analysis features of GeoChronR using the record of:</p>
+<p>In this notebook we demonstrate how to use the spectral analysis features of geoChronR using the record of:</p>
 <ul>
 <li>Mix, A. C., J. Le, and N. J. Shackleton (1995a), Benthic foraminiferal stable isotope stratigraphy from Site 846: 0–1.8 Ma, Proc. Ocean Drill. Program Sci. Results, 138, 839–847.</li>
 <li>Shackleton, N. J. (1995), New data on the evolution of Pliocene climate variability, in Paleoclimate and Evolution, With Emphasis on Human Origins, edited by E. S. Vrba et al., pp. 242-248, Yale Univ. Press, New Haven, CT.</li>
@@ -152,7 +160,7 @@
 <p>We first remotely load the data using the LiPD utilities. Depending on your connectivity, this may take a minute as the file is fairly large (2.6Mb).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">lipdR</span>) <span class="co"># to load the file</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>) <span class="co"># to analyze it</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/geoChronR">geoChronR</a></span>) <span class="co"># to analyze it</span>
 </pre></div>
 <pre><code>## Welcome to geoChronR version 1.0.4! 
 ##  Note that major changes to parameter names (terms within functions) were made for version 1.0.0
@@ -214,7 +222,7 @@
 <div id="lomb-scargle-periodogram" class="section level3">
 <h3 class="hasAnchor">
 <a href="#lomb-scargle-periodogram" class="anchor"></a>Lomb-Scargle periodogram</h3>
-<p>This is a very standard method implemented in many packages. For a review, see <a href="https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta">VanderPlas (2018)</a>. There are several ways to implement Lomb-Scargle. GeoChronR does this via the <a href="https://www.rdocumentation.org/packages/lomb">lomb</a> package.</p>
+<p>This is a very standard method implemented in many packages. For a review, see <a href="https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta">VanderPlas (2018)</a>. There are several ways to implement Lomb-Scargle. geoChronR does this via the <a href="https://www.rdocumentation.org/packages/lomb">lomb</a> package.</p>
 <p>To establish significance, we have a few choices. We re-use Stephen Meyer’s excellent <a href="https://www.rdocumentation.org/packages/astrochron">astrochron</a> package for this purpose, as it implements the methods described in <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307">Meyers, (2012)</a>. Several nulls could be chosen here, and we focus first on a power-law, characteristic of many paleoclimate records (e.g. <a href="https://www.pnas.org/content/116/18/8728.short">Zhu et al, 2019</a>).</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="kw">spec.ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/computeSpectraEns.html">computeSpectraEns</a></span>(<span class="kw">t</span>,<span class="kw">X</span>,method = <span class="st">'lomb-scargle'</span>)
@@ -257,7 +265,7 @@
 </pre></div>
 <p><img src="spectral_analysis_files/figure-html/lomb-scargle-1.png" width="768"></p>
 <p>It is clearly seen that the data contain significant energy (peaks) near, but not exactly at, the famed Milankovitch periodicities (100, 41, 23, and 19 kyr). These periodicities (particularly the eccentricity (100kyr) and obliquity (40kyr)) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of the Lomb-Scargle methods, which does not use any tapers and therefore displays high variance (in this context, spurious peaks). Other methods smooth out that noise.</p>
-<p><a href="https://boris.unibe.ch/id/eprint/38577">REDFIT</a> does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. GeoChronR uses its <a href="https://cran.r-project.org/web/packages/dplR/index.html">dplR</a> implementation, which differs slightly from the published algorithm (see <code><a href="https://rdrr.io/pkg/dplR/man/redfit.html">?dplR::redfit</a></code> for details).</p>
+<p><a href="https://boris.unibe.ch/id/eprint/38577">REDFIT</a> does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its <a href="https://cran.r-project.org/web/packages/dplR/index.html">dplR</a> implementation, which differs slightly from the published algorithm (see <code><a href="https://rdrr.io/pkg/dplR/man/redfit.html">?dplR::redfit</a></code> for details).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="kw">spec.redfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/computeSpectraEns.html">computeSpectraEns</a></span>(<span class="kw">t</span>,<span class="kw">X</span>,method = <span class="st">'redfit'</span>)
 <span class="kw">redfit.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="st">"freq"</span> = <span class="kw">spec.redfit</span><span class="op">$</span><span class="kw">freq</span>, <span class="st">"pwr"</span> = <span class="kw">spec.redfit</span><span class="op">$</span><span class="kw">power</span>)
@@ -364,15 +372,15 @@
 <span class="fu">show</span>(<span class="kw">p.mtmPL</span>)
 </pre></div>
 <p><img src="spectral_analysis_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
-<p>Sure enough, this gets rid of a few cycles, but many remain. A few regions of the spectrum poke above the 95% confidence limit, but one should not be so foolish as to identify every single periodicity in these ranges to be independent. This is related to the <a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">multiple hypothesis problem</a>. However, as pointed out by <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307">Meyers, (2012)</a>, even that misses the point: sedimentary processes (and many processes in other proxy archives) tend to smooth out the signal over the depth axis (hence, over time), making comparisons at neighboring frequencies highly dependent. One solution is to use predictions made by a physical model about the frequency and relative amplitude of astronomical cycles <a href="http://www.ajsonline.org/content/307/5/773">Meyers &amp; Sageman, 2007</a>. However this may not be applicable to all spectral detection problems. We thus refrain from implementing “cookie-cutter” solutions in GeoChronR, to force the user to think deeply about the null hypothesis and the most sensible way to test it.</p>
+<p>Sure enough, this gets rid of a few cycles, but many remain. A few regions of the spectrum poke above the 95% confidence limit, but one should not be so foolish as to identify every single periodicity in these ranges to be independent. This is related to the <a href="https://en.wikipedia.org/wiki/Multiple_comparisons_problem">multiple hypothesis problem</a>. However, as pointed out by <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307">Meyers, (2012)</a>, even that misses the point: sedimentary processes (and many processes in other proxy archives) tend to smooth out the signal over the depth axis (hence, over time), making comparisons at neighboring frequencies highly dependent. One solution is to use predictions made by a physical model about the frequency and relative amplitude of astronomical cycles <a href="http://www.ajsonline.org/content/307/5/773">Meyers &amp; Sageman, 2007</a>. However this may not be applicable to all spectral detection problems. We thus refrain from implementing “cookie-cutter” solutions in geoChronR, to force the user to think deeply about the null hypothesis and the most sensible way to test it.</p>
 </div>
 <div id="weighted-wavelet-z-transform-nuspectral" class="section level3">
 <h3 class="hasAnchor">
 <a href="#weighted-wavelet-z-transform-nuspectral" class="anchor"></a>Weighted Wavelet Z-transform (<em>nuspectral</em>)</h3>
 <p>An interpolation-free alternative to MTM is the Weighted Wavelet Z-transform of <a href="http://adsabs.harvard.edu/cgi-bin/bib_query?1996AJ....112.1709F">Foster, (1996)</a>. The idea of spectral analysis is to decompose the signal on an orthogonal basis of sines and cosines. Data gaps cause this basis to lose its orthogonality, creating energy leakage. WWZ mitigates this problem using an inverse approach. Because it is wavelet based, it does not rely on interpolation or detrending. WWZ was adapted by <a href="https://www.pnas.org/content/110/30/12213.short">Kirchner &amp; Neal (2013)</a>, who employed basis rotations to mitigate the numerical instability that occurs in pathological cases with the original algorithm. A paleoclimate example of its use is given in <a href="https://www.pnas.org/content/116/18/8728.short">Zhu et al (2019)</a>).</p>
 <p>The WWZ method has one adjustable parameter, a decay constant that balances the time resolution and frequency resolution of the wavelet analysis. The smaller this constant is, the sharper the peaks.</p>
-<p>We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the <em>nuspectral</em> method of <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> based on a similar idea. However, it is not equivalent to WWZ. The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. For now, it is incorporated into GeoChronR to encourage further development.</p>
-<p>First, you’ll need to make sure you have nuspectral installed, as it’s not yet automatically installed with GeoChronR</p>
+<p>We wanted to offer geoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the <em>nuspectral</em> method of <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> based on a similar idea. However, it is not equivalent to WWZ. The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. For now, it is incorporated into geoChronR to encourage further development.</p>
+<p>First, you’ll need to make sure you have nuspectral installed, as it’s not yet automatically installed with geoChronR</p>
 <div class="sourceCode" id="cb30"><pre class="downlit">
 <span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"nuspectral"</span>,quietly = <span class="fl">TRUE</span>)){<span class="co">#see if nuspectral is already installed</span>
   <span class="kw">remotes</span>::<span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"nickmckay/nuspectral"</span>) <span class="co">#install nuspectral if needed</span>
@@ -433,7 +441,7 @@
 <h2 class="hasAnchor">
 <a href="#time-uncertain-spectral-analysis" class="anchor"></a>Time-uncertain spectral analysis</h2>
 <p>Now let’s consider age uncertainties.</p>
-<p>The GeoChronR approach to quantifying and propagating those uncertainties is to leverage the power of ensembles. Here we will illustrate this with MTM. Let us repeat the previous analysis by looping over the 1,000 age realizations output by the tuning algorithm HMM-Match. That means computing 1000 spectra. We’ve already seen that <em>nuspectral</em> is too slow for an ensemble job, so let’s leave it out. Also, since REDFIT is a tapered version of Lomb-Scargle, and comes with more features, let’s focus here on comparing an REDFIT and MTM in ensemble mode.</p>
+<p>The geoChronR approach to quantifying and propagating those uncertainties is to leverage the power of ensembles. Here we will illustrate this with MTM. Let us repeat the previous analysis by looping over the 1,000 age realizations output by the tuning algorithm HMM-Match. That means computing 1000 spectra. We’ve already seen that <em>nuspectral</em> is too slow for an ensemble job, so let’s leave it out. Also, since REDFIT is a tapered version of Lomb-Scargle, and comes with more features, let’s focus here on comparing an REDFIT and MTM in ensemble mode.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit">
 <span class="kw">time</span> <span class="op">=</span> <span class="kw">age</span><span class="op">$</span><span class="kw">values</span>[<span class="kw">age.median</span> <span class="op">&lt;</span> <span class="fl">1000</span>,]  <span class="co"># age ensemble for ~ last 1 Ma</span>
 <span class="kw">values</span> <span class="op">=</span> <span class="kw">temp</span><span class="op">$</span><span class="kw">values</span>[<span class="kw">age.median</span> <span class="op">&lt;</span> <span class="fl">1000</span>]
@@ -565,7 +573,7 @@
 <span class="fu">show</span>(<span class="kw">p.mtm.ens</span>)
 </pre></div>
 <p><img src="spectral_analysis_files/figure-html/ensemble-mode%20MTM,%20plot-1.png" width="768"></p>
-<p>To this we can add the periods identified as significant owing to MTM’s harmonic ratio test. GeoChronR deals with it by computing at each frequency the fraction of ensemble members that exhbit a significant peak. One simple criterion for gauging the level of support for such peaks given age uncertainties is to pick out those periodicities that are identified as significant more than 50% of the time.</p>
+<p>To this we can add the periods identified as significant owing to MTM’s harmonic ratio test. geoChronR deals with it by computing at each frequency the fraction of ensemble members that exhbit a significant peak. One simple criterion for gauging the level of support for such peaks given age uncertainties is to pick out those periodicities that are identified as significant more than 50% of the time.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit">
 <span class="kw">per</span> <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="kw">cl.df</span><span class="op">$</span><span class="kw">freq</span>
 <span class="kw">sig_per</span> <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="kw">mtm.ens.spec</span><span class="op">$</span><span class="kw">sig.freq</span><span class="op">&gt;</span><span class="fl">0.5</span>)
@@ -710,7 +718,7 @@
 <a href="#conclusion" class="anchor"></a>Conclusion</h1>
 <p>There are several takeways from this example:</p>
 <ol style="list-style-type: decimal">
-<li>GeoChronR implements 4 different spectral methods, with different features and assumptions. This allows users to explore whether results obtained with one method are robust to these choices.<br>
+<li>geoChronR implements 4 different spectral methods, with different features and assumptions. This allows users to explore whether results obtained with one method are robust to these choices.<br>
 </li>
 <li>The methods are enabled for single age models, as well as age ensembles.</li>
 <li>The choice of null hypothesis is always highly consequential, and should be made with care.</li>
@@ -748,7 +756,20 @@
 </div>
 
   
-
-
-  </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
+  docsearch({
+    
+    
+    apiKey: 'apiKey',
+    indexName: 'lipd-utilities',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+</body>
 </html>

@@ -17,9 +17,11 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Tools to analyze and visualize time-uncertain geoscientific data">
+<script src="pkgdown.js"></script><!-- docsearch --><script src="docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
+<link href="docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Tools to analyze and visualize time-uncertain geoscientific data">
 <meta property="og:description" content="Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.">
-<meta property="og:image" content="/logo.svg">
+<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -89,7 +91,7 @@
       <a href="articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
     </li>
     <li>
-      <a href="articles/spectral_analysis.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
+      <a href="articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
   </ul>
 </li>
@@ -99,13 +101,19 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/GeoChronR/">
+  <a href="https://github.com/nickmckay/geoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
+<form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
+      </form>
+      
+    </div>
 <!--/.nav-collapse -->
   </div>
 <!--/.container -->
@@ -150,7 +158,13 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 <p>Install package in R Studio:</p>
 <pre><code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("nickmckay/geoChronR")</a></code></pre>
 <p>Load the package into the environment:</p>
-<pre><code><a href="https://github.com/nickmckay/GeoChronR">library(geoChronR)</a></code></pre>
+<pre><code><a href="https://github.com/nickmckay/geoChronR">library(geoChronR)</a></code></pre>
+</div>
+<div id="getting-started-with-geochronr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-started-with-geochronr" class="anchor"></a>Getting started with geoChronR</h2>
+<p>A great way to get started with geoChronR is to work through <a href="http://nickmckay.github.io/geoChronR">some of the tutorials on the geoChronR documentation page</a>. These are also provided as “vignettes” that come installed with geoChronR, which you can access by running <code><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes("geoChronR")</a></code>. These examples run through how to create an age model ensemble, perform ensemble correlation, regression, spectral and principal components analysis, and visualize the results. They also show off some of the tools we’ve built for efficiently working with and visualizing LiPD datasets.</p>
+<p>Once you’re ready to start applying these techniques to your new data, you’ll need one more LiPD files. <a href="http://lipdverse.org">Thousands of LiPD datasets are available at lipdverse.org</a> and the <a href="https://www.ncdc.noaa.gov/data-access/paleoclimatology-data">World Data Service for Paleoclimatology</a>. If you’d like to create your own dataset, the easiest way is using the <a href="http://lipd.net/playground">lipd.net/playground</a>. This can be a bit daunting at first, but check out the tutorial on the playground, and/or this <a href="https://youtu.be/rHZ1oZXmF84">youtube tutorial</a> to get started.</p>
 </div>
 <div id="how-to-cite-this-code" class="section level2">
 <h2 class="hasAnchor">
@@ -184,9 +198,9 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/nickmckay/GeoChronR/">https://​github.com/​nickmckay/​GeoChronR/​</a>
+<li>Browse source code at <br><a href="https://github.com/nickmckay/geoChronR/">https://​github.com/​nickmckay/​geoChronR/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/nickmckay/GeoChronR/issues">https://​github.com/​nickmckay/​GeoChronR/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/nickmckay/geoChronR/issues">https://​github.com/​nickmckay/​geoChronR/​issues</a>
 </li>
 </ul>
 </div>
@@ -230,7 +244,20 @@ remotes::install_github("nickmckay/nuspectral")</a></code></pre>
 </div>
 
   
-
-
-  </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
+  docsearch({
+    
+    
+    apiKey: 'apiKey',
+    indexName: 'lipd-utilities',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+</body>
 </html>
