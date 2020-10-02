@@ -601,6 +601,12 @@ bin = function(time,values,bin.vec,bin.fun = mean){
 #' @author Nick McKay
 #' @return A list of binned years and values.
 binTs = function(TS,time.var="ageEnsemble",bin.vec,bin.fun = mean,max.ens=1000,na.col.rm=TRUE){
+  
+  #check to see if TS is a tibble
+  if(tibble::is_tibble(TS)){#convert back to TS
+    TS <- lipdR::untidyTs(TS)
+  }
+  
   timeList = lapply(TS,"[[",time.var)
   valueList = lapply(TS,"[[","paleoData_values")
   
