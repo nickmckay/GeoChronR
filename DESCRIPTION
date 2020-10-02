@@ -1,19 +1,9 @@
 Package: geoChronR
 Type: Package
 Title: Tools to analyze and visualize time-uncertain geoscientific data
-Version: 1.0.4
+Version: 1.0.1
 Date: 2020-09-16
-Authors@R: c(
-    person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
-      comment = c(ORCID = "0000-0003-3598-5113")
-    ),
-    person("Julien", "Emile-Geay", role = c("aut"),
-      comment = c(ORCID = "0000-0001-5920-4751")
-    ),
-    person("Deborah", "Khider", role = "aut",
-        comment = c(ORCID = "0000-0001-7501-8430")
-    )
-  )
+Author: Nick McKay, Julien Emile-Geay, Deborah Khider, Chris Heiser
 Maintainer: Nick McKay <nick@nau.edu>
 Description: Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
 License: MIT License
@@ -51,14 +41,10 @@ Imports:
     glue,
     BiocManager,
     rEDM,
-    nuspectral (>= 1.0)
-Suggests: 
-    lipdR,
-    knitr,
+    inline
+Suggests: knitr,
     rmarkdown,
-    testthat
+    testthat,
+    lipdR,
+    nuspectral
 VignetteBuilder: knitr
-URL: https://github.com/nickmckay/geoChronR
-BugReports: https://github.com/nickmckay/geoChronR/issues
-Remotes: 
-    nickmckay/nuspectral

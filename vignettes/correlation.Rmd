@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 # Table of contents
   
-  1. [Introduction to geoChronR](Introduction.html)
+  1. [Introduction to GeoChronR](Introduction.html)
   2. [**Age-uncertain correlation**](correlation.html)
   3. [Age-uncertain regression and calibration-in-time](regression.html)
   4. [Age-uncertain spectral analysis](spectral.html)
@@ -46,7 +46,7 @@ loadRemote("http://lipdverse.org/geochronr-examples/introductionOutput.RData",us
 ## The corEns() function
 
 Let's take another look at the the two timeseries over the period of overlap.
-To calculate age uncertian correlation let use geoChronR's `corEns` function.
+To calculate age uncertian correlation let use GeoChronR's `corEns` function.
 Note that this approach is, in many ways, simplistic.
 Correlating the two age-uncertain datasets will characterize the relationship, but ignores ancillary evidence that may support a mechanistic relationship between two timeseries. 
 Still, it illustrates how age uncertainty can affect apparent alignment between two datasets, which is the purpose of this example.
@@ -98,7 +98,7 @@ OK, here we see the distribution of correlation coefficients, and their signific
 Note that we chose "significance.option = 'raw'", so in green we see the distribution of significant correlations as determined by a standard T-test, without any consideration of autocorrelation.
 In this case, we observe that `r round(100*sum(corout$cor.df$pRaw <= 0.05)/nrow(corout$cor.df),1)`% of the correlations are signficant. 
 Of course we know this is a very simplistic approach, and that with many paleoclimate datasets we must consider the impact of temporal autocorrelation, which can readily cause spurious correlations. 
-geoChronR addresses this point using three approaches, which are elaborated on in the [geoChronR manuscript](https://doi.org/10.5194/gchron-2020-25), and summarized here:
+GeoChronR addresses this point using three approaches, which are elaborated on in the [GeoChronR manuscript](https://doi.org/10.5194/gchron-2020-25), and summarized here:
 
 1. The simplest approach ("eff-n") is to adjust the test's sample size to reflect the reduction in degrees of freedom due to autocorrelation. 
 
@@ -147,7 +147,7 @@ plotCorEns(corout,
 
 Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we're sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only `r round(100*corout$cor.fdr.stats$pIsopersistentFDR,1)`% of the ensemble members are significant. 
 
-Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in geoChronR. For our final example we'll take a look at isospectral significance testing and account for FDR.
+Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in GeoChronR. For our final example we'll take a look at isospectral significance testing and account for FDR.
 
 
 ```{r,warning=FALSE,message=FALSE,fig.width=6, fig.height=4}
@@ -159,7 +159,7 @@ plotCorEns(corout,
 ```
 
 In the isospectral test, only a few of the ensembles members are significant, none of which remain upon adjusting for FDR. 
-This method makes the fewest assumptions as to the structure of the series, and its computational cost is moderate, and so it is the default in geoChronR.
+This method makes the fewest assumptions as to the structure of the series, and its computational cost is moderate, and so it is the default in GeoChronR.
 We also recommend including FDR adjustment to avoid test-multiplicitly corrections. 
 
 ## Judging the overall significance of an age-uncertain correlation
@@ -191,7 +191,7 @@ However, all of the correlations remain significant, even after accounting for a
 
 ## Conclusions
 
-So, to wrap up, generally, age uncertainties obscure relationships between records, while in rare cases creating the appearance of spurious correlations.  It is appropriate to think of the ensemble correlation results produced by geoChronR as a first-order estimate of the age-uncertain correlation characteristics between timeseries, rather than a binary answer to the question "Are these two datasets significantly correlated?".
+So, to wrap up, generally, age uncertainties obscure relationships between records, while in rare cases creating the appearance of spurious correlations.  It is appropriate to think of the ensemble correlation results produced by GeoChronR as a first-order estimate of the age-uncertain correlation characteristics between timeseries, rather than a binary answer to the question "Are these two datasets significantly correlated?".
 However, as a rule of thumb, if more than half of the ensemble correlation results are significant, it is reasonable to characterize that correlation as robust to age uncertainty. 
 
 Ready to move on to regression? Learn about ensemble regression and calibration in time in [the next vignette](regression.html) on a whole new use case. 

@@ -17,7 +17,7 @@ knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 
 # Table of contents
 
-  1. [Introduction to geoChronR](Introduction.html)
+  1. [Introduction to GeoChronR](Introduction.html)
   2. [Age-uncertain correlation](correlation.html)
   3. [Age-uncertain regression and calibration-in-time](regression.html)
   4. [**Age-uncertain spectral analysis**](spectral.html)
@@ -82,7 +82,7 @@ From this point there are two ways to proceed: 1) use methods that explictly dea
 In the first case, we could use the *Lomb-Scargle periodogram* or rather its version tailored for paleoclimate data, [REDFIT](https://www.nonlin-processes-geophys.net/16/43/2009/). In the second case, we can interpolate and use a method tailored to evenly-spaced data.
 
 ### Lomb-Scargle periodogram
-This is a very standard method implemented in many packages. For a review, see [VanderPlas (2018)](https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta). There are several ways to implement Lomb-Scargle. geoChronR does this via the [lomb](https://www.rdocumentation.org/packages/lomb) package.
+This is a very standard method implemented in many packages. For a review, see [VanderPlas (2018)](https://iopscience.iop.org/article/10.3847/1538-4365/aab766/meta). There are several ways to implement Lomb-Scargle. GeoChronR does this via the [lomb](https://www.rdocumentation.org/packages/lomb) package.
 
 To establish significance, we have a few choices. We re-use Stephen Meyer's excellent [astrochron](https://www.rdocumentation.org/packages/astrochron) package for this purpose, as it implements the methods described in [Meyers, (2012)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012PA002307).  Several nulls could be chosen here, and we focus first on a power-law, characteristic of many paleoclimate records (e.g. [Zhu et al, 2019](https://www.pnas.org/content/116/18/8728.short)).
 
@@ -117,7 +117,7 @@ show(p.ls)
 
 It is clearly seen that the data contain significant energy (peaks) near, but not exactly at, the famed Milankovitch periodicities (100, 41, 23, and 19 kyr).  These periodicities (particularly the eccentricity (100kyr) and obliquity (40kyr)) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of the Lomb-Scargle methods, which does not use any tapers and therefore displays high variance (in this context, spurious peaks). Other methods smooth out that noise.   
 
-[REDFIT](https://boris.unibe.ch/id/eprint/38577) does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its [dplR](https://cran.r-project.org/web/packages/dplR/index.html) implementation, which differs slightly from the published algorithm (see `?dplR::redfit` for details).
+[REDFIT](https://boris.unibe.ch/id/eprint/38577) does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. GeoChronR uses its [dplR](https://cran.r-project.org/web/packages/dplR/index.html) implementation, which differs slightly from the published algorithm (see `?dplR::redfit` for details).
 
 ```{r REDFIT, message=FALSE, results = 'hide', warning = FALSE}
 spec.redfit <- computeSpectraEns(t,X,method = 'redfit')
@@ -309,7 +309,7 @@ p.mtm.ens <- periodAnnotate(p.mtm.ens, periods = c(19,23,41,100), y.lims =c(0.01
 show(p.mtm.ens)
 ```
 
-To this we can add the periods identified as significant owing to MTM's harmonic ratio test. geoChronR deals with it by computing at each frequency the fraction of ensemble members that exhibit a significant peak. One simple criterion for gauging the level of support for such peaks given age uncertainties is to pick out those periodicities that are identified as significant more than 50% of the time. 
+To this we can add the periods identified as significant owing to MTM's harmonic ratio test. GeoChronR deals with it by computing at each frequency the fraction of ensemble members that exhbit a significant peak. One simple criterion for gauging the level of support for such peaks given age uncertainties is to pick out those periodicities that are identified as significant more than 50% of the time.
 
 ```{r, MTM ensemble, with significant frequencies, message=FALSE, results = 'hide', warning = FALSE}
 per = 1/cl.df$freq
@@ -355,7 +355,7 @@ The result is quite a bit smoother here, perhaps because of the choice of parame
 # Conclusion
 There are several takeaways from this example:
 
-1. geoChronR implements 4 different spectral methods, with different features and assumptions. This allows users to explore whether results obtained with one method are robust to these choices.  
+1. GeoChronR implements 4 different spectral methods, with different features and assumptions. This allows users to explore whether results obtained with one method are robust to these choices.  
 2. The methods are enabled for single age models, as well as age ensembles.
 3. The choice of null hypothesis is always highly consequential, and should be made with care.
 4. Hunting for astronomical (or other) frequencies in paleoclimate timeseries takes extreme care, and cannot be answered in one function call. In this particular example where the data are nearly evenly spaced, and interpolation has a negligible impact, the best choice is MTM for two reasons: (1) because it is optimal, in the sense that it minimizes spectral leakage, and (2) because the implementation used here (derived from *astrochron*) allows to flexibly apply different tests of significance. Not such luxury is afforded by the other methods at present.

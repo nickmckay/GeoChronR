@@ -8,13 +8,6 @@
 
 <title>Plot an ensemble dataset as a histogram — plotHistEns • geoChronR</title>
 
-<!-- favicons -->
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -44,17 +37,10 @@
 <script src="../pkgdown.js"></script>
 
 
-<!-- docsearch -->
-<script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
-<link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
-
 
 
 <meta property="og:title" content="Plot an ensemble dataset as a histogram — plotHistEns" />
 <meta property="og:description" content="Plots ensemble data as a histogram" />
-<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg" />
 
 
 
@@ -86,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -103,13 +89,13 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Tutorials
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li class="divider"></li>
-    <li class="dropdown-header">Getting Started With geoChronR</li>
+    <li class="dropdown-header">Getting Started With GeoChronR</li>
     <li>
       <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
@@ -117,27 +103,24 @@
       <a href="../articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
-      <a href="../articles/regression.html">Ensemble Regression</a>
+      <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
     </li>
     <li>
-      <a href="../articles/spectral_analysis.html">Spectral Analysis</a>
+      <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">Ensemble Principal Components Analysis</a>
+      <a href="../articles/PCA.html">Ensemble PCA</a>
     </li>
     <li class="divider"></li>
-    <li class="dropdown-header">Tutorials highlighting additional geoChronR use cases</li>
+    <li class="dropdown-header">More examples</li>
     <li>
-      <a href="../articles/oxCal.html">Introduction to oxCal in geoChronR</a>
+      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
     </li>
     <li>
-      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of timeseries</a>
+      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
     </li>
     <li>
-      <a href="../articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
-    </li>
-    <li>
-      <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
+      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
     </li>
   </ul>
 </li>
@@ -146,19 +129,8 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
-      
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
-        <div class="form-group">
-          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
-        </div>
-      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -172,7 +144,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot an ensemble dataset as a histogram</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/plotting.geoChronR.R'><code>R/plotting.geoChronR.R</code></a></small>
+    
     <div class="hidden name"><code>plotHistEns.Rd</code></div>
     </div>
 
@@ -270,7 +242,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
+  <p>Developed by Nick McKay.</p>
 </div>
 
 <div class="pkgdown">
@@ -281,23 +253,6 @@
    </div>
 
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
-<script>
-  docsearch({
-    
-    
-    apiKey: '21c1c99b27cf4a45be9f8db70183f6c7',
-    indexName: 'lipd-utilities',
-    inputSelector: 'input#search-input.form-control',
-    transformData: function(hits) {
-      return hits.map(function (hit) {
-        hit.url = updateHitURL(hit);
-        return hit;
-      });
-    }
-  });
-</script>
-
 
 
   </body>

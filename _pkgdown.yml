@@ -20,7 +20,7 @@ reference:
 
 - title: Ensemble Analysis
 - subtitle: Primary ensemble analysis functions
-  desc:  Primary functions used to run ensemble analysis in geoChronR
+  desc:  Primary functions used to run ensemble analysis in GeoChronR
 - contents:
   - corEns
   - regressEns
@@ -42,7 +42,7 @@ reference:
 
 - title: Visualization
 - subtitle: Plotting functions
-  desc: Primary functions to visualize data in geoChronR
+  desc: Primary functions to visualize data in GeoChronR
 - contents: 
   - starts_with("plot")
   
@@ -71,8 +71,8 @@ reference:
   - has_concept("utility")
 
 articles:
-- title: Getting Started With geoChronR
-  navbar: Getting Started With geoChronR
+- title: Getting Started With GeoChronR
+  navbar: Getting Started With GeoChronR
   contents:
   - Introduction
   - correlation
@@ -82,45 +82,11 @@ articles:
 
 - title: More examples
   navbar: More examples
-  desc: Vignettes highlighting additional geoChronR use cases
+  desc: Vignettes highlighting additional GeoChronR use cases
   contents:
   - oxCal
   - PlotTimeseriesStack
   - TsFilteringAndMapping
-  - tidyIso2k
 
-navbar:
-  components:
-    articles:
-      text: Tutorials
-      menu:
-      - text: -------
-      - text: Getting Started With geoChronR
-      - text: Introduction to geoChronR
-        href: articles/Introduction.html
-      - text: Ensemble Correlation
-        href: articles/correlation.html
-      - text: Ensemble Regression
-        href: articles/regression.html
-      - text: Spectral Analysis
-        href: articles/spectral_analysis.html
-      - text: Ensemble Principal Components Analysis
-        href: articles/PCA.html
-      - text: -------
-      - text: Tutorials highlighting additional geoChronR use cases
-      - text: Introduction to oxCal in geoChronR
-        href: articles/oxCal.html
-      - text: Plot a stack of timeseries
-        href: articles/PlotTimeseriesStack.html
-      - text: Dataset filtering and mapping (with iso2k)
-        href: articles/TsFilteringAndMapping.html
-      - text: Tidy filtering and mapping (with tidyverse & iso2k)
-        href: articles/tidyIso2k.html
-        
-template:
-  params:
-    docsearch: 
-      api_key: 21c1c99b27cf4a45be9f8db70183f6c7
-      index_name: lipd-utilities
 
-url: https://nickmckay.github.io/geoChronR
+  

@@ -144,7 +144,6 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' For REDFIT and MTM, only the 95% confidence limit is computed. The estimation thereof is as described in Mudelsee et al 2009 for a single ensemble member.
 #' For multiple ensemble members, the median of the ensemble of 95% CLs is taken.  
 #' For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted as confidence limits.
-#'
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param max.ens Maximum number of ensemble members to analyze
@@ -154,15 +153,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @param wgtrad radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)
 #' @param sigma decay parameter of the nuspectral::nuwaveletcoeff wavelets
 #' @param probs vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.
-#' @param method Method used to compute the spectra. Choose from: \itemize{
-#' \item 'mtm': The multi-taper method (MTM) of Thomson (1982), a mainstay of spectral analysis (Ghil et al. 2002) designed for evenly spaced timeseries. From the astrochron package.
-#' \item 'redfit': a version of the Lomb-Scargle periodogram tailored to paleoclimatic data (Mudelsee et al. 2009). From the dplR package.
-#' \item 'lomb-scargle': the Lomb-Scargle periodogram (VanderPlas et al. 2018), which uses an inverse approach to harmonic analysis in unevenly-spaced timeseries. From the lomb package.   
-#' \item 'nuspectral':The wavelet-based method of Mattias et al. (2004). This method is quite similar to the Weighted Wavelet Z-transform algorithm of Foster (1996), though it is prohibitively slow in this implementation. From the nuspectral package.
-#' }
-#' @param mtm_null Method to estimate null hypothesis if method = "mtm". Valid choices are 'AR(1)', 'power_law' (default), or 'ML96'
 #' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
-#'
+#' @param mtm_mull null hypothesis for the detectiion of significant peaks in `astrochron::mtm()`. Possible choices: AR(1), power_law, or ML96.
 #' @return a list of ensemble spectra results
 #' \itemize{
 #' \item freqs: vector of frequencies
@@ -173,20 +165,9 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @importFrom astrochron mtm mtmPL mtmML96
 #' @importFrom matrixStats rowMedians
 #' @importFrom lomb lsp
-#' @references 
-#' Ghil, M., Allen, R. M., Dettinger, M. D., Ide, K., Kondrashov, D., Mann, M. E., Robertson, A., Saunders, A., Tian, Y., Varadi, F., and Yiou, P.: Advanced spectral methods for climatic time series, Rev. Geophys., 40, 1003–1052, 2002.
-#' 
-#' Foster, G.: Wavelets for period analysis of unevenly sampled time series, Astron. Jour., 112, 1709, https://doi.org/10.1086/118137, 1996.
-#' 
-#' Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
-#'
-#'Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
-#'
-#'Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
-#'
-#'VanderPlas, J. T.: Understanding the Lomb–Scargle Periodogram, The Astrophysical Journal Supplement Series, 236, 16, https://doi.org/10.3847/1538-4365/aab766, 2018.
-#'
-#'Mann, M. and Lees, J.: Robust Estimation of Background Noise and Signal Detection in Climatic Time Series, Clim. Change, 33, 409–445.
+#' @references Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.
+#' @references Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.
+#' @references Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.
 #' @export
 #' @family spectra
 #' @section Long-form example:

@@ -1284,10 +1284,7 @@ plotPcaEns = function(ens.pc.out,
                       legend.position = c(0.5,0.5),
                       color){#now deprecated
   
-  #check to see if TS is a tibble
-  if(tibble::is_tibble(TS)){#convert back to TS
-    TS <- lipdR::untidyTs(TS)
-  }
+  
   #Deprecation check
   if(!missing(color)){
     stop("argument `color` is deprecated; please use `high.color` and `low.color` instead.")
