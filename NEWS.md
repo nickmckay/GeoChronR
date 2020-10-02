@@ -5,7 +5,7 @@
 # geoChronR 1.0.3
 
 * Added interoperability with "tidyTs" objects, that is, TS objects expressed as tidy (or nested) tibbles.
-* Fixed binding warning in `plotTimeAvailabililyTs()`
+* Fixed binding warning in `plotTimeAvailabilityTs()`
 * Fixed bug in `mapTs()` when the regions were really small
 
 # geoChronR 1.0.2

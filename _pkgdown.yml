@@ -120,7 +120,7 @@ navbar:
 template:
   params:
     docsearch: 
-      api_key: apiKey
+      api_key: 21c1c99b27cf4a45be9f8db70183f6c7
       index_name: lipd-utilities
 
 url: https://nickmckay.github.io/geoChronR
