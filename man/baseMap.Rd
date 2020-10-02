@@ -8,12 +8,12 @@ baseMap(
   lon,
   lat,
   map.type = "line",
-  f = 0.1,
+  f = 0,
   restrict.map.range = TRUE,
   projection = "mollweide",
   bound.circ = FALSE,
   global = FALSE,
-  extend.range = 5,
+  extend.range = 1,
   ...
 )
 }

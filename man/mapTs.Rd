@@ -8,7 +8,7 @@ mapTs(
   TS,
   color = "archiveType",
   size = 6,
-  shape = 21,
+  shape = 16,
   lat.range = NA,
   lon.range = NA,
   ...
@@ -17,11 +17,11 @@ mapTs(
 \arguments{
 \item{TS}{A list of LiPD objects}
 
-\item{color}{variable by which to color}
+\item{color}{variable (in TS) by which to color, or a string specifying a static ggplot color}
 
 \item{size}{Size of the location marker}
 
-\item{shape}{Shape of the location marker}
+\item{shape}{variable (in TS) by which to adjust shape, or an integer specifying a static ggplot shape}
 
 \item{lat.range}{Latitudes to use to create baseMap range (default = NA, which determines from TS)}
 
