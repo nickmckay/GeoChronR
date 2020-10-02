@@ -8,6 +8,13 @@
 
 <title>Calculate ensemble power spectra — computeSpectraEns • geoChronR</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -37,6 +44,12 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 
 <meta property="og:title" content="Calculate ensemble power spectra — computeSpectraEns" />
@@ -48,6 +61,7 @@ nuspectral (Mathias et al 2004)  (no confidence estimation)
 For REDFIT and MTM, only the 95
 For multiple ensemble members, the median of the ensemble of 95
 For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogate spectrum distribution extracted as confidence limits." />
+<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg" />
 
 
 
@@ -79,7 +93,7 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -96,13 +110,13 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li class="divider"></li>
-    <li class="dropdown-header">Getting Started With GeoChronR</li>
+    <li class="dropdown-header">Getting Started With geoChronR</li>
     <li>
       <a href="../articles/Introduction.html">Introduction to geoChronR</a>
     </li>
@@ -110,24 +124,27 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
       <a href="../articles/correlation.html">Ensemble Correlation</a>
     </li>
     <li>
-      <a href="../articles/regression.html">Ensemble regression and calibration-in-time</a>
+      <a href="../articles/regression.html">Ensemble Regression</a>
     </li>
     <li>
-      <a href="../articles/spectral_analysis.html">Spectral estimation with and without age uncertainties</a>
+      <a href="../articles/spectral_analysis.html">Spectral Analysis</a>
     </li>
     <li>
-      <a href="../articles/PCA.html">Ensemble PCA</a>
+      <a href="../articles/PCA.html">Ensemble Principal Components Analysis</a>
     </li>
     <li class="divider"></li>
-    <li class="dropdown-header">More examples</li>
+    <li class="dropdown-header">Tutorials highlighting additional geoChronR use cases</li>
     <li>
-      <a href="../articles/oxCal.html">Intro to OxCal in GeoChronR</a>
+      <a href="../articles/oxCal.html">Introduction to oxCal in geoChronR</a>
     </li>
     <li>
-      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of proxy timeseries</a>
+      <a href="../articles/PlotTimeseriesStack.html">Plot a stack of timeseries</a>
     </li>
     <li>
-      <a href="../articles/TsFilteringAndMapping.html">Filtering, mapping and plotting LiPD objects</a>
+      <a href="../articles/TsFilteringAndMapping.html">Dataset filtering and mapping (with iso2k)</a>
+    </li>
+    <li>
+      <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
   </ul>
 </li>
@@ -136,8 +153,19 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/nickmckay/geoChronR/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
+      
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -151,7 +179,7 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate ensemble power spectra</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/power.spectra.ens.R'><code>R/power.spectra.ens.R</code></a></small>
     <div class="hidden name"><code>computeSpectraEns.Rd</code></div>
     </div>
 
@@ -197,6 +225,15 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
       <td><p>Maximum number of ensemble members to analyze</p></td>
     </tr>
     <tr>
+      <th>method</th>
+      <td><p>Method used to compute the spectra. Choose from:</p><ul>
+<li><p>'mtm': The multi-taper method (MTM) of Thomson (1982), a mainstay of spectral analysis (Ghil et al. 2002) designed for evenly spaced timeseries. From the astrochron package.</p></li>
+<li><p>'redfit': a version of the Lomb-Scargle periodogram tailored to paleoclimatic data (Mudelsee et al. 2009). From the dplR package.</p></li>
+<li><p>'lomb-scargle': the Lomb-Scargle periodogram (VanderPlas et al. 2018), which uses an inverse approach to harmonic analysis in unevenly-spaced timeseries. From the lomb package.</p></li>
+<li><p>'nuspectral':The wavelet-based method of Mattias et al. (2004). This method is quite similar to the Weighted Wavelet Z-transform algorithm of Foster (1996), though it is prohibitively slow in this implementation. From the nuspectral package.</p></li>
+</ul></td>
+    </tr>
+    <tr>
       <th>probs</th>
       <td><p>vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.</p></td>
     </tr>
@@ -225,8 +262,8 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
       <td><p>decay parameter of the nuspectral::nuwaveletcoeff wavelets</p></td>
     </tr>
     <tr>
-      <th>mtm_mull</th>
-      <td><p>null hypothesis for the detectiion of significant peaks in `astrochron::mtm()`. Possible choices: AR(1), power_law, or ML96.</p></td>
+      <th>mtm_null</th>
+      <td><p>Method to estimate null hypothesis if method = "mtm". Valid choices are 'AR(1)', 'power_law' (default), or 'ML96'</p></td>
     </tr>
     </table>
 
@@ -248,9 +285,13 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
 <p><a href='http://nickmckay.github.io/GeoChronR/articles/spectral_analysis.html'>View a full-fledged example of how to use this function.</a></p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.</p>
+    <p>Ghil, M., Allen, R. M., Dettinger, M. D., Ide, K., Kondrashov, D., Mann, M. E., Robertson, A., Saunders, A., Tian, Y., Varadi, F., and Yiou, P.: Advanced spectral methods for climatic time series, Rev. Geophys., 40, 1003–1052, 2002.</p>
+<p>Foster, G.: Wavelets for period analysis of unevenly sampled time series, Astron. Jour., 112, 1709, https://doi.org/10.1086/118137, 1996.</p>
+<p>Mudelsee, M., D. Scholz, R. Röthlisberger, D. Fleitmann, A. Mangini, and E. W. Wolff (2009), Climate spectrum estimation in the presence of timescale errors, Nonlinear Processes in Geophysics, 16(1), 43–56, doi:10.5194/npg-16-43-2009.</p>
 <p>Mathias, A., F. Grond, R. Guardans, D. Seese, M. Canela, and H. Diebner (2004), Algorithms for spectral analysis of irregularly sampled time series, Journal of Statistical Software, Articles, 11(2), 1–27, doi:10.18637/jss.v011.i02.</p>
 <p>Thomson, D. J. (1982), Spectrum estimation and harmonic analysis, Proc. IEEE, 70(9), 1055–1096.</p>
+<p>VanderPlas, J. T.: Understanding the Lomb–Scargle Periodogram, The Astrophysical Journal Supplement Series, 236, 16, https://doi.org/10.3847/1538-4365/aab766, 2018.</p>
+<p>Mann, M. and Lees, J.: Robust Estimation of Background Noise and Signal Detection in Climatic Time Series, Clim. Change, 33, 409–445.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other spectra: 
@@ -271,7 +312,7 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
 
       <footer>
       <div class="copyright">
-  <p>Developed by Nick McKay.</p>
+  <p>Developed by Nicholas McKay, Julien Emile-Geay, Deborah Khider.</p>
 </div>
 
 <div class="pkgdown">
@@ -282,6 +323,23 @@ For Lomb-Scargle, the parameter `probs` determines the quantiles of the surrogat
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '21c1c99b27cf4a45be9f8db70183f6c7',
+    indexName: 'lipd-utilities',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
 
   </body>

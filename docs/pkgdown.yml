@@ -10,5 +10,9 @@ articles:
   oxCal: oxCal.html
   regression: regression.html
   spectral_analysis: spectral_analysis.html
-last_built: 2020-09-17T15:23Z
+  tidyIso2k: tidyIso2k.html
+last_built: 2020-10-02T13:41Z
+urls:
+  reference: https://nickmckay.github.io/geoChronR/reference
+  article: https://nickmckay.github.io/geoChronR/articles
 
