@@ -1,4 +1,4 @@
-# [GeoChronR](https://nickmckay.github.io/GeoChronR/)
+# [geoChronR](https://nickmckay.github.io/GeoChronR/)
 [![DOI:10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)](https://doi.org/10.5194/gchron-2020-25)
 [![R](https://img.shields.io/badge/R-3.5.0-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,14 +6,14 @@
 
 ## What is it?
 
-Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). GeoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. 
+Quantifying age uncertainties is a critical component of paleoscience (paleoclimatology, paleoecology, paleontology). geoChronR is an integrated framework that allows scientists to generate state-of-the-art age models for their records, create time-uncertain ensembles of their data, analyze those ensembles with a number of commonly-used techniques, and visualize their results in an intuitive way. The code is being developed in the open-source and community-supported R platform. 
 
-GeoChronR is currently under review as a discussion paper in Geochronology, [check it out here](https://doi.org/10.5194/gchron-2020-25)
+geoChronR is currently under review as a discussion paper in Geochronology, [check it out here](https://doi.org/10.5194/gchron-2020-25)
 
 
 ## Pre-Installation
 
-GeoChronR is a package for R, and so you'll need R to run and install it. GeoChronR should work with any version newer than 3.5.0. You can download R for your operating system [here](https://www.r-project.org/).
+geoChronR is a package for R, and so you'll need R to run and install it. geoChronR should work with any version newer than 3.5.0. You can download R for your operating system [here](https://www.r-project.org/).
 
 You'll also need an interface to use R. Although many can work, I strongly recommend RStudio. You can download RStudio for your operating system [here](https://rstudio.com/).
 
