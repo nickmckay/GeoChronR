@@ -1,3 +1,5 @@
+# geoChronR (development version)
+
 # geoChronR 1.0.4
 
 * Better automatic detection for mapping ranges in `baseMap()`
