@@ -669,7 +669,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
 #' @author Nick McKay
 #' @title Plot an ensemble timeseries as ribbons of probabilities
 #' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
-#' @import ggplot2
+#' @import ggplot2 tibble
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
 #' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
@@ -683,7 +683,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
 #' @param y.bin vector of bin edges over which to bin.
 #' @param alp alpha (transparency) parameter for the ribbons
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
-#' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
+#' @param export.quantiles If TRUE, return the plotted quantiles rather than the plot
 #' @inheritDotParams quantile2d
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
@@ -745,7 +745,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
     # }
     ###END DEPRECATED - old method.
     
-    probMatList = quantile2d(X,
+    probMatList <- quantile2d(X,
                              Y,
                              n.bins = n.bins,
                              x.bin = x.bin,
@@ -753,12 +753,15 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
                              ...)
     
     if(export.quantiles){
-      return(probMatList)
+      probMat <- cbind(probMatList$x.bin,probMatList$quants)
+      colnames(probMat) <- c("ages",as.character(probs))
+      probMat <- tibble::as_tibble(probMat)
+      return(probMat)
     }
     
     
     
-    probMat = probMatList$quants
+    probMat  <-  probMatList$quants
     
     probMat=as.data.frame(probMat)
     
