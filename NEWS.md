@@ -1,5 +1,7 @@
 # geoChronR (development version)
 
+* Improve and document the `export.quantiles` option in `plotTimeseriesEnsRibbons`
+
 # geoChronR 1.0.4
 
 * Better automatic detection for mapping ranges in `baseMap()`
