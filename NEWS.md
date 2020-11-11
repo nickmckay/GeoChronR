@@ -1,4 +1,4 @@
-# geoChronR (development version)
+# geoChronR 1.0.5
 
 * Improve and document the `export.quantiles` option in `plotTimeseriesEnsRibbons`
 * Fix bug in `plotTimeAvailabilityTs()` when only one instance of the `group.var` [see issue 49](https://github.com/nickmckay/GeoChronR/issues/49)
