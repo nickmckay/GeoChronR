@@ -49,7 +49,7 @@ plotTimeseriesEnsRibbons(
 
 \item{line.width}{Width of the line}
 
-\item{export.quantiles}{If TRUE, teturn the plotted quantiles rather than the plot}
+\item{export.quantiles}{If TRUE, return the plotted quantiles rather than the plot}
 
 \item{...}{
   Arguments passed on to \code{\link[=quantile2d]{quantile2d}}

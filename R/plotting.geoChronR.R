@@ -669,7 +669,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
 #' @author Nick McKay
 #' @title Plot an ensemble timeseries as ribbons of probabilities
 #' @description Plot an ensemble timeseries as a set of bands of probability. Useful for displaying the full range of probability across ensemble members.
-#' @import ggplot2
+#' @import ggplot2 tibble
 #' @param X A LiPD variable list to plot, including values, units, names, and more
 #' @param Y A LiPD variable list to plot, including values, units, names, and more
 #' @param probs a vector of probabilities to plot as ribbons. It will create bands as ribbons of quantiles moving inward. If there's an odd number, it plots the middle quantile as a line. 
@@ -683,7 +683,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
 #' @param y.bin vector of bin edges over which to bin.
 #' @param alp alpha (transparency) parameter for the ribbons
 #' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
-#' @param export.quantiles If TRUE, teturn the plotted quantiles rather than the plot
+#' @param export.quantiles If TRUE, return the plotted quantiles rather than the plot
 #' @inheritDotParams quantile2d
 #' @return A ggplot object OR list of plotted quantiles, depending on export.quantiles
 plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
@@ -745,7 +745,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
     # }
     ###END DEPRECATED - old method.
     
-    probMatList = quantile2d(X,
+    probMatList <- quantile2d(X,
                              Y,
                              n.bins = n.bins,
                              x.bin = x.bin,
@@ -753,12 +753,15 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
                              ...)
     
     if(export.quantiles){
-      return(probMatList)
+      probMat <- cbind(probMatList$x.bin,probMatList$quants)
+      colnames(probMat) <- c("ages",as.character(probs))
+      probMat <- tibble::as_tibble(probMat)
+      return(probMat)
     }
     
     
     
-    probMat = probMatList$quants
+    probMat  <-  probMatList$quants
     
     probMat=as.data.frame(probMat)
     
@@ -2070,22 +2073,27 @@ plotRegressEns = function(reg.ens,
 #' @import RColorBrewer
 #' @import grDevices
 #' @import scales
+#'
 #' @param plot.df A tidy data.frame, typically the output of tidyTs()
 #' @param time.var Which variable to put on the x-axis. Must be in plot.df. Typically "year", "age", or "depth"
 #' @param color.var Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.
+#' @param invert.var Which variable to use to invert the timeseries. This should point to a variable of "positive" and "negative" (searches on "neg"), or a vector of 1s and -1s. (default = NA, which flips nothing)
 #' @param fill.alpha Transparency of the shading
 #' @param scale.factor Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)
 #' @param scale.height Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)
 #' @param lab.buff Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)
 #' @param lab.size Font size for the ylabels
+#' @param line.size thickness of the line (default = 0.5)
+#' @param color.ramp Specify the colors to use in the plot arranged along color.var. (default = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")})
 #' @param lab.space Multiplier on lab.buff for the axis label separation from the y-scale
-#' @param color.fun A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))
+#'
 #' @return A ggplot object of the plot
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/PlotTimeseriesStack.html}{View a full-fledged example of how to use this function.} 
 plotTimeseriesStack <- function(plot.df,
                                 time.var = "year", 
                                 color.var = "paleoData_TSid", 
+                                invert.var = NA,
                                 fill.alpha = 0.2, 
                                 line.size = 0.5,
                                 scale.factor = 1/3,
@@ -2121,6 +2129,23 @@ plotTimeseriesStack <- function(plot.df,
     dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) %>%
     dplyr::filter(is.finite(scaled))
   
+  if(!is.na(invert.var)){# then make some negative
+    iv <- plot.df[[invert.var]]
+    if(is.character(iv)){
+      ivn <- matrix(1,nrow(plot.df))
+      ivn[grepl("neg",iv,ignore.case = TRUE)] <- -1
+      iv <- ivn
+    }
+    if(all(iv == 1 | iv == -1)){
+      plot.df$scaled <- plot.df$scaled*iv# flip as needed
+      plot.df$iv <- iv
+    }else{
+      stop("inverting the variables based on invert.var failed. Check help for details.")
+    }
+  }else{#then all positive
+    plot.df$iv <- 1
+  }
+  
   #arrange the data.frame by TSid factors
   plot.df$paleoData_TSid <- factor(plot.df$paleoData_TSid,levels = unique(plot.df$paleoData_TSid))
   
@@ -2134,15 +2159,17 @@ plotTimeseriesStack <- function(plot.df,
     dplyr::summarize(variableName = unique(paleoData_variableName),
                      units = unique(paleoData_units),
                      dataSetName = unique(dataSetName),
-                     archiveType = unique(archiveType),
+                     archiveType = unique(archiveType), 
+                     invert = mean(iv),
                      mean = mean(paleoData_values,na.rm = T),
                      sdhigh = sd(paleoData_values,na.rm = T)/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
                      sdlow = -sd(paleoData_values,na.rm = T)/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
                      color.var = unique(cv)) %>%
     dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
-    dplyr::mutate(axisMin = as.character(signif(sdlow,3))) %>%
-    dplyr::mutate(axisMax = as.character(signif(sdhigh,3)))
+    dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
+    dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
   
+
   colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
   
   axisStats <- axisStats[colOrder,]

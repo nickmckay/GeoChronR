@@ -128,6 +128,15 @@ plotPCA <-  plotPcaEns(pcout,TS = TS.filtered,map.type = "line",projection = "st
 
 Nice! A summary plot that combines the major features is produced, but all of the components, are included in the "plotPCA" list that was exported. 
 
+For comparison with other datasets it can be useful to export quantile timeseries shown in the figures. `plotTimeseriesEnsRibbons()` can optionally be used to export the data rather than plotting them. The following will export the PC1 timeseries:
+
+```{r}
+quantileData <- plotTimeseriesEnsRibbons(X = pcout$age,Y = pcout$PCs[,1,],export.quantiles = TRUE)
+
+print(quantileData)
+```
+
+
 ## Ensemble PCA take two - using a covariance matrix.
 Let's repeat much of this analysis, but this time we're only going to analyze the $\delta^{18}O$ data, keep them in their native values, and use a covariance matrix in the PCA analysis. 
 
@@ -202,7 +211,7 @@ plotScreeEns(pcout2)
 ```
 Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
 
-```{r,fig.width = 8,fig.height = 6}
+```{r,fig.width = 8,fig.height = 6,warning = FALSE}
 plotPCA2 <-  plotPcaEns(pcout2,
                         TS = d18OTS,
                         which.pcs = 1:3,  
