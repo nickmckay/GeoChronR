@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -184,6 +184,7 @@
   <span class='kw'>plot.df</span>,
   time.var = <span class='st'>"year"</span>,
   color.var = <span class='st'>"paleoData_TSid"</span>,
+  invert.var = <span class='fl'>NA</span>,
   fill.alpha = <span class='fl'>0.2</span>,
   line.size = <span class='fl'>0.5</span>,
   scale.factor = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>3</span>,
@@ -210,8 +211,16 @@
       <td><p>Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.</p></td>
     </tr>
     <tr>
+      <th>invert.var</th>
+      <td><p>Which variable to use to invert the timeseries. This should point to a variable of "positive" and "negative" (searches on "neg"), or a vector of 1s and -1s. (default = NA, which flips nothing)</p></td>
+    </tr>
+    <tr>
       <th>fill.alpha</th>
       <td><p>Transparency of the shading</p></td>
+    </tr>
+    <tr>
+      <th>line.size</th>
+      <td><p>thickness of the line (default = 0.5)</p></td>
     </tr>
     <tr>
       <th>scale.factor</th>
@@ -234,8 +243,8 @@
       <td><p>Multiplier on lab.buff for the axis label separation from the y-scale</p></td>
     </tr>
     <tr>
-      <th>color.fun</th>
-      <td><p>A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))</p></td>
+      <th>color.ramp</th>
+      <td><p>Specify the colors to use in the plot arranged along color.var. (default = function(nColors)RColorBrewer::brewer.pal(nColors,"Dark2"))</p></td>
     </tr>
     </table>
 
