@@ -2134,6 +2134,11 @@ plotTimeseriesStack <- function(plot.df,
     if(is.character(iv)){
       ivn <- matrix(1,nrow(plot.df))
       ivn[grepl("neg",iv,ignore.case = TRUE)] <- -1
+      ivn[grepl("-1",iv,ignore.case = TRUE)] <- -1
+      iv <- ivn
+    }else if(is.numeric(iv)){
+      ivn <- matrix(1,nrow(plot.df))
+      ivn[iv<0] <- -1
       iv <- ivn
     }
     if(all(iv == 1 | iv == -1)){
