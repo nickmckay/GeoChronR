@@ -8,6 +8,7 @@ plotTimeseriesStack(
   plot.df,
   time.var = "year",
   color.var = "paleoData_TSid",
+  invert.var = NA,
   fill.alpha = 0.2,
   line.size = 0.5,
   scale.factor = 1/3,
@@ -25,7 +26,11 @@ plotTimeseriesStack(
 
 \item{color.var}{Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.}
 
+\item{invert.var}{Which variable to use to invert the timeseries. This should point to a variable of "positive" and "negative" (searches on "neg"), or a vector of 1s and -1s. (default = NA, which flips nothing)}
+
 \item{fill.alpha}{Transparency of the shading}
+
+\item{line.size}{thickness of the line (default = 0.5)}
 
 \item{scale.factor}{Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)}
 
@@ -37,7 +42,7 @@ plotTimeseriesStack(
 
 \item{lab.space}{Multiplier on lab.buff for the axis label separation from the y-scale}
 
-\item{color.fun}{A function that defines what colorscale to use. If you want constant colors, you can just enter a string (e.g., "black"). (default = grDevices::colorRampPalette(RColorBrewer::brewer.pal(nColors,"Dark2")))}
+\item{color.ramp}{Specify the colors to use in the plot arranged along color.var. (default = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")})}
 }
 \value{
 A ggplot object of the plot

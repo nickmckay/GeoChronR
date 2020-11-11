@@ -29,7 +29,7 @@ plotScreeEns(pcaout, null.color = "red", null.significance = 0.05, ...)
     \item{\code{y.bin}}{vector of bin edges over which to bin.}
     \item{\code{alp}}{alpha (transparency) parameter for the ribbons}
     \item{\code{add.to.plot}}{A ggplot object to add this plot to. Default is ggplot() .}
-    \item{\code{export.quantiles}}{If TRUE, teturn the plotted quantiles rather than the plot}
+    \item{\code{export.quantiles}}{If TRUE, return the plotted quantiles rather than the plot}
   }}
 }
 \value{

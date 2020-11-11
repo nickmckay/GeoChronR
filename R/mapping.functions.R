@@ -102,7 +102,7 @@ plotTimeAvailabilityTs <- function(TS,
   for(i in 1:hgroups){
     ind <- which(ugv[i]==gv)
     if(length(ind)==1){
-      countMat[,i] <- sum(tfmat[ ,ind])
+      countMat[,i] <- as.numeric(tfmat[ ,ind])
     }else{
       countMat[,i] <- rowSums(tfmat[ ,ind])
     }

@@ -1,6 +1,8 @@
 # geoChronR (development version)
 
 * Improve and document the `export.quantiles` option in `plotTimeseriesEnsRibbons`
+* Fix bug in `plotTimeAvailabilityTs()` when only one instance of the `group.var` [see issue 49](https://github.com/nickmckay/GeoChronR/issues/49)
+* Added support for flipping timeseries vertically  in `plotTimeseriesStack` to match interpertations, based on TS metadata, specified in `invert.var`. Details in `?plotTimeseriesStack`. [See issue 30](https://github.com/nickmckay/GeoChronR/issues/30)
 
 # geoChronR 1.0.4
 

@@ -133,7 +133,7 @@ For comparison with other datasets it can be useful to export quantile timeserie
 ```{r}
 quantileData <- plotTimeseriesEnsRibbons(X = pcout$age,Y = pcout$PCs[,1,],export.quantiles = TRUE)
 
-head(quantileData$quants)
+print(quantileData)
 ```
 
 
@@ -211,7 +211,7 @@ plotScreeEns(pcout2)
 ```
 Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
 
-```{r,fig.width = 8,fig.height = 6}
+```{r,fig.width = 8,fig.height = 6,warning = FALSE}
 plotPCA2 <-  plotPcaEns(pcout2,
                         TS = d18OTS,
                         which.pcs = 1:3,  
