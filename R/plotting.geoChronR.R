@@ -2166,8 +2166,8 @@ plotTimeseriesStack <- function(plot.df,
                      sdlow = -sd(paleoData_values,na.rm = T)/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
                      color.var = unique(cv)) %>%
     dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
-    dplyr::mutate(axisMin = as.character(signif(sdlow,3) * invert)) %>%
-    dplyr::mutate(axisMax = as.character(signif(sdhigh,3) * invert))
+    dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
+    dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
   
 
   colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
