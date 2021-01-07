@@ -14,6 +14,7 @@ getBaconDir <- function(bacon.dir = NA){
     #check geoChronR env first
     if(!exists("bacon.dir",where = geoChronREnv)){
       cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
+      
       baconFile=file.choose()
       assign("bacon.dir",value = dirname(dirname(baconFile)),envir = geoChronREnv)
       bacon.dir=dirname(dirname(baconFile))
@@ -220,8 +221,13 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   if(getRversion()>=4){
     end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
   }else{
-    end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
+    if(packageVersion("rbacon") < '2.5.0'){
+      end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
+    }else{
+      end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
+    }
   }
+  
   start.depth=bacData$V11
   Dc=(end.depth-start.depth)/(K-1)
   depths=seq(start.depth,end.depth,by=Dc)
