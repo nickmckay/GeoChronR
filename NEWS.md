@@ -1,3 +1,7 @@
+# geoChronR 1.0.6
+
+* Fix sampleBaconAges() for case when R < 4.0, but rbacon >= 2.5.0, should still work for older versions. 
+
 # geoChronR 1.0.5
 
 * Improve and document the `export.quantiles` option in `plotTimeseriesEnsRibbons`
