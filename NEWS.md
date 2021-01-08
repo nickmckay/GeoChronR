@@ -1,6 +1,6 @@
 # geoChronR 1.0.6
 
-* Fix sampleBaconAges() for case when R < 4.0, but rbacon >= 2.5.0, should still work for older versions. 
+* Fixed sampleBaconAges() for handling different versions of R and rbacon.
 
 # geoChronR 1.0.5
 
