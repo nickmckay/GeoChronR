@@ -40,7 +40,7 @@ library(gridExtra)
 And the data we generated in the [introduction](Introduction.html).
 
 ```{r load data}
-loadRemote("http://lipdverse.org/geochronr-examples/introductionOutput.RData",useSavedNames = TRUE)
+loadRemote("https://lipdverse.org/geoChronR-examples/introductionOutput.RData",useSavedNames = TRUE)
 ```
 
 ## The corEns() function

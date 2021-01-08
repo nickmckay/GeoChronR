@@ -218,15 +218,28 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
       sline=sline+1
     }
   }
-  if(getRversion()>=4){
+  
+  
+  if(is.numeric(bacData$V12)){
+    end.depth <- bacData$V12
+  }else if(is.character(bacData$V12)){
     end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
-  }else{
-    if(packageVersion("rbacon") < '2.5.0'){
-      end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
-    }else{
-      end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
-    }
+  }else if(is.factor(bacData$V12)){
+    end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
   }
+  
+  #Old strategy. Updated 1/8/21 by NPM.
+  # if(getRversion()>=4){
+  #   end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
+  # }else{
+  #   if(packageVersion("rbacon") < '2.5.0'){
+  #     end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
+  #   }else{
+  #     end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
+  #   }
+  # }
+  # 
+  
   
   start.depth=bacData$V11
   Dc=(end.depth-start.depth)/(K-1)

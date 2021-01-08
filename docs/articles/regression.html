@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Ensemble regression and calibration-in-time</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2020-11-11</h4>
+            <h4 class="date">2021-01-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/regression.Rmd"><code>vignettes/regression.Rmd</code></a></small>
       <div class="hidden name"><code>regression.Rmd</code></div>
@@ -162,9 +162,9 @@
 <p>OK, we’ll begin by loading in the Kurupa Lake record from Boldt et al., 2015. <code>The system.file(...)</code> part of this pulls the example file from the package directory. You’d like just enter the path as a string for typical use.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"lipdR"</span>)){
-<span class="kw">K</span> <span class="op">&lt;-</span> <span class="kw">lipdR</span>::<span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span>(<span class="st">"http://lipdverse.org/geochronr-examples/Kurupa.Boldt.2015.lpd"</span>)
+<span class="kw">K</span> <span class="op">&lt;-</span> <span class="kw">lipdR</span>::<span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span>)
 }<span class="co">else</span>{
-<span class="kw">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span>(<span class="st">"http://lipdverse.org/geochronr-examples/Kurupa.Boldt.2015.Rdata"</span>)
+<span class="kw">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.RData"</span>)
 }
 </pre></div>
 <pre><code>## [1] "reading: Kurupa.Boldt.2015.lpd"</code></pre>
@@ -265,7 +265,7 @@
 <h2 class="hasAnchor">
 <a href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains" class="anchor"></a>Now load in the instrumental data we want to correlate and regress agains</h2>
 <div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="kw">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="kw">readr</span>::<span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span>(<span class="st">"http://lipdverse.org/geochronr-examples/KurupaInstrumental.csv"</span>)
+<span class="kw">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="kw">readr</span>::<span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/KurupaInstrumental.csv"</span>)
 </pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
