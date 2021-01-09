@@ -55,7 +55,8 @@ Imports:
     lipdR,
     spatstat,
     inline,
-    bindrcpp
+    bindrcpp,
+    devtools
 Suggests: 
     knitr,
     rmarkdown,

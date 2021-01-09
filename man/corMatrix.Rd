@@ -11,7 +11,8 @@ corMatrix(
   isospectral = TRUE,
   isopersistent = FALSE,
   p.ens = 100,
-  gaussianize = TRUE
+  gaussianize = TRUE,
+  cor.method = "pearson"
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ corMatrix(
 \item{p.ens}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
 
 \item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
+
+\item{cor.method}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)

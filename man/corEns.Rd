@@ -51,6 +51,7 @@ corEns(
     \item{\code{isopersistent}}{estimate significance using the isopersistence method (default = FALSE)}
     \item{\code{p.ens}}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
     \item{\code{gaussianize}}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
+    \item{\code{cor.method}}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"}
   }}
 
 \item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis}

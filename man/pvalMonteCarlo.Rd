@@ -4,7 +4,13 @@
 \alias{pvalMonteCarlo}
 \title{Correlations and their significance according to AR(1) benchmarks}
 \usage{
-pvalMonteCarlo(X, Y, n.sim = 100, method = "isospectral")
+pvalMonteCarlo(
+  X,
+  Y,
+  n.sim = 100,
+  method = "isospectral",
+  cor.method = "pearson"
+)
 }
 \arguments{
 \item{X}{a 1-column vector}
@@ -14,6 +20,8 @@ pvalMonteCarlo(X, Y, n.sim = 100, method = "isospectral")
 \item{n.sim}{number of simulations}
 
 \item{method}{the method applies. Possible choices are "isospectral" (default) and "isopersistent"}
+
+\item{cor.method}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"}
 }
 \value{
 output
