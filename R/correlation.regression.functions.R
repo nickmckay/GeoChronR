@@ -455,6 +455,7 @@ corEns = function(time.1,
   }
   bin2 = as.matrix(bin2[,good])
   
+  
   # apply mapping to standard Gaussian [optional]
   if(gaussianize==TRUE){
     bin1 = gaussianize(bin1)

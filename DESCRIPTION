@@ -56,7 +56,8 @@ Imports:
     spatstat,
     inline,
     bindrcpp,
-    devtools
+    devtools,
+    geosphere
 Suggests: 
     knitr,
     rmarkdown,
