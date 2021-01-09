@@ -15,7 +15,7 @@ Authors@R: c(
     )
   )
 Maintainer: Nick McKay <nick@nau.edu>
-Description: Time uncertain analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
+Description: Time uncertain chronology developement and analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
 License: MIT License
 LazyData: TRUE
 RoxygenNote: 7.1.1
