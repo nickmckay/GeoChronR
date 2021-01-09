@@ -16,13 +16,15 @@ ar1 = function(x){
 #' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
+#'
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
 #' @param n.sim number of simulations
+#' @param cor.method correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"
 #' @param method the method applies. Possible choices are "isospectral" (default) and "isopersistent"
 #' @return output
 #' @family correlation
-pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
+pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pearson"){
   if(is.matrix(X)){
     if(min(dim(X)) != 1){
       stop("the input to this function should be a vector, not a matrix")
@@ -42,7 +44,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
     stop("X and Y must be the same length")
   }  
   
-  rhoXY = cor(X,Y,use="pairwise.complete.obs")
+  rhoXY = cor(X,Y,use="pairwise.complete.obs",method = cor.method)
   
   if(grepl(method,pattern = "persis",ignore.case = T)){
     tdum = 1:nx  # dummy time axis
@@ -68,8 +70,8 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral"){
   }
   
 
-  cor.mat1 = cor(X,Y.surr,use="pairwise.complete.obs") # X vs Y-like noise
-  cor.mat2 = cor(Y,X.surr,use="pairwise.complete.obs") # Y vs X-like noise
+  cor.mat1 = cor(X,Y.surr,use="pairwise.complete.obs",method = cor.method) # X vs Y-like noise
+  cor.mat2 = cor(Y,X.surr,use="pairwise.complete.obs",method = cor.method) # Y vs X-like noise
   cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
@@ -137,6 +139,7 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
 #' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
 #' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
+#' @param cor.method correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
@@ -145,7 +148,8 @@ corMatrix = function(ens.1,
                      isospectral = TRUE, 
                      isopersistent = FALSE,
                      p.ens = 100,
-                     gaussianize = TRUE
+                     gaussianize = TRUE,
+                     cor.method = "pearson"
                      ){
 
   ens.1=as.matrix(ens.1)
@@ -170,18 +174,18 @@ corMatrix = function(ens.1,
       #test for singularity
       effN = try(effectiveN(ens.1[,i],ens.2[,j]),silent = TRUE)
       if(is.numeric(effN)){
-        r[j+ncol(ens.2)*(i-1)] <- cor(ens.1[,i],ens.2[,j],use="pairwise",method = "pearson")
+        r[j+ncol(ens.2)*(i-1)] <- cor(ens.1[,i],ens.2[,j],use="pairwise",method = cor.method)
         #calculate raw
         p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
         #calculate adjust p-value (Bretherton 1999)
         pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         #calculate isopersist
         if(isopersistent){
-          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent")
+          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent",cor.method = cor.method)
         }
         #calculate isospectral
         if(isospectral){
-        pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral")
+        pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral",cor.method = cor.method)
         }
         
 

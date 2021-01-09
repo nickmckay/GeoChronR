@@ -15,7 +15,8 @@ vignette: >
 library(lipdR)
 library(geoChronR)
 library(ggplot2)
-library(tidyverse)
+library(magrittr)
+library(dplyr)
 ```
 
 This vignette highlights how to filter, plot and map a library of LiPD data, but this time using the tidyverse framework. [As before](TsFilteringAndMapping.html) first let's load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset [Earth System Science Data](https://essd.copernicus.org/articles/12/2261/2020/).

@@ -53,7 +53,9 @@ Imports:
     rEDM,
     nuspectral (>= 1.0),
     lipdR,
-    spatstat
+    spatstat,
+    inline,
+    bindrcpp
 Suggests: 
     knitr,
     rmarkdown,

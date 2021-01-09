@@ -20,7 +20,7 @@ knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 library(lipdR)
 library(geoChronR)
 library(ggplot2)
-library(tidyverse)
+library(magrittr)
 ```
 
 First let's load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset [Earth System Science Data](https://essd.copernicus.org/articles/12/2261/2020/).
