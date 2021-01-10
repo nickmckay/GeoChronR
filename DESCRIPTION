@@ -58,7 +58,10 @@ Imports:
     bindrcpp,
     devtools,
     geosphere,
-    proto
+    proto,
+    crayon,
+    tidyr,
+    magrittr
 Suggests: 
     knitr,
     rmarkdown,
