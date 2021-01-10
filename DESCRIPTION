@@ -57,7 +57,8 @@ Imports:
     inline,
     bindrcpp,
     devtools,
-    geosphere
+    geosphere,
+    proto
 Suggests: 
     knitr,
     rmarkdown,
