@@ -35,11 +35,7 @@ library(ggplot2)
 In this case, we're going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. If you have the lipdR package, you can load a LiPD file directly from your computer, use `L <- readLipd()` to interactively select a file (or a directory), or enter the path to file or the directory that you want: `L <- readLipd("~/Downloads/my.lpd")`
 
 ```{r}
-if(requireNamespace("lipdR")){
   hulu <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd")
-}else{
-  hulu <- loadRemote("http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.RData")
-}
 ```
 
 Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don't have that for this record. For this example we're going to use the original U/Th dates to create a new a model using BChron.
@@ -133,11 +129,7 @@ print(hulu.ts.plot)
 Let's compare these data to the GISP2 ice core.
 
 ```{r, message=FALSE}
-if(requireNamespace("lipdR")){
   gisp2 <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd")
-}else{
-  gisp2 <- loadRemote("http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.RData")
-}
 ```
 
 

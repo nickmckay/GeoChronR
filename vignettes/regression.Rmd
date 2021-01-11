@@ -40,11 +40,7 @@ library(ggplot2) #for plotting
 ## Load the LiPD file
 OK, we'll begin by loading in the Kurupa Lake record from Boldt et al., 2015. `The system.file(...)` part of this pulls the example file from the package directory. You'd like just enter the path as a string for typical use.
 ```{r}
-if(requireNamespace("lipdR")){
 K <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
-}else{
-K <- loadRemote("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.RData")
-}
 ```
 
 ## Check out the contents

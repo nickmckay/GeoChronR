@@ -221,56 +221,6 @@ The WWZ method has one adjustable parameter, a decay constant that balances the 
 
 We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the *nuspectral* method of [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) based on a similar idea. However, it is not equivalent to WWZ. The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. [Mathias et al (2004)](https://www.jstatsoft.org/article/view/v011i02) also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. For now, it is incorporated into GeoChronR to encourage further development.
 
-First, you'll need to make sure you have nuspectral installed, as it's not yet automatically installed with GeoChronR
-```{r, message=FALSE, results = 'hide', warning = FALSE}
-if(!requireNamespace("nuspectral",quietly = TRUE)){#see if nuspectral is already installed
-  remotes::install_github("nickmckay/nuspectral") #install nuspectral if needed
-}
-```
-
-
-Let us see how it performs in on IODP846.
-
-```{r nuspectral estimation, message=FALSE, results = 'hide', warning = FALSE}
-requireNamespace("nuspectral", quietly = TRUE)
-nt = length(t)
-tau = seq(min(t),max(t),length = max(nt %/% 2,5))
-nuspec <-  nuspectral:::nuwavelet_psd(t,X,sigma=0.01,taus = tau)
-nf <- length(nuspec$Frequency)
-nus.df <- data.frame("freq" = nuspec$Frequency, "pwr" = nuspec$Power)
-
-# power law fit
-plaw.fit = astrochron::pwrLawFit(nus.df, dof = 2, flow = 0.001, fhigh = 0.1, output = 1, genplot = F)
-cl.df <- data.frame(plaw.fit[,union(1,c(5:7))]) # extract confidence limits
-# rename columns to be less silly
-names(cl.df)[1] <- "freq"
-names(cl.df)[2] <- "90% CL"
-names(cl.df)[3] <- "95% CL"
-names(cl.df)[4] <- "99% CL"
-```
-
-Compared to the previous methods, which were essentially instantaneous on this dataset, this took a few seconds. Keep that in mind for large ensembles, because if you start adding up 1000's of seconds, pretty soon you're waiting for an hour.
-
-As before, we leverage *astrochron*'s capabilities to fit a power-law to the spectrum. The power law comes out with a slope around 1, as before.
-
-```{r nuspectral plotting, message=FALSE, results = 'hide', warning = FALSE}
-p.nus <- plotSpectrum(nus.df,cl.df,
-                      x.lim=c(10,1000),
-                      x.ticks = pticks,
-                      y.lims = c(0.1,300),
-                      color.line='orange',
-                      color.cl='white') +
-  ggtitle("IODP 846 d18O, nuspectral periodogram") +
-  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
-
-# label periodicities of interest
-p.nus <- periodAnnotate(p.nus, periods = c(19,23,41,100),y.lims = c(0.1,100))
-show(p.nus)
-```
-
-Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the $\sigma$ parameter ; the default (0.05) would have overly damped the peaks. We note that this default value is not backed by good theoretical arguments or Monte Carlo simulation -- undoubtedly a weakness of this method.
-Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100ky rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming two degrees of freedom (DOFs) at each frequency, which is most likely violated with wavelets. Internally, `nuwavelet_psd` does use variable DOFs, but this is not easy to export. You can tweak the range over which this power law is fit and it will not change the story much.
-
 Readers interested in a more robust implementation of WWZ may want to consider [pyleoclim](http://linkedearth.github.io/Pyleoclim_util/Introduction.html), a Python package.  This can be called in R via the [Reticulate](https://rstudio.github.io/reticulate/) package.
 
 ## Time-uncertain spectral analysis

@@ -51,7 +51,6 @@ Imports:
     glue,
     BiocManager,
     rEDM,
-    nuspectral (>= 1.0),
     lipdR,
     spatstat,
     inline,
@@ -64,11 +63,11 @@ Imports:
     magrittr
 Suggests: 
     knitr,
+    nuspectral (>= 1.0),
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-URL: https://github.com/nickmckay/geoChronR
-BugReports: https://github.com/nickmckay/geoChronR/issues
+URL: https://github.com/nickmckay/GeoChronR
+BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
-    nickmckay/nuspectral,
     nickmckay/lipdR
