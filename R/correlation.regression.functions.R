@@ -139,7 +139,7 @@ pvalPearsonSerialCorrected = function(r,n){
 #' @param isopersistent estimate significance using the isopersistence method (default = FALSE)
 #' @param p.ens number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)
 #' @param gaussianize Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.
-#' @param cor.method correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"
+#' @param cor.method correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"
 #'
 #' @return out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
 corMatrix = function(ens.1,
@@ -176,9 +176,15 @@ corMatrix = function(ens.1,
       if(is.numeric(effN)){
         r[j+ncol(ens.2)*(i-1)] <- cor(ens.1[,i],ens.2[,j],use="pairwise",method = cor.method)
         #calculate raw
+        if(cor.method == "kendall"){#just NAs here
+          p[j+ncol(ens.2)*(i-1)] <- NA
+          #calculate adjust p-value (Bretherton 1999)
+          pAdj[j+ncol(ens.2)*(i-1)] <- NA
+        }else{
         p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
         #calculate adjust p-value (Bretherton 1999)
         pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
+        }
         #calculate isopersist
         if(isopersistent){
           pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent",cor.method = cor.method)

@@ -5,7 +5,7 @@
 #' @return the loadeds object
 #' @export
 loadRemote <- function(url,useSavedNames = FALSE){
-  download.file(url,destfile = file.path(tempdir(),"downloadData.RData"))
+  download.file(url,destfile = file.path(tempdir(),"downloadData.RData"),method = "libcurl")
   varName <- load(file.path(tempdir(),"downloadData.RData"))
   if(useSavedNames){
     for(i in 1:length(varName)){
