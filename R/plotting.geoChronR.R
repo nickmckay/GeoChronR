@@ -2125,6 +2125,14 @@ plotTimeseriesStack <- function(plot.df,
       stop(paste(reqVar[r],"must be in plot.df"))
     }
   }
+  
+  #check to see if time.var is an age ensemble
+  
+  if(NCOL(plot.df[[time.var]]) > 1){
+    stop(glue::glue("It looks like your time.var ({time.var}) has more than 1 column ({NCOL(plot.df[[time.var]])}). plotTimeseriesStack() cannot yet handle age ensembles."))
+  }
+  
+  
   plot.df <- plot.df %>%
     dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) %>%
     dplyr::filter(is.finite(scaled))
