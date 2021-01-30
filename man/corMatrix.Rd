@@ -30,7 +30,7 @@ corMatrix(
 
 \item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
 
-\item{cor.method}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"}
+\item{cor.method}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"}
 }
 \value{
 out list of correlation coefficients (r) p-values (p) and autocorrelation corrected p-values (pAdj)
