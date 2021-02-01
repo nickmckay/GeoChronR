@@ -59,7 +59,7 @@ createSummaryTableFromEnsembleTable <- function(L,
                         model.num = model.num)
   
   #calculate the quantiles
-  quants <- t(apply(ensVals$values,1,quantile,probs = probs))
+  quants <- t(apply(ensVals$values,1,quantile,probs = probs,na.rm = TRUE))
   
   
   #pull the depth data
