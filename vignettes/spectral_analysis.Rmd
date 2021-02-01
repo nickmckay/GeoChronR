@@ -117,7 +117,7 @@ show(p.ls)
 
 It is clearly seen that the data contain significant energy (peaks) near, but not exactly at, the famed Milankovitch periodicities (100, 41, 23, and 19 kyr).  These periodicities (particularly the eccentricity (100kyr) and obliquity (40kyr)) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of the Lomb-Scargle methods, which does not use any tapers and therefore displays high variance (in this context, spurious peaks). Other methods smooth out that noise.   
 
-[REDFIT](https://boris.unibe.ch/id/eprint/38577) does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its [dplR](https://cran.r-project.org/web/packages/dplR/index.html) implementation, which differs slightly from the published algorithm (see `?dplR::redfit` for details).
+[REDFIT](https://boris.unibe.ch/id/eprint/38577) does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its [dplR](https://cran.r-project.org/package=dplR) implementation, which differs slightly from the published algorithm (see `?dplR::redfit` for details).
 
 ```{r REDFIT, message=FALSE, results = 'hide', warning = FALSE}
 spec.redfit <- computeSpectraEns(t,X,method = 'redfit')

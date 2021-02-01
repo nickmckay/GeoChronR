@@ -1,8 +1,8 @@
 Package: geoChronR
 Type: Package
-Title: Tools to analyze and visualize time-uncertain geoscientific data
+Title: Tools to Analyze and Visualize Time-uncertain Data
 Version: 1.0.6
-Date: 2020-09-16
+Date: 2021-02-01
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-3598-5113")
@@ -70,4 +70,5 @@ VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
-    nickmckay/lipdR
+    nickmckay/lipdR,  
+    nickmckay/nuspectral
