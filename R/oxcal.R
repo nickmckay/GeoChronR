@@ -227,7 +227,7 @@ loadOxcalOutput <- function(L,
   
   
   #see if the path has MCMC results
-  if(!file.exists(dirname(oxcal.result.file.path),"MCMC_Sample.csv")){
+  if(!file.exists(file.path(dirname(oxcal.result.file.path),"MCMC_Sample.csv"))){
     stop("It doesn't look like the model ran properly. Typically this is because of parameter choices. If all else seems right, consider increasing the depth.interval, or increasing events.per.unit.length")
   }
   

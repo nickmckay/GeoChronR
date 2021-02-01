@@ -13,11 +13,13 @@
 #'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #'@import Bchron
 #'@examples
-#'Run in interactive mode:
+#'\dontrun{
+#'#Run in interactive mode:
 #'L = runBchron(L)
 #'
-#'Run in noninteractive mode:
+#'#Run in noninteractive mode:
 #'L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
+#'}
 
 runBchron =  function(L,
                       chron.num=NA,

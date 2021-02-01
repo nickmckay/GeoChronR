@@ -294,10 +294,12 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' @param model.num chron.numModel do you want to use?
 #' @return L the input LiPD file with methods added to the chronModel.
 #' @examples 
+#' \dontrun{
 #' writeBacon(L)
 #' #Run in interactive mode
 #' 
 #' writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
+#' }
 writeBacon <-  function(L,bacon.dir=NA,chron.num = 1, remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA,use.marine = NULL,askReservoir = TRUE,...){
   
   #deal with directories

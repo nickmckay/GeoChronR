@@ -503,6 +503,7 @@ bamCorrect <- function(X, t, model=NULL){
 #' @description Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
 #' The time series in X are automatically flipped to range from most recent to oldest measurements when the input t is given in increasing order. 
 #' @examples
+#' \dontrun{
 #'res <- simulateBam(X,t) 
 #' #will generate an ensemble of 1000 age models randomly following
 #' #a Poisson process with rate parameter theta=0.05 used to perturb data X
@@ -510,6 +511,7 @@ bamCorrect <- function(X, t, model=NULL){
 #' res <- simulateBam(X,t,model) 
 #' #will perturb data X  with the model specified in
 #' #the model structure
+#' }
 #' @param X data (vector or matrix n*p)
 #' @param t chronology for data X (n*1)
 #' @param model a list that describes the model to use in BAM

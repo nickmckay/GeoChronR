@@ -500,8 +500,10 @@ plotSummary = function(L,
   #do chron.
   chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize,legend.position = legend.position, ...)
   
-  if(is.na(chronPlot)){
-    chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
+  if(!is.list(chronPlot)){
+    if(is.na(chronPlot)){
+      chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
+    }
   }
   
   
@@ -618,7 +620,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   
   dfXY <- dplyr::bind_cols(Xplot,Yplot)
   
-#  names(dfXY) <- c("xEns","x","yEns","y")
+  #  names(dfXY) <- c("xEns","x","yEns","y")
   dfXY <- dplyr::arrange(dfXY,xEns)
   
   if(na.rm){
@@ -746,11 +748,11 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
     ###END DEPRECATED - old method.
     
     probMatList <- quantile2d(X,
-                             Y,
-                             n.bins = n.bins,
-                             x.bin = x.bin,
-                             probs = probs,
-                             ...)
+                              Y,
+                              n.bins = n.bins,
+                              x.bin = x.bin,
+                              probs = probs,
+                              ...)
     
     if(export.quantiles){
       probMat <- cbind(probMatList$x.bin,probMatList$quants)
@@ -999,7 +1001,7 @@ plotCorEns = function(corout,
   sig_lbl = paste0("Fraction significant: ", round(sig_frac,1), "%")
   # Now the plotting begins
   
-#pick a good x scale
+  #pick a good x scale
   xs <- rng+c(-diff(rng)*.05,diff(rng)*.05)
   plotR <- cor.df$r
   
@@ -1043,7 +1045,7 @@ plotCorEns = function(corout,
     }
     
     h <- h+geom_histogram(aes(x=plotR,y=..count..,fill = factor(issig)), position = 'stack', color = "white", binwidth = bw) +
-    scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
+      scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
   }
   
   ranges <- getPlotRanges(h)
@@ -1053,27 +1055,27 @@ plotCorEns = function(corout,
   
   #how many lines?
   if(!is.null(cor.stats)){
-  lineType= rep("dashed",times = nrow(cor.stats))
-  lineType[cor.stats$percentiles==.5]="solid"
-  lineType[cor.stats$percentiles==.975 | cor.stats$percentiles==.025]="dotted"
-  
-  
-  # add vertical lines at the quantiles specified in cor.stats. 
-  h = h + geom_vline(data = cor.stats, aes(xintercept = r), color="red", size = 1,
-                     linetype=lineType, show.legend = FALSE) +
-    ylim(c(y.lims[1],y.lims[2]*1.1)) # expand vertical range
-  ymax = max(y.lims)
-  # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
-  h = h + geom_text(data = cor.stats, mapping = aes(x=r, y=1.05*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)
+    lineType= rep("dashed",times = nrow(cor.stats))
+    lineType[cor.stats$percentiles==.5]="solid"
+    lineType[cor.stats$percentiles==.975 | cor.stats$percentiles==.025]="dotted"
+    
+    
+    # add vertical lines at the quantiles specified in cor.stats. 
+    h = h + geom_vline(data = cor.stats, aes(xintercept = r), color="red", size = 1,
+                       linetype=lineType, show.legend = FALSE) +
+      ylim(c(y.lims[1],y.lims[2]*1.1)) # expand vertical range
+    ymax = max(y.lims)
+    # annotate quantile lines. geom_label is too inflexible (no angles) so use geom_text()
+    h = h + geom_text(data = cor.stats, mapping = aes(x=r, y=1.05*ymax, label=line.labels), color="red", size=3, angle=45, vjust=+2.0, hjust=0)
   }
-    #customize legend
+  #customize legend
   h = h + geoChronRPlotTheme() +
     theme(legend.position = legend.position,
-                legend.title = element_text(size=10, face="bold"),
-                legend.text = element_text(size=8),
-                legend.key = element_rect(fill = "transparent",
-                                          color = "transparent"),
-                legend.background = element_rect(fill=alpha('white', 0.3)))+
+          legend.title = element_text(size=10, face="bold"),
+          legend.text = element_text(size=8),
+          legend.key = element_rect(fill = "transparent",
+                                    color = "transparent"),
+          legend.background = element_rect(fill=alpha('white', 0.3)))+
     coord_cartesian(xlim = xs)+
     xlab("r")+
     annotate("label",x = diff(range(x.lims))*f.sig.lab.position[1]+x.lims[1],
@@ -1217,22 +1219,22 @@ plotScreeEns <- function(pcaout,
                          null.color = "red",
                          null.significance = 0.05,
                          ...){
-                           
-                           nPCs <- nrow(pcaout$variance)
-                           
-                           nullLine <- apply(pcaout$nullVariance,1,quantile,1-null.significance)
-                           scree <- plotTimeseriesEnsRibbons(X = seq_len(nPCs),
-                                                             Y = pcaout$variance,
-                                                             limit.outliers.x = NA,
-                                                             ...) +
-                             ggplot2::geom_line(aes(x = seq_len(nPCs),y = nullLine),colour = null.color)+
-                             ggplot2::scale_x_continuous("Component number",breaks = seq_len(nPCs))+
-                             ggplot2::scale_y_continuous("Fraction of variance explained",limits=c(NA,NA))+
-                             ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",size = .05,linetype = 2))+
-                             ggtitle("PCA Scree Plot")
-                           
-                           return(scree)
-                         }
+  
+  nPCs <- nrow(pcaout$variance)
+  
+  nullLine <- apply(pcaout$nullVariance,1,quantile,1-null.significance)
+  scree <- plotTimeseriesEnsRibbons(X = seq_len(nPCs),
+                                    Y = pcaout$variance,
+                                    limit.outliers.x = NA,
+                                    ...) +
+    ggplot2::geom_line(aes(x = seq_len(nPCs),y = nullLine),colour = null.color)+
+    ggplot2::scale_x_continuous("Component number",breaks = seq_len(nPCs))+
+    ggplot2::scale_y_continuous("Fraction of variance explained",limits=c(NA,NA))+
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",size = .05,linetype = 2))+
+    ggtitle("PCA Scree Plot")
+  
+  return(scree)
+}
 
 
 
@@ -1900,7 +1902,7 @@ plotChronEns = function(L,
     scale_y_reverse(name = axisLabel(depth)) + 
     ggtitle(paste0(L$dataSetName)) + 
     theme(legend.position = "none")
-    geoChronRPlotTheme()
+  geoChronRPlotTheme()
   
   return(chronPlot)
   
@@ -2182,7 +2184,7 @@ plotTimeseriesStack <- function(plot.df,
     dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
     dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
   
-
+  
   colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
   
   axisStats <- axisStats[colOrder,]
