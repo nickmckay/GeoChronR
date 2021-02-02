@@ -62,10 +62,10 @@ setBaconDir <- function(bacon.dir){
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 
 #' \dontrun{
-#' Run in interactive mode:
+#' #Run in interactive mode:
 #' L = runBacon(L)
 #' 
-#' Run in noninteractive mode, describing everything:
+#' #Run in noninteractive mode, describing everything:
 #' L = runBacon(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
 #' }
 #' @section Long-form example:

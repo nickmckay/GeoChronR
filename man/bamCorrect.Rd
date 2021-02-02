@@ -43,12 +43,14 @@ Generate an ensemble of possible age corrected data:See www.clim-past-discuss.ne
 The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.
 }
 \examples{
+\dontrun{
 res <- bamCorrect(X,t) 
 #will generate an ensemble of 1000 age models randomly following
 #a Poisson process with rate parameter theta=0.05 used to perturb data X
 res <- bamCorrect(X,t,model) 
 #will correct data X  with the model specified in
 #the model structure
+}
 }
 \seealso{
 Other BAM: 

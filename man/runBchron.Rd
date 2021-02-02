@@ -45,11 +45,13 @@ L. The single LiPD object that was entered, with methods, ensembleTable, summary
 This is a high-level function that uses Bchron to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Haslett and Parnell (2008) doi:10.1111/j.1467-9876.2008.00623.x for details.
 }
 \examples{
-Run in interactive mode:
+\dontrun{
+#Run in interactive mode:
 L = runBchron(L)
 
-Run in noninteractive mode:
+#Run in noninteractive mode:
 L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
+}
 }
 \author{
 Deborah Khider

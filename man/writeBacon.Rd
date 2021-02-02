@@ -49,10 +49,12 @@ L the input LiPD file with methods added to the chronModel.
 This generates the csv file that is used for input to Bacon. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs.
 }
 \examples{
+\dontrun{
 writeBacon(L)
 #Run in interactive mode
 
 writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
+}
 }
 \seealso{
 Other Bacon: 

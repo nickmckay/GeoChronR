@@ -1,6 +1,6 @@
 Package: geoChronR
 Type: Package
-Title: Tools to Analyze and Visualize Time-uncertain Data
+Title: Tools to Analyze and Visualize Time-Uncertain Data
 Version: 1.0.6
 Date: 2021-02-01
 Authors@R: c(
