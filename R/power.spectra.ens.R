@@ -347,6 +347,11 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     spec.ens = list(freqs = freq, power = pMat, power.CL = pCL)
     
   } else if ( method=='mtm') {    # need to make a choice on null : AR(1) or power law?
+
+      if (!requireNamespace("astrochron", quietly = TRUE)) {
+        stop('Package "astrochron" is needed for to use the mtm aptions. Please install it. If astrochron is no longer on CRAN (using install.packages("astrochron")), consider installing using remotes::install_github("cran/astrochron")',call. = FALSE)
+      }
+  
     if ( mtm_null=='AR(1)') {
       mtm.func = astrochron::mtm
     } else if ( mtm_null=='power_law') {

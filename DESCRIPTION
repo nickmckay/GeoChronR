@@ -1,7 +1,7 @@
 Package: geoChronR
 Type: Package
 Title: Tools to Analyze and Visualize Time-Uncertain Data
-Version: 1.0.6
+Version: 1.0.7
 Date: 2021-02-01
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
@@ -25,7 +25,6 @@ Imports:
     Bchron,
     RColorBrewer,
     arsenal,
-    astrochron,
     dplR,
     dplyr,
     ggmap,
@@ -63,7 +62,7 @@ Imports:
     magrittr
 Suggests: 
     knitr,
-    nuspectral (>= 1.0),
+    astrochron,
     rmarkdown,
     testthat
 VignetteBuilder: knitr

@@ -1,3 +1,5 @@
+# geoChronR 1.0.7
+
 # geoChronR 1.0.6
 
 * Fixed sampleBaconAges() for handling different versions of R and rbacon.
