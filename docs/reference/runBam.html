@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate a Banded Age Model (BAM) and add it into a LiPD object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/BAM.lipd.R'><code>R/BAM.lipd.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/BAM.lipd.R'><code>R/BAM.lipd.R</code></a></small>
     <div class="hidden name"><code>runBam.Rd</code></div>
     </div>
 
@@ -261,7 +261,15 @@
 <p>Maud Comboul (BAM)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>#Run in interactive mode:</span>
+<span class='kw'>L</span> <span class='op'>=</span> <span class='fu'>runBam</span>(<span class='kw'>L</span>)
+
+<span class='co'>#Run in noninteractive mode, describing everything:</span>
+<span class='kw'>L</span> <span class='op'>=</span> <span class='fu'>runBam</span>(<span class='kw'>L</span>,paleo.num = <span class='fl'>1</span>, paleo.meas.table.num = <span class='fl'>1</span>, model.num = <span class='fl'>3</span>, make.new = <span class='fl'>TRUE</span>,
+nEns = <span class='fl'>100</span>, model = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(name = <span class='st'>"poisson"</span>,param = <span class='fl'>0.05</span>, resize = <span class='fl'>0</span>, ns = <span class='kw'>n.ens</span>))
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

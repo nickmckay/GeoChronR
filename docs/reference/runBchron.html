@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/run.bchron.LiPD.R'><code>R/run.bchron.LiPD.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/run.bchron.LiPD.R'><code>R/run.bchron.LiPD.R</code></a></small>
     <div class="hidden name"><code>runBchron.Rd</code></div>
     </div>
 
@@ -238,7 +238,14 @@
 <p>Nick McKay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>#Run in interactive mode:</span>
+<span class='kw'>L</span> <span class='op'>=</span> <span class='fu'>runBchron</span>(<span class='kw'>L</span>)
+
+<span class='co'>#Run in noninteractive mode:</span>
+<span class='kw'>L</span> <span class='op'>=</span> <span class='fu'>runBchron</span>(<span class='kw'>L</span>,chron.num = <span class='fl'>1</span>, site.name = <span class='st'>"MyWonderfulSite"</span>, model.num = <span class='fl'>3</span>, cal.curves = <span class='st'>"marine13"</span>) 
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

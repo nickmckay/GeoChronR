@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -128,9 +128,9 @@
       <h1 data-toc-skip>Spectral estimation with and without age uncertainties</h1>
                         <h4 class="author">Julien Emile-Geay</h4>
             
-            <h4 class="date">2021-01-08</h4>
+            <h4 class="date">2021-02-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/spectral_analysis.Rmd"><code>vignettes/spectral_analysis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/spectral_analysis.Rmd"><code>vignettes/spectral_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>spectral_analysis.Rmd</code></div>
 
     </div>
@@ -160,7 +160,7 @@
 <p>We first remotely load the data using the LiPD utilities. Depending on your connectivity, this may take a minute as the file is fairly large (2.6Mb).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">lipdR</span>) <span class="co"># to load the file</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/geoChronR">geoChronR</a></span>) <span class="co"># to analyze it</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>) <span class="co"># to analyze it</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://github.com/jrnold/ggthemes">ggthemes</a></span>) <span class="co"># to define plotting theme</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)  <span class="co"># to plot</span>
 
@@ -230,7 +230,7 @@
 </pre></div>
 <p><img src="spectral_analysis_files/figure-html/lomb-scargle-1.png" width="768"></p>
 <p>It is clearly seen that the data contain significant energy (peaks) near, but not exactly at, the famed Milankovitch periodicities (100, 41, 23, and 19 kyr). These periodicities (particularly the eccentricity (100kyr) and obliquity (40kyr)) rise above the various power law nulls, but we see hints of higher power at high-frequencies. We shall soon see that this is an artifact of the Lomb-Scargle methods, which does not use any tapers and therefore displays high variance (in this context, spurious peaks). Other methods smooth out that noise.</p>
-<p><a href="https://boris.unibe.ch/id/eprint/38577">REDFIT</a> does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its <a href="https://cran.r-project.org/web/packages/dplR/index.html">dplR</a> implementation, which differs slightly from the published algorithm (see <code><a href="https://rdrr.io/pkg/dplR/man/redfit.html">?dplR::redfit</a></code> for details).</p>
+<p><a href="https://boris.unibe.ch/id/eprint/38577">REDFIT</a> does so via application of Welch’s Overlapped Segment Averaging, which by default uses 3 segments that overlap by about 50%. geoChronR uses its <a href="https://cran.r-project.org/package=dplR">dplR</a> implementation, which differs slightly from the published algorithm (see <code><a href="https://rdrr.io/pkg/dplR/man/redfit.html">?dplR::redfit</a></code> for details).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">spec.redfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/computeSpectraEns.html">computeSpectraEns</a></span>(<span class="kw">t</span>,<span class="kw">X</span>,method = <span class="st">'redfit'</span>)
 <span class="kw">redfit.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="st">"freq"</span> = <span class="kw">spec.redfit</span><span class="op">$</span><span class="kw">freq</span>, <span class="st">"pwr"</span> = <span class="kw">spec.redfit</span><span class="op">$</span><span class="kw">power</span>)
@@ -327,48 +327,6 @@
 <p>An interpolation-free alternative to MTM is the Weighted Wavelet Z-transform of <a href="http://adsabs.harvard.edu/cgi-bin/bib_query?1996AJ....112.1709F">Foster, (1996)</a>. The idea of spectral analysis is to decompose the signal on an orthogonal basis of sines and cosines. Data gaps cause this basis to lose its orthogonality, creating energy leakage. WWZ mitigates this problem using an inverse approach. Because it is wavelet based, it does not rely on interpolation or detrending. WWZ was adapted by <a href="https://www.pnas.org/content/110/30/12213.short">Kirchner &amp; Neal (2013)</a>, who employed basis rotations to mitigate the numerical instability that occurs in pathological cases with the original algorithm. A paleoclimate example of its use is given in <a href="https://www.pnas.org/content/116/18/8728.short">Zhu et al (2019)</a>).</p>
 <p>The WWZ method has one adjustable parameter, a decay constant that balances the time resolution and frequency resolution of the wavelet analysis. The smaller this constant is, the sharper the peaks.</p>
 <p>We wanted to offer GeoChronR users a better alternative to Lom-Scargle, but the WWZ code is relatively complex. We thus chose to incoporate the <em>nuspectral</em> method of <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> based on a similar idea. However, it is not equivalent to WWZ. The main difference has to do with the approximation of the mother wavelet by a cubic polynomial with compact support. This speeds up computation at the cost of much accuracy. <a href="https://www.jstatsoft.org/article/view/v011i02">Mathias et al (2004)</a> also describe implementations of complex wavelets in C (a compiled language, faster with loops), but we were not able to obtain any sensible results with those. For now, it is incorporated into GeoChronR to encourage further development.</p>
-<p>First, you’ll need to make sure you have nuspectral installed, as it’s not yet automatically installed with GeoChronR</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"nuspectral"</span>,quietly = <span class="fl">TRUE</span>)){<span class="co">#see if nuspectral is already installed</span>
-  <span class="kw">remotes</span>::<span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"nickmckay/nuspectral"</span>) <span class="co">#install nuspectral if needed</span>
-}
-</pre></div>
-<p>Let us see how it performs in on IODP846.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"nuspectral"</span>, quietly = <span class="fl">TRUE</span>)
-<span class="kw">nt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw">t</span>)
-<span class="kw">tau</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">t</span>),<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">t</span>),length = <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw">nt</span> <span class="op">%/%</span> <span class="fl">2</span>,<span class="fl">5</span>))
-<span class="kw">nuspec</span> <span class="op">&lt;-</span>  <span class="kw">nuspectral</span>:::<span class="fu"><a href="https://rdrr.io/pkg/nuspectral/man/nuwavelet_psd.html">nuwavelet_psd</a></span>(<span class="kw">t</span>,<span class="kw">X</span>,sigma=<span class="fl">0.01</span>,taus = <span class="kw">tau</span>)
-<span class="kw">nf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="kw">nuspec</span><span class="op">$</span><span class="kw">Frequency</span>)
-<span class="kw">nus.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="st">"freq"</span> = <span class="kw">nuspec</span><span class="op">$</span><span class="kw">Frequency</span>, <span class="st">"pwr"</span> = <span class="kw">nuspec</span><span class="op">$</span><span class="kw">Power</span>)
-
-<span class="co"># power law fit</span>
-<span class="kw">plaw.fit</span> <span class="op">=</span> <span class="kw">astrochron</span>::<span class="fu"><a href="https://rdrr.io/pkg/astrochron/man/pwrLawFit.html">pwrLawFit</a></span>(<span class="kw">nus.df</span>, dof = <span class="fl">2</span>, flow = <span class="fl">0.001</span>, fhigh = <span class="fl">0.1</span>, output = <span class="fl">1</span>, genplot = <span class="kw">F</span>)
-<span class="kw">cl.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">plaw.fit</span>[,<span class="fu"><a href="https://rdrr.io/pkg/generics/man/setops.html">union</a></span>(<span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span><span class="op">:</span><span class="fl">7</span>))]) <span class="co"># extract confidence limits</span>
-<span class="co"># rename columns to be less silly</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">cl.df</span>)[<span class="fl">1</span>] <span class="op">&lt;-</span> <span class="st">"freq"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">cl.df</span>)[<span class="fl">2</span>] <span class="op">&lt;-</span> <span class="st">"90% CL"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">cl.df</span>)[<span class="fl">3</span>] <span class="op">&lt;-</span> <span class="st">"95% CL"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">cl.df</span>)[<span class="fl">4</span>] <span class="op">&lt;-</span> <span class="st">"99% CL"</span>
-</pre></div>
-<p>Compared to the previous methods, which were essentially instantaneous on this dataset, this took a few seconds. Keep that in mind for large ensembles, because if you start adding up 1000’s of seconds, pretty soon you’re waiting for an hour.</p>
-<p>As before, we leverage <em>astrochron</em>’s capabilities to fit a power-law to the spectrum. The power law comes out with a slope around 1, as before.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="kw">p.nus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotSpectrum.html">plotSpectrum</a></span>(<span class="kw">nus.df</span>,<span class="kw">cl.df</span>,
-                      x.lim=<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>,<span class="fl">1000</span>),
-                      x.ticks = <span class="kw">pticks</span>,
-                      y.lims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">300</span>),
-                      color.line=<span class="st">'orange'</span>,
-                      color.cl=<span class="st">'white'</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"IODP 846 d18O, nuspectral periodogram"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_hc.html">theme_hc</a></span>(style = <span class="st">"darkunica"</span>) <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(axis.ticks.x = <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_line</a></span>(color = <span class="st">"gray"</span>))
-
-<span class="co"># label periodicities of interest</span>
-<span class="kw">p.nus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span>(<span class="kw">p.nus</span>, periods = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span>),y.lims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>,<span class="fl">100</span>))
-<span class="fu">show</span>(<span class="kw">p.nus</span>)
-</pre></div>
-<p><img src="spectral_analysis_files/figure-html/nuspectral%20plotting-1.png" width="768"></p>
-<p>Broadly speaking, we see evidence for the same periodicities, but this took some fiddling with the <span class="math inline">\(\sigma\)</span> parameter ; the default (0.05) would have overly damped the peaks. We note that this default value is not backed by good theoretical arguments or Monte Carlo simulation – undoubtedly a weakness of this method. Also notable is that the confidence limits affect peak detection very differently here; only the eccentricity cycle near 100ky rises above the 95% and 99% levels; other cycles are summarily dismissed. This could be a result of assuming two degrees of freedom (DOFs) at each frequency, which is most likely violated with wavelets. Internally, <code>nuwavelet_psd</code> does use variable DOFs, but this is not easy to export. You can tweak the range over which this power law is fit and it will not change the story much.</p>
 <p>Readers interested in a more robust implementation of WWZ may want to consider <a href="http://linkedearth.github.io/Pyleoclim_util/Introduction.html">pyleoclim</a>, a Python package. This can be called in R via the <a href="https://rstudio.github.io/reticulate/">Reticulate</a> package.</p>
 </div>
 <div id="time-uncertain-spectral-analysis" class="section level2">
@@ -376,7 +334,7 @@
 <a href="#time-uncertain-spectral-analysis" class="anchor"></a>Time-uncertain spectral analysis</h2>
 <p>Now let’s consider age uncertainties.</p>
 <p>The GeoChronR approach to quantifying and propagating those uncertainties is to leverage the power of ensembles. Here we will illustrate this with MTM. Let us repeat the previous analysis by looping over the 1,000 age realizations output by the tuning algorithm HMM-Match. That means computing 1000 spectra. We’ve already seen that <em>nuspectral</em> is too slow for an ensemble job, so let’s leave it out. Also, since REDFIT is a tapered version of Lomb-Scargle, and comes with more features, let’s focus here on comparing an REDFIT and MTM in ensemble mode.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="kw">time</span> <span class="op">=</span> <span class="kw">age</span><span class="op">$</span><span class="kw">values</span>[<span class="kw">age.median</span> <span class="op">&lt;</span> <span class="fl">1000</span>,]  <span class="co"># age ensemble for ~ last 1 Ma</span>
 <span class="kw">values</span> <span class="op">=</span> <span class="kw">temp</span><span class="op">$</span><span class="kw">values</span>[<span class="kw">age.median</span> <span class="op">&lt;</span> <span class="fl">1000</span>]
 <span class="kw">mtm.ens.spec</span> <span class="op">=</span> <span class="fu"><a href="../reference/computeSpectraEns.html">computeSpectraEns</a></span>(<span class="kw">time</span>,<span class="kw">values</span>,
@@ -386,7 +344,7 @@
                                  mtm_null = <span class="st">'AR(1)'</span>)
 </pre></div>
 <p>This took a few seconds with 1000 ensemble members, and the resulting output is close to 10 Mb. Not an issue for modern computers, but you can see why people weren’t doing this in the 70’s, even if they wanted to. Now, let’s plot the result:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
+<div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="kw">ar1.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">mtm.ens.spec</span><span class="op">$</span><span class="kw">freqs</span>,<span class="kw">mtm.ens.spec</span><span class="op">$</span><span class="kw">power.CL</span>)
 <span class="co"># rename columns to be less silly</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">ar1.df</span>)[<span class="fl">1</span>] <span class="op">&lt;-</span> <span class="st">"freq"</span>
@@ -405,7 +363,7 @@
 </pre></div>
 <p><img src="spectral_analysis_files/figure-html/ensemble-mode%20MTM,%20plot-1.png" width="768"></p>
 <p>To this we can add the periods identified as significant owing to MTM’s harmonic ratio test. geoChronR deals with it by computing at each frequency the fraction of ensemble members that exhibit a significant peak. One simple criterion for gauging the level of support for such peaks given age uncertainties is to pick out those periodicities that are identified as significant more than 50% of the time.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
+<div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="kw">per</span> <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="kw">cl.df</span><span class="op">$</span><span class="kw">freq</span>
 <span class="kw">sig_per</span> <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="kw">mtm.ens.spec</span><span class="op">$</span><span class="kw">sig.freq</span><span class="op">&gt;</span><span class="fl">0.5</span>)
 <span class="kw">p.mtm.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span>(<span class="kw">p.mtm.ens</span>, periods = <span class="kw">per</span>[<span class="kw">sig_per</span>],color = <span class="st">"chartreuse"</span>,y.lims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1e-5</span>,<span class="fl">5e-4</span>))
@@ -415,13 +373,13 @@
 <p>One could of course, impose a more stringent criterion (e.g. 80%, 90%, etc). To do that, specify <code><a href="https://rdrr.io/r/base/which.html">which(mtm.ens.spec$sig.freq&gt;0.8)</a></code> or <code><a href="https://rdrr.io/r/base/which.html">which(mtm.ens.spec$sig.freq&gt;0.9)</a></code>. That relatively close peaks appear significant may be an artifact of neglecting the multiple hypothesis problem (cf Vaughan et al, 2011).</p>
 <p>So what do we find? Consistent with previous investigations (e.g. <a href="https://npg.copernicus.org/articles/16/43/2009/">Mudelsee et al 2009</a>), the effect of age uncertainties is felt more at high frequencies, with the effect of broadening peaks, or lumping them together. Again, the peaks that rise above the power-law background are the ~100kyr and ~40kyr peaks, which is not surprising. There is significant energy around the precessional peaks, but it is rather spread out, and hard to tie to particular harmonics. No doubt a record with higher-resolution and/or tighter chronology would show sharper precessional peaks.</p>
 <p>Do we get the same answer in REDFIT? Let’s find out.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
+<div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="kw">spec.redfit.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/computeSpectraEns.html">computeSpectraEns</a></span>(<span class="kw">time</span>,<span class="kw">values</span>,max.ens = <span class="fl">1000</span>, method = <span class="st">'redfit'</span>)
 <span class="kw">cl.ens.df</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="st">"freq"</span> = <span class="kw">spec.redfit.ens</span><span class="op">$</span><span class="kw">freq</span>, <span class="st">"pwr95"</span> = <span class="kw">spec.redfit.ens</span><span class="op">$</span><span class="kw">power.CL</span>) <span class="co"># store confidence limits</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">cl.ens.df</span>)[<span class="fl">2</span>] <span class="op">&lt;-</span> <span class="st">"95% CL"</span>
 </pre></div>
 <p>again, it took a bit of time. let’s plot the result:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
+<div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="kw">p.redfit.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotSpectraEns.html">plotSpectraEns</a></span>(spec.ens = <span class="kw">spec.redfit.ens</span>,
                                cl.df = <span class="kw">cl.ens.df</span>,
                                x.lims = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>,<span class="fl">150</span>),

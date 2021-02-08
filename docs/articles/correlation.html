@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -128,9 +128,9 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-01-08</h4>
+            <h4 class="date">2021-02-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/correlation.Rmd"><code>vignettes/correlation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/correlation.Rmd"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
 
     </div>
@@ -153,7 +153,7 @@
 <a href="#age-uncertain-correlation" class="anchor"></a>Age-uncertain correlation</h1>
 <p>This vignette picks up where the <a href="Introduction.html">introduction</a> leaves off, we’ve generated age ensembles for two datasets, and now want to explore the relationship between these two datasets. First we’ll load the packages we need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/geoChronR">geoChronR</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">gridExtra</span>)
 </pre></div>
@@ -185,14 +185,17 @@
 <p><code>corEns</code> returns a list that has the key correlation and significance results for all the selected methods. If percentiles are provided to corEns, and they are by default, the function will output a data.frame that summarizes the output.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">corout</span><span class="op">$</span><span class="kw">cor.stats</span>
+<span class="co">#&gt; Registered S3 method overwritten by 'cli':</span>
+<span class="co">#&gt;   method     from    </span>
+<span class="co">#&gt;   print.boxx spatstat</span>
 <span class="co">#&gt; # A tibble: 5 x 6</span>
 <span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span>
 <span class="co">#&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00595        0.106</span>
-<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.156          0.396</span>
-<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.423          0.636</span>
-<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.725          0.842</span>
-<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982          0.989</span>
+<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00718        0.101</span>
+<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.153          0.386</span>
+<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.426          0.629</span>
+<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.727          0.842</span>
+<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982          0.991</span>
 </pre></div>
 </div>
 <div id="plotting-the-results" class="section level2">
@@ -244,7 +247,7 @@
            use.fdr = <span class="fl">TRUE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Isopersistent significance testing, with False Discovery Rate effects"</span>)
 </pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
-<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.5% of the ensemble members are significant.</p>
+<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.7% of the ensemble members are significant.</p>
 <p>Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in geoChronR. For our final example we’ll take a look at isospectral significance testing and account for FDR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,

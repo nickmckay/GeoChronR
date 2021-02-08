@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create the input file for a Bacon model from a LiPD object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/bacon.lipd.R'><code>R/bacon.lipd.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/bacon.lipd.R'><code>R/bacon.lipd.R</code></a></small>
     <div class="hidden name"><code>writeBacon.Rd</code></div>
     </div>
 
@@ -255,11 +255,13 @@
     <p>Nick McKay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>writeBacon</span>(<span class='kw'>L</span>)
-</div><div class='output co'>#&gt; <span class='error'>Error in createChronMeasInputDf(L, chron.num = chron.num, ...): object 'L' not found</span></div><div class='input'><span class='co'>#Run in interactive mode</span>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>writeBacon</span>(<span class='kw'>L</span>)
+<span class='co'>#Run in interactive mode</span>
 
 <span class='fu'>writeBacon</span>(<span class='kw'>L</span>,chron.num=<span class='fl'>1</span>,meas.table.num = <span class='fl'>1</span>,bacon.dir=<span class='st'>"~/Bacon/"</span>,remove.rejected=<span class='fl'>TRUE</span>,overwrite=<span class='fl'>TRUE</span>,cc=<span class='fl'>NA</span>,site.name=<span class='kw'>L</span><span class='op'>$</span><span class='kw'>dataSetName</span>,model.num=<span class='fl'>NA</span>)
-</div><div class='output co'>#&gt; <span class='error'>Error in createChronMeasInputDf(L, chron.num = chron.num, ...): object 'L' not found</span></div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

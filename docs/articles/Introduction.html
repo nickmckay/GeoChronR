@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -128,9 +128,9 @@
       <h1 data-toc-skip>Introduction to geoChronR</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-01-08</h4>
+            <h4 class="date">2021-02-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/Introduction.Rmd"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
 
     </div>
@@ -154,7 +154,7 @@
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Almost always, your geoChronR work flow will start with loading in a valid LiPD file. So you’ll want both the geoChronR and lipdR libraries</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/geoChronR">geoChronR</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">magrittr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
 </pre></div>
@@ -163,13 +163,8 @@
 <a href="#loading-in-your-data" class="anchor"></a>Loading in your data</h2>
 <p>In this case, we’re going to load in the Wang 2001 Hulu Cave dataset that came a long with the package. If you have the lipdR package, you can load a LiPD file directly from your computer, use <code>L &lt;- readLipd()</code> to interactively select a file (or a directory), or enter the path to file or the directory that you want: <code>L &lt;- readLipd("~/Downloads/my.lpd")</code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="co">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"lipdR"</span>)){
   <span class="kw">hulu</span> <span class="op">&lt;-</span> <span class="kw">lipdR</span>::<span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd"</span>)
-}<span class="co">else</span>{
-  <span class="kw">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.RData"</span>)
-}
 </pre></div>
-<pre><code>## Loading required namespace: lipdR</code></pre>
 <pre><code>## [1] "reading: Hulucave.Wang.2001.lpd"</code></pre>
 <p>Data from five stalagmites are stored in this file. Age model output, including ensemble data, can be stored in LiPD files, but we don’t have that for this record. For this example we’re going to use the original U/Th dates to create a new a model using BChron.</p>
 </div>
@@ -179,7 +174,7 @@
 <p>We’re going to specify many of the parameters here for simplicity, but you can run this with just:</p>
 <p><code>hulu &lt;- runBchron(L)</code></p>
 <p>and it will prompt you for the details.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="kw">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runBchron.html">runBchron</a></span>(<span class="kw">hulu</span>,
                   cal.curves = <span class="st">"normal"</span>,
                   iter = <span class="fl">10000</span>,
@@ -203,7 +198,7 @@
 <h3 class="hasAnchor">
 <a href="#plotting-the-chronology" class="anchor"></a>Plotting the chronology</h3>
 <p>OK, let’s take a look at the model.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">chronPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span>(<span class="kw">hulu</span>,truncate.dist = <span class="fl">1e-6</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="kw">NULL</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html">coord_cartesian</a></span>(xlim = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">80000</span>,<span class="fl">30000</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">chronPlot</span>)
 </pre></div>
@@ -214,7 +209,7 @@
 <h3 class="hasAnchor">
 <a href="#mapping-the-age-ensemble-to-the-paleodata-measurements" class="anchor"></a>Mapping the age ensemble to the paleoData measurements</h3>
 <p>The ensemble chronology in a chronModel may or may not have values corresponding to the paleoclimatic or paleoenvironmental measurements in paleoData. To map the model ensemble values to a measurement table in paleoData, use</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
+<div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="kw">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span>(<span class="kw">hulu</span>,age.var = <span class="st">"ageEnsemble"</span>,paleo.meas.table.num = <span class="fl">2</span>)
 </pre></div>
 </div>
@@ -223,11 +218,11 @@
 <a href="#selecting-the-variables-of-interest" class="anchor"></a>Selecting the variables of interest</h3>
 <p>Let’s take a look at the this timeseries.</p>
 <p>First we’re going to pull out the age ensemble and d18O data for future reference. The <code><a href="../reference/selectData.html">selectData()</a></code> function makes this easy.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
+<div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="kw">hulu.ae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">hulu</span>,var.name = <span class="st">"ageEnsemble"</span>,meas.table.num = <span class="fl">2</span>)
 </pre></div>
 <pre><code>## [1] "Found it! Moving on..."</code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit">
+<div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="kw">hulu.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">hulu</span>,var.name = <span class="st">"d18O"</span>,meas.table.num = <span class="fl">2</span>)
 </pre></div>
 <pre><code>## [1] "Found it! Moving on..."</code></pre>
@@ -237,7 +232,7 @@
 <a href="#creating-a-timeseries-plot-as-a-spaghetti-plot-of-lines" class="anchor"></a>Creating a timeseries plot as a spaghetti plot of lines</h3>
 <p>This might be a good time to take a peak at the data, lets plot the ensemble of lines for these</p>
 <p>Here we will just plot 50 the data with 50 of its ensemble members.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
+<div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="kw">hulu.ts.plot</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span>(X = <span class="kw">hulu.ae</span>,Y = <span class="kw">hulu.d18O</span>,alp = <span class="fl">0.05</span>,n.ens.plot = <span class="fl">50</span>,color = <span class="st">"blue"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">hulu.ts.plot</span>)
 </pre></div>
@@ -247,7 +242,7 @@
 <h3 class="hasAnchor">
 <a href="#creating-a-timeseries-plot-with-a-ribbon-confidence-intervals" class="anchor"></a>Creating a timeseries plot with a ribbon confidence intervals</h3>
 <p>We can also plot this as a ribbon plot of quantiles</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
+<div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="kw">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span>(X = <span class="kw">hulu.ae</span>,Y = <span class="kw">hulu.d18O</span>,n.bins = <span class="fl">1000</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">35000</span>,<span class="fl">75000</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">hulu.ts.plot</span>)
 </pre></div>
@@ -257,7 +252,7 @@
 <h3 class="hasAnchor">
 <a href="#combining-the-two-kinds-of-timeseries-plots" class="anchor"></a>Combining the two kinds of timeseries plots</h3>
 <p>Or a combination of the two with the “add.to.plot option”</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
+<div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="kw">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span>(X = <span class="kw">hulu.ae</span>,Y = <span class="kw">hulu.d18O</span>,alp = <span class="fl">0.1</span>,n.ens.plot = <span class="fl">10</span>,color = <span class="st">"red"</span>,add.to.plot = <span class="kw">hulu.ts.plot</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Hulu Cave d18O"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">hulu.ts.plot</span>)
 </pre></div>
@@ -268,12 +263,8 @@
 <h2 class="hasAnchor">
 <a href="#load-in-another-dataset" class="anchor"></a>Load in another dataset</h2>
 <p>Let’s compare these data to the GISP2 ice core.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="co">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"lipdR"</span>)){
+<div class="sourceCode" id="cb14"><pre class="downlit">
   <span class="kw">gisp2</span> <span class="op">&lt;-</span> <span class="kw">lipdR</span>::<span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd"</span>)
-}<span class="co">else</span>{
-  <span class="kw">gisp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span>(<span class="st">"http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.RData"</span>)
-}
 </pre></div>
 <pre><code>## [1] "reading: GISP2.Alley.2000.lpd"</code></pre>
 </div>
@@ -281,7 +272,7 @@
 <h2 class="hasAnchor">
 <a href="#use-bam-banded-age-model-to-create-an-age-ensemble" class="anchor"></a>Use BAM (Banded Age Model) to create an age ensemble</h2>
 <p>This is an ice core, so the chronology is not based on radiometric tie points. Let’s use BAM (Banded Age Model) to estimate a 2% counting uncertainty on this. Here we specify all the parameters so it runs in non-interactive mode.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
+<div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="kw">gisp2</span> <span class="op">=</span> <span class="fu"><a href="../reference/runBam.html">runBam</a></span>(<span class="kw">gisp2</span>,
                paleo.num = <span class="fl">1</span>, 
                paleo.meas.table.num = <span class="fl">1</span>,
@@ -301,15 +292,15 @@
 <div id="select-the-relevant-variables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#select-the-relevant-variables" class="anchor"></a>Select the relevant variables</h3>
-<div class="sourceCode" id="cb18"><pre class="downlit">
+<div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="kw">gisp2.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">gisp2</span>,var.name = <span class="st">"temp"</span>)
 </pre></div>
 <pre><code>## [1] "Found it! Moving on..."</code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit">
+<div class="sourceCode" id="cb19"><pre class="downlit">
 <span class="kw">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">gisp2</span>,var.name = <span class="st">"yearEnsemble"</span>)
 </pre></div>
 <pre><code>## [1] "Found it! Moving on..."</code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit">
+<div class="sourceCode" id="cb21"><pre class="downlit">
 <span class="kw">gisp2.ens</span><span class="op">$</span><span class="kw">values</span>[<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>]
 </pre></div>
 <pre><code>##           [,1]     [,2]     [,3]     [,4]     [,5]
@@ -329,12 +320,12 @@
 <h3 class="hasAnchor">
 <a href="#convert-the-ages-from-years-ad-to-bp" class="anchor"></a>Convert the ages from years AD to BP</h3>
 <p>Hey, it looks like those might be in calendar years instead of years BP. Let’s check the units</p>
-<div class="sourceCode" id="cb24"><pre class="downlit">
+<div class="sourceCode" id="cb23"><pre class="downlit">
 <span class="kw">gisp2.ens</span><span class="op">$</span><span class="kw">units</span>
 </pre></div>
 <pre><code>## [1] "AD"</code></pre>
 <p>yep. We’d better convert it to BP for comparison with Hulu.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit">
+<div class="sourceCode" id="cb25"><pre class="downlit">
 <span class="kw">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertAD2BP.html">convertAD2BP</a></span>(<span class="kw">gisp2.ens</span>)
 </pre></div>
 </div>
@@ -342,7 +333,7 @@
 <h3 class="hasAnchor">
 <a href="#plot-the-timeseries" class="anchor"></a>Plot the timeseries</h3>
 <p>Let’s make another ribbon and lines plot, this time useing the magrittr pipe to streamline the process</p>
-<div class="sourceCode" id="cb27"><pre class="downlit">
+<div class="sourceCode" id="cb26"><pre class="downlit">
 <span class="kw">gisp2.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span>(X = <span class="kw">gisp2.ens</span>,Y = <span class="kw">gisp2.d18O</span>,n.bins = <span class="fl">500</span>) <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span>(X = <span class="kw">gisp2.ens</span>,Y = <span class="kw">gisp2.d18O</span>,n.ens.plot = <span class="fl">5</span>,color = <span class="st">"Reds"</span>,alp = <span class="fl">.2</span>)<span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"GISP2 temperature"</span>)
@@ -356,7 +347,7 @@
 <h2 class="hasAnchor">
 <a href="#compare-the-two-timeseries" class="anchor"></a>Compare the two timeseries</h2>
 <p>Let’s compare the overlapping sections of these records, from about 36 to 50 kyr. We’ll need the gridExtra package for this.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit">
+<div class="sourceCode" id="cb27"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">gridExtra</span>)
 <span class="kw">overlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">36000</span>,<span class="fl">50000</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html">grid.arrange</a></span>(grobs = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">gisp2.ts.plot</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="kw">overlap</span>)),<span class="kw">hulu.ts.plot</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="kw">overlap</span>))),nrow = <span class="fl">2</span>)

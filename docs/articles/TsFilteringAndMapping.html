@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -128,9 +128,9 @@
       <h1 data-toc-skip>Filtering, mapping and plotting LiPD objects</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-01-08</h4>
+            <h4 class="date">2021-02-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/geoChronR/blob/master/vignettes/TsFilteringAndMapping.Rmd"><code>vignettes/TsFilteringAndMapping.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/TsFilteringAndMapping.Rmd"><code>vignettes/TsFilteringAndMapping.Rmd</code></a></small>
       <div class="hidden name"><code>TsFilteringAndMapping.Rmd</code></div>
 
     </div>
@@ -142,9 +142,10 @@
 <a href="#lipd-filtering-and-mapping" class="anchor"></a>LiPD filtering and mapping</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">lipdR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/geoChronR">geoChronR</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">magrittr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
 </pre></div>
 <p>First let’s load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset <a href="https://essd.copernicus.org/articles/12/2261/2020/">Earth System Science Data</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">

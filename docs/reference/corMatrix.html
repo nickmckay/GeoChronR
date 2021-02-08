@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Matrix correlation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
     <div class="hidden name"><code>corMatrix.Rd</code></div>
     </div>
 
@@ -187,7 +187,8 @@
   isospectral = <span class='fl'>TRUE</span>,
   isopersistent = <span class='fl'>FALSE</span>,
   p.ens = <span class='fl'>100</span>,
-  gaussianize = <span class='fl'>TRUE</span>
+  gaussianize = <span class='fl'>TRUE</span>,
+  cor.method = <span class='st'>"pearson"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -220,6 +221,10 @@
     <tr>
       <th>gaussianize</th>
       <td><p>Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.</p></td>
+    </tr>
+    <tr>
+      <th>cor.method</th>
+      <td><p>correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"</p></td>
     </tr>
     </table>
 

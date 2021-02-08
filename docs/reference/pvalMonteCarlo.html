@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Correlations and their significance according to AR(1) benchmarks</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
     <div class="hidden name"><code>pvalMonteCarlo.Rd</code></div>
     </div>
 
@@ -180,7 +180,13 @@
     <p>Generate parametric or non-parametric surrogates of two series X &amp; Y</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pvalMonteCarlo</span>(<span class='kw'>X</span>, <span class='kw'>Y</span>, n.sim = <span class='fl'>100</span>, method = <span class='st'>"isospectral"</span>)</pre>
+    <pre class="usage"><span class='fu'>pvalMonteCarlo</span>(
+  <span class='kw'>X</span>,
+  <span class='kw'>Y</span>,
+  n.sim = <span class='fl'>100</span>,
+  method = <span class='st'>"isospectral"</span>,
+  cor.method = <span class='st'>"pearson"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -200,6 +206,10 @@
     <tr>
       <th>method</th>
       <td><p>the method applies. Possible choices are "isospectral" (default) and "isopersistent"</p></td>
+    </tr>
+    <tr>
+      <th>cor.method</th>
+      <td><p>correlation method to pass to cor() "pearson" (default), "kendall", or "spearman"</p></td>
     </tr>
     </table>
 

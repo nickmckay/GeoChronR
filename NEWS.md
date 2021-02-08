@@ -1,5 +1,7 @@
 # geoChronR 1.0.7
 
+* Moved astrochron to a "suggested" package, after it was removed from CRAN.
+
 # geoChronR 1.0.6
 
 * Fixed sampleBaconAges() for handling different versions of R and rbacon.

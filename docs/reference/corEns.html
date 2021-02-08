@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/nickmckay/geoChronR/">
+  <a href="https://github.com/nickmckay/GeoChronR/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -172,7 +172,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Ensemble correlation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/nickmckay/geoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/correlation.regression.functions.R'><code>R/correlation.regression.functions.R</code></a></small>
     <div class="hidden name"><code>corEns.Rd</code></div>
     </div>
 
@@ -249,6 +249,7 @@
     <dt><code>isopersistent</code></dt><dd><p>estimate significance using the isopersistence method (default = FALSE)</p></dd>
     <dt><code>p.ens</code></dt><dd><p>number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)</p></dd>
     <dt><code>gaussianize</code></dt><dd><p>Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.</p></dd>
+    <dt><code>cor.method</code></dt><dd><p>correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"</p></dd>
   
 </dl></td>
     </tr>
