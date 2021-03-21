@@ -59,10 +59,10 @@ Imports:
     proto,
     crayon,
     tidyr,
-    magrittr
+    magrittr,
+    astrochron
 Suggests: 
     knitr,
-    astrochron,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
