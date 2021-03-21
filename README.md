@@ -1,7 +1,7 @@
 <!-- badges: start -->
 # [geoChronR](https://nickmckay.github.io/GeoChronR/)
 [![DOI:10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)](https://doi.org/10.5194/gchron-2020-25)
-[![R](https://img.shields.io/badge/R-3.5.0-blue.svg)]()
+[![R](https://img.shields.io/badge/R-3.6.0-blue.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R build status](https://github.com/nickmckay/GeoChronR/workflows/R-CMD-check/badge.svg)](https://github.com/nickmckay/GeoChronR/actions)
 <!-- badges: end -->
@@ -16,7 +16,7 @@ geoChronR is currently under review as a discussion paper in Geochronology, [che
 
 ## Pre-Installation
 
-geoChronR is a package for R, and so you'll need R to run and install it. geoChronR should work with any version newer than 3.5.0. You can download R for your operating system [here](https://www.r-project.org/).
+geoChronR is a package for R, and so you'll need R to run and install it. geoChronR should work with any version newer than 3.6.0. You can download R for your operating system [here](https://www.r-project.org/).
 
 You'll also need an interface to use R. Although many can work, I strongly recommend RStudio. You can download RStudio for your operating system [here](https://rstudio.com/).
 
@@ -55,10 +55,9 @@ Once you're ready to start applying these techniques to your new data, you'll ne
 
 ## How to Cite this Code
 
-McKay, N. P., Emile-Geay, J., and Khider, D.: GeoChronR – an R package to model, analyze and visualize age-uncertain paleoscientific data, Geochronology Discuss., https://doi.org/10.5194/gchron-2020-25, in review, 2020.
+McKay, N. P., Emile-Geay, J., and Khider, D.: GeoChronR – an R package to model, analyze and visualize age-uncertain paleoscientific data, Geochronology Discuss., https://doi.org/10.5194/gchron-2020-25,  2020.
 
 [![DOI:10.5194/gchron-2020-25)](https://zenodo.org/badge/DOI/10.5194/gchron-2020-25.svg)](https://doi.org/10.5194/gchron-2020-25)
-
 
 ## Additional Resources 
 
