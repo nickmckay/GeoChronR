@@ -51,7 +51,6 @@ Imports:
     BiocManager,
     rEDM,
     lipdR,
-    spatstat,
     inline,
     bindrcpp,
     devtools,
@@ -60,7 +59,8 @@ Imports:
     crayon,
     tidyr,
     magrittr,
-    astrochron
+    astrochron,
+    spatstat.core
 Suggests: 
     knitr,
     rmarkdown,

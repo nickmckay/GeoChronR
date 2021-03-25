@@ -16,7 +16,7 @@ ar1 = function(x){
 #' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
-#'
+#' @importFrom spatstat.core CDF.density
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
 #' @param n.sim number of simulations
@@ -76,7 +76,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
   rho_dens <- stats::density(rho,from=0,to=1) # estimate density
-  rho_cdf  <- spatstat::CDF.density(rho_dens) # turn into CDF
+  rho_cdf  <- spatstat.core::CDF.density(rho_dens) # turn into CDF
   #rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
   # estimate test p-value
   pval = 1-rho_cdf(abs(rhoXY))
