@@ -1,3 +1,5 @@
+# geoChronR 1.0.8
+
 # geoChronR 1.0.7
 
 * Moved astrochron to a "suggested" package, after it was removed from CRAN.
