@@ -1,5 +1,8 @@
 # geoChronR 1.0.8
 
+* Modified the use of the spatstat package (to spatstat.core) to accommodate the changes in that package.
+* Moved astrochron back to a "required" package, now that it's back.
+
 # geoChronR 1.0.7
 
 * Moved astrochron to a "suggested" package, after it was removed from CRAN.
