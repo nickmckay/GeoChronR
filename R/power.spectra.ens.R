@@ -4,9 +4,13 @@
 #' @family pca
 #' @title Create a synthetic timeseries that emulates the characteristics of a timeseries
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
+#'
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
+#' @param sameTrend should the synthetic data have the same first-order trend as the original? (default  = TRUE)
+#' @param index.to.model an optional index of values to model (default = NA, the whole series)
 #' @param n.ens Number of ensemble members to simulate
+#'
 #' @return a vector or matrix of synthetic values
 createSyntheticTimeseries <- function(time,values,n.ens=1,sameTrend=TRUE,index.to.model = NA){
   #check to see if time and values are "column lists"
