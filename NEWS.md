@@ -1,3 +1,5 @@
+# geoChronR 1.0.9
+
 # geoChronR 1.0.8
 
 * Modified the use of the spatstat package (to spatstat.core) to accommodate the changes in that package.
