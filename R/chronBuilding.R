@@ -187,7 +187,7 @@ createChronMeasInputDf <- function(L,
         cont <- askUser(paste0("The variable ",crayon::red(MT[[ci]]$variableName)," has already been used\n Do you want to continue?\n If not you can select a different variable, or specify in function input"))
         if(tolower(stringr::str_sub(cont,1,1)) == "n"){
           ci <- getVariableIndex(MT)
-
+          
         }
       }
     }
@@ -197,17 +197,21 @@ createChronMeasInputDf <- function(L,
         
         #check units
         u <- MT[[ci]]$units
-       if(!is.na(u)){
-         if(grepl(pattern = "k",x = u,ignore.case = T)){#it's probably ka
-           unitConversionFactor <- 1000
-           cat(crayon::red(paste("converting",v2gv[tv],"from ka to yr BP")),"\n")
-         }
-       } 
+        if(!is.null(u)){
+          if(!is.na(u)){
+            if(grepl(pattern = "k",x = u,ignore.case = T)){#it's probably ka
+              unitConversionFactor <- 1000
+              cat(crayon::red(paste("converting",v2gv[tv],"from ka to yr BP")),"\n")
+            }
+          } 
+        }else{
+          cat(crayon::red(paste("No units listed in",v2gv[tv],", assuming that they're yr BP")),"\n")
+        }
         chronDf[,tv] <- MT[[ci]]$values * unitConversionFactor
         v2gUsed[tv] <- MT[[ci]]$variableName
       }else{#not ages
-      chronDf[,tv] <- MT[[ci]]$values
-      v2gUsed[tv] <- MT[[ci]]$variableName
+        chronDf[,tv] <- MT[[ci]]$values
+        v2gUsed[tv] <- MT[[ci]]$variableName
       }
     }else{
       cat(crayon::red(paste(crayon::bold(v2gv[tv]),"does not seem to exist, moving on.\n")))

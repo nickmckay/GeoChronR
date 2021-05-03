@@ -186,8 +186,12 @@ runBchron =  function(L,
   
   
   ageEns$ageEnsemble$units = 'yr BP'
+  ageEns$ageEnsemble$variableName  <- "ageEnsemble"
+  
   ageEns$depth$values = run$predictPositions
   ageEns$depth$units =  depth.units
+  ageEns$depth$variableName  <- "depth"
+  
   
   L$chronData[[chron.num]]$model[[model.num]]$ensembleTable[[1]]=ageEns
   
@@ -213,12 +217,14 @@ runBchron =  function(L,
   
   # Summary Table
   sumTable = list()
-  sumTable$depth$values = depth
-  sumTable$depth$units = depth.units
+  sumTable$depth$values <- run$predictPositions
+  sumTable$depth$units <- depth.units
+  sumTable$depth$variableName <- "depth"
   
   sumTable$meanCalibratedAge$values = rowMeans(t(run$theta))
   sumTable$meanCalibratedAge$units = "yr BP"
-  
+  sumTable$meanCalibratedAge$variableName <- "age"
+  sumTable$meanCalibratedAge$details <- "mean across ensembles"
   L$chronData[[chron.num]]$model[[model.num]]$summaryTable[[1]]=sumTable
   
   return(L)
