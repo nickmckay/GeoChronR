@@ -1,3 +1,5 @@
+# geoChronR (development version)
+
 # geoChronR 1.0.5
 
 * Improve and document the `export.quantiles` option in `plotTimeseriesEnsRibbons`
