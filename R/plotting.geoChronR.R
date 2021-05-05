@@ -2127,8 +2127,6 @@ plotTimeseriesStack <- function(plot.df,
       stop(paste(reqVar[r],"must be in plot.df"))
     }
   }
-<<<<<<< Updated upstream
-=======
   
   #check to see if time.var is an age ensemble
   
@@ -2143,7 +2141,6 @@ plotTimeseriesStack <- function(plot.df,
     plot.df <- plot.df %>%
       dplyr::mutate(scaled = scale(paleoData_values,scale = FALSE, center = TRUE)*scale.factor) 
   }
->>>>>>> Stashed changes
   plot.df <- plot.df %>%
     dplyr::filter(is.finite(scaled))
   
