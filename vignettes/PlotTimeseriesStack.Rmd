@@ -78,7 +78,7 @@ That last `arrange()` command controls the order of the data frame, and will als
 The key function for this is plotTimeseriesStack(), and has many options (`?plotTimeseriesStack`). We can start simply by giving it the data frame and using the default options:
 ```{r}
 #plot the stack and color by Archive type
-plotTimeseriesStack(plot.df)
+plotTimeseriesStack(plot.df,common.axis = TRUE)
 ```
 ## Adjusting the options
 

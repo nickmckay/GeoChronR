@@ -2066,7 +2066,7 @@ plotRegressEns = function(reg.ens,
 #' @family plot
 #' @author Nick McKay
 #' @title Plot a bunch of timeseries in a vertical stack
-#' @description Creates a suite of plots to characterize the results of an ensemble regression.
+#' @description Creates a ridge plot that shows multiple timeseries in a vertical stack.
 #' @import ggplot2
 #' @importFrom ggridges geom_ridgeline theme_ridges
 #' @import dplyr
@@ -2081,6 +2081,7 @@ plotRegressEns = function(reg.ens,
 #' @param fill.alpha Transparency of the shading
 #' @param scale.factor Controls how much the timeseries should overlap, with larger numbers overlapping more. (default = 1/3)
 #' @param scale.height Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)
+#' @param common.axis Should all plots share the same axis scale? (default = FALSE)
 #' @param lab.buff Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)
 #' @param lab.size Font size for the ylabels
 #' @param line.size thickness of the line (default = 0.5)
@@ -2098,6 +2099,7 @@ plotTimeseriesStack <- function(plot.df,
                                 line.size = 0.5,
                                 scale.factor = 1/3,
                                 scale.height = .75, 
+                                common.axis = FALSE,
                                 lab.buff = 0.02, 
                                 lab.size = 3,  
                                 lab.space= 2,
@@ -2125,8 +2127,24 @@ plotTimeseriesStack <- function(plot.df,
       stop(paste(reqVar[r],"must be in plot.df"))
     }
   }
+<<<<<<< Updated upstream
+=======
+  
+  #check to see if time.var is an age ensemble
+  
+  if(NCOL(plot.df[[time.var]]) > 1){
+    stop(glue::glue("It looks like your time.var ({time.var}) has more than 1 column ({NCOL(plot.df[[time.var]])}). plotTimeseriesStack() cannot yet handle age ensembles."))
+  }
+  
+  if(!common.axis){#then scale them all to unit variance
+    plot.df <- plot.df %>%
+      dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) 
+  }else{#only center
+    plot.df <- plot.df %>%
+      dplyr::mutate(scaled = scale(paleoData_values,scale = FALSE, center = TRUE)*scale.factor) 
+  }
+>>>>>>> Stashed changes
   plot.df <- plot.df %>%
-    dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) %>%
     dplyr::filter(is.finite(scaled))
   
   if(!is.na(invert.var)){# then make some negative
@@ -2160,6 +2178,7 @@ plotTimeseriesStack <- function(plot.df,
   
   plot.df$cv <- factor(plot.df$cv,levels = unique(plot.df$cv))
   
+  if(!common.axis){
   axisStats <- plot.df %>%
     dplyr::summarize(variableName = unique(paleoData_variableName),
                      units = unique(paleoData_units),
@@ -2173,6 +2192,23 @@ plotTimeseriesStack <- function(plot.df,
     dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
     dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
     dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
+  }else{
+    allPaleoSd <- sd(plot.df$paleoData_values,na.rm = T)
+    
+    axisStats <- plot.df %>%
+      dplyr::summarize(variableName = unique(paleoData_variableName),
+                       units = unique(paleoData_units),
+                       dataSetName = unique(dataSetName),
+                       archiveType = unique(archiveType), 
+                       invert = mean(iv),
+                       mean = mean(paleoData_values,na.rm = T),
+                       sdhigh = allPaleoSd/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
+                       sdlow = -allPaleoSd/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
+                       color.var = unique(cv)) %>%
+      dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
+      dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
+      dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
+  }
   
 
   colOrder <- match(unique(plot.df$paleoData_TSid),axisStats$paleoData_TSid)
