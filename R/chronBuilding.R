@@ -197,6 +197,9 @@ createChronMeasInputDf <- function(L,
         
         #check units
         u <- MT[[ci]]$units
+        if(is.null(u)){
+          u <- MT[[ci]]$units <- NA
+        }
        if(!is.na(u)){
          if(grepl(pattern = "k",x = u,ignore.case = T)){#it's probably ka
            unitConversionFactor <- 1000
