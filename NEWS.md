@@ -1,4 +1,6 @@
-# geoChronR 1.1.0
+# geoChronR 1.0.10
+
+* Added handling for shapes in `mapTs()` for tibbles.
 
 # geoChronR 1.0.9
 
