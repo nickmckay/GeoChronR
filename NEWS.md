@@ -1,3 +1,5 @@
+# geoChronR 1.1.0
+
 # geoChronR 1.0.9
 
 * Fixed bug writing Bchron output into LiPD structure. Thanks @alexkjames for recognizing the bug.
