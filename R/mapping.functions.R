@@ -169,7 +169,7 @@ mapTs <- function(TS,
     }
     
     shapevar <- TS[[shape]]
-    if(is.null(shapevar)){
+    if(is.null(shapevar) | is.numeric(shape)){
       man.shape = TRUE
       shapevar <- shape
     }else{
