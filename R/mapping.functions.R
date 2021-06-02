@@ -413,6 +413,9 @@ baseMap = function(lon,
       names(bb) <- c("left","bottom","right","top")
       lnp <- FALSE
       warning("Stamen globally doesn't work well at high latitudes. Truncating at 70.")
+    }else{
+      bb[c(1,3)] = bb[c(1,3)] + c(-extend.range,extend.range)
+      bb[c(2,4)] = bb[c(2,4)] + c(-extend.range,extend.range)
     }
     if(lnp){
       suppressWarnings(try(load(file.path(tempdir(),"newmap.Rdata")),silent = TRUE))
