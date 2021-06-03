@@ -2100,6 +2100,8 @@ plotTimeseriesStack <- function(plot.df,
                                 scale.factor = 1/3,
                                 scale.height = .75, 
                                 common.axis = FALSE,
+                                y.axis.range = NA,
+                                y.axis.sig.dig = 2,
                                 lab.buff = 0.02, 
                                 lab.size = 3,  
                                 lab.space= 2,
@@ -2137,9 +2139,22 @@ plotTimeseriesStack <- function(plot.df,
   if(!common.axis){#then scale them all to unit variance
     plot.df <- plot.df %>%
       dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) 
-  }else{#only center
+  }else{#scale across all records
+    allPaleoSd <- sd(plot.df$paleoData_values,na.rm = T)
+    if(!is.na(y.axis.range)){
+      scale.factor <- allPaleoSd/y.axis.range
+    }
+    
+    
     plot.df <- plot.df %>%
-      dplyr::mutate(scaled = scale(paleoData_values,scale = FALSE, center = TRUE)*scale.factor) 
+      dplyr::ungroup() %>% 
+      dplyr::mutate(scaled = scale(paleoData_values,scale = TRUE, center = TRUE)*scale.factor) %>% 
+      dplyr::group_by(paleoData_TSid) %>% 
+      dplyr::mutate(scaled = scale(scaled,scale = FALSE, center = TRUE))
+      
+    
+    
+      
   }
   plot.df <- plot.df %>%
     dplyr::filter(is.finite(scaled))
@@ -2187,10 +2202,14 @@ plotTimeseriesStack <- function(plot.df,
                      sdlow = -sd(paleoData_values,na.rm = T)/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
                      color.var = unique(cv)) %>%
     dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
-    dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
-    dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
+    dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,y.axis.sig.dig)),as.character(signif(sdhigh,y.axis.sig.dig))))  %>%
+    dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,y.axis.sig.dig)),as.character(signif(sdlow,y.axis.sig.dig))))
   }else{
     allPaleoSd <- sd(plot.df$paleoData_values,na.rm = T)
+    
+    if(is.na(y.axis.range)){
+      y.axis.range <- allPaleoSd/scale.factor
+    }
     
     axisStats <- plot.df %>%
       dplyr::summarize(variableName = unique(paleoData_variableName),
@@ -2199,12 +2218,12 @@ plotTimeseriesStack <- function(plot.df,
                        archiveType = unique(archiveType), 
                        invert = mean(iv),
                        mean = mean(paleoData_values,na.rm = T),
-                       sdhigh = allPaleoSd/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
-                       sdlow = -allPaleoSd/scale.factor*scale.height+mean(paleoData_values,na.rm = T),
+                       sdhigh = y.axis.range*scale.height*.5+mean(paleoData_values,na.rm = T),
+                       sdlow = -y.axis.range*scale.height*.5+mean(paleoData_values,na.rm = T),
                        color.var = unique(cv)) %>%
       dplyr::mutate(axisLabel = paste0(variableName," (",units,")")) %>%
-      dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(sdlow,3)),as.character(signif(sdhigh,3))))  %>%
-      dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(sdhigh,3)),as.character(signif(sdlow,3))))
+      dplyr::mutate(axisMin = ifelse(invert == 1,as.character(signif(-y.axis.range*.5+mean,y.axis.sig.dig)),as.character(signif(sdhigh,y.axis.sig.dig))))  %>%
+      dplyr::mutate(axisMax = ifelse(invert == 1,as.character(signif(y.axis.range*.5+mean,y.axis.sig.dig)),as.character(signif(sdlow,y.axis.sig.dig))))
   }
   
 

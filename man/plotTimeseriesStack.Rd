@@ -13,6 +13,7 @@ plotTimeseriesStack(
   line.size = 0.5,
   scale.factor = 1/3,
   scale.height = 0.75,
+  common.axis = FALSE,
   lab.buff = 0.02,
   lab.size = 3,
   lab.space = 2,
@@ -36,6 +37,8 @@ plotTimeseriesStack(
 
 \item{scale.height}{Controls how large the y-axes will be. 1 is equivalent to end-to-end coverage with no space. (default = 0.75)}
 
+\item{common.axis}{Should all plots share the same axis scale? (default = FALSE)}
+
 \item{lab.buff}{Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)}
 
 \item{lab.size}{Font size for the ylabels}
@@ -48,7 +51,7 @@ plotTimeseriesStack(
 A ggplot object of the plot
 }
 \description{
-Creates a suite of plots to characterize the results of an ensemble regression.
+Creates a ridge plot that shows multiple timeseries in a vertical stack.
 }
 \section{Long-form example}{
 
