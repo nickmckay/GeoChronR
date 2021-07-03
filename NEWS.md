@@ -1,5 +1,7 @@
 # geoChronR 1.0.11
 
+* Removed jitterPositions option following `Bchron` update. [See issue 53](https://github.com/nickmckay/GeoChronR/issues/53)
+
 # geoChronR 1.0.10
 
 * Added handling for shapes in `mapTs()` for tibbles.
