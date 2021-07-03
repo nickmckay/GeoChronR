@@ -152,7 +152,6 @@ runBchron =  function(L,
                             positions = cdf$depth,
                             positionThicknesses = rep(1,length(cdf$depth)),
                             iterations = iter,
-                            jitterPositions = TRUE,
                             outlierProbs = cdf$outlier.probs,
                             ...)
                             
