@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,20 +180,20 @@
     <p>Creates a suite of plots to characterize the results of an ensemble regression.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotTimeseriesStack</span>(
-  <span class='kw'>plot.df</span>,
-  time.var = <span class='st'>"year"</span>,
-  color.var = <span class='st'>"paleoData_TSid"</span>,
-  invert.var = <span class='fl'>NA</span>,
-  fill.alpha = <span class='fl'>0.2</span>,
-  line.size = <span class='fl'>0.5</span>,
-  scale.factor = <span class='fl'>1</span><span class='op'>/</span><span class='fl'>3</span>,
-  scale.height = <span class='fl'>0.75</span>,
-  lab.buff = <span class='fl'>0.02</span>,
-  lab.size = <span class='fl'>3</span>,
-  lab.space = <span class='fl'>2</span>,
-  color.ramp = <span class='fu'>function</span>(<span class='kw'>nColors</span>) {     <span class='kw'>RColorBrewer</span>::<span class='fu'><a href='https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html'>brewer.pal</a></span>(<span class='kw'>nColors</span>, <span class='st'>"Dark2"</span>) }
-)</pre>
+    <pre class="usage"><span class='fu'>plotTimeseriesStack</span><span class='op'>(</span>
+  <span class='va'>plot.df</span>,
+  time.var <span class='op'>=</span> <span class='st'>"year"</span>,
+  color.var <span class='op'>=</span> <span class='st'>"paleoData_TSid"</span>,
+  invert.var <span class='op'>=</span> <span class='cn'>NA</span>,
+  fill.alpha <span class='op'>=</span> <span class='fl'>0.2</span>,
+  line.size <span class='op'>=</span> <span class='fl'>0.5</span>,
+  scale.factor <span class='op'>=</span> <span class='fl'>1</span><span class='op'>/</span><span class='fl'>3</span>,
+  scale.height <span class='op'>=</span> <span class='fl'>0.75</span>,
+  lab.buff <span class='op'>=</span> <span class='fl'>0.02</span>,
+  lab.size <span class='op'>=</span> <span class='fl'>3</span>,
+  lab.space <span class='op'>=</span> <span class='fl'>2</span>,
+  color.ramp <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>nColors</span><span class='op'>)</span> <span class='op'>{</span>     <span class='fu'>RColorBrewer</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html'>brewer.pal</a></span><span class='op'>(</span><span class='va'>nColors</span>, <span class='st'>"Dark2"</span><span class='op'>)</span> <span class='op'>}</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

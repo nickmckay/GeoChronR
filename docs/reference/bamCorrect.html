@@ -87,7 +87,7 @@ The time series in X are automatically flipped to range from most recent to olde
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@ The time series in X are automatically flipped to range from most recent to olde
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -149,7 +149,7 @@ The time series in X are automatically flipped to range from most recent to olde
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -182,7 +182,7 @@ The time series in X are automatically flipped to range from most recent to olde
 The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>bamCorrect</span>(<span class='kw'>X</span>, <span class='kw'>t</span>, model = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>bamCorrect</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>t</span>, model <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -233,14 +233,14 @@ where tn is the chronology length = n (default), shortest sample or longest samp
     <p>Maud Comboul</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>bamCorrect</span>(<span class='kw'>X</span>,<span class='kw'>t</span>) 
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>bamCorrect</span><span class='op'>(</span><span class='va'>X</span>,<span class='va'>t</span><span class='op'>)</span> 
 <span class='co'>#will generate an ensemble of 1000 age models randomly following</span>
 <span class='co'>#a Poisson process with rate parameter theta=0.05 used to perturb data X</span>
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>bamCorrect</span>(<span class='kw'>X</span>,<span class='kw'>t</span>,<span class='kw'>model</span>) 
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>bamCorrect</span><span class='op'>(</span><span class='va'>X</span>,<span class='va'>t</span>,<span class='va'>model</span><span class='op'>)</span> 
 <span class='co'>#will correct data X  with the model specified in</span>
 <span class='co'>#the model structure</span>
-}
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

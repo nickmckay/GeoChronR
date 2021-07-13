@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,16 +180,16 @@
     <p>Loads the ensemble, summary and distribution data from a Bacon simulation and stores them in the LiPD structure. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>loadBaconOutput</span>(
-  <span class='kw'>L</span>,
-  site.name = <span class='kw'>L</span><span class='op'>$</span><span class='kw'>dataSetName</span>,
-  K = <span class='fl'>NA</span>,
-  chron.num = <span class='fl'>NA</span>,
-  bacon.dir = <span class='fl'>NA</span>,
-  model.num = <span class='fl'>NA</span>,
-  make.new = <span class='fl'>NA</span>,
-  max.ens = <span class='fl'>1000</span>
-)</pre>
+    <pre class="usage"><span class='fu'>loadBaconOutput</span><span class='op'>(</span>
+  <span class='va'>L</span>,
+  site.name <span class='op'>=</span> <span class='va'>L</span><span class='op'>$</span><span class='va'>dataSetName</span>,
+  K <span class='op'>=</span> <span class='cn'>NA</span>,
+  chron.num <span class='op'>=</span> <span class='cn'>NA</span>,
+  bacon.dir <span class='op'>=</span> <span class='cn'>NA</span>,
+  model.num <span class='op'>=</span> <span class='cn'>NA</span>,
+  make.new <span class='op'>=</span> <span class='cn'>NA</span>,
+  max.ens <span class='op'>=</span> <span class='fl'>1000</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -236,7 +236,7 @@
     <p>Nick McKay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>loadBaconOutput</span>(<span class='kw'>L</span>)
+    <pre class="examples"><div class='input'><span class='fu'>loadBaconOutput</span><span class='op'>(</span><span class='va'>L</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory </div><div class='output co'>#&gt; <span class='error'>Error in grepl(site.name, dir()): object 'L' not found</span></div><div class='input'><span class='co'>#Run in interactive mode</span>
 </div></pre>
   </div>

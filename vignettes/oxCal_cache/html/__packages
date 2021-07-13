@@ -4,3 +4,5 @@ lipdR
 oxcAAR
 dplyr
 ggplot2
+gridExtra
+magrittr

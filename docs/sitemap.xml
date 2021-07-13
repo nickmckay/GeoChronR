@@ -10,6 +10,9 @@
     <loc>https://nickmckay.github.io/geoChronR/reference/BP2AD_trans.html</loc>
   </url>
   <url>
+    <loc>https://nickmckay.github.io/geoChronR/reference/PeriodAnnotate.html</loc>
+  </url>
+  <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/alignTimeseriesBin.html</loc>
   </url>
   <url>
@@ -155,9 +158,6 @@
   </url>
   <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/pcaEns.html</loc>
-  </url>
-  <url>
-    <loc>https://nickmckay.github.io/geoChronR/reference/periodAnnotate.html</loc>
   </url>
   <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/plotChron.html</loc>

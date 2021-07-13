@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,11 +180,11 @@
     <p>This is an internal function that calculates an estimate of a, the proportion of alternative hypotheses, using one of several methods.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>propAlt</span>(
-  <span class='kw'>pvals</span>,
-  adjustment.method = <span class='st'>"mean"</span>,
-  adjustment.args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(edf.lower = <span class='fl'>0.8</span>, num.steps = <span class='fl'>20</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>propAlt</span><span class='op'>(</span>
+  <span class='va'>pvals</span>,
+  adjustment.method <span class='op'>=</span> <span class='st'>"mean"</span>,
+  adjustment.args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>edf.lower <span class='op'>=</span> <span class='fl'>0.8</span>, num.steps <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,7 +222,7 @@
     <p>Chris Paciorek</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>a</span> <span class='op'>&lt;-</span> <span class='fu'>propAlt</span>(<span class='kw'>pvals</span>,adjustment.method=<span class='st'>"mean"</span>)
+    <pre class="examples"><div class='input'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'>propAlt</span><span class='op'>(</span><span class='va'>pvals</span>,adjustment.method<span class='op'>=</span><span class='st'>"mean"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in propAlt(pvals, adjustment.method = "mean"): object 'pvals' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

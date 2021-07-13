@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,21 +180,21 @@
     <p>shows a map, timeseries, and age model diagram, and basic simple metadata</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotSummary</span>(
-  <span class='kw'>L</span>,
-  paleo.age.var = <span class='st'>"age"</span>,
-  paleo.data.var = <span class='fl'>NA</span>,
-  chron.number = <span class='fl'>NA</span>,
-  paleo.meas.num = <span class='fl'>NA</span>,
-  chron.meas.num = <span class='fl'>NA</span>,
-  chron.depth.var = <span class='st'>"depth"</span>,
-  chron.age.var = <span class='st'>"age"</span>,
-  dotSize = <span class='fl'>5</span>,
-  summary.font.size = <span class='fl'>10</span>,
-  text.width = <span class='fl'>400</span><span class='op'>/</span><span class='kw'>summary.font.size</span>,
-  legend.position = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.7</span>, <span class='fl'>0.3</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>plotSummary</span><span class='op'>(</span>
+  <span class='va'>L</span>,
+  paleo.age.var <span class='op'>=</span> <span class='st'>"age"</span>,
+  paleo.data.var <span class='op'>=</span> <span class='cn'>NA</span>,
+  chron.number <span class='op'>=</span> <span class='cn'>NA</span>,
+  paleo.meas.num <span class='op'>=</span> <span class='cn'>NA</span>,
+  chron.meas.num <span class='op'>=</span> <span class='cn'>NA</span>,
+  chron.depth.var <span class='op'>=</span> <span class='st'>"depth"</span>,
+  chron.age.var <span class='op'>=</span> <span class='st'>"age"</span>,
+  dotSize <span class='op'>=</span> <span class='fl'>5</span>,
+  summary.font.size <span class='op'>=</span> <span class='fl'>10</span>,
+  text.width <span class='op'>=</span> <span class='fl'>400</span><span class='op'>/</span><span class='va'>summary.font.size</span>,
+  legend.position <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.7</span>, <span class='fl'>0.3</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -298,9 +298,9 @@
     <p>Nick McKay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>myPlot</span> <span class='op'>=</span> <span class='fu'>summaryPlot</span>(<span class='kw'>L</span>)
-}
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>myPlot</span> <span class='op'>=</span> <span class='fu'>summaryPlot</span><span class='op'>(</span><span class='va'>L</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

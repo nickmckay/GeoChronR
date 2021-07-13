@@ -1,4 +1,4 @@
-pandoc: 2.3.1
+pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -11,7 +11,7 @@ articles:
   regression: regression.html
   spectral_analysis: spectral_analysis.html
   tidyIso2k: tidyIso2k.html
-last_built: 2021-02-08T20:56Z
+last_built: 2021-07-13T21:19Z
 urls:
   reference: https://nickmckay.github.io/geoChronR/reference
   article: https://nickmckay.github.io/geoChronR/articles

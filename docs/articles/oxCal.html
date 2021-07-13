@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -48,7 +48,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -122,13 +122,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="oxCal_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Intro to OxCal in geoChronR</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-02-08</h4>
+            <h4 class="date">2021-07-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/oxCal.Rmd"><code>vignettes/oxCal.Rmd</code></a></small>
       <div class="hidden name"><code>oxCal.Rmd</code></div>
@@ -140,51 +140,48 @@
 <div id="use-oxcal-to-create-an-age-model" class="section level1">
 <h1 class="hasAnchor">
 <a href="#use-oxcal-to-create-an-age-model" class="anchor"></a>Use oxCal to create an age model</h1>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">lipdR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">oxcAAR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">oxcAAR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></code></pre></div>
 <div id="setting-up-oxcal" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setting-up-oxcal" class="anchor"></a>Setting up oxCal</h2>
 <p>The <code>oxcAAR</code> package provides efficient access from R to the oxCal executables, which will need to be set up on your computer before you can use it. Once it’s installed you won’t need to repeat this step, just point to where it’s installed. If it’s already installed, it will tell you.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/pkg/oxcAAR/man/quickSetupOxcal.html">quickSetupOxcal</a></span>(path = <span class="st">"~/OxCal"</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/oxcAAR/man/quickSetupOxcal.html">quickSetupOxcal</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"~/OxCal"</span><span class="op">)</span>
 <span class="co">#&gt; Oxcal is installed but Oxcal executable path is wrong. Let's have a look...</span>
 <span class="co">#&gt; Oxcal path set!</span>
-<span class="co">#&gt; NULL</span>
-</pre></div>
+<span class="co">#&gt; NULL</span></code></pre></div>
 <p>OK, let’s get a LiPD file from the LinkedEarth Wiki:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
- <span class="kw">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span>(<span class="st">"http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&amp;lipdid=BJ8-03-70GGC.Linsley.2010"</span>)
-<span class="co">#&gt; [1] "reading: Special:WTLiPD?op=export&amp;lipdid=BJ8-03-70GGC.Linsley.2010.lpd"</span>
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"> <span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html">readLipd</a></span><span class="op">(</span><span class="st">"http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&amp;lipdid=BJ8-03-70GGC.Linsley.2010"</span><span class="op">)</span>
+<span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></code></pre></div>
 <p>Now we can run it through oxcal. First, we specify our oxcal path, then use the <code>runOxcal</code> function. Like the other <code>run{AgeModel}</code> functions in geoChronR, you can leave the parameters empty and specify the choicecs interactively, or you can specify everything for replicability. For choosing the variable names, if you did it interactively and would like to recall those choices, try the <code>getLastVarString</code> function.</p>
 <p>Here, in addition to the variable choices, there are a few key parameters to note. First, we specify a “static” reservoir age and uncertainty. You can use this if you want to apply the same deltaR (and uncertainty) to all the ages. Alternatively, these can be columns in the chron measurement tables.</p>
 <p>Also, note that we’ve specified the surface age and uncertainty, as that was not included in the measurent table.</p>
 <p>Finally, there are two more key parameters, the <code>depth.interval</code> and the <code>events.per.unit.length</code>. These have a substantial impact the output. The <code>depth.interval</code> controls the spacing at which to calculate the age model uncertainty distributions, and the <code>events.per.unit.length</code> is the key parameter for the poisson distribution. As the number events increases, the modeled sequence will become more monitonic (linear) between ages. If you’re having trouble getting OxCal to produce a valid model for your sequence, tinker with these two parameters. Fewer <code>events.per.unit.length</code> and a larger <code>depth.interval</code> will increase the flexibility of the model and likelihood of convergence.</p>
 <p>Optionally, you can set <code>events.per.unit.length.uncertainty</code> to a positive number to indicate a prior uncertainty estimate (in orders of magnitude) on <code>events.per.unit.length</code>. This will tell OxCal to treat <code>events.per.unit.length</code> as a variable and optimize it to fit the data. This often returns better results, especially in the absence of an informed prior on <code>events.per.unit.length</code>, but <strong>greatly</strong> increases the run time (expect a run to take multiple hours).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runOxcal.html">runOxcal</a></span>(<span class="kw">L</span>,
-              lab.id.var = <span class="st">'id'</span>, 
-              age.14c.var = <span class="st">'age14c'</span>, 
-              age.14c.uncertainty.var = <span class="st">'age14cuncertainty'</span>, 
-              age.var = <span class="st">'calendarage'</span>, 
-              age.uncertainty.var = <span class="st">'calendarageuncertainty'</span>, 
-              depth.var = <span class="st">'depth'</span>, 
-              reservoir.age.14c.var = <span class="kw">NULL</span>, 
-              reservoir.age.14c.uncertainty.var = <span class="kw">NULL</span>, 
-              rejected.ages.var = <span class="kw">NULL</span>,
-              static.reservoir.age = <span class="fl">70</span>,
-              static.reservoir.age.unc = <span class="fl">50</span>,
-              oxcal.path = <span class="st">"~/OxCal"</span>,
-              surface.age = <span class="fl">0</span>,
-              surface.age.unc = <span class="fl">25</span>,
-              depth.interval = <span class="fl">10</span>,
-              events.per.unit.length = <span class="fl">.1</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runOxcal.html">runOxcal</a></span><span class="op">(</span><span class="va">L</span>,
+              lab.id.var <span class="op">=</span> <span class="st">'id'</span>, 
+              age.14c.var <span class="op">=</span> <span class="st">'age14c'</span>, 
+              age.14c.uncertainty.var <span class="op">=</span> <span class="st">'age14cuncertainty'</span>, 
+              age.var <span class="op">=</span> <span class="st">'calendarage'</span>, 
+              age.uncertainty.var <span class="op">=</span> <span class="st">'calendarageuncertainty'</span>, 
+              depth.var <span class="op">=</span> <span class="st">'depth'</span>, 
+              reservoir.age.14c.var <span class="op">=</span> <span class="cn">NULL</span>, 
+              reservoir.age.14c.uncertainty.var <span class="op">=</span> <span class="cn">NULL</span>, 
+              rejected.ages.var <span class="op">=</span> <span class="cn">NULL</span>,
+              static.reservoir.age <span class="op">=</span> <span class="fl">70</span>,
+              static.reservoir.age.unc <span class="op">=</span> <span class="fl">50</span>,
+              oxcal.path <span class="op">=</span> <span class="st">"~/OxCal"</span>,
+              surface.age <span class="op">=</span> <span class="fl">0</span>,
+              surface.age.unc <span class="op">=</span> <span class="fl">25</span>,
+              depth.interval <span class="op">=</span> <span class="fl">10</span>,
+              events.per.unit.length <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span>
 <span class="co">#&gt; Looking for laboratory ID </span>
 <span class="co">#&gt; [1] "Found it! Moving on..."</span>
 <span class="co">#&gt; Looking for radiocarbon ages </span>
@@ -207,39 +204,34 @@
 <span class="co">#&gt; For future reference: here are the options you chose:</span>
 <span class="co">#&gt;  Find later with getLastVarString()</span>
 <span class="co">#&gt; lab.id.var = 'id', age.14c.var = 'age14c', age.14c.uncertainty.var = 'age14cuncertainty', age.var = 'calendarage', age.uncertainty.var = 'calendarageuncertainty', depth.var = 'depth', reservoir.age.14c.var = NULL, reservoir.age.14c.uncertainty.var = NULL, rejected.ages.var = NULL, </span>
-<span class="co">#&gt; Oxcal is now running, depending on your settings and your computer, this may take a few minutes to several hours. The model is complete when a table of model diagnostics appears.</span>
-</pre></div>
+<span class="co">#&gt; Oxcal is now running, depending on your settings and your computer, this may take a few minutes to several hours. The model is complete when a table of model diagnostics appears.</span></code></pre></div>
 <p>Great. After OxCal finishes running successfully, it will return this table showing some diagnostics of the MCMC statistics for the dated levels. If the table is empty, that’s a sure sign that there was an error in your run.</p>
 <p>Now that the age model has been generated, you can plot your age model with <code>plotChronEns</code>, just like with the other methods.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span>(<span class="kw">L</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">L</span><span class="op">)</span>
 <span class="co">#&gt; [1] "Found it! Moving on..."</span>
 <span class="co">#&gt; [1] "Found it! Moving on..."</span>
-<span class="co">#&gt; [1] "plotting your chron ensemble. This make take a few seconds..."</span>
-</pre></div>
+<span class="co">#&gt; [1] "plotting your chron ensemble. This make take a few seconds..."</span></code></pre></div>
 <p><img src="oxCal_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>To map the the age ensembles onto the proxy data, use <code>mapAgeEnsembleToPaleoData</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span>(<span class="kw">L</span>,age.var = <span class="st">"ageEnsemble"</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">L</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span>
 <span class="co">#&gt; [1] "BJ8-03-70GGC.Linsley.2010"</span>
 <span class="co">#&gt; [1] "Looking for age ensemble...."</span>
 <span class="co">#&gt; [1] "Found it! Moving on..."</span>
 <span class="co">#&gt; [1] "Found it! Moving on..."</span>
 <span class="co">#&gt; [1] "getting depth from the paleodata table..."</span>
-<span class="co">#&gt; [1] "Found it! Moving on..."</span>
-</pre></div>
+<span class="co">#&gt; [1] "Found it! Moving on..."</span></code></pre></div>
 <p>Finally, let’s select the ageEnsemble and the SST variables…</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">ageEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">L</span>,var.name = <span class="st">"ageEnsemble"</span>)
-<span class="kw">SST</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span>(<span class="kw">L</span>,var.name = <span class="st">"SST"</span>)
-</pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ageEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span>
+<span class="va">SST</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,var.name <span class="op">=</span> <span class="st">"SST"</span><span class="op">)</span></code></pre></div>
 <p>And plot up the output.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span>(X = <span class="kw">ageEns</span>, Y = <span class="kw">SST</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span>(X = <span class="kw">ageEns</span>, Y = <span class="kw">SST</span>,n.ens.plot = <span class="fl">10</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">ageEns</span>, Y <span class="op">=</span> <span class="va">SST</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">ageEns</span>, Y <span class="op">=</span> <span class="va">SST</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span>
-<span class="co">#&gt; replace the existing scale.</span>
-</pre></div>
+<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
 <p><img src="oxCal_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
 <p>It looks reasonable, so we can now proceed to use this ensemble like it’s any other.</p>
 <p>Happy modeling!</p>

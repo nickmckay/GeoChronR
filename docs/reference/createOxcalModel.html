@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,20 +180,20 @@
     <p>Create the oxcal model script</p>
     </div>
 
-    <pre class="usage"><span class='fu'>createOxcalModel</span>(
-  <span class='kw'>cdf</span>,
-  depths.to.model = <span class='fl'>NA</span>,
-  depth.interval = <span class='fl'>10</span>,
-  thin = <span class='fl'>50</span>,
-  n.it = <span class='fl'>10000</span>,
-  events.per.unit.length = <span class='fl'>1</span>,
-  events.per.unit.length.uncertainty = <span class='fl'>NA</span>,
-  seq.type = <span class='st'>"P_Sequence"</span>,
-  top.boundary = <span class='st'>"Boundary"</span>,
-  bottom.boundary = <span class='st'>"Boundary"</span>,
-  outlier.prob = <span class='fl'>0.05</span>,
-  cal.curve = <span class='st'>"intcal13"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>createOxcalModel</span><span class='op'>(</span>
+  <span class='va'>cdf</span>,
+  depths.to.model <span class='op'>=</span> <span class='cn'>NA</span>,
+  depth.interval <span class='op'>=</span> <span class='fl'>10</span>,
+  thin <span class='op'>=</span> <span class='fl'>50</span>,
+  n.it <span class='op'>=</span> <span class='fl'>10000</span>,
+  events.per.unit.length <span class='op'>=</span> <span class='fl'>1</span>,
+  events.per.unit.length.uncertainty <span class='op'>=</span> <span class='cn'>NA</span>,
+  seq.type <span class='op'>=</span> <span class='st'>"P_Sequence"</span>,
+  top.boundary <span class='op'>=</span> <span class='st'>"Boundary"</span>,
+  bottom.boundary <span class='op'>=</span> <span class='st'>"Boundary"</span>,
+  outlier.prob <span class='op'>=</span> <span class='fl'>0.05</span>,
+  cal.curve <span class='op'>=</span> <span class='st'>"intcal13"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

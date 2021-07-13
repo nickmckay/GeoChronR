@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -180,21 +180,21 @@
     <p>Primary function for calculating correlation ensembles</p>
     </div>
 
-    <pre class="usage"><span class='fu'>corEns</span>(
-  <span class='kw'>time.1</span>,
-  <span class='kw'>values.1</span>,
-  <span class='kw'>time.2</span>,
-  <span class='kw'>values.2</span>,
-  bin.vec = <span class='fl'>NA</span>,
-  bin.step = <span class='fl'>NA</span>,
-  bin.fun = <span class='kw'>mean</span>,
-  max.ens = <span class='fl'>NA</span>,
-  percentiles = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.025</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.975</span>),
-  min.obs = <span class='fl'>10</span>,
-  fdr.qlevel = <span class='fl'>0.05</span>,
-  gaussianize = <span class='fl'>TRUE</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>corEns</span><span class='op'>(</span>
+  <span class='va'>time.1</span>,
+  <span class='va'>values.1</span>,
+  <span class='va'>time.2</span>,
+  <span class='va'>values.2</span>,
+  bin.vec <span class='op'>=</span> <span class='cn'>NA</span>,
+  bin.step <span class='op'>=</span> <span class='cn'>NA</span>,
+  bin.fun <span class='op'>=</span> <span class='va'>mean</span>,
+  max.ens <span class='op'>=</span> <span class='cn'>NA</span>,
+  percentiles <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.025</span>, <span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span>, <span class='fl'>0.975</span><span class='op'>)</span>,
+  min.obs <span class='op'>=</span> <span class='fl'>10</span>,
+  fdr.qlevel <span class='op'>=</span> <span class='fl'>0.05</span>,
+  gaussianize <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

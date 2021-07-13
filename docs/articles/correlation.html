@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
       </span>
     </div>
 
@@ -48,7 +48,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/nickmckay/GeoChronR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -122,13 +122,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="correlation_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-02-08</h4>
+            <h4 class="date">2021-07-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/correlation.Rmd"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -152,30 +152,27 @@
 <h1 class="hasAnchor">
 <a href="#age-uncertain-correlation" class="anchor"></a>Age-uncertain correlation</h1>
 <p>This vignette picks up where the <a href="Introduction.html">introduction</a> leaves off, we’ve generated age ensembles for two datasets, and now want to explore the relationship between these two datasets. First we’ll load the packages we need.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">gridExtra</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR">geoChronR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></code></pre></div>
 <p>And the data we generated in the <a href="Introduction.html">introduction</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span>(<span class="st">"https://lipdverse.org/geoChronR-examples/introductionOutput.RData"</span>,useSavedNames = <span class="fl">TRUE</span>)
-</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span><span class="op">(</span><span class="st">"https://lipdverse.org/geoChronR-examples/introductionOutput.RData"</span>,useSavedNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <div id="the-corens-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-corens-function" class="anchor"></a>The corEns() function</h2>
 <p>Let’s take another look at the the two timeseries over the period of overlap. To calculate age uncertian correlation let use geoChronR’s <code>corEns</code> function. Note that this approach is, in many ways, simplistic. Correlating the two age-uncertain datasets will characterize the relationship, but ignores ancillary evidence that may support a mechanistic relationship between two timeseries. Still, it illustrates how age uncertainty can affect apparent alignment between two datasets, which is the purpose of this example.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span>(time.1 = <span class="kw">gisp2.ens</span>,
-                 values.1 = <span class="kw">gisp2.d18O</span>,
-                 time.2 = <span class="kw">hulu.ae</span>,
-                 values.2 = <span class="kw">hulu.d18O</span>,
-                 bin.step = <span class="fl">200</span>,
-                 max.ens = <span class="fl">1000</span>,
-                 isopersistent  = <span class="fl">TRUE</span>,
-                 isospectral = <span class="fl">TRUE</span>,
-                 gaussianize = <span class="fl">TRUE</span>)
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span>time.1 <span class="op">=</span> <span class="va">gisp2.ens</span>,
+                 values.1 <span class="op">=</span> <span class="va">gisp2.d18O</span>,
+                 time.2 <span class="op">=</span> <span class="va">hulu.ae</span>,
+                 values.2 <span class="op">=</span> <span class="va">hulu.d18O</span>,
+                 bin.step <span class="op">=</span> <span class="fl">200</span>,
+                 max.ens <span class="op">=</span> <span class="fl">1000</span>,
+                 isopersistent  <span class="op">=</span> <span class="cn">TRUE</span>,
+                 isospectral <span class="op">=</span> <span class="cn">TRUE</span>,
+                 gaussianize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>Note that there are many parameters available for the <code>corEns</code> function (check out the help at <code><a href="../reference/corEns.html">?corEns</a></code>). Some of the key ones to pay attention to are:</p>
 <ul>
 <li><p><strong>bin.step</strong> This variable sets the size of the bins that the data will be averaged into to align before correlation. Smaller bins will focus allow examination of shorter timescales, and increase the the sample size, but also increase the number of empty bins, and tend to increase autocorrelation. The right bin size varies depends on the distribution of resolutions in your datasets.</p></li>
@@ -183,32 +180,30 @@
 <li><p><strong>gaussianize</strong> You’ll find the gaussianize option throughout geoChronR, and it’s typically the default option. <code>gaussianize</code> will transform the data into a Gaussian distribution, recognizing that many of the methods and/or their significance testing assume that the input data are normally distributed. This options ensures that this is the case.</p></li>
 </ul>
 <p><code>corEns</code> returns a list that has the key correlation and significance results for all the selected methods. If percentiles are provided to corEns, and they are by default, the function will output a data.frame that summarizes the output.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">corout</span><span class="op">$</span><span class="kw">cor.stats</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">corout</span><span class="op">$</span><span class="va">cor.stats</span>
 <span class="co">#&gt; Registered S3 method overwritten by 'cli':</span>
-<span class="co">#&gt;   method     from    </span>
-<span class="co">#&gt;   print.boxx spatstat</span>
+<span class="co">#&gt;   method     from         </span>
+<span class="co">#&gt;   print.boxx spatstat.geom</span>
 <span class="co">#&gt; # A tibble: 5 x 6</span>
 <span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span>
 <span class="co">#&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00718        0.101</span>
-<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.153          0.386</span>
-<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.426          0.629</span>
-<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.727          0.842</span>
-<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982          0.991</span>
-</pre></div>
+<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00850       0.0962</span>
+<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.158         0.392 </span>
+<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.432         0.633 </span>
+<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.720         0.842 </span>
+<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982         0.989</span></code></pre></div>
 </div>
 <div id="plotting-the-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-the-results" class="anchor"></a>Plotting the results</h2>
 <p>This gives us a first order sense of the results, but let’s use the <code>plotCorEns</code> function to dig in deeper.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,
-           legend.position =<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.8</span>),
-           f.sig.lab.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.6</span>),
-           significance.option = <span class="st">"raw"</span>,
-           use.fdr = <span class="fl">FALSE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Distribution of correlation coefficients"</span>)
-</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,
+           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,
+           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,
+           significance.option <span class="op">=</span> <span class="st">"raw"</span>,
+           use.fdr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Distribution of correlation coefficients"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
 <div id="significance-testing-options" class="section level3">
 <h3 class="hasAnchor">
@@ -220,42 +215,38 @@
 <li><p>The final option, “isospectral” also generates surrogates to estimate significance, but does so by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal.</p></li>
 </ol>
 <p>Let’s take a look at each of these three options,</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,
-           legend.position =<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.8</span>),
-           f.sig.lab.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.6</span>),
-           significance.option = <span class="st">"eff-n"</span>,
-           use.fdr = <span class="fl">FALSE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Effective-N significance testing"</span>)
-</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,
+           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,
+           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,
+           significance.option <span class="op">=</span> <span class="st">"eff-n"</span>,
+           use.fdr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Effective-N significance testing"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 <p>Here we see a dramatic effect of accounting for serial autocorrelation in our significance testing. Using the “effective-N” method drops the percentage of significant correlations (at the 0.05 level) to 0. However when autocorrelation is large, this approach dramatically reduces the effective degrees of freedom and has been shown to be overly conservative in many cases. So let’s take a look at the surrogate-based approaches.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,
-           legend.position =<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.8</span>),
-           f.sig.lab.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.6</span>),
-           significance.option = <span class="st">"isopersistent"</span>,
-           use.fdr = <span class="fl">FALSE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Isopersistent significance testing"</span>)
-</pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,
+           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,
+           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,
+           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,
+           use.fdr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Isopersistent significance testing"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 <p>Using the “isopersistent” approach, where we simulate thousands of synthetic correlations with the same autocorrelation characteristics as the real data, and see how frequently we observe r-values at the observed levels, gives a much less conservative result. In this case the fraction of significant correlations is only slightly smaller than when not accounting for autocorrelation at all.</p>
 <p>This is a good point to note that we have another statistical problem on our hands. In addition to the impact of autocorrelation on this analysis, repeating the test over multiple ensemble members raises the issue of test multiplicity <span class="citation">[@Ventura2004]</span>, or the “look elsewhere effect”. At a 5% significance level, one would expect a 1000 member ensemble to contain 50 spurious “discoveries” – instances of the null hypothesis, here “no correlation” being rejected. To overcome this problem, we control for this false discovery rate (FDR) using the simple approach of <span class="citation">@BenjaminiHochberg95</span>, coded in R by <span class="citation">@Ventura2004</span>. FDR takes this effect into account to minimize the risk of identifying such spurious correlations merely on account of repeated testing. In effect, it filters the set of “significant” results identified by each hypothesis test (effective-N, isopersistent, or isospectral). Let’s plot this again, but turn the <code>use.fdr</code> option to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,
-           legend.position =<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.8</span>),
-           f.sig.lab.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.6</span>),
-           significance.option = <span class="st">"isopersistent"</span>,
-           use.fdr = <span class="fl">TRUE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Isopersistent significance testing, with False Discovery Rate effects"</span>)
-</pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,
+           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,
+           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,
+           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,
+           use.fdr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Isopersistent significance testing, with False Discovery Rate effects"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
-<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.7% of the ensemble members are significant.</p>
+<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.1% of the ensemble members are significant.</p>
 <p>Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in geoChronR. For our final example we’ll take a look at isospectral significance testing and account for FDR.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">corout</span>,
-           legend.position =<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.8</span>),
-           f.sig.lab.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">.85</span>,<span class="fl">.6</span>),
-           significance.option = <span class="st">"isospectral"</span>,
-           use.fdr = <span class="fl">TRUE</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Isospectral significance testing"</span>)
-</pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,
+           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,
+           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,
+           significance.option <span class="op">=</span> <span class="st">"isospectral"</span>,
+           use.fdr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Isospectral significance testing"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 <p>In the isospectral test, only a few of the ensembles members are significant, none of which remain upon adjusting for FDR. This method makes the fewest assumptions as to the structure of the series, and its computational cost is moderate, and so it is the default in geoChronR. We also recommend including FDR adjustment to avoid test-multiplicitly corrections.</p>
 </div>
@@ -264,17 +255,16 @@
 <h2 class="hasAnchor">
 <a href="#judging-the-overall-significance-of-an-age-uncertain-correlation" class="anchor"></a>Judging the overall significance of an age-uncertain correlation</h2>
 <p>So, with all of the methods, only a small subset of the correlations are significant, so it’s probably fair to say to that this is not a significant correlation after accounting for age uncertainty. But this begs the question, what fraction of the correlation ensemble needs to be significant to consider an age-uncertain relation significant? There is no hard and fast theoretical justification for what fraction of ensemble correlation results should be expected to pass such a significance test, and so evaluating the significance of age uncertain correlation remains somewhat subjective. Indeed, two truly correlated timeseries, when afflicted with age uncertainty, will commonly return some fraction of insignificant results when random ensemble members are correlated against each other. The frequency of these “false negatives” depends on the structure of the age uncertainties and the timeseries, and will vary to some extent by random chance. One way to get a sense of the vulnerability of a timeseries to false negatives is to perform an age-uncertain correlation of a dataset with itself. It is appropriate to consider the results of this analysis as a best-case scenario, and to consider the correlation results in this light. For illustration, we perform this calculation with the Hulu Cave <span class="math inline">\(\delta^{18}\)</span>O record</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="kw">coroutHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span>(<span class="kw">hulu.ae</span>,<span class="kw">hulu.d18O</span>,<span class="kw">hulu.ae</span>,<span class="kw">hulu.d18O</span>,bin.step = <span class="fl">200</span>,max.ens = <span class="fl">1000</span>)
-<span class="kw">corPlotHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span>(<span class="kw">coroutHulu</span>,
-                          legend.position = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>, <span class="fl">0.8</span>),
-                          significance.option = <span class="st">"isospectral"</span>)<span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="kw">NULL</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coroutHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,<span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,bin.step <span class="op">=</span> <span class="fl">200</span>,max.ens <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
+<span class="va">corPlotHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">coroutHulu</span>,
+                          legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.8</span><span class="op">)</span>,
+                          significance.option <span class="op">=</span> <span class="st">"isospectral"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
 
-<span class="kw">above90</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="kw">coroutHulu</span><span class="op">$</span><span class="kw">cor.df</span><span class="op">$</span><span class="kw">r</span> <span class="op">&gt;</span> <span class="fl">0.9</span>)<span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">coroutHulu</span><span class="op">$</span><span class="kw">cor.df</span>)<span class="op">*</span><span class="fl">100</span>,<span class="fl">1</span>)
-<span class="kw">med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(<span class="kw">coroutHulu</span><span class="op">$</span><span class="kw">cor.df</span><span class="op">$</span><span class="kw">r</span>),<span class="fl">2</span>)
+<span class="va">above90</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">coroutHulu</span><span class="op">$</span><span class="va">cor.df</span><span class="op">$</span><span class="va">r</span> <span class="op">&gt;</span> <span class="fl">0.9</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">coroutHulu</span><span class="op">$</span><span class="va">cor.df</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">)</span>
+<span class="va">med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">coroutHulu</span><span class="op">$</span><span class="va">cor.df</span><span class="op">$</span><span class="va">r</span><span class="op">)</span>,<span class="fl">2</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">corPlotHulu</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">corPlotHulu</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 <p>The impact of age uncertainty on the correlation of this record is apparent; even when correlated against itself, only 3.1% of the ensembles have r-values greater than 0.9, and the median correlation is 0.8. However, all of the correlations remain significant, even after accounting for autocorrelation, indicating that age uncertainty and the structure of the timeseries does not preclude the possibility of significant correlations.</p>
 </div>
