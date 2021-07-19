@@ -26,6 +26,8 @@ regressEns(
 
 \item{time.y}{matrix of age/time ensembles, or single column}
 
+\item{values.y}{matrix of values ensembles, or single column}
+
 \item{bin.vec}{vector of bin edges for binning step}
 
 \item{bin.step}{spacing of bins, used to build bin step}
@@ -41,8 +43,6 @@ regressEns(
 \item{min.obs}{minimum number of points required to calculate regression}
 
 \item{gaussianize}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
-
-\item{values.2}{matrix of values ensembles, or single column}
 }
 \value{
 list of ensemble output

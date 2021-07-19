@@ -23,6 +23,8 @@ runBam(
 
 \item{paleo.meas.table.num}{the number of the measurementTable you'll be working in}
 
+\item{chron.num}{the number of the chronData object that you'll be working in}
+
 \item{model.num}{the number of the chronData model where you want to store the model information}
 
 \item{ens.table.number}{the number of the ensembleTable you want to put the output into}

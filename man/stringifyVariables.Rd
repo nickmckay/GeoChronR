@@ -9,7 +9,7 @@ stringifyVariables(var.name, used.value)
 \arguments{
 \item{var.name}{string name of the variable to extract}
 
-\item{used.value}{}
+\item{used.value}{the value that was used}
 }
 \value{
 the var.name as a string

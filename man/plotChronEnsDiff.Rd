@@ -54,6 +54,8 @@ plotChronEnsDiff(
 
 \item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE   #' @param probs quantiles to calculate and plot}
 
+\item{probs}{quantiles to plot with ribbons}
+
 \item{x.bin}{vector of bin edges over which to bin.}
 
 \item{y.bin}{vector of bin edges over which to bin.}

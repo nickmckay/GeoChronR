@@ -55,8 +55,6 @@ plotPcaEns(
 \item{legend.position}{Where to put the map legend?}
 
 \item{color}{deprecated. Use high.color and low.color instead}
-
-\item{line.labels}{Labels for the quantiles lines}
 }
 \value{
 A gridExtra ggplot object

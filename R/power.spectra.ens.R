@@ -4,7 +4,6 @@
 #' @family pca
 #' @title Create a synthetic timeseries that emulates the characteristics of a timeseries
 #' @description create synthetic timeseries based on a timeseries. Useful for null hypothesis testing
-#'
 #' @param time LiPD "variable list" or vector of year/age values
 #' @param values LiPD "variable list" or vector of values
 #' @param sameTrend should the synthetic data have the same first-order trend as the original? (default  = TRUE)
@@ -174,6 +173,7 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' \item power.CL: matrix of confidence limits for spectral power
 #' }
 #' @import dplR
+#' @import nuspectral
 #' @importFrom astrochron mtm mtmPL mtmML96
 #' @importFrom matrixStats rowMedians
 #' @importFrom lomb lsp
@@ -393,7 +393,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
       } else if ( mtm_null=='power_law') {
         ens.mtm.cl[,k] <- mtm.main$PowerLaw_95_power        
       } else if ( mtm_null=='ML96') {
-        ens.mtm.cl[,k] <- astrochron::mtm.main$AR1_95_power
+        ens.mtm.cl[,k] <- mtm.main$AR1_95_power
       } 
       ens.mtm.sigfreq[match(mtm.sigfreq$Frequency, mtm.main$Frequency, nomatch = 0),k] <- 1
       if(n.ens>1 & k%%round(n.ens/50)==0){
@@ -416,7 +416,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     
     # first iteration to define matrix sizes
     t = time[,tind[1]]; v = vals[,vind[1]] 
-    nuspec <-  nuspectral:::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    nuspec <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     noutrow <- length(nuspec$Frequency)
     
     #preallocate matrices
@@ -432,7 +432,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # pb = txtProgressBar(min=1,max = n.ens,style = 3)  # run the loop with progress bar
     # for (k in 2:n.ens){
     #   t = time[,tind[k]]; v = vals[,vind[k]] 
-    #   nuspec   <-  nuspectral:::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    #   nuspec   <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     #   pMat[,k] <- nuspec$Power
     #   fMat[,k] <- nuspec$Frequency
     # 

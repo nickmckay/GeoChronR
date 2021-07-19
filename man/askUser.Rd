@@ -7,7 +7,7 @@
 askUser(query)
 }
 \arguments{
-\item{query}{}
+\item{query}{What do you want to ask the user?}
 }
 \value{
 user input

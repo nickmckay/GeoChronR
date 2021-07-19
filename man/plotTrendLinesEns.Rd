@@ -22,6 +22,8 @@ plotTrendLinesEns(
 
 \item{alp}{Line transparency}
 
+\item{color}{color of the lines}
+
 \item{add.to.plot}{A ggplot object to add these lines to. Default is ggplot() .}
 }
 \value{

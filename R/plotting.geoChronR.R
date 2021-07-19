@@ -29,8 +29,9 @@ getPlotRanges <- function(h){
 #' @description Use this to define a theme across geoChronR
 #' @import ggplot2
 #' @import ggthemes
+#' @inheritParams ggthemes::theme_hc
 #geoChronRPlotTheme = ggplot2::theme_minimal
-geoChronRPlotTheme = ggthemes::theme_hc
+geoChronRPlotTheme <- ggthemes::theme_hc
 
 
 #' @export
@@ -132,13 +133,19 @@ plotSpectraEns = function (spec.ens,
 #' @param x.lims range of plotted periodicities
 #' @param x.ticks ticks to mark on the period axis. if NULL, defaults to (10, 20, 50, 100, 200, 500, 1000)
 #' @param y.lims 2-vector for the y-axis. If NULL, computed from range(pwr)
-#' @param color.main color of the line representing the spectrum
+#' @param color.line color of the line representing the spectrum
 #' @param color.cl color of the lines representing the confidence limits (90, 95, 99\%)
 #' @return a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2
 #' @import reshape2
-plotSpectrum = function (spec.df,cl.df = NULL,x.lims=NULL,x.ticks= c(10, 20, 50, 100, 200, 500, 1000), y.lims = NULL, color.line="black", color.cl = "red"){
+plotSpectrum = function (spec.df,
+                         cl.df = NULL,
+                         x.lims=NULL,
+                         x.ticks= c(10, 20, 50, 100, 200, 500, 1000),
+                         y.lims = NULL,
+                         color.line="black", 
+                         color.cl = "red"){
   # TO DO: general handling of colors (theme)
   
   period <- 1/spec.df$freq
@@ -180,13 +187,23 @@ plotSpectrum = function (spec.df,cl.df = NULL,x.lims=NULL,x.ticks= c(10, 20, 50,
 #' @description Annotate plot of spectra (ensemble or otherwise) with vertical lines at specific periodicities (assumes log10 scaling)
 #' @family plot help
 #' @family spectra
+#'
 #' @param specPlot ggplot handle to figure containing spectrum
 #' @param periods the periods to highlight in the spectrum
+#' @param log10scale Use a log 10 scale TRUE (default) or FALSE
+#' @param y.lims optionally specify y limits (default = NULL)
+#' @param size font size for labels (default = 4)
 #' @param color the color of the text and lines
+#'
 #' @return ggplot object of spectrum plot
 #' @author Julien Emile-Geay
 
-periodAnnotate = function (specPlot, periods, color = "orange",log10scale = T, y.lims = NULL, size = 4){
+periodAnnotate = function (specPlot, 
+                           periods, 
+                           color = "orange",
+                           log10scale = T, 
+                           y.lims = NULL, 
+                           size = 4){
   
   if (is.null(y.lims)) {
     ggp <- ggplot_build(specPlot)
@@ -229,8 +246,8 @@ reverselog10_trans <- function(){
 #' @param x.bin vector of bin edges over which to bin.
 #' @param probs quantiles to calculate
 #' @param seed set a seed for reproducibility
+#' @param n.ens how many ensemble members?
 #' @param limit.outliers.x limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)
-#' @param n.ens.table.number of ensemble members to derive quantiles for
 #'
 #' @return list of quantiles and x.bin
 #' @author Nick McKay
@@ -397,6 +414,7 @@ bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate =
 #' @export
 #' @family gridding
 #' @family plot help
+#' @importFrom MASS kde2d
 #' @title Two dimensional kernel density estimation
 #' @description Use a kernel density estimator to model the density of samples along a 2-dimensional grid
 #' @param x n by m matrix where n is the number of observations and m is >= 1
@@ -447,6 +465,9 @@ kde2d <- function(x,y,n.bins=100,x.bin=NA,y.bin=NA){
 #' @param chron.depth.var variableName to use for chron depth ("depth" by default)
 #' @param chron.age.var variableName to use for chron age ("age" by default)
 #' @param dot.size what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
+#' @param summary.font.size Font size for the summary
+#' @param text.width Width of the text panel
+#' @param legend.position location of the legend
 #' @return A gridArrange of ggplot grobs
 #' @examples 
 #' \dontrun{
@@ -460,7 +481,7 @@ plotSummary = function(L,
                        chron.meas.num = NA, 
                        chron.depth.var = "depth", 
                        chron.age.var = "age", 
-                       dotSize = 5, 
+                       dot.size = 5, 
                        summary.font.size = 10, 
                        text.width = 400/summary.font.size, 
                        legend.position = c(0.7,0.3),
@@ -498,7 +519,7 @@ plotSummary = function(L,
   paleoPlot = paleoPlot + ggtitle(paste("PaleoData:",variable$variableName))
   
   #do chron.
-  chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dotSize = dotSize,legend.position = legend.position, ...)
+  chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dot.size = dot.size,legend.position = legend.position, ...)
   
   if(!is.list(chronPlot)){
     if(is.na(chronPlot)){
@@ -880,13 +901,21 @@ plotScatterEns = function(X,Y,alp=.2,n.ens.plot=1000,add.to.plot = ggplot()){
 #' @author Nick McKay
 #' @title Plot an ensemble of trendlines
 #' @description Plot an ensemble of trendlines based on slope and intercept. 
+#'
 #' @param mb.df A data.frame of slopes (column 1) and intercepts (column 2)
 #' @param alp Line transparency
 #' @param index.xy index of which observations to use
 #' @param x.range range of x values (min and max)
+#' @param color color of the lines
 #' @param add.to.plot A ggplot object to add these lines to. Default is ggplot() . 
+#'
 #' @return A ggplot object
-plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color = "red",add.to.plot=ggplot()){
+plotTrendLinesEns = function(mb.df,
+                             x.range,
+                             index.xy=1:nrow(mb.df) ,
+                             alp=.2 ,
+                             color = "red",
+                             add.to.plot=ggplot()){
   xvec = c(x.range,NA)
   yall = c()
   xall = c()
@@ -915,6 +944,7 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #' @title Plot the results of an ensemble correlation
 #' @description Plots the output of an ensemble correlation analysis.
 #' @import ggplot2
+#'
 #' @param corout output from corEns()
 #' @param bins Number of bins in the histogram
 #' @param line.labels Labels for the quantiles lines
@@ -929,6 +959,9 @@ plotTrendLinesEns = function(mb.df,x.range,index.xy=1:nrow(mb.df) ,alp=.2 ,color
 #'  }
 #' @param f.sig.lab.position x,y (0-1) position of the fraction of significant correlation labels
 #' 
+#' @param sig.level What significance level to plot?
+#' @param use.fdr Use results from False Discovery Rate testing in plot?
+#' @param bar.colors What colors to use for the bars, formatted as (insignificant, significant, significant after FDR)
 #'
 #' @return A ggplot object
 plotCorEns = function(corout,
@@ -1146,6 +1179,8 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
 #' @param alp transparency (between 0 and 1)
 #' @param font.size font size for the labels
 #' @param fill fill color of the histogram, following ggplot rules
+#' @param add.labels Label the quantiles?
+#' @param label.vert.position Vertical position of the quantiles (from 0 to 1)
 #'
 #' @return A ggplot object
 plotHistEns = function(ens.data,
@@ -1266,7 +1301,6 @@ plotScreeEns <- function(pcaout,
 #' @param restrict.map.range TRUE or FALSE. Trim the size of the map to the points, for "line" map type
 #' @param shape.by.archive TRUE or FALSE. Use archiveType to assign shapes.
 #' @param projection Map project. All options on: ?mapproject
-#' @param line.labels Labels for the quantiles lines
 #' @param bound.circ For polar projects, draw a boundary circle? TRUE or FALSE
 #' @param probs quantiles to calculate and plot in the PC timeseries
 #' @param which.leg which map legend to include in the summary plot?
@@ -1485,9 +1519,23 @@ plotPcaEns = function(ens.pc.out,
 #' @param thick thickness of the line around the distribution
 #' @param truncate.dist truncate probability density values below this number. NA (default) means no truncation
 #' @param scale.frac controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
-#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot() . 
+#' @param add.to.plot A ggplot object to add this plot to. Default is ggplot()
+#' @param alp transparency, from 0 to 1
 #' @return A ggplot object
-plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chron",paleo.or.chron.num = 1, model.num = 1, add.to.plot = ggplot(), alp=.5,color = "purple",scale.frac = 0.02,equalArea = TRUE,dist.plot = NA,dist.type = "violin",thick = 0.1,truncate.dist = NA){
+plotModelDistributions = function(L,
+                                  dist.var = "age",
+                                  y.var = "depth",
+                                  mode = "chron",
+                                  paleo.or.chron.num = 1, 
+                                  model.num = 1, 
+                                  add.to.plot = ggplot(), 
+                                  alp=.5,
+                                  color = "purple",
+                                  scale.frac = 0.02,
+                                  dist.plot = NA,
+                                  dist.type = "violin",
+                                  thick = 0.1,
+                                  truncate.dist = NA){
   
   
   P = L[[paste0(mode,"Data")]]
@@ -1596,8 +1644,32 @@ plotModelDistributions = function(L,dist.var = "age",y.var = "depth",mode = "chr
 #' @param n.ens.plot Number of ensemble members to plot
 #' @param color.ens.line color of the ensemble lines
 #' @param alp.ens.line transparency of the lines
+#' @param probs quantiles to plot with ribbons
 #' @return A ggplot object
-plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",age.var = "age",depth.var = "depth",paleo.num=NA,paleo.meas.table.num=NA,chron.num=NA,model.num=NA,ens.table.num = NA,max.ensemble.members=NA,strict.search=FALSE,probs=c(0.025,.25,.5,.75,.975),x.bin=NA,y.bin=NA,n.bins=100,color.low="white",color.high="grey70",alp=1,color.line="Black",line.width=1,add.to.plot=ggplot2::ggplot(),n.ens.plot = 5, color.ens.line = "red",alp.ens.line = 0.7){
+plotChronEnsDiff = function(L,
+                            ageEnsVar = "ageEnsemble",
+                            age.var = "age",
+                            depth.var = "depth",
+                            paleo.num=NA,
+                            paleo.meas.table.num=NA,
+                            chron.num=NA,
+                            model.num=NA,
+                            ens.table.num = NA,
+                            max.ensemble.members=NA,
+                            strict.search=FALSE,
+                            probs=c(0.025,.25,.5,.75,.975),
+                            x.bin=NA,
+                            y.bin=NA,
+                            n.bins=100,
+                            color.low="white",
+                            color.high="grey70",
+                            alp=1,
+                            color.line="Black",
+                            line.width=1,
+                            add.to.plot=ggplot2::ggplot(),
+                            n.ens.plot = 5,
+                            color.ens.line = "red",
+                            alp.ens.line = 0.7){
   
   
   L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,depth.var = depth.var,paleo.num = paleo.num, chron.num = chron.num, model.num = model.num,paleo.meas.table.num = paleo.meas.table.num, ens.table.num = ens.table.num)
@@ -1660,7 +1732,14 @@ plotChronEnsDiff = function(L,ageEnsVar = "ageEnsemble",age.var = "age",depth.va
 #' @param dot.size what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
 #' @param legend.position where to put the legend on the chron plot?
 #' @return a ggplot object, or NA if there's chronData to plot
-plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", age.var = "age", age.14c.var = "age14C", dotSize = 5, legend.position = c(0.7,0.3), ...){
+plotChron <- function(L,
+                      chron.number = NA, 
+                      meas.num = NA,
+                      depth.var = "depth", 
+                      age.var = "age",
+                      age.14c.var = "age14C", 
+                      dot.size = 5,
+                      legend.position = c(0.7,0.3), ...){
   #grab the chronData 
   C = L$chronData
   
@@ -1723,7 +1802,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
     }
     
     ageDf$depth <- depth$values
-    chronPlot <- ggplot(ageDf)+geom_point(aes(x = age, y = depth, color = ageType), size = dotSize)+
+    chronPlot <- ggplot(ageDf)+geom_point(aes(x = age, y = depth, color = ageType), size = dot.size)+
       scale_y_reverse(name = axisLabel(depth))+
       geoChronRPlotTheme() +  theme(legend.position = legend.position) +
       ggtitle(paste0(L$dataSetName,": chronData ", as.character(chron.number), " - measurementTable ", as.character(meas.num)))
@@ -1767,6 +1846,7 @@ plotChron <- function(L,chron.number = NA, meas.num = NA, depth.var = "depth", a
 #' @param dist.color distribution color (following ggplot rules)
 #' @param dist.type "violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down
 #' @param dist.thick thickness of the line around the distribution
+#' @param dist.alp alpha of the distribution
 #' @param truncate.dist truncate probability density values below this number. NA (default) means no truncation
 #' @param dist.scale controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
 #' @param add.paleo.age.depth add a line that shows the paleoData age depth.
@@ -1792,7 +1872,7 @@ plotChronEns = function(L,
                         n.ens.plot = 5,
                         color.ens.line = "red",
                         alp.ens.line = 0.7,
-                        distAlp = 0.3,
+                        dist.alp = 0.3,
                         dist.type = "violin",
                         dist.color = "purple",
                         dist.thick = 0.1,
@@ -1886,7 +1966,7 @@ plotChronEns = function(L,
   
   #distributions last
   if(is.list(C[[chron.number]]$model[[model.num]]$distributionTable)){#if it exists. Add it.
-    chronPlot = plotModelDistributions(L,paleo.or.chron.num = chron.number,model.num = model.num,add.to.plot = chronPlot,alp=distAlp,color = dist.color,dist.type = dist.type,thick = dist.thick,scale.frac = dist.scale,truncate.dist = truncate.dist)
+    chronPlot = plotModelDistributions(L,paleo.or.chron.num = chron.number,model.num = model.num,add.to.plot = chronPlot,alp=dist.alp,color = dist.color,dist.type = dist.type,thick = dist.thick,scale.frac = dist.scale,truncate.dist = truncate.dist)
   }
   
   
@@ -1984,9 +2064,12 @@ meltDistributionTable = function(this.dist,dist.plot = 1:length(this.dist)){
 #' @description Creates a suite of plots to characterize the results of an ensemble regression.
 #' @import ggplot2
 #' @importFrom gridExtra grid.arrange
+#'
 #' @param reg.ens output of regressEns()
 #' @param alp Transparency of the scatter plot.
+#' @param font.size Font size
 #' @param quantiles quantiles to calculate and plot
+#'
 #' @return A list of ggplot objects
 #' \itemize{
 #' \item YPlot - ribbon plot of the prectictand timeseries over the interval of overlap

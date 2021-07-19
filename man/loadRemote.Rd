@@ -8,6 +8,8 @@ loadRemote(url, useSavedNames = FALSE)
 }
 \arguments{
 \item{url}{the url of a remote data file}
+
+\item{useSavedNames}{use the names saved in the file?}
 }
 \value{
 the loadeds object

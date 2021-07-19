@@ -19,6 +19,12 @@ periodAnnotate(
 \item{periods}{the periods to highlight in the spectrum}
 
 \item{color}{the color of the text and lines}
+
+\item{log10scale}{Use a log 10 scale TRUE (default) or FALSE}
+
+\item{y.lims}{optionally specify y limits (default = NULL)}
+
+\item{size}{font size for labels (default = 4)}
 }
 \value{
 ggplot object of spectrum plot

@@ -15,7 +15,6 @@ plotModelDistributions(
   alp = 0.5,
   color = "purple",
   scale.frac = 0.02,
-  equalArea = TRUE,
   dist.plot = NA,
   dist.type = "violin",
   thick = 0.1,
@@ -35,7 +34,9 @@ plotModelDistributions(
 
 \item{model.num}{number of the model object}
 
-\item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot() .}
+\item{add.to.plot}{A ggplot object to add this plot to. Default is ggplot()}
+
+\item{alp}{transparency, from 0 to 1}
 
 \item{color}{distribution color (following ggplot rules)}
 

@@ -17,6 +17,8 @@ plotRegressEns(
 \item{alp}{Transparency of the scatter plot.}
 
 \item{quantiles}{quantiles to calculate and plot}
+
+\item{font.size}{Font size}
 }
 \value{
 A list of ggplot objects

@@ -16,8 +16,6 @@ propAlt(
 \item{adjustment.method}{method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)}
 
 \item{adjustment.args}{arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()}
-
-\item{qlevel}{the proportion of false positives desired}
 }
 \value{
 estimate of a, the number of alternative hypotheses
@@ -26,7 +24,9 @@ estimate of a, the number of alternative hypotheses
 This is an internal function that calculates an estimate of a, the proportion of alternative hypotheses, using one of several methods.
 }
 \examples{
+\dontrun{
 a <- propAlt(pvals,adjustment.method="mean")
+}
 }
 \seealso{
 Other FDR: 

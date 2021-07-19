@@ -27,7 +27,7 @@ library(dplyr)
 First let's load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset [Earth System Science Data](https://essd.copernicus.org/articles/12/2261/2020/).
 
 
-```{r, results = 'hide', cache=TRUE}
+```{r data, results = 'hide', cache=TRUE}
 iso <- readLipd("http://lipdverse.org/iso2k/1_0_0/iso2k1_0_0.zip")
 ```
 

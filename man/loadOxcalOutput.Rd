@@ -24,6 +24,8 @@ loadOxcalOutput(
 
 \item{depth.units}{Depth units to assign in (default = "cm")}
 
+\item{chron.num}{Which chronData object to select?}
+
 \item{model.num}{an integer that corresponds to model.num that has the variable you want}
 
 \item{make.new}{Create a new model?}
@@ -31,7 +33,7 @@ loadOxcalOutput(
 \item{max.ens}{Maximum number of ensemble members to import (default = 1000)}
 }
 \value{
-
+A lipd object
 }
 \description{
 Load oxcal output

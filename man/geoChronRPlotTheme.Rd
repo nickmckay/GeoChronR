@@ -11,6 +11,16 @@ geoChronRPlotTheme(
   bgcolor = NULL
 )
 }
+\arguments{
+\item{base_size}{base font size, given in pts.}
+
+\item{base_family}{base font family}
+
+\item{style}{The Highcharts theme to use \code{'default'},
+\code{'darkunica'}.}
+
+\item{bgcolor}{Deprecated}
+}
 \description{
 Use this to define a theme across geoChronR
 }

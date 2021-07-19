@@ -25,9 +25,9 @@ plotSpectrum(
 
 \item{y.lims}{2-vector for the y-axis. If NULL, computed from range(pwr)}
 
-\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
+\item{color.line}{color of the line representing the spectrum}
 
-\item{color.main}{color of the line representing the spectrum}
+\item{color.cl}{color of the lines representing the confidence limits (90, 95, 99\%)}
 }
 \value{
 a ggplot object

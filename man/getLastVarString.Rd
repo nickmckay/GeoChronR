@@ -7,7 +7,7 @@
 getLastVarString()
 }
 \value{
-
+the last set of parameters you used in createChronMeasInputDf()
 }
 \description{
 Get the last set of parameters you used in createChronMeasInputDf()

@@ -29,9 +29,11 @@ runOxcal(
 \arguments{
 \item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
-\item{chron.num}{the number of the chronData object that you'll be working in}
+\item{chron.num}{Which chron number to get data from}
 
-\item{meas.table.num}{the number of the measurementTable you'll be working in}
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
+
+\item{oxcal.path}{path to oxcal binaries}
 
 \item{model.num}{chron.numModel do you want to use?}
 
@@ -45,18 +47,34 @@ runOxcal(
 
 \item{static.reservoir.age.unc}{optionally assign a deltaR uncertainty to all radiocarbon dates}
 
+\item{surface.age}{specify the age of the surface}
+
+\item{surface.age.unc}{surface age uncertainty}
+
+\item{surface.age.depth}{depth of the surface age}
+
+\item{depth.interval}{Depth interval to use to create depths.to.model (default = 10)}
+
+\item{events.per.unit.length}{How many events per unit length for the Poisson model? This controls the flexibility on the model, the lower the number the more flexibile.}
+
+\item{events.per.unit.length.uncertainty}{Uncertainty on events.per.unit.length in orders of magnitude. This makes for better models but *greatly* increases the run time. If NA or < 0 it runs without uncertainty (default = NA)}
+
+\item{outlier.prob}{What's the probability of a date being an outlier if not otherwise specified (default= 0.05)}
+
+\item{cal.curve}{What calibration curve to use? (default = "intcal13")}
+
 \item{...}{
   Arguments passed on to \code{\link[=createChronMeasInputDf]{createChronMeasInputDf}}
   \describe{
-    \item{\code{lab.id.var}}{}
-    \item{\code{age.14c.var}}{}
-    \item{\code{age.14c.uncertainty.var}}{}
-    \item{\code{age.var}}{}
-    \item{\code{age.uncertainty.var}}{}
-    \item{\code{depth.var}}{}
-    \item{\code{reservoir.age.14c.var}}{}
-    \item{\code{reservoir.age.14c.uncertainty.var}}{}
-    \item{\code{rejected.ages.var}}{}
+    \item{\code{lab.id.var}}{Lab Id variable name}
+    \item{\code{age.14c.var}}{Radiocarbon age variable name}
+    \item{\code{age.14c.uncertainty.var}}{Radiocarbon age uncertainty variable name}
+    \item{\code{age.var}}{Calibrated age variable name}
+    \item{\code{age.uncertainty.var}}{Calibrated age uncertainty variable name}
+    \item{\code{depth.var}}{Depth variable name}
+    \item{\code{reservoir.age.14c.var}}{Reservoir age variable name}
+    \item{\code{reservoir.age.14c.uncertainty.var}}{Reservoir age uncertainty variable name}
+    \item{\code{rejected.ages.var}}{Rejected ages variable name}
     \item{\code{split.ages}}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
   }}
 }

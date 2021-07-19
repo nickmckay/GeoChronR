@@ -1,6 +1,8 @@
 #' Load a remote RData file
 #'
+#' @param useSavedNames use the names saved in the file?
 #' @param url the url of a remote data file 
+#'
 #' @family utility
 #' @return the loadeds object
 #' @export
@@ -20,7 +22,10 @@ loadRemote <- function(url,useSavedNames = FALSE){
 #' @family utility
 #' @title Makes a guess about the units of a time vector based on the values
 #' @description Guesses year units based on some simple heuristics
+#'
+#' @param range.min What's the smallest range that you'd believe is yr not ka? (default = 25)
 #' @param X A LiPD variable list or a vector of years BP 
+#'
 #' @return A *guessed* string unit label
 heuristicUnits = function(X,range.min = 25){
   if(is.list(X)){

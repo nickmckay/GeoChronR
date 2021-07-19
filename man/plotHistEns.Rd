@@ -32,7 +32,11 @@ plotHistEns(
 
 \item{font.size}{font size for the labels}
 
+\item{add.labels}{Label the quantiles?}
+
 \item{line.labels}{Labels for the quantiles lines}
+
+\item{label.vert.position}{Vertical position of the quantiles (from 0 to 1)}
 }
 \value{
 A ggplot object

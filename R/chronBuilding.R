@@ -3,7 +3,7 @@
 #' Convert var.names to strings
 #' @family utility
 #' @inheritParams selectData 
-#' @param used.value 
+#' @param used.value the value that was used
 #' @return the var.name as a string
 #' @export
 stringifyVariables <- function(var.name,used.value){
@@ -20,7 +20,7 @@ stringifyVariables <- function(var.name,used.value){
 
 #' askUser
 #' @description Helper function to consistently get user input
-#' @param query 
+#' @param query What do you want to ask the user?
 #' @family utility
 #' @importFrom crayon bold
 #' @return user input
@@ -33,22 +33,20 @@ askUser <- function(query){
 #' Create a data frame for chron measurement data
 #' @inheritParams selectData
 #' @family utility
-#' @param chron.num 
-#' @param overwrite 
-#' @param site.name 
-#' @param use.marine 
-#' @param lab.id.var 
-#' @param age.14c.var 
-#' @param age.14c.uncertainty.var 
-#' @param age.var 
-#' @param age.uncertainty.var 
-#' @param depth.var 
-#' @param reservoir.age.14c.var 
-#' @param reservoir.age.14c.uncertainty.var 
-#' @param rejected.ages.var 
+#' @param chron.num Which chron number to get data from
+#' @param lab.id.var Lab Id variable name
+#' @param age.14c.var Radiocarbon age variable name
+#' @param age.14c.uncertainty.var Radiocarbon age uncertainty variable name
+#' @param age.var Calibrated age variable name
+#' @param age.uncertainty.var Calibrated age uncertainty variable name
+#' @param depth.var Depth variable name
+#' @param reservoir.age.14c.var Reservoir age variable name
+#' @param reservoir.age.14c.uncertainty.var Reservoir age uncertainty variable name
+#' @param rejected.ages.var Rejected ages variable name
 #' @param split.ages if there's an age_type column, and only one age column, intelligently split between age and age14C
 #' @importFrom purrr map_dbl map_lgl map_chr
 #' @importFrom crayon bold yellow cyan red green blue 
+#' @importFrom stringr str_sub
 #' @return a standardized dataframe of chron measurements
 #' @export
 createChronMeasInputDf <- function(L,
@@ -321,7 +319,7 @@ createChronMeasInputDf <- function(L,
 
 #' Get the last set of parameters you used in createChronMeasInputDf()
 #'
-#' @return
+#' @return the last set of parameters you used in createChronMeasInputDf() 
 #' @family utility
 #' @export
 getLastVarString <- function(){

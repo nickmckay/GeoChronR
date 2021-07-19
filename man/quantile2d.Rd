@@ -26,11 +26,11 @@ quantile2d(
 
 \item{probs}{quantiles to calculate}
 
+\item{n.ens}{how many ensemble members?}
+
 \item{seed}{set a seed for reproducibility}
 
 \item{limit.outliers.x}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
-
-\item{n.ens.table.number}{of ensemble members to derive quantiles for}
 }
 \value{
 list of quantiles and x.bin

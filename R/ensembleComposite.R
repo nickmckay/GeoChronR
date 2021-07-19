@@ -45,7 +45,7 @@ return(cbind(sa,sp))
 #' @inheritParams concatEnsembleTimeseries
 #' @param n.ens How many ensemble members?
 #' @description This "shuffles" together two *independent* ensemble datasets, making no assumptions about stratigraphic order, but assuming that each dataset is representing the same phenomenon.
-#' @return
+#' @return A measurement table object
 #' @family LiPD manipulation
 #' @export
 #'

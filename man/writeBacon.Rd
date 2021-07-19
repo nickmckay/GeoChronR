@@ -14,12 +14,12 @@ writeBacon(
   site.name = L$dataSetName,
   model.num = NA,
   use.marine = NULL,
-  askReservoir = TRUE,
+  ask.reservoir = TRUE,
   ...
 )
 }
 \arguments{
-\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
+\item{L}{a LiPD object}
 
 \item{bacon.dir}{the directory where Bacon is installed on this computer.}
 
@@ -40,7 +40,24 @@ writeBacon(
 
 \item{model.num}{chron.numModel do you want to use?}
 
-\item{meas.table.num}{the number of the measurementTable you'll be working in}
+\item{use.marine}{use the marine 13C curve? (yes or no, or NULL to choose)}
+
+\item{ask.reservoir}{ask about reservoir corrections}
+
+\item{...}{
+  Arguments passed on to \code{\link[=selectData]{selectData}}
+  \describe{
+    \item{\code{var.name}}{string name of the variable to extract}
+    \item{\code{paleo.or.chron}}{"paleoData" or "chronData"}
+    \item{\code{paleo.or.chron.num}}{an integer that corresponds to paleo.num or chron Data object (L$<paleo.or.chron>[[?]]) has the variable you want?}
+    \item{\code{meas.table.num}}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
+    \item{\code{table.type}}{What type of table do you want to select data from? ("measurement", "summary" or "ensemble")}
+    \item{\code{always.choose}}{Force selection of the variable from a list}
+    \item{\code{alt.names}}{A vector of strings for alternative names to search for}
+    \item{\code{ens.table.num}}{an integer that corresponds to ensembleTable you want to get the variable from?}
+    \item{\code{sum.table.num}}{an integer that corresponds to which summaryTable you want to get the variable from?}
+    \item{\code{strict.search}}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
+  }}
 }
 \value{
 L the input LiPD file with methods added to the chronModel.

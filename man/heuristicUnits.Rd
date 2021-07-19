@@ -8,6 +8,8 @@ heuristicUnits(X, range.min = 25)
 }
 \arguments{
 \item{X}{A LiPD variable list or a vector of years BP}
+
+\item{range.min}{What's the smallest range that you'd believe is yr not ka? (default = 25)}
 }
 \value{
 A *guessed* string unit label

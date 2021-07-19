@@ -51,7 +51,7 @@ createModel(
 \item{create.summary.table}{Optionally create a summary table derived from the ensemble data (default = TRUE)}
 }
 \value{
-
+a model object
 }
 \description{
 This function will create a model in a LiPD object, adding ensemble data

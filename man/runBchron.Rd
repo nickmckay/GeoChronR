@@ -7,7 +7,7 @@
 runBchron(
   L,
   chron.num = NA,
-  which.table = NA,
+  meas.table.num = NA,
   site.name = L$dataSetName,
   model.num = NA,
   cal.curves = NA,
@@ -32,11 +32,67 @@ runBchron(
 
 \item{chron.num}{the number of the chronData object that you'll be working in}
 
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
+
 \item{site.name}{the name of the site}
 
 \item{model.num}{chron.numModel do you want to use?}
 
 \item{cal.curves}{The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.}
+
+\item{iter}{number of iterations to use in bchron (default = 10000)}
+
+\item{outlier.probs}{probability of outliers amongst the dates}
+
+\item{ask}{ask for user input? (True/False)}
+
+\item{lab.id.var}{Lab Id variable name}
+
+\item{age.14c.var}{Radiocarbon age variable name}
+
+\item{age.14c.uncertainty.var}{Radiocarbon age uncertainty variable name}
+
+\item{age.var}{Calibrated age variable name}
+
+\item{age.uncertainty.var}{Calibrated age uncertainty variable name}
+
+\item{depth.var}{Depth variable name}
+
+\item{reservoir.age.14c.var}{Reservoir age variable name}
+
+\item{reservoir.age.14c.uncertainty.var}{Reservoir age uncertainty variable name}
+
+\item{rejected.ages.var}{Rejected ages variable name}
+
+\item{depth.units}{units for depth}
+
+\item{...}{
+  Arguments passed on to \code{\link[Bchron:Bchronology]{Bchron::Bchronology}}
+  \describe{
+    \item{\code{ages}}{A vector of ages provided in years before 1950.}
+    \item{\code{ageSds}}{A vector of 1-sigma values for the ages given above}
+    \item{\code{positions}}{Position values (e.g. depths) for each age. In the case of layers of non-zero thickness, this should be the middle value of the slice}
+    \item{\code{positionThicknesses}}{Thickness values for each of the positions. The thickness value should be the full thickness value of the slice. By default set to zero.}
+    \item{\code{calCurves}}{A vector of values containing either \code{intcal20}, \code{shcal20}, \code{marine20}, or \code{normal} (older calibration curves are supposed such as intcal13). Should be the same length the number of ages supplied. Non-standard calibration curves can be used provided they are supplied in the same format as those previously mentioned and are placed in the same directory. Normal indicates a normally-distributed (non-14C) age.}
+    \item{\code{ids}}{ID names for each age}
+    \item{\code{outlierProbs}}{A vector of prior outlier probabilities, one for each age. Defaults to 0.01}
+    \item{\code{predictPositions}}{A vector of positions (e.g. depths) at which predicted age values are required. Defaults to a sequence of length 100 from the top position to the bottom position}
+    \item{\code{pathToCalCurves}}{File path to where the calibration curves are located. Defaults to the system directory where the 3 standard calibration curves are stored.}
+    \item{\code{artificialThickness}}{Amount to add to the thickness values in the case of equal positions with no \code{positionThicknesses}. Bchron may fail if \code{positionThicknesses} are zero and some positions are repeated. This value is added on to the zero thicknesses (only in the case of repeated positions) to stop this failure.}
+    \item{\code{allowOutside}}{Whether to allow calibrations to run outside the range of the calibration curve. By default this is turned off as calibrations outside of the range of the calibration curve can cause severe issues with probability ranges of calibrated dates}
+    \item{\code{iterations}}{The number of iterations to run the procedure for}
+    \item{\code{burn}}{The number of starting iterations to discard}
+    \item{\code{thin}}{The step size for every iteration to keep beyond the burn-in}
+    \item{\code{extractDate}}{The top age of the core. Used for extrapolation purposes so that no extrapolated ages go beyond the top age of the core. Defaults to the current year}
+    \item{\code{maxExtrap}}{The maximum number of extrapolations to perform before giving up and setting the predicted ages to NA. Useful for when large amounts of extrapolation are required, i.e. some of the \code{predictPositions} are a long way from the dated positions}
+    \item{\code{thetaStart}}{A set of starting values for the calendar ages estimated by Bchron. If NULL uses a function to estimate the ages. These should be in the same units as the posterior ages required. See example below for usage.}
+    \item{\code{thetaMhSd}}{The Metropolis-Hastings standard deviation for the age parameters}
+    \item{\code{muMhSd}}{The Metropolis-Hastings standard deviation for the Compound Poisson-Gamma mean}
+    \item{\code{psiMhSd}}{The Metropolis-Hastings standard deviation for the Compound Poisson-Gamma scale}
+    \item{\code{ageScaleVal}}{A scale value for the ages. \code{Bchronology} works best when the ages are scaled to be approximately between 0 and 100. The default value is thus 1000 for ages given in years.}
+    \item{\code{positionEps}}{A small value used to check whether simulated positions are far enough apart to avoid numerical underflow errors. If errors occur in model runs (e.g. \code{missing value where TRUE/FALSE needed} increase this value)}
+    \item{\code{positionNormalise}}{Whether to normalise the position values. \code{Bchronology} works best when the positions are normalised to be between 0 and 1 The default value is \code{TRUE}}
+  }}
 }
 \value{
 L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.

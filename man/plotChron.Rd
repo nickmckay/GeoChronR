@@ -11,7 +11,7 @@ plotChron(
   depth.var = "depth",
   age.var = "age",
   age.14c.var = "age14C",
-  dotSize = 5,
+  dot.size = 5,
   legend.position = c(0.7, 0.3),
   ...
 )
@@ -28,6 +28,8 @@ plotChron(
 \item{age.var}{variableName to use for age ensemble ("age" by default)}
 
 \item{age.14c.var}{variableName to use for age ensemble ("age14C" by default)}
+
+\item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 
 \item{legend.position}{where to put the legend on the chron plot?}
 
@@ -51,14 +53,13 @@ plotChron(
     \item{\code{dist.color}}{distribution color (following ggplot rules)}
     \item{\code{dist.type}}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
     \item{\code{dist.thick}}{thickness of the line around the distribution}
+    \item{\code{dist.alp}}{alpha of the distribution}
     \item{\code{truncate.dist}}{truncate probability density values below this number. NA (default) means no truncation}
     \item{\code{dist.scale}}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
     \item{\code{add.paleo.age.depth}}{add a line that shows the paleoData age depth.}
     \item{\code{paleo.number}}{paleo.num number for the paleoData age-depth}
     \item{\code{color.line.paleo}}{line color of the paleoData age-depth (following ggplot rules)}
   }}
-
-\item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 }
 \value{
 a ggplot object, or NA if there's chronData to plot

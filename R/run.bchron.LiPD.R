@@ -6,10 +6,16 @@
 #'@title Generate a Bayesian Reconstruction Age Model  (Bacon) and add it into a LiPD object
 #'@description This is a high-level function that uses Bchron to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Haslett and Parnell (2008) doi:10.1111/j.1467-9876.2008.00623.x for details.
 #'@inheritParams selectData
+#'@inheritParams createChronMeasInputDf
+#'@inheritDotParams Bchron::Bchronology
 #'@param chron.num the number of the chronData object that you'll be working in
 #'@param site.name the name of the site
 #'@param model.num chron.numModel do you want to use?
 #'@param cal.curves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
+#'@param iter number of iterations to use in bchron (default = 10000)
+#'@param outlier.probs probability of outliers amongst the dates
+#'@param ask ask for user input? (True/False)
+#'@param depth.units units for depth
 #'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #'@import Bchron
 #'@examples
@@ -23,7 +29,7 @@
 
 runBchron =  function(L,
                       chron.num=NA,
-                      which.table = NA,
+                      meas.table.num = NA,
                       site.name=L$dataSetName,
                       model.num=NA, 
                       cal.curves = NA,
@@ -69,7 +75,7 @@ runBchron =  function(L,
   #get chron data data frame
   cdf <- createChronMeasInputDf(L,
                                 chron.num,
-                                which.table,
+                                meas.table.num,
                                 lab.id.var,
                                 age.14c.var, 
                                 age.14c.uncertainty.var, 

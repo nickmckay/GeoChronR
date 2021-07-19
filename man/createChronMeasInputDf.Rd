@@ -23,35 +23,29 @@ createChronMeasInputDf(
 \arguments{
 \item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
 
-\item{chron.num}{}
+\item{chron.num}{Which chron number to get data from}
 
 \item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
 
-\item{lab.id.var}{}
+\item{lab.id.var}{Lab Id variable name}
 
-\item{age.14c.var}{}
+\item{age.14c.var}{Radiocarbon age variable name}
 
-\item{age.14c.uncertainty.var}{}
+\item{age.14c.uncertainty.var}{Radiocarbon age uncertainty variable name}
 
-\item{age.var}{}
+\item{age.var}{Calibrated age variable name}
 
-\item{age.uncertainty.var}{}
+\item{age.uncertainty.var}{Calibrated age uncertainty variable name}
 
-\item{depth.var}{}
+\item{depth.var}{Depth variable name}
 
-\item{reservoir.age.14c.var}{}
+\item{reservoir.age.14c.var}{Reservoir age variable name}
 
-\item{reservoir.age.14c.uncertainty.var}{}
+\item{reservoir.age.14c.uncertainty.var}{Reservoir age uncertainty variable name}
 
-\item{rejected.ages.var}{}
+\item{rejected.ages.var}{Rejected ages variable name}
 
 \item{split.ages}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
-
-\item{overwrite}{}
-
-\item{site.name}{}
-
-\item{use.marine}{}
 }
 \value{
 a standardized dataframe of chron measurements

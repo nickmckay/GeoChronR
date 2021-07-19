@@ -20,6 +20,8 @@ loadBaconOutput(
 
 \item{site.name}{the name used for the bacon model (and directories)}
 
+\item{K}{The bacon K parameter (number of segments to model)}
+
 \item{chron.num}{the number of the chronData object that you'll be working in}
 
 \item{bacon.dir}{the directory where Bacon is installed on this computer.}
@@ -27,6 +29,8 @@ loadBaconOutput(
 \item{model.num}{chron.numModel do you want to use?}
 
 \item{make.new}{do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.}
+
+\item{max.ens}{The maximum number of ensembles to export}
 }
 \value{
 L the input LiPD file with methods and data added to the chronModel.
@@ -35,8 +39,10 @@ L the input LiPD file with methods and data added to the chronModel.
 Loads the ensemble, summary and distribution data from a Bacon simulation and stores them in the LiPD structure. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs.
 }
 \examples{
+\dontrun{
 loadBaconOutput(L)
 #Run in interactive mode
+}
 }
 \seealso{
 Other Bacon: 

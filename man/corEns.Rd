@@ -35,26 +35,26 @@ corEns(
 
 \item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
+\item{max.ens}{Maximum number of ensembles to use}
+
 \item{percentiles}{quantiles to calculate for regression parameters}
 
 \item{min.obs}{minimum number of points required to calculate regression}
 
 \item{fdr.qlevel}{target false discovery rate (most users won't want to change this)}
 
+\item{gaussianize}{Convert data to Gaussian distribution before correlating?}
+
 \item{...}{
   Arguments passed on to \code{\link[=corMatrix]{corMatrix}}
   \describe{
     \item{\code{ens.1}}{matrix of age-uncertain columns to correlate and calculate p-values}
     \item{\code{ens.2}}{matrix of age-uncertain columns to correlate and calculate p-values}
-    \item{\code{max.ens}}{optionally limit the number of ensembles calculated (default = NA)}
     \item{\code{isospectral}}{estimate significance using the Ebisuzaki method (default = TRUE)}
     \item{\code{isopersistent}}{estimate significance using the isopersistence method (default = FALSE)}
     \item{\code{p.ens}}{number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)}
-    \item{\code{gaussianize}}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.}
     \item{\code{cor.method}}{correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"}
   }}
-
-\item{gauss}{Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis}
 }
 \value{
 list of ensemble output and percentile information

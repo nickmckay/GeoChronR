@@ -22,7 +22,9 @@ An ensemble table in the LiPD structure
 Pulls ensemble members from Bacon output. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs.
 }
 \examples{
+\dontrun{
 ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
+}
 
 }
 \seealso{

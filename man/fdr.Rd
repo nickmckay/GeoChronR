@@ -23,20 +23,30 @@ fdr(
 \item{adjustment.method}{method for increasing the power of the procedure by estimating the proportion of alternative p-values, one of "mean", the modified Storey estimator that we suggest in Ventura et al. (2004), "storey", the method of Storey (2002), or "two-stage", the iterative approach of Benjamini et al. (2001)}
 
 \item{adjustment.args}{arguments to adjustment.method; see propAlt() for description, but note that for "two-stage", qlevel and fdr.method are taken from the qlevel and method arguments to fdr()}
+
+\item{verbose}{Be verbose (TRUE or FALSE)}
+}
+\value{
+NULL if no significant tests, or a vector of the indices of the significant tests
 }
 \description{
 iThis is the main function designed for general usage for determining significance based on the FDR approach, following the Ventura et al. reference below.
 }
+\examples{
+\dontrun{
+signif <- fdr(pvals,method="original",adjustment.method="mean")
+}
+}
 \references{
-# References:
- Ventura, V., C.J. Paciorek, and J.S. Risbey.  2004.  Controlling the proportion of falsely-rejected hypotheses when conducting multiple tests with climatological data.  Journal of Climate, in press.  Also Carnegie Mellon University, Department of Statistics technical report 775 (\url{www.stat.cmu.edu/tr/tr775/tr775.html}).
- Benjamini, Y, and Y. Hochberg. 1995. Controlling the false discovery rate: a practical and powerful approach to multiple testing.  JRSSB 57:289-300.
- Benjamini, Y. and D. Yekutieli.  2001.  The control of the false discovery rate in multiple testing under dependency. Annals of Statistics 29:1165-1188.
- Benjamini, Y., A. Krieger, and D. Yekutieli.  2001.  Two staged linear step up FDR controlling procedure.  Technical Report, Department of Statistics and Operations Research, Tel Aviv University.  URL: \url{http://www.math.tau.ac.il/~ybenja/Papers.html}
-  Storey, J. 2002.  A direct approach to false discovery rates.  JRSSB 64: 479--498.
-  @return NULL if no significant tests, or a vector of the indices of the significant tests
-  @examples
- signif <- fdr(pvals,method="original",adjustment.method="mean")
+Ventura, V., C.J. Paciorek, and J.S. Risbey.  2004.  Controlling the proportion of falsely-rejected hypotheses when conducting multiple tests with climatological data.  Journal of Climate, in press.  Also Carnegie Mellon University, Department of Statistics technical report 775 (\url{www.stat.cmu.edu/tr/tr775/tr775.html}).
+
+Benjamini, Y, and Y. Hochberg. 1995. Controlling the false discovery rate: a practical and powerful approach to multiple testing.  JRSSB 57:289-300.
+
+Benjamini, Y. and D. Yekutieli.  2001.  The control of the false discovery rate in multiple testing under dependency. Annals of Statistics 29:1165-1188.
+
+Benjamini, Y., A. Krieger, and D. Yekutieli.  2001.  Two staged linear step up FDR controlling procedure.  Technical Report, Department of Statistics and Operations Research, Tel Aviv University.  URL: \url{http://www.math.tau.ac.il/~ybenja/Papers.html}
+
+Storey, J. 2002.  A direct approach to false discovery rates.  JRSSB 64: 479--498.
 }
 \seealso{
 Other FDR: 

@@ -57,6 +57,7 @@ plotTimeseriesEnsRibbons(
     \item{\code{x}}{n by m matrix where n is the number of observations and m is >= 1}
     \item{\code{y}}{n by j matrix where n is the number of observations and j is >= 1}
     \item{\code{seed}}{set a seed for reproducibility}
+    \item{\code{n.ens}}{how many ensemble members?}
     \item{\code{limit.outliers.x}}{limit the plotting of outliers on the x axis to exclude values below this probability limit (default = 0.025)}
   }}
 }

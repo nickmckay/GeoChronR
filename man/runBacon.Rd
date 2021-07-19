@@ -31,11 +31,11 @@ runBacon(
 )
 }
 \arguments{
-\item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
+\item{L}{a LiPD object}
 
 \item{chron.num}{the number of the chronData object that you'll be working in}
 
-\item{meas.table.num}{the number of the measurementTable you'll be working in}
+\item{meas.table.num}{an integer that corresponds to paleo.num measurementTable has the variable you want?}
 
 \item{bacon.dir}{the directory where Bacon is installed on this computer.}
 
@@ -56,6 +56,30 @@ runBacon(
 
 \item{max.ens}{the maximum number of ensembles to load in (default = 1000)}
 
+\item{use.marine}{use the marine 13C curve? (yes or no, or NULL to choose)}
+
+\item{lab.id.var}{Lab Id variable name}
+
+\item{age.14c.var}{Radiocarbon age variable name}
+
+\item{age.14c.uncertainty.var}{Radiocarbon age uncertainty variable name}
+
+\item{age.var}{Calibrated age variable name}
+
+\item{age.uncertainty.var}{Calibrated age uncertainty variable name}
+
+\item{depth.var}{Depth variable name}
+
+\item{reservoir.age.14c.var}{Reservoir age variable name}
+
+\item{reservoir.age.14c.uncertainty.var}{Reservoir age uncertainty variable name}
+
+\item{rejected.ages.var}{Rejected ages variable name}
+
+\item{bacon.thick}{thickness parameter to pass to bacon (How thick is each chunk to model)}
+
+\item{bacon.acc.mean}{prior mean accumulation rate estimate for bacon}
+
 \item{...}{
   Arguments passed on to \code{\link[rbacon:Bacon]{rbacon::Bacon}}
   \describe{
@@ -70,7 +94,7 @@ Thinner (and thus more) sections will result in smoother age-models, but too man
     \item{\code{d.max}}{Maximum depth of age-depth model (use this to extrapolate to depths below the bottom dated depth).}
     \item{\code{add.bottom}}{Add a model section at the bottom of the core, in order to ensure the bottommost date is taken into account. Default \code{add.bottom=TRUE}. This is a new option and can cause age-models to differ from previous version. Please re-run the model if in doubt.}
     \item{\code{d.by}}{Depth intervals at which ages are calculated. Defaults to \code{d.by=1}.}
-    \item{\code{seed}}{Seed used for C++ executions. If it is not assigned (\code{seed=NA}) then the seed is set by system.}
+    \item{\code{seed}}{Seed used for C++ executions. If it is not assigned (\code{seed=NA}; default) then the seed is set by system.}
     \item{\code{depths.file}}{By default, Bacon will calculate the ages for the depths \code{d.min} to \code{d.max} in steps of \code{d.by}.
 If \code{depths.file=TRUE}, Bacon will read a file containing the depths for which you require ages.
 This file, containing the depths in a single column without a header, should be stored within \code{coredir},
@@ -85,11 +109,11 @@ Its shape is set by acc.shape (default \code{acc.shape=1.5}; higher values resul
     \item{\code{acc.mean}}{The accumulation rate prior consists of a gamma distribution with two parameters. Its mean is set by acc.mean (default \code{acc.mean=20} yr/cm (or whatever age or depth units are chosen),
 which can be changed to, e.g., 5, 10 or 50 for different kinds of deposits). Multiple values can be given in case of hiatuses or boundaries, e.g., Bacon(hiatus.depths=23, acc.mean=c(5,20))}
     \item{\code{mem.strength}}{The prior for the memory (dependence of accumulation rate between neighbouring depths) is a beta distribution, which looks much like the gamma distribution.
-but its values are always between 0 (no assumed memory) and 1 (100\% memory). Its default settings of \code{mem.strength=4}
-(higher values result in more peaked shapes) allow for a large range of posterior memory values.}
+but its values are always between 0 (no assumed memory) and 1 (100\% memory). Its default settings of \code{mem.strength=10}
+(higher values result in more peaked shapes) allow for a large range of posterior memory values. Please note that the default memory prior has been updated from rbacon version 2.5.1 on, to repair a bug.}
     \item{\code{mem.mean}}{The prior for the memory is a beta distribution, which looks much like the gamma distribution but
-its values are always between 0 (no assumed memory) and 1 (100\% memory). Its default settings of \code{mem.mean=0.7}
-allow for a large range of posterior memory values.}
+its values are always between 0 (no assumed memory) and 1 (100\% memory). Its default settings of \code{mem.mean=0.5}
+allow for a large range of posterior memory values. Please note that the default memory prior has been updated from rbacon version 2.5.1. on, to repair a bug.}
     \item{\code{boundary}}{The assumed depths of any boundary, which divides sections of different accumulation rate regimes (e.g., as indicated by major change in the stratigraphy). No hiatus is assumed between these sections, and memory is reset crossing the boundary. Different accumulation priors can be set for the sections above and below the boundary, e.g., \code{acc.mean=c(5, 20)}. See also \code{hiatus.depths}, \code{mem.mean}, \code{acc.mean} and \code{acc.shape}. Setting many boundaries might not work, and having more than one boundary per model section (see \code{'thick'}) might not work either.}
     \item{\code{hiatus.depths}}{The assumed depths for any hiatus should be provided as, e.g.,
 \code{hiatus.depths=20} for one at 20cm depth, and \code{hiatus.depths=c(20,40)} for two hiatuses at 20 and 40 cm depth.}
@@ -100,7 +124,7 @@ allow for a large range of posterior memory values.}
     \item{\code{cc2}}{For marine 14C dates (Marine20).}
     \item{\code{cc3}}{For southern hemisphere 14C dates (SHCal20).}
     \item{\code{cc4}}{Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See \code{ccdir}.}
-    \item{\code{ccdir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default \code{ccdir=""} since they are loaded into R's memory.
+    \item{\code{ccdir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default \code{ccdir=""}.
 For example, use \code{ccdir="."} to choose current working directory, or \code{ccdir="Curves/"} to choose sub-folder \code{Curves/}. Note that all calibration curves should reside in the same directory. If you want to add a custom-built curve, put it in the directory where the default calibration curves are (probably \code{list.files(paste0(.libPaths(), "/IntCal/extdata"))}).
 Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(copyCalibrationCurve(1), "./3Col_intcal20.14C", sep="\t")}.)}
     \item{\code{postbomb}}{Use a postbomb curve for negative (i.e. postbomb) 14C ages. \code{0 = none, 1 = NH1, 2 = NH2, 3 = NH3, 4 = SH1-2, 5 = SH3}}

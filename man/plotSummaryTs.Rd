@@ -23,6 +23,16 @@ plotSummaryTs(
 \item{age.var}{What age variable should be used (default = "age)}
 
 \item{step}{What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the age.range)}
+
+\item{...}{
+  Arguments passed on to \code{\link[=mapTs]{mapTs}}
+  \describe{
+    \item{\code{color}}{variable (in TS) by which to color, or a string specifying a static ggplot color}
+    \item{\code{size}}{Size of the location marker}
+    \item{\code{lat.range}}{Latitudes to use to create baseMap range (default = NA, which determines from TS)}
+    \item{\code{lon.range}}{Longitudes to use to create baseMap range (default = NA, which determines from TS)}
+    \item{\code{shape}}{variable (in TS) by which to adjust shape, or an integer specifying a static ggplot shape}
+  }}
 }
 \value{
 a gridExtra ggplot output

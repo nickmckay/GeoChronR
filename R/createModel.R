@@ -113,7 +113,7 @@ createSummaryTableFromEnsembleTable <- function(L,
 #' @param methods Optionally add in a list describing the methods used to make the model (default = NA)
 #' @param create.summary.table Optionally create a summary table derived from the ensemble data (default = TRUE)
 #'
-#' @return
+#' @return a model object
 #' @export
 createModel <- function(L,
                         depth.or.age.vector,

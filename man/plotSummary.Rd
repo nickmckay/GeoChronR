@@ -13,7 +13,7 @@ plotSummary(
   chron.meas.num = NA,
   chron.depth.var = "depth",
   chron.age.var = "age",
-  dotSize = 5,
+  dot.size = 5,
   summary.font.size = 10,
   text.width = 400/summary.font.size,
   legend.position = c(0.7, 0.3),
@@ -37,6 +37,14 @@ plotSummary(
 
 \item{chron.age.var}{variableName to use for chron age ("age" by default)}
 
+\item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
+
+\item{summary.font.size}{Font size for the summary}
+
+\item{text.width}{Width of the text panel}
+
+\item{legend.position}{location of the legend}
+
 \item{...}{
   Arguments passed on to \code{\link[=plotChronEns]{plotChronEns}}
   \describe{
@@ -59,6 +67,7 @@ plotSummary(
     \item{\code{dist.color}}{distribution color (following ggplot rules)}
     \item{\code{dist.type}}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
     \item{\code{dist.thick}}{thickness of the line around the distribution}
+    \item{\code{dist.alp}}{alpha of the distribution}
     \item{\code{truncate.dist}}{truncate probability density values below this number. NA (default) means no truncation}
     \item{\code{dist.scale}}{controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.}
     \item{\code{add.paleo.age.depth}}{add a line that shows the paleoData age depth.}
@@ -66,8 +75,6 @@ plotSummary(
     \item{\code{meas.num}}{which measurement Table for the paleoData age-depth}
     \item{\code{color.line.paleo}}{line color of the paleoData age-depth (following ggplot rules)}
   }}
-
-\item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 }
 \value{
 A gridArrange of ggplot grobs

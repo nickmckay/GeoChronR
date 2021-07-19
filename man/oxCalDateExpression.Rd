@@ -12,7 +12,7 @@ oxCalDateExpression(
 )
 }
 \arguments{
-\item{...}{}
+\item{...}{data to pass into a tibble}
 
 \item{default.outlier.prob}{Outlier Probability}
 
@@ -21,7 +21,7 @@ oxCalDateExpression(
 \item{unknown.delta.r}{Use an unknown delta R (T/f)}
 }
 \value{
-
+an oxcal date expression
 }
 \description{
 write oxcal expression for each date.

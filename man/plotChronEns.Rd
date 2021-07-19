@@ -23,7 +23,7 @@ plotChronEns(
   n.ens.plot = 5,
   color.ens.line = "red",
   alp.ens.line = 0.7,
-  distAlp = 0.3,
+  dist.alp = 0.3,
   dist.type = "violin",
   dist.color = "purple",
   dist.thick = 0.1,
@@ -71,6 +71,8 @@ plotChronEns(
 \item{color.ens.line}{color of the ensemble lines}
 
 \item{alp.ens.line}{transparency of the lines}
+
+\item{dist.alp}{alpha of the distribution}
 
 \item{dist.type}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
 

@@ -18,6 +18,10 @@ createSyntheticTimeseries(
 \item{values}{LiPD "variable list" or vector of values}
 
 \item{n.ens}{Number of ensemble members to simulate}
+
+\item{sameTrend}{should the synthetic data have the same first-order trend as the original? (default  = TRUE)}
+
+\item{index.to.model}{an optional index of values to model (default = NA, the whole series)}
 }
 \value{
 a vector or matrix of synthetic values

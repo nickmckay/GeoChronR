@@ -60,7 +60,12 @@ Imports:
     tidyr,
     magrittr,
     astrochron,
-    spatstat.core
+    spatstat.core,
+    MASS,
+    plyr,
+    stringr,
+    nuspectral,
+    readr
 Suggests: 
     knitr,
     rmarkdown,

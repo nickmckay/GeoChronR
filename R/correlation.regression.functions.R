@@ -246,7 +246,7 @@ regress=function (X,Y){
 #' @param time.x matrix of age/time ensembles, or single column
 #' @param values.x matrix of values ensembles, or single column
 #' @param time.y matrix of age/time ensembles, or single column
-#' @param values.2 matrix of values ensembles, or single column
+#' @param values.y matrix of values ensembles, or single column
 #' @param bin.vec vector of bin edges for binning step
 #' @param bin.step spacing of bins, used to build bin step
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
@@ -385,6 +385,7 @@ regressEns = function(time.x,
 #' @importFrom dplyr select bind_cols
 #' @importFrom magrittr %>% 
 #' @importFrom purrr map_dfc map_dfr
+#'
 #' @param time.1 matrix of age/time ensembles, or single column
 #' @param values.1 matrix of values ensembles, or single column
 #' @param time.2 matrix of age/time ensembles, or single column
@@ -394,8 +395,10 @@ regressEns = function(time.x,
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param percentiles quantiles to calculate for regression parameters
 #' @param min.obs minimum number of points required to calculate regression
+#' @param max.ens Maximum number of ensembles to use
+#' @param gaussianize Convert data to Gaussian distribution before correlating?
 #' @param fdr.qlevel target false discovery rate (most users won't want to change this)
-#' @param gauss  Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis
+#'
 #' @inheritDotParams corMatrix
 #' @return list of ensemble output and percentile information
 #' @section Long-form example:
@@ -513,7 +516,6 @@ corEns = function(time.1,
 #' @param time single column vector of time
 #' @param values single column vector of values to bin
 #' @param bin.vec vector of bin edges for binning step
-#' @param bin.step spacing of bins, used to build bin step
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens maximum number of ensemble members to regress
 #' @return list that includes matrix of binned data and binned time
@@ -604,11 +606,14 @@ bin = function(time,values,bin.vec,bin.fun = mean){
 #' @family bin
 #' @title Bin every entry in a Timeseries object
 #' @description Aggregate data from a timeseries object into the same timeline through binning. 
+#'
 #' @param TS LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}
 #' @param bin.vec vector of bin edges for describing where to bin
 #' @param bin.fun function to use during binning (mean, sd, and sum all work)
 #' @param max.ens Maximum number of ensemble members.
+#' @param time.var specify the time variable to bin (default = "ageEnsemble")
 #' @param na.col.rm Remove columns that are all NAs? (TRUE or FALSE)
+#'
 #' @author Nick McKay
 #' @return A list of binned years and values.
 binTs = function(TS,time.var="ageEnsemble",bin.vec,bin.fun = mean,max.ens=1000,na.col.rm=TRUE){

@@ -16,6 +16,8 @@ binTs(
 \arguments{
 \item{TS}{LiPD timeseries object See \url{http://nickmckay.github.io/LiPD-utilities/r/index.html#what-is-a-time-series}}
 
+\item{time.var}{specify the time variable to bin (default = "ageEnsemble")}
+
 \item{bin.vec}{vector of bin edges for describing where to bin}
 
 \item{bin.fun}{function to use during binning (mean, sd, and sum all work)}

@@ -1,12 +1,12 @@
 
 #' write oxcal expression for each date.
 #' @family oxcal
-#' @param ... 
+#' @param ... data to pass into a tibble
 #' @param default.outlier.prob Outlier Probability
 #' @param cal.curve Calibration curve
 #' @param unknown.delta.r Use an unknown delta R (T/f)
 #'
-#' @return
+#' @return an oxcal date expression
 #' @export
 oxCalDateExpression <- function(...,
                                 default.outlier.prob = 0.05,
@@ -118,7 +118,7 @@ return(dateExp)
 #' @importFrom magrittr %>% 
 #' @importFrom purrr pmap_chr
 #' @family oxcal
-#' @return
+#' @return a list of an oxcal model
 #' @export
 createOxcalModel <- function(cdf,
                              depths.to.model = NA,
@@ -208,14 +208,16 @@ createOxcalModel <- function(cdf,
 
 #' Load oxcal output
 #' @inheritParams selectData
+#' @param chron.num Which chronData object to select?
 #' @param oxcal.result.file.path Path to oxcal output data (from oxcAAR::executeOxcalScript())
 #' @param model.parameters model parameters to write into the lipd file
 #' @param depth.units Depth units to assign in (default = "cm")
 #' @param make.new Create a new model?
 #' @param max.ens Maximum number of ensemble members to import (default = 1000)
 #' @family oxcal
-#' @return
-#' @export
+#' @importFrom stringr str_split
+#' @return A lipd object
+#' @export 
 loadOxcalOutput <- function(L,
                             oxcal.result.file.path,
                             model.parameters,
@@ -361,10 +363,16 @@ loadOxcalOutput <- function(L,
 #' @importFrom crayon bold yellow cyan red green blue 
 #' @title Generate an oxcal Age Model and add it into a LiPD object
 #' @description This is a high-level function that uses oxcal to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Bronk Ramsey et al. 2008 doi:10.1016/j.quascirev.2007.01.019
-#' @inheritParams writeBacon
+#' @inheritParams createOxcalModel
 #' @param max.ens the maximum number of ensembles to load in (default = 1000)
 #' @param static.reservoir.age optionally assign a deltaR to all radiocarbon dates
 #' @param static.reservoir.age.unc optionally assign a deltaR uncertainty to all radiocarbon dates
+#' @param oxcal.path path to oxcal binaries
+#' @param surface.age specify the age of the surface
+#' @param surface.age.unc surface age uncertainty
+#' @param surface.age.depth depth of the surface age
+#' @inheritParams createChronMeasInputDf
+#' @inheritParams writeBacon
 #' @inheritDotParams createChronMeasInputDf
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 

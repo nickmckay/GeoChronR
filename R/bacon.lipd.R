@@ -57,8 +57,10 @@ setBaconDir <- function(bacon.dir){
 #' @description This is a high-level function that uses Bacon to simulate an age model, and stores this as an age-ensemble in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. See Blaauw and Christen (2011) doi:10.1214/11-BA618 for details.
 #' @inheritParams writeBacon
 #' @param max.ens the maximum number of ensembles to load in (default = 1000)
-#' @param ... arguments to pass on to Bacon
+#' @param bacon.thick thickness parameter to pass to bacon (How thick is each chunk to model)
+#' @param bacon.acc.mean prior mean accumulation rate estimate for bacon
 #' @inheritDotParams rbacon::Bacon
+#' @inheritParams createChronMeasInputDf
 #' @return L The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #' @examples 
 #' \dontrun{
@@ -174,8 +176,11 @@ runBacon <-  function(L,
 #' @param bacon.dir the directory where Bacon is installed on this computer. Willimport if bossible. 
 #' @param max.ens the maximum number of ensemble members to import
 #' @return An ensemble table in the LiPD structure
+#' @importFrom plyr laply
 #' @examples 
+#' \dontrun{
 #' ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
+#' }
 #' 
 sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   #from Simon Goring, modified by Nick McKay
@@ -278,9 +283,8 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' @title Create the input file for a Bacon model from a LiPD object
 #' @description This generates the csv file that is used for input to Bacon. Will be run in interactive mode if necessary parameters aren't specified. Most users will want to use runBacon for their bacon needs. 
 #' @family Bacon
-#' @inheritParams selectData
+#' @inheritDotParams selectData
 #' @param chron.num the number of the chronData object that you'll be working in
-#' @param meas.table.num the number of the measurementTable you'll be working in
 #' @param bacon.dir the directory where Bacon is installed on this computer.
 #' @param remove.rejected don't write out dates that are marked as rejected
 #' @param overwrite overwrite files and directories
@@ -290,8 +294,11 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' \item cc=2 MarineCal 
 #' \item cc=3 SHCal13
 #' }
+#' @param L a LiPD object
 #' @param site.name the name used for the bacon model (and directories)
 #' @param model.num chron.numModel do you want to use?
+#' @param use.marine use the marine 13C curve? (yes or no, or NULL to choose)
+#' @param ask.reservoir ask about reservoir corrections
 #' @return L the input LiPD file with methods added to the chronModel.
 #' @examples 
 #' \dontrun{
@@ -300,7 +307,17 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' 
 #' writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
 #' }
-writeBacon <-  function(L,bacon.dir=NA,chron.num = 1, remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA,use.marine = NULL,askReservoir = TRUE,...){
+writeBacon <-  function(L,
+                        bacon.dir=NA,
+                        chron.num = 1,
+                        remove.rejected=TRUE,
+                        overwrite=TRUE,
+                        cc=NA,
+                        site.name=L$dataSetName,
+                        model.num=NA,
+                        use.marine = NULL,
+                        ask.reservoir = TRUE,
+                        ...){
   
   #deal with directories
   cur.dir = getwd()
@@ -320,7 +337,7 @@ writeBacon <-  function(L,bacon.dir=NA,chron.num = 1, remove.rejected=TRUE,overw
   }
   
   if(!all(is.na(cdf$reservoirAge))){
-    if(askReservoir){
+    if(ask.reservoir){
     print("bacon uses delta-R: deviation from the reservoir curve")
     print("If your data are in absolute reservoir years, you probably want to subtract a reservoir estimate (400 yr) from your data")
     print("Take a look at the values")
@@ -343,7 +360,7 @@ writeBacon <-  function(L,bacon.dir=NA,chron.num = 1, remove.rejected=TRUE,overw
       }
     }else{
       if(is.null(use.marine)){
-        use.marine = readline(prompt = "Do you want to use the Marine13 curve?")
+        use.marine = readline(prompt = "Do you want to use the Marine curve?")
       }
       if(grepl(use.marine,pattern = "y")){
         cdf$cc <- rep(2,len=nrows)
@@ -472,13 +489,17 @@ writeBacon <-  function(L,bacon.dir=NA,chron.num = 1, remove.rejected=TRUE,overw
 #' @param chron.num the number of the chronData object that you'll be working in
 #' @param bacon.dir the directory where Bacon is installed on this computer.
 #' @param site.name the name used for the bacon model (and directories)
+#' @param K The bacon K parameter (number of segments to model)
 #' @param model.num chron.numModel do you want to use?
 #' @param make.new do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.
+#' @param max.ens The maximum number of ensembles to export
 #' @return L the input LiPD file with methods and data added to the chronModel.
 #' @examples 
+#' \dontrun{
 #' loadBaconOutput(L)
 #' #Run in interactive mode
-loadBaconOutput = function(L,
+#' }
+loadBaconOutput <- function(L,
                            site.name=L$dataSetName, 
                            K = NA, 
                            chron.num=NA,

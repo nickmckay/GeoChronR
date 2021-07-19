@@ -45,7 +45,7 @@ createOxcalModel(
 \item{cal.curve}{What calibration curve to use? (default = "intcal13")}
 }
 \value{
-
+a list of an oxcal model
 }
 \description{
 Create the oxcal model script

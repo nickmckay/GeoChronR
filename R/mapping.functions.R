@@ -7,7 +7,7 @@
 #' @param age.range a two element vector that includes the range over which you want to count (default = NA, which calculates the full range in the TS)
 #' @param age.var What age variable should be used (default = "age)
 #' @param step What step size should be used along the age axis? (default = NA, which will calculate 0.5\% of the age.range)
-#' @inheritParams mapTs
+#' @inheritDotParams mapTs
 #' @importFrom gridExtra grid.arrange
 #' @return a gridExtra ggplot output
 #' @export

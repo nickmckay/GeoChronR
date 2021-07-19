@@ -24,7 +24,7 @@ createConcatenatedEnsembleMeasurementTable(
 \item{n.ens}{How many ensemble members?}
 }
 \value{
-
+A measurement table object
 }
 \description{
 This "shuffles" together two *independent* ensemble datasets, making no assumptions about stratigraphic order, but assuming that each dataset is representing the same phenomenon.

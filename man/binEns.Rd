@@ -16,8 +16,6 @@ binEns(time, values, bin.vec, bin.fun = mean, max.ens = NA)
 \item{bin.fun}{function to use during binning (mean, sd, and sum all work)}
 
 \item{max.ens}{maximum number of ensemble members to regress}
-
-\item{bin.step}{spacing of bins, used to build bin step}
 }
 \value{
 list that includes matrix of binned data and binned time

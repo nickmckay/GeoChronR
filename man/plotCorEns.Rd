@@ -30,6 +30,8 @@ plotCorEns(
 
 \item{f.sig.lab.position}{x,y (0-1) position of the fraction of significant correlation labels}
 
+\item{sig.level}{What significance level to plot?}
+
 \item{significance.option}{Choose how handle significance. Options are:
 \itemize{
 \item "raw" for uncorrected p-values
@@ -37,6 +39,10 @@ plotCorEns(
 \item "isopersistent" to estimate significance by generating surrogates, or random synthetic timeseries, that emulate the persistence characteristics of the series.
 \item "isospectral" A non-parametric alternative which estimates significance by generating surrogates by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal. This is the recommended (and default) option.
 }}
+
+\item{use.fdr}{Use results from False Discovery Rate testing in plot?}
+
+\item{bar.colors}{What colors to use for the bars, formatted as (insignificant, significant, significant after FDR)}
 }
 \value{
 A ggplot object
