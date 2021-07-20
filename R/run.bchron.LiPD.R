@@ -46,8 +46,13 @@ runBchron =  function(L,
                       reservoir.age.14c.uncertainty.var = "reservoirAge14C",
                       rejected.ages.var="rejected",
                       depth.units = "cm",
+                      which.table = NA,#deprecated
                       ...){
   
+  #handle back compatibility
+  if(!is.na(which.table) & is.na(meas.table.num)){
+    meas.table.num <- which.table
+  }
   
   cur.dir = getwd()
   
