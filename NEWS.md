@@ -1,5 +1,8 @@
 # geoChronR 1.0.12
 
+* Improved documentation
+* `runBchron()`: `which.table` parameter changed to `meas.table.num` for consistency. 
+
 # geoChronR 1.0.11
 
 * Removed jitterPositions option following `Bchron` update. [See issue 53](https://github.com/nickmckay/GeoChronR/issues/53)
