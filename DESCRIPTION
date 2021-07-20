@@ -27,9 +27,9 @@ Imports:
     arsenal,
     dplR,
     dplyr,
-    ggmap,
     ggplot2,
     ggthemes,
+    ggmap,
     grDevices,
     grid,
     lomb,
@@ -75,4 +75,5 @@ URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
-    nickmckay/nuspectral
+    nickmckay/nuspectral,
+    dkahle/ggmap
