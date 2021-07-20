@@ -1,3 +1,5 @@
+# geoChronR 1.0.12
+
 # geoChronR 1.0.11
 
 * Removed jitterPositions option following `Bchron` update. [See issue 53](https://github.com/nickmckay/GeoChronR/issues/53)
