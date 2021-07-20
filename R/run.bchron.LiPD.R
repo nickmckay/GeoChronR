@@ -16,6 +16,7 @@
 #'@param outlier.probs probability of outliers amongst the dates
 #'@param ask ask for user input? (True/False)
 #'@param depth.units units for depth
+#'@param which.table deprecated. Use meas.table.num instead.
 #'@return L. The single LiPD object that was entered, with methods, ensembleTable, summaryTable and distributionTable added to the chronData model.
 #'@import Bchron
 #'@examples

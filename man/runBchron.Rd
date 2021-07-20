@@ -24,6 +24,7 @@ runBchron(
   reservoir.age.14c.uncertainty.var = "reservoirAge14C",
   rejected.ages.var = "rejected",
   depth.units = "cm",
+  which.table = NA,
   ...
 )
 }
@@ -65,6 +66,8 @@ runBchron(
 \item{rejected.ages.var}{Rejected ages variable name}
 
 \item{depth.units}{units for depth}
+
+\item{which.table}{deprecated. Use meas.table.num instead.}
 
 \item{...}{
   Arguments passed on to \code{\link[Bchron:Bchronology]{Bchron::Bchronology}}
