@@ -1,5 +1,7 @@
 # geoChronR 1.0.13
 
+* Added explicit references to astrochron function `linterp` in `computeSpectraEns`. [See issue 55](https://github.com/nickmckay/GeoChronR/issues/55)
+
 # geoChronR 1.0.12
 
 * Improved documentation
