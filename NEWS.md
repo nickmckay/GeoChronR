@@ -1,3 +1,5 @@
+# geoChronR 1.0.13
+
 # geoChronR 1.0.12
 
 * Improved documentation
