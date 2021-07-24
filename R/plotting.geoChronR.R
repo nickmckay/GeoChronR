@@ -197,7 +197,6 @@ plotSpectrum = function (spec.df,
 #'
 #' @return ggplot object of spectrum plot
 #' @author Julien Emile-Geay
-
 periodAnnotate = function (specPlot, 
                            periods, 
                            color = "orange",
