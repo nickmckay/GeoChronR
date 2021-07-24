@@ -174,7 +174,7 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' }
 #' @import dplR
 #' @import nuspectral
-#' @importFrom astrochron mtm mtmPL mtmML96
+#' @importFrom astrochron mtm mtmPL mtmML96 linterp
 #' @importFrom matrixStats rowMedians
 #' @importFrom lomb lsp
 #' @references 
@@ -366,7 +366,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     #  apply workflow to first member
     t  = time[,tind[1]]; v = vals[,vind[1]] # define data vectors
     dti = modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
-    dfi = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
+    dfi = astrochron::linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
     ti = dfi$t  # interpolatedtimescale
     mtm.main    <- mtm.func(dfi,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
     mtm.sigfreq <- mtm.func(dfi,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
@@ -382,9 +382,9 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     for (k in 1:n.ens){
       t = time[,tind[k]]; v = vals[,vind[k]] 
       dfl = data.frame(approx(t,v,ti,rule = 2)) # interpolate onto new timescale
-      #dfe = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
+      #dfe = astrochron::linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # define local dataframe
       #dti =modeSelektor(diff(t))  # identify sensible interpolation interval (mode of distribution)
-      #dfl = linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
+      #dfl = astrochron::linterp(data.frame(t,v),dt=dti,genplot=F,check=T,verbose=F)  # interpolate at that sampling rate
       mtm.main    <- mtm.func(dfl,padfac=padfac,genplot = F,output=1, verbose = F, tbw = tbw)
       mtm.sigfreq <- mtm.func(dfl,padfac=padfac,genplot = F,output=2, verbose = F, tbw = tbw)
       ens.mtm.power[,k] <- mtm.main$Power
