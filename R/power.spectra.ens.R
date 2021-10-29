@@ -43,7 +43,7 @@ createSyntheticTimeseries <- function(time,values,n.ens=1,sameTrend=TRUE,index.t
   a=acf(notrend,na.action=na.pass,plot=FALSE)
   ar=max(0,as.numeric(unlist(a[1])[1]))
   
-  fit = arima(x = notrend, order = c(1, 0, 0)) #AR1 only
+  #fit = arima(x = notrend, order = c(1, 0, 0),method = "ML") #AR1 only
   
   synValues = matrix(NA,nrow=length(orig.time),ncol=n.ens)
   #go through ensemble members

@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Filtering, mapping and plotting LiPD objects</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-07-13</h4>
+            <h4 class="date">2021-10-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/TsFilteringAndMapping.Rmd"><code>vignettes/TsFilteringAndMapping.Rmd</code></a></small>
       <div class="hidden name"><code>TsFilteringAndMapping.Rmd</code></div>
@@ -153,7 +153,7 @@
 <p>Now that the data are loaded, we can quickly map a bunch of LiPD files using <code><a href="../reference/mapLipd.html">mapLipd()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">iso</span>, global <span class="op">=</span> <span class="cn">TRUE</span>,size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"iso2k v1.0.0"</span><span class="op">)</span></code></pre></div>
-<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
 <p>Now we’ve seen an overview of all the files we’ve loaded, but now we’d like to filter the data.</p>
 <p>First, we’ll extract a TS object, the primary way to work with multiple LiPD files. A TS is a list object that has an entry for each, column, and is readily queryable.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -175,17 +175,17 @@
 <p>OK, now we’ve filtered down to what we’d like to map. We can use <code><a href="../reference/mapTs.html">mapTs()</a></code> to map this.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/mapTs.html">mapTs</a></span><span class="op">(</span><span class="va">gTS</span><span class="op">)</span></code></pre></div>
-<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
 <p>You can change the mapping options by passing options to <code>basemap()</code> which creates the base map. Try <code>?basemap</code> for options.</p>
 <p>##Time availability</p>
 <p>You can also quickly make a plot of availability through time:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs</a></span><span class="op">(</span><span class="va">gTS</span>,age.range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2000</span><span class="op">)</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></code></pre></div>
-<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
 <p>Finally, if you just want a quick overview, <code><a href="../reference/plotSummaryTs.html">plotSummaryTs()</a></code> will quickly combine these two plots, but with fewer options</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotSummaryTs.html">plotSummaryTs</a></span><span class="op">(</span><span class="va">gTS</span>,age.var <span class="op">=</span> <span class="st">"year"</span>, age.range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
+<p><img src="TsFilteringAndMapping_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <pre><code>## TableGrob (5 x 3) "arrange": 2 grobs
 ##   z     cells    name           grob
 ## 1 1 (1-3,1-3) arrange gtable[layout]

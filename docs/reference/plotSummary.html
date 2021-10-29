@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@
   chron.meas.num <span class='op'>=</span> <span class='cn'>NA</span>,
   chron.depth.var <span class='op'>=</span> <span class='st'>"depth"</span>,
   chron.age.var <span class='op'>=</span> <span class='st'>"age"</span>,
-  dotSize <span class='op'>=</span> <span class='fl'>5</span>,
+  dot.size <span class='op'>=</span> <span class='fl'>5</span>,
   summary.font.size <span class='op'>=</span> <span class='fl'>10</span>,
   text.width <span class='op'>=</span> <span class='fl'>400</span><span class='op'>/</span><span class='va'>summary.font.size</span>,
   legend.position <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.7</span>, <span class='fl'>0.3</span><span class='op'>)</span>,
@@ -232,6 +232,22 @@
       <td><p>variableName to use for chron age ("age" by default)</p></td>
     </tr>
     <tr>
+      <th>dot.size</th>
+      <td><p>what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)</p></td>
+    </tr>
+    <tr>
+      <th>summary.font.size</th>
+      <td><p>Font size for the summary</p></td>
+    </tr>
+    <tr>
+      <th>text.width</th>
+      <td><p>Width of the text panel</p></td>
+    </tr>
+    <tr>
+      <th>legend.position</th>
+      <td><p>location of the legend</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='plotChronEns.html'>plotChronEns</a></code></p><dl>
     <dt><code>depth.var</code></dt><dd><p>variableName to use for depth ("depth" by default)</p></dd>
@@ -253,6 +269,7 @@
     <dt><code>dist.color</code></dt><dd><p>distribution color (following ggplot rules)</p></dd>
     <dt><code>dist.type</code></dt><dd><p>"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down</p></dd>
     <dt><code>dist.thick</code></dt><dd><p>thickness of the line around the distribution</p></dd>
+    <dt><code>dist.alp</code></dt><dd><p>alpha of the distribution</p></dd>
     <dt><code>truncate.dist</code></dt><dd><p>truncate probability density values below this number. NA (default) means no truncation</p></dd>
     <dt><code>dist.scale</code></dt><dd><p>controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover.</p></dd>
     <dt><code>add.paleo.age.depth</code></dt><dd><p>add a line that shows the paleoData age depth.</p></dd>
@@ -261,10 +278,6 @@
     <dt><code>color.line.paleo</code></dt><dd><p>line color of the paleoData age-depth (following ggplot rules)</p></dd>
   
 </dl></td>
-    </tr>
-    <tr>
-      <th>dot.size</th>
-      <td><p>what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)</p></td>
     </tr>
     </table>
 

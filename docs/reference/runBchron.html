@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -183,7 +183,7 @@
     <pre class="usage"><span class='fu'>runBchron</span><span class='op'>(</span>
   <span class='va'>L</span>,
   chron.num <span class='op'>=</span> <span class='cn'>NA</span>,
-  which.table <span class='op'>=</span> <span class='cn'>NA</span>,
+  meas.table.num <span class='op'>=</span> <span class='cn'>NA</span>,
   site.name <span class='op'>=</span> <span class='va'>L</span><span class='op'>$</span><span class='va'>dataSetName</span>,
   model.num <span class='op'>=</span> <span class='cn'>NA</span>,
   cal.curves <span class='op'>=</span> <span class='cn'>NA</span>,
@@ -200,6 +200,7 @@
   reservoir.age.14c.uncertainty.var <span class='op'>=</span> <span class='st'>"reservoirAge14C"</span>,
   rejected.ages.var <span class='op'>=</span> <span class='st'>"rejected"</span>,
   depth.units <span class='op'>=</span> <span class='st'>"cm"</span>,
+  which.table <span class='op'>=</span> <span class='cn'>NA</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -215,6 +216,10 @@
       <td><p>the number of the chronData object that you'll be working in</p></td>
     </tr>
     <tr>
+      <th>meas.table.num</th>
+      <td><p>an integer that corresponds to paleo.num measurementTable has the variable you want?</p></td>
+    </tr>
+    <tr>
       <th>site.name</th>
       <td><p>the name of the site</p></td>
     </tr>
@@ -225,6 +230,91 @@
     <tr>
       <th>cal.curves</th>
       <td><p>The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.</p></td>
+    </tr>
+    <tr>
+      <th>iter</th>
+      <td><p>number of iterations to use in bchron (default = 10000)</p></td>
+    </tr>
+    <tr>
+      <th>outlier.probs</th>
+      <td><p>probability of outliers amongst the dates</p></td>
+    </tr>
+    <tr>
+      <th>ask</th>
+      <td><p>ask for user input? (True/False)</p></td>
+    </tr>
+    <tr>
+      <th>lab.id.var</th>
+      <td><p>Lab Id variable name</p></td>
+    </tr>
+    <tr>
+      <th>age.14c.var</th>
+      <td><p>Radiocarbon age variable name</p></td>
+    </tr>
+    <tr>
+      <th>age.14c.uncertainty.var</th>
+      <td><p>Radiocarbon age uncertainty variable name</p></td>
+    </tr>
+    <tr>
+      <th>age.var</th>
+      <td><p>Calibrated age variable name</p></td>
+    </tr>
+    <tr>
+      <th>age.uncertainty.var</th>
+      <td><p>Calibrated age uncertainty variable name</p></td>
+    </tr>
+    <tr>
+      <th>depth.var</th>
+      <td><p>Depth variable name</p></td>
+    </tr>
+    <tr>
+      <th>reservoir.age.14c.var</th>
+      <td><p>Reservoir age variable name</p></td>
+    </tr>
+    <tr>
+      <th>reservoir.age.14c.uncertainty.var</th>
+      <td><p>Reservoir age uncertainty variable name</p></td>
+    </tr>
+    <tr>
+      <th>rejected.ages.var</th>
+      <td><p>Rejected ages variable name</p></td>
+    </tr>
+    <tr>
+      <th>depth.units</th>
+      <td><p>units for depth</p></td>
+    </tr>
+    <tr>
+      <th>which.table</th>
+      <td><p>deprecated. Use meas.table.num instead.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='https://andrewcparnell.github.io/Bchron/reference/Bchronology.html'>Bchron::Bchronology</a></code></p><dl>
+    <dt><code>ages</code></dt><dd><p>A vector of ages provided in years before 1950.</p></dd>
+    <dt><code>ageSds</code></dt><dd><p>A vector of 1-sigma values for the ages given above</p></dd>
+    <dt><code>positions</code></dt><dd><p>Position values (e.g. depths) for each age. In the case of layers of non-zero thickness, this should be the middle value of the slice</p></dd>
+    <dt><code>positionThicknesses</code></dt><dd><p>Thickness values for each of the positions. The thickness value should be the full thickness value of the slice. By default set to zero.</p></dd>
+    <dt><code>calCurves</code></dt><dd><p>A vector of values containing either <code>intcal20</code>, <code>shcal20</code>, <code>marine20</code>, or <code>normal</code> (older calibration curves are supposed such as intcal13). Should be the same length the number of ages supplied. Non-standard calibration curves can be used provided they are supplied in the same format as those previously mentioned and are placed in the same directory. Normal indicates a normally-distributed (non-14C) age.</p></dd>
+    <dt><code>ids</code></dt><dd><p>ID names for each age</p></dd>
+    <dt><code>outlierProbs</code></dt><dd><p>A vector of prior outlier probabilities, one for each age. Defaults to 0.01</p></dd>
+    <dt><code>predictPositions</code></dt><dd><p>A vector of positions (e.g. depths) at which predicted age values are required. Defaults to a sequence of length 100 from the top position to the bottom position</p></dd>
+    <dt><code>pathToCalCurves</code></dt><dd><p>File path to where the calibration curves are located. Defaults to the system directory where the 3 standard calibration curves are stored.</p></dd>
+    <dt><code>artificialThickness</code></dt><dd><p>Amount to add to the thickness values in the case of equal positions with no <code>positionThicknesses</code>. Bchron may fail if <code>positionThicknesses</code> are zero and some positions are repeated. This value is added on to the zero thicknesses (only in the case of repeated positions) to stop this failure.</p></dd>
+    <dt><code>allowOutside</code></dt><dd><p>Whether to allow calibrations to run outside the range of the calibration curve. By default this is turned off as calibrations outside of the range of the calibration curve can cause severe issues with probability ranges of calibrated dates</p></dd>
+    <dt><code>iterations</code></dt><dd><p>The number of iterations to run the procedure for</p></dd>
+    <dt><code>burn</code></dt><dd><p>The number of starting iterations to discard</p></dd>
+    <dt><code>thin</code></dt><dd><p>The step size for every iteration to keep beyond the burn-in</p></dd>
+    <dt><code>extractDate</code></dt><dd><p>The top age of the core. Used for extrapolation purposes so that no extrapolated ages go beyond the top age of the core. Defaults to the current year</p></dd>
+    <dt><code>maxExtrap</code></dt><dd><p>The maximum number of extrapolations to perform before giving up and setting the predicted ages to NA. Useful for when large amounts of extrapolation are required, i.e. some of the <code>predictPositions</code> are a long way from the dated positions</p></dd>
+    <dt><code>thetaStart</code></dt><dd><p>A set of starting values for the calendar ages estimated by Bchron. If NULL uses a function to estimate the ages. These should be in the same units as the posterior ages required. See example below for usage.</p></dd>
+    <dt><code>thetaMhSd</code></dt><dd><p>The Metropolis-Hastings standard deviation for the age parameters</p></dd>
+    <dt><code>muMhSd</code></dt><dd><p>The Metropolis-Hastings standard deviation for the Compound Poisson-Gamma mean</p></dd>
+    <dt><code>psiMhSd</code></dt><dd><p>The Metropolis-Hastings standard deviation for the Compound Poisson-Gamma scale</p></dd>
+    <dt><code>ageScaleVal</code></dt><dd><p>A scale value for the ages. <code>Bchronology</code> works best when the ages are scaled to be approximately between 0 and 100. The default value is thus 1000 for ages given in years.</p></dd>
+    <dt><code>positionEps</code></dt><dd><p>A small value used to check whether simulated positions are far enough apart to avoid numerical underflow errors. If errors occur in model runs (e.g. <code>missing value where TRUE/FALSE needed</code> increase this value)</p></dd>
+    <dt><code>positionNormalise</code></dt><dd><p>Whether to normalise the position values. <code>Bchronology</code> works best when the positions are normalised to be between 0 and 1 The default value is <code>TRUE</code></p></dd>
+  
+</dl></td>
     </tr>
     </table>
 

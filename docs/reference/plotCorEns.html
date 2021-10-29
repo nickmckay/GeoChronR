@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -221,6 +221,10 @@
       <td><p>x,y (0-1) position of the fraction of significant correlation labels</p></td>
     </tr>
     <tr>
+      <th>sig.level</th>
+      <td><p>What significance level to plot?</p></td>
+    </tr>
+    <tr>
       <th>significance.option</th>
       <td><p>Choose how handle significance. Options are:</p><ul>
 <li><p>"raw" for uncorrected p-values</p></li>
@@ -228,6 +232,14 @@
 <li><p>"isopersistent" to estimate significance by generating surrogates, or random synthetic timeseries, that emulate the persistence characteristics of the series.</p></li>
 <li><p>"isospectral" A non-parametric alternative which estimates significance by generating surrogates by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal. This is the recommended (and default) option.</p></li>
 </ul></td>
+    </tr>
+    <tr>
+      <th>use.fdr</th>
+      <td><p>Use results from False Discovery Rate testing in plot?</p></td>
+    </tr>
+    <tr>
+      <th>bar.colors</th>
+      <td><p>What colors to use for the bars, formatted as (insignificant, significant, significant after FDR)</p></td>
     </tr>
     </table>
 

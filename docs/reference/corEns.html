@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -228,6 +228,10 @@
       <td><p>function to use during binning (mean, sd, and sum all work)</p></td>
     </tr>
     <tr>
+      <th>max.ens</th>
+      <td><p>Maximum number of ensembles to use</p></td>
+    </tr>
+    <tr>
       <th>percentiles</th>
       <td><p>quantiles to calculate for regression parameters</p></td>
     </tr>
@@ -240,22 +244,20 @@
       <td><p>target false discovery rate (most users won't want to change this)</p></td>
     </tr>
     <tr>
+      <th>gaussianize</th>
+      <td><p>Convert data to Gaussian distribution before correlating?</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='corMatrix.html'>corMatrix</a></code></p><dl>
     <dt><code>ens.1</code></dt><dd><p>matrix of age-uncertain columns to correlate and calculate p-values</p></dd>
     <dt><code>ens.2</code></dt><dd><p>matrix of age-uncertain columns to correlate and calculate p-values</p></dd>
-    <dt><code>max.ens</code></dt><dd><p>optionally limit the number of ensembles calculated (default = NA)</p></dd>
     <dt><code>isospectral</code></dt><dd><p>estimate significance using the Ebisuzaki method (default = TRUE)</p></dd>
     <dt><code>isopersistent</code></dt><dd><p>estimate significance using the isopersistence method (default = FALSE)</p></dd>
     <dt><code>p.ens</code></dt><dd><p>number of ensemble members to use for isospectral and/or isopersistent methods (default = 100)</p></dd>
-    <dt><code>gaussianize</code></dt><dd><p>Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis.</p></dd>
     <dt><code>cor.method</code></dt><dd><p>correlation method to pass to cor() "pearson" (default), "kendall", or "spearman". Note that because the standard Student's T-test for significance is inappropriate for Kendall's Tau correlations, the raw and effective-N significance estimates will be NA when using "kendall"</p></dd>
   
 </dl></td>
-    </tr>
-    <tr>
-      <th>gauss</th>
-      <td><p>Boolean flag indicating whether the values should be mapped to a standard Gaussian prior to analysis</p></td>
     </tr>
     </table>
 

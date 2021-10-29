@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -190,7 +190,7 @@
   site.name <span class='op'>=</span> <span class='va'>L</span><span class='op'>$</span><span class='va'>dataSetName</span>,
   model.num <span class='op'>=</span> <span class='cn'>NA</span>,
   use.marine <span class='op'>=</span> <span class='cn'>NULL</span>,
-  askReservoir <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  ask.reservoir <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -199,7 +199,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>L</th>
-      <td><p>A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`</p></td>
+      <td><p>a LiPD object</p></td>
     </tr>
     <tr>
       <th>bacon.dir</th>
@@ -234,8 +234,28 @@
       <td><p>chron.numModel do you want to use?</p></td>
     </tr>
     <tr>
-      <th>meas.table.num</th>
-      <td><p>the number of the measurementTable you'll be working in</p></td>
+      <th>use.marine</th>
+      <td><p>use the marine 13C curve? (yes or no, or NULL to choose)</p></td>
+    </tr>
+    <tr>
+      <th>ask.reservoir</th>
+      <td><p>ask about reservoir corrections</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='selectData.html'>selectData</a></code></p><dl>
+    <dt><code>var.name</code></dt><dd><p>string name of the variable to extract</p></dd>
+    <dt><code>paleo.or.chron</code></dt><dd><p>"paleoData" or "chronData"</p></dd>
+    <dt><code>paleo.or.chron.num</code></dt><dd><p>an integer that corresponds to paleo.num or chron Data object (L$&lt;paleo.or.chron&gt;[[?]]) has the variable you want?</p></dd>
+    <dt><code>meas.table.num</code></dt><dd><p>an integer that corresponds to paleo.num measurementTable has the variable you want?</p></dd>
+    <dt><code>table.type</code></dt><dd><p>What type of table do you want to select data from? ("measurement", "summary" or "ensemble")</p></dd>
+    <dt><code>always.choose</code></dt><dd><p>Force selection of the variable from a list</p></dd>
+    <dt><code>alt.names</code></dt><dd><p>A vector of strings for alternative names to search for</p></dd>
+    <dt><code>ens.table.num</code></dt><dd><p>an integer that corresponds to ensembleTable you want to get the variable from?</p></dd>
+    <dt><code>sum.table.num</code></dt><dd><p>an integer that corresponds to which summaryTable you want to get the variable from?</p></dd>
+    <dt><code>strict.search</code></dt><dd><p>Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 

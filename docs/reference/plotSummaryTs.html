@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -211,6 +211,17 @@
     <tr>
       <th>step</th>
       <td><p>What step size should be used along the age axis? (default = NA, which will calculate 0.5% of the age.range)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='mapTs.html'>mapTs</a></code></p><dl>
+    <dt><code>color</code></dt><dd><p>variable (in TS) by which to color, or a string specifying a static ggplot color</p></dd>
+    <dt><code>size</code></dt><dd><p>Size of the location marker</p></dd>
+    <dt><code>lat.range</code></dt><dd><p>Latitudes to use to create baseMap range (default = NA, which determines from TS)</p></dd>
+    <dt><code>lon.range</code></dt><dd><p>Longitudes to use to create baseMap range (default = NA, which determines from TS)</p></dd>
+    <dt><code>shape</code></dt><dd><p>variable (in TS) by which to adjust shape, or an integer specifying a static ggplot shape</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 

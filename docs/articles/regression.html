@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Ensemble regression and calibration-in-time</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-07-13</h4>
+            <h4 class="date">2021-10-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/regression.Rmd"><code>vignettes/regression.Rmd</code></a></small>
       <div class="hidden name"><code>regression.Rmd</code></div>
@@ -254,27 +254,28 @@
 <a href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains" class="anchor"></a>Now load in the instrumental data we want to correlate and regress agains</h2>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/KurupaInstrumental.csv"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 134 Columns: 2</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## dbl (2): Year (AD), JJAS Temperature (deg C)</code></pre>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   `Year (AD)` = col_double(),
-##   `JJAS Temperature (deg C)` = col_double()
-## )</code></pre>
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 <div id="check-agetime-units-before-proceeding" class="section level2">
 <h2 class="hasAnchor">
 <a href="#check-agetime-units-before-proceeding" class="anchor"></a>Check age/time units before proceeding</h2>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kae</span><span class="op">$</span><span class="va">units</span></code></pre></div>
 <pre><code>## [1] "yr BP"</code></pre>
 <p>yep, we need to convert the units from BP to AD</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertBP2AD.html">convertBP2AD</a></span><span class="op">(</span><span class="va">kae</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="create-a-variable-list-for-the-instrumental-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-a-variable-list-for-the-instrumental-data" class="anchor"></a>Create a “variable list” for the instrumental data</h2>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">kyear</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="va">kurupa.instrumental</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
 <span class="va">kyear</span><span class="op">$</span><span class="va">variableName</span> <span class="op">&lt;-</span> <span class="st">"year"</span>
@@ -288,17 +289,14 @@
 <div id="calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data" class="anchor"></a>Calculate an ensmeble correlation between the RABD and local summer temperature data</h2>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">kae</span>,<span class="va">rabd</span>,<span class="va">kyear</span>,<span class="va">kinst</span>,bin.step<span class="op">=</span><span class="fl">2</span>,percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.05</span>,<span class="fl">.5</span>,<span class="fl">.95</span> <span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Registered S3 method overwritten by 'spatstat.geom':
-##   method     from
-##   print.boxx cli</code></pre>
 </div>
 <div id="and-plot-the-output" class="section level2">
 <h2 class="hasAnchor">
 <a href="#and-plot-the-output" class="anchor"></a>And plot the output</h2>
 <p>Note that here we use the “Effective-N” significance option as we mimic the Boldt et al. (2015) paper.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,significance.option <span class="op">=</span> <span class="st">"eff-n"</span><span class="op">)</span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 <p>Mixed results. But encouraging enough to move forward.</p>
@@ -307,7 +305,7 @@
 <h2 class="hasAnchor">
 <a href="#perform-ensemble-regression" class="anchor"></a>Perform ensemble regression</h2>
 <p>OK, you’ve convinced yourself that you want to use RABD to model temperature back through time. We can do this simply (perhaps naively) with regession, and lets do it with age uncertainty, both in the building of the model, and the reconstructing</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regressEns.html">regressEns</a></span><span class="op">(</span>time.x <span class="op">=</span> <span class="va">kae</span>,
                     values.x <span class="op">=</span> <span class="va">rabd</span>,
                     time.y <span class="op">=</span><span class="va">kyear</span>,
@@ -319,7 +317,7 @@
 <div id="and-plot-the-output-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#and-plot-the-output-1" class="anchor"></a>And plot the output</h2>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regPlots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotRegressEns.html">plotRegressEns</a></span><span class="op">(</span><span class="va">regout</span>,alp <span class="op">=</span> <span class="fl">0.01</span>,font.size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
 <p>This result is consistent with that produced by Boldt et al., (2015), and was much simpler to produce with geoChronR.</p>

@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-07-13</h4>
+            <h4 class="date">2021-10-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PCA.Rmd"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -254,16 +254,16 @@
 <pre><code>## # A tibble: 200 x 6
 ##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`
 ##    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-##  1 1408. -0.0589  0.0457  0.0987  0.154    0.275
-##  2 1410.  0.0263  0.0916  0.129   0.168    0.260
-##  3 1413.  0.0498  0.125   0.166   0.205    0.285
-##  4 1416.  0.114   0.179   0.207   0.234    0.285
-##  5 1419.  0.0758  0.144   0.172   0.201    0.249
-##  6 1422. -0.0281  0.0428  0.0876  0.128    0.201
-##  7 1425. -0.0372  0.0138  0.0413  0.0668   0.117
-##  8 1428. -0.0883 -0.0266  0.00839 0.0421   0.114
-##  9 1431. -0.0767 -0.0109  0.0223  0.0584   0.121
-## 10 1434. -0.0641  0.00374 0.0410  0.0844   0.152
+##  1 1408. -0.0641  0.0446  0.103   0.160    0.270
+##  2 1410.  0.0159  0.0949  0.134   0.175    0.246
+##  3 1413.  0.0524  0.124   0.169   0.205    0.284
+##  4 1416.  0.101   0.174   0.209   0.238    0.287
+##  5 1419.  0.0896  0.143   0.174   0.200    0.250
+##  6 1422. -0.0149  0.0562  0.0909  0.129    0.206
+##  7 1425. -0.0380  0.0172  0.0394  0.0679   0.121
+##  8 1428. -0.0976 -0.0291  0.00767 0.0436   0.112
+##  9 1431. -0.0716 -0.0179  0.0194  0.0567   0.124
+## 10 1434. -0.0666  0.00276 0.0372  0.0807   0.142
 ## # … with 190 more rows</code></pre>
 </div>
 </div>
@@ -274,30 +274,32 @@
 <p>First, it looks like let’s look at all the names in the TS</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"variableName"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Warning in pullTsVariable(TS, "variableName"): Couldn't find exact match for
+## 'variableName', using paleoData_variableName instead.</code></pre>
 <p>Oops - looks like we didn’t use quite the correct name. Next time use:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"paleoData_variableName"</span><span class="op">)</span></code></pre></div>
 <p>and take a look at the unique variableNames in the TS</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">var.names</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "d18O"                    "year"                   
 ## [3] "ageEnsemble"             "thickness"              
 ## [5] "X_radiograph_dark_layer" "massacum"</code></pre>
 <p>OK. Let’s filter the timeseries again, this time pulling all the <span class="math inline">\(\delta^{18}O\)</span> data.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d18OTS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html">filterTs</a></span><span class="op">(</span><span class="va">TS</span>,<span class="st">"paleoData_variableName == d18O"</span><span class="op">)</span></code></pre></div>
 <p>And we’ll tidy up the data for a plotStack</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidyd18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html">tidyTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></code></pre></div>
 <p>Before plotting, let’s do some tidyverse gymnastics to reorder the data by the length of the observations</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#arrange the tidy dataframe by record length</span>
 <span class="va">tidyd18O</span> <span class="op">&lt;-</span> <span class="va">tidyd18O</span> <span class="op">%&gt;%</span> <span class="co">#use the magrittr pipe for clarity</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">paleoData_TSid</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#group the data by column</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#create a new column for the duration</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">duration</span><span class="op">)</span> <span class="co"># and arrange the data by duration</span></code></pre></div>
 <p>Again we’ll use <code>plotTimeseriesStack</code> to show all the data, now nicely arranged.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyd18O</span>, 
                     color.var <span class="op">=</span> <span class="st">"paleoData_variableName"</span>, <span class="co"># Color the data by the variable name (all the same in the case)</span>
                     color.ramp <span class="op">=</span> <span class="st">"DarkBlue"</span>, <span class="co">#colors to use</span>
@@ -308,13 +310,13 @@
                     lab.buff <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
 <p>Well that sure is nice and tidy. Again, it looks like binning from 1400-2000 will give us good data coverage.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">binned.TS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,na.col.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p>And calculate the ensemble PCA, this time using a covariance matrix. By using a covariance, we’ll allow records that have larger variability in <span class="math inline">\(\delta^{18}O\)</span> to influence the PCA more, and those that have little variability will have little impact. This may or may not be a good idea, but it’s an important option to consider when possible.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pcout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS2</span>,pca.type <span class="op">=</span> <span class="st">"cov"</span><span class="op">)</span></code></pre></div>
 <p>Once again, let’s take a look at the scree plot:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout2</span><span class="op">)</span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-24-1.png" width="384"></p>
 <pre><code>Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 

@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -211,11 +211,15 @@
     </tr>
     <tr>
       <th>chron.num</th>
-      <td><p>the number of the chronData object that you'll be working in</p></td>
+      <td><p>Which chron number to get data from</p></td>
     </tr>
     <tr>
       <th>meas.table.num</th>
-      <td><p>the number of the measurementTable you'll be working in</p></td>
+      <td><p>an integer that corresponds to paleo.num measurementTable has the variable you want?</p></td>
+    </tr>
+    <tr>
+      <th>oxcal.path</th>
+      <td><p>path to oxcal binaries</p></td>
     </tr>
     <tr>
       <th>model.num</th>
@@ -242,17 +246,49 @@
       <td><p>optionally assign a deltaR uncertainty to all radiocarbon dates</p></td>
     </tr>
     <tr>
+      <th>surface.age</th>
+      <td><p>specify the age of the surface</p></td>
+    </tr>
+    <tr>
+      <th>surface.age.unc</th>
+      <td><p>surface age uncertainty</p></td>
+    </tr>
+    <tr>
+      <th>surface.age.depth</th>
+      <td><p>depth of the surface age</p></td>
+    </tr>
+    <tr>
+      <th>depth.interval</th>
+      <td><p>Depth interval to use to create depths.to.model (default = 10)</p></td>
+    </tr>
+    <tr>
+      <th>events.per.unit.length</th>
+      <td><p>How many events per unit length for the Poisson model? This controls the flexibility on the model, the lower the number the more flexibile.</p></td>
+    </tr>
+    <tr>
+      <th>events.per.unit.length.uncertainty</th>
+      <td><p>Uncertainty on events.per.unit.length in orders of magnitude. This makes for better models but *greatly* increases the run time. If NA or &lt; 0 it runs without uncertainty (default = NA)</p></td>
+    </tr>
+    <tr>
+      <th>outlier.prob</th>
+      <td><p>What's the probability of a date being an outlier if not otherwise specified (default= 0.05)</p></td>
+    </tr>
+    <tr>
+      <th>cal.curve</th>
+      <td><p>What calibration curve to use? (default = "intcal13")</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='createChronMeasInputDf.html'>createChronMeasInputDf</a></code></p><dl>
-    <dt><code>lab.id.var</code></dt><dd><p></p></dd>
-    <dt><code>age.14c.var</code></dt><dd><p></p></dd>
-    <dt><code>age.14c.uncertainty.var</code></dt><dd><p></p></dd>
-    <dt><code>age.var</code></dt><dd><p></p></dd>
-    <dt><code>age.uncertainty.var</code></dt><dd><p></p></dd>
-    <dt><code>depth.var</code></dt><dd><p></p></dd>
-    <dt><code>reservoir.age.14c.var</code></dt><dd><p></p></dd>
-    <dt><code>reservoir.age.14c.uncertainty.var</code></dt><dd><p></p></dd>
-    <dt><code>rejected.ages.var</code></dt><dd><p></p></dd>
+    <dt><code>lab.id.var</code></dt><dd><p>Lab Id variable name</p></dd>
+    <dt><code>age.14c.var</code></dt><dd><p>Radiocarbon age variable name</p></dd>
+    <dt><code>age.14c.uncertainty.var</code></dt><dd><p>Radiocarbon age uncertainty variable name</p></dd>
+    <dt><code>age.var</code></dt><dd><p>Calibrated age variable name</p></dd>
+    <dt><code>age.uncertainty.var</code></dt><dd><p>Calibrated age uncertainty variable name</p></dd>
+    <dt><code>depth.var</code></dt><dd><p>Depth variable name</p></dd>
+    <dt><code>reservoir.age.14c.var</code></dt><dd><p>Reservoir age variable name</p></dd>
+    <dt><code>reservoir.age.14c.uncertainty.var</code></dt><dd><p>Reservoir age uncertainty variable name</p></dd>
+    <dt><code>rejected.ages.var</code></dt><dd><p>Rejected ages variable name</p></dd>
     <dt><code>split.ages</code></dt><dd><p>if there's an age_type column, and only one age column, intelligently split between age and age14C</p></dd>
   
 </dl></td>

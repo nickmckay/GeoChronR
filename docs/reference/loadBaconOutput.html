@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
       </span>
     </div>
 
@@ -203,6 +203,10 @@
       <td><p>the name used for the bacon model (and directories)</p></td>
     </tr>
     <tr>
+      <th>K</th>
+      <td><p>The bacon K parameter (number of segments to model)</p></td>
+    </tr>
+    <tr>
       <th>chron.num</th>
       <td><p>the number of the chronData object that you'll be working in</p></td>
     </tr>
@@ -217,6 +221,10 @@
     <tr>
       <th>make.new</th>
       <td><p>do you want to create a new model in chronData? (TRUE, FALSE, NA). NA will try be smart, or ask you for advice.</p></td>
+    </tr>
+    <tr>
+      <th>max.ens</th>
+      <td><p>The maximum number of ensembles to export</p></td>
     </tr>
     </table>
 
@@ -236,8 +244,10 @@
     <p>Nick McKay</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>loadBaconOutput</span><span class='op'>(</span><span class='va'>L</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory </div><div class='output co'>#&gt; <span class='error'>Error in grepl(site.name, dir()): object 'L' not found</span></div><div class='input'><span class='co'>#Run in interactive mode</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>loadBaconOutput</span><span class='op'>(</span><span class='va'>L</span><span class='op'>)</span>
+<span class='co'>#Run in interactive mode</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
