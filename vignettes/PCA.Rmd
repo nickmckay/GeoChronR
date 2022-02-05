@@ -58,7 +58,8 @@ FD2 = purrr::map(FD,
                  mapAgeEnsembleToPaleoData,
                  strict.search = TRUE,
                  age.var = "ageEnsemble",
-                 depth.var = NULL )
+                 chron.depth.var = NULL,
+                 paleo.depth.var = NULL)
 ```
 
 Now extract all the "timeseries" into at "TS object" that will facilitate working with multiple records.

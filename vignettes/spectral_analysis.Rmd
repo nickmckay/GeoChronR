@@ -48,7 +48,7 @@ Now let us take a first look at the median age model:
 ```{r, message=FALSE, results = 'hide', warning = FALSE}
 d18O =  I$chronData[[1]]$model[[1]]$summaryTable[[1]]$d180$values
 t.med <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
-L <- geoChronR::mapAgeEnsembleToPaleoData(I,paleo.meas.table.num = 1)
+L <- geoChronR::mapAgeEnsembleToPaleoData(I,paleo.meas.table.num = 1,age.var = "age")
 age = geoChronR::selectData(L,"ageEnsemble",meas.table.num = 1)
 temp = geoChronR::selectData(L,"temp muller",meas.table.num = 1)
 plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,color.low="orchid",color.high="darkorange3",color.line="orange",line.width=0.5,alp=0.3) + scale_x_reverse() + theme_hc(style = "darkunica")
