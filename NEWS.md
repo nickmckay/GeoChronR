@@ -1,3 +1,5 @@
+# geoChronR 1.1.0
+
 # geoChronR 1.0.14
 
 * removed unused arima() in `createSyntheticTimeseries()`
