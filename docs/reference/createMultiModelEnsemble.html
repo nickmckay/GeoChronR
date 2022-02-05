@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • geoChronR</title>
+<title>Create a multi-model ensemble — createMultiModelEnsemble • geoChronR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -52,7 +52,8 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Create a multi-model ensemble — createMultiModelEnsemble" />
+<meta property="og:description" content="Create a multi-model ensemble" />
 <meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg" />
 
 
@@ -72,7 +73,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -170,153 +171,78 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Create a multi-model ensemble</h1>
+    <small class="dont-index">Source: <a href='https://github.com/nickmckay/GeoChronR/blob/master/R/createModel.R'><code>R/createModel.R</code></a></small>
+    <div class="hidden name"><code>createMultiModelEnsemble.Rd</code></div>
     </div>
 
-    <div id="geochronr-110" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.0">
-<a href="#geochronr-110" class="anchor"></a>geoChronR 1.1.0</h1>
-<ul>
-<li>A bunch of quality of life improvements</li>
-<li>Better integration with new lipdR classes</li>
-<li>A new function to create multi-model ensembles! <code><a href="../reference/createMultiModelEnsemble.html">createMultiModelEnsemble()</a></code>
-</li>
-</ul>
-</div>
-    <div id="geochronr-1014" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.14">
-<a href="#geochronr-1014" class="anchor"></a>geoChronR 1.0.14</h1>
-<ul>
-<li>removed unused arima() in <code><a href="../reference/createSyntheticTimeseries.html">createSyntheticTimeseries()</a></code>
-</li>
-</ul>
-</div>
-    <div id="geochronr-1013" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.13">
-<a href="#geochronr-1013" class="anchor"></a>geoChronR 1.0.13</h1>
-<ul>
-<li>Added explicit references to astrochron function <code>linterp</code> in <code>computeSpectraEns</code>. <a href="https://github.com/nickmckay/GeoChronR/issues/55">See issue 55</a>
-</li>
-</ul>
-</div>
-    <div id="geochronr-1012" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.12">
-<a href="#geochronr-1012" class="anchor"></a>geoChronR 1.0.12</h1>
-<ul>
-<li>Improved documentation</li>
-<li>
-<code><a href="../reference/runBchron.html">runBchron()</a></code>: <code>which.table</code> parameter changed to <code>meas.table.num</code> for consistency.</li>
-</ul>
-</div>
-    <div id="geochronr-1011" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.11">
-<a href="#geochronr-1011" class="anchor"></a>geoChronR 1.0.11</h1>
-<ul>
-<li>Removed jitterPositions option following <code>Bchron</code> update. <a href="https://github.com/nickmckay/GeoChronR/issues/53">See issue 53</a>
-</li>
-</ul>
-</div>
-    <div id="geochronr-1010" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.10">
-<a href="#geochronr-1010" class="anchor"></a>geoChronR 1.0.10</h1>
-<ul>
-<li>Added handling for shapes in <code><a href="../reference/mapTs.html">mapTs()</a></code> for tibbles.</li>
-</ul>
-</div>
-    <div id="geochronr-109" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.9">
-<a href="#geochronr-109" class="anchor"></a>geoChronR 1.0.9</h1>
-<ul>
-<li>Fixed bug writing Bchron output into LiPD structure. Thanks <a href='https://github.com/alexkjames'>@alexkjames</a> for recognizing the bug.</li>
-</ul>
-</div>
-    <div id="geochronr-108" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.8">
-<a href="#geochronr-108" class="anchor"></a>geoChronR 1.0.8</h1>
-<ul>
-<li>Modified the use of the spatstat package (to spatstat.core) to accommodate the changes in that package.</li>
-<li>Moved astrochron back to a “required” package, now that it’s back.</li>
-</ul>
-</div>
-    <div id="geochronr-107" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.7">
-<a href="#geochronr-107" class="anchor"></a>geoChronR 1.0.7</h1>
-<ul>
-<li>Moved astrochron to a “suggested” package, after it was removed from CRAN.</li>
-</ul>
-</div>
-    <div id="geochronr-106" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.6">
-<a href="#geochronr-106" class="anchor"></a>geoChronR 1.0.6</h1>
-<ul>
-<li>Fixed sampleBaconAges() for handling different versions of R and rbacon.</li>
-</ul>
-</div>
-    <div id="geochronr-105" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.5">
-<a href="#geochronr-105" class="anchor"></a>geoChronR 1.0.5</h1>
-<ul>
-<li>Improve and document the <code>export.quantiles</code> option in <code>plotTimeseriesEnsRibbons</code>
-</li>
-<li>Fix bug in <code><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs()</a></code> when only one instance of the <code>group.var</code> <a href="https://github.com/nickmckay/GeoChronR/issues/49">see issue 49</a>
-</li>
-<li>Added support for flipping timeseries vertically in <code>plotTimeseriesStack</code> to match interpertations, based on TS metadata, specified in <code>invert.var</code>. Details in <code><a href="../reference/plotTimeseriesStack.html">?plotTimeseriesStack</a></code>. <a href="https://github.com/nickmckay/GeoChronR/issues/30">See issue 30</a>
-</li>
-</ul>
-</div>
-    <div id="geochronr-104" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.4">
-<a href="#geochronr-104" class="anchor"></a>geoChronR 1.0.4</h1>
-<ul>
-<li>Better automatic detection for mapping ranges in <code><a href="../reference/baseMap.html">baseMap()</a></code>
-</li>
-</ul>
-</div>
-    <div id="geochronr-103" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.3">
-<a href="#geochronr-103" class="anchor"></a>geoChronR 1.0.3</h1>
-<ul>
-<li>Added interoperability with “tidyTs” objects, that is, TS objects expressed as tidy (or nested) tibbles.</li>
-<li>Fixed binding warning in <code><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs()</a></code>
-</li>
-<li>Fixed bug in <code><a href="../reference/mapTs.html">mapTs()</a></code> when the regions were really small</li>
-</ul>
-</div>
-    <div id="geochronr-102" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.2">
-<a href="#geochronr-102" class="anchor"></a>geoChronR 1.0.2</h1>
-<ul>
-<li>Fixed a bug in <code>plotTimeAvailabililyTs()</code> where if <code>group.var</code> had a variable with a single instance it would fail.</li>
-</ul>
-</div>
-    <div id="geochronr-101" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.1">
-<a href="#geochronr-101" class="anchor"></a>geoChronR 1.0.1</h1>
-<ul>
-<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
-<li>Added pkgdown documentation, website available at nickmckay.github.io/GeoChronR</li>
-<li>Updated vignettes for consistency with Geochronology manuscript and version 1.0.0</li>
-<li>Fixed typo in <code><a href="../reference/plotCorEns.html">plotCorEns()</a></code> legend when using <code>use.fdr = FALSE</code>
-</li>
-</ul>
-</div>
-    <div id="geochronr-100" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.0">
-<a href="#geochronr-100" class="anchor"></a>geoChronR 1.0.0</h1>
-<ul>
-<li>This release marks the submission of the manuscript describing geoChronR to “Geochronology”, the manuscript, which is under discussion, <a href="https://doi.org/10.5194/gchron-2020-25">is available here</a>.</li>
-<li>Major changes to parameter names (terms within functions) were made for version 1.0.0, standardizing them all to lower case, period separated terminology. If you’ve been using geoChronR for awhile, this will almost certainly break some of your code, sorry.</li>
-</ul>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>Create a multi-model ensemble</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>createMultiModelEnsemble</span><span class='op'>(</span>
+  <span class='va'>L</span>,
+  depth.var <span class='op'>=</span> <span class='st'>"depth"</span>,
+  age.var <span class='op'>=</span> <span class='st'>"ageEnsemble"</span>,
+  <span class='va'>models.to.combine</span>,
+  chron.num <span class='op'>=</span> <span class='fl'>1</span>,
+  depth.interval <span class='op'>=</span> <span class='fl'>10</span>,
+  depth.seq <span class='op'>=</span> <span class='cn'>NA</span>,
+  ens.table.number <span class='op'>=</span> <span class='fl'>1</span>,
+  n.ens <span class='op'>=</span> <span class='fl'>1000</span>
+<span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>L</th>
+      <td><p>A lipd object containing the ensembles you want to combine</p></td>
+    </tr>
+    <tr>
+      <th>depth.var</th>
+      <td><p>What is the variable name of the ensemble depth vector? Must be the same for all models.</p></td>
+    </tr>
+    <tr>
+      <th>age.var</th>
+      <td><p>What is the variable name of the chronEnsemble? Must be the same for all models.</p></td>
+    </tr>
+    <tr>
+      <th>models.to.combine</th>
+      <td><p>2 or more integers that correspond to the chronData model objects you want to combine into an ensemble</p></td>
+    </tr>
+    <tr>
+      <th>chron.num</th>
+      <td><p>an integer that corresponds to number of the chronData object (L$chron[[?]])</p></td>
+    </tr>
+    <tr>
+      <th>depth.interval</th>
+      <td><p>The depth spacing that you want the new ensemble to be interpolated to.</p></td>
+    </tr>
+    <tr>
+      <th>depth.seq</th>
+      <td><p>Optionally specify a depth sequence overwhich to create the new ensemble</p></td>
+    </tr>
+    <tr>
+      <th>ens.table.number</th>
+      <td><p>What ensemble table number should we pull the data from (default = 1)</p></td>
+    </tr>
+    <tr>
+      <th>n.ens</th>
+      <td><p>How many ensembles should be included in the final model? The amount from each contributing model will be equal (or very nearly so if it's not evenly divisible)</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A lipd object with a new chron model that contains your multimodel ensemble.</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 

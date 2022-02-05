@@ -278,7 +278,7 @@ mapLipd <- function(D,
     map <-  basemap + geom_point(data=dfp,aes(x=lon,y=lat),colour = color,fill = color,size=size,shape = shape) 
     if(!is.null( L$geo$siteName) & label.site){
       dfp$sitename <-  L$geo$siteName
-      map <- map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-1)
+      map <- map+geom_label(data=dfp,aes(x=lon,y=lat,label=sitename),nudge_y=-5)
     }
     
   }else{ #multiple lipd datasets

@@ -104,12 +104,12 @@ runBchron =  function(L,
   if(is.na(cal.curves)){
     if(!is.null(L$archiveType)){#make an educated guess
       if(grepl(L$archiveType,pattern = "marine")){
-        cal.curves <- "marine13"
+        cal.curves <- "marine20"
       }else{
-        cal.curves <- "intcal13"
+        cal.curves <- "intcal20"
       }
     }else{
-         possible_curve = c("marine13","intcal13","shcal13","normal")
+         possible_curve = c("marine20","intcal20","shcal20","normal")
          print("You haven't specified a calibration curve")
          for (i in seq(from=1, to=length(possible_curve), by =1)){
            print(paste(i,": ",possible_curve[i]))}
@@ -218,7 +218,7 @@ runBchron =  function(L,
     distTable$probabilityDensity$values = run$calAges[[i]]$densities
     distTable$probabilityDensity$units = NA
     distTable$probabilityDensity$description = "probability density that for calibrated ages at specific ages"
-    distTable$age$values = run$calAges[[i]]$ageGrid
+    distTable$age$values = suppressWarnings(as.matrix(run$calAges[[i]]$ageGrid))
     distTable$age$units = "yr BP"
     distTable$age$variableName <- "age"
     

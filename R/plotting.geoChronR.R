@@ -480,8 +480,9 @@ plotSummary = function(L,
                        chron.meas.num = NA, 
                        chron.depth.var = "depth", 
                        chron.age.var = "age", 
+                       chron.age.14c.var = "age14C",
                        dot.size = 5, 
-                       summary.font.size = 10, 
+                       summary.font.size = 6, 
                        text.width = 400/summary.font.size, 
                        legend.position = c(0.7,0.3),
                        ...){
@@ -495,7 +496,7 @@ plotSummary = function(L,
     stop("plotSummary requires a single LiPD object as input")
   }
   
-  map <- mapLipd(L,extend.range = 10,map.type = "line")
+  map <- mapLipd(L,extend.range = 4,map.type = "line")
   
   #plot paleoData
   
@@ -518,7 +519,7 @@ plotSummary = function(L,
   paleoPlot = paleoPlot + ggtitle(paste("PaleoData:",variable$variableName))
   
   #do chron.
-  chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var, dot.size = dot.size,legend.position = legend.position, ...)
+  chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var,age.14c.var = chron.age.14c.var, dot.size = dot.size,legend.position = legend.position, ...)
   
   if(!is.list(chronPlot)){
     if(is.na(chronPlot)){
@@ -1880,7 +1881,8 @@ plotChronEns = function(L,
                         add.paleo.age.depth = FALSE, 
                         paleo.number = NA, 
                         meas.num = NA,
-                        color.line.paleo = "cyan"){
+                        color.line.paleo = "cyan",
+                        plot.traces = TRUE){
   
   C = L$chronData
   if(is.na(chron.number)){
@@ -1958,10 +1960,10 @@ plotChronEns = function(L,
   chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = alp,probs = probs,x.bin = x.bin,y.bin = y.bin, n.bins = n.bins, color.low = color.low,color.high = color.high,color.line = color.line,line.width = line.width,add.to.plot = add.to.plot)
   
   
-  
+  if(plot.traces){
   #A few traces second
   chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = alp.ens.line,color = color.ens.line,add.to.plot = chronPlot,n.ens.plot = n.ens.plot)
-  
+  }
   
   #distributions last
   if(is.list(C[[chron.number]]$model[[model.num]]$distributionTable)){#if it exists. Add it.

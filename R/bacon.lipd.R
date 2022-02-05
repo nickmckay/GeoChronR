@@ -13,18 +13,11 @@ getBaconDir <- function(bacon.dir = NA){
   if(is.na(bacon.dir) | !is.character(bacon.dir)){
     #check geoChronR env first
     if(!exists("bacon.dir",where = geoChronREnv)){
-      cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
-      
-      baconFile=file.choose()
-      assign("bacon.dir",value = dirname(dirname(baconFile)),envir = geoChronREnv)
-      bacon.dir=dirname(dirname(baconFile))
+      bacon.dir <- tempdir()
     }else{
       bacon.dir=get("bacon.dir",envir = geoChronREnv)
       if(is.na(bacon.dir) | !is.character(bacon.dir)){
-        cat('please select the "MSB2K.csv" file inside your "Bacon_runs" or "Cores" directory',"\n")
-        baconFile=file.choose()
-        assign("bacon.dir",value = dirname(dirname(baconFile)),envir = geoChronREnv)
-        bacon.dir=dirname(dirname(baconFile))
+        bacon.dir <- tempdir()
       }
     }
   }
@@ -590,7 +583,7 @@ loadBaconOutput <- function(L,
   
   
   
-  if(is.na(L$chronData[[chron.num]]$model[[model.num]])){
+  if(is.null(L$chronData[[chron.num]]$model[[model.num]]$methods)){
     L$chronData[[chron.num]]$model[[model.num]]=list("methods"=methods)
     
   }else{
@@ -607,7 +600,9 @@ loadBaconOutput <- function(L,
     }
   }
   if(length(st)!=1){
-    cat("select the correct ages.txt file","\n")
+    cat("select the correct ages.txt file")
+    cat("\n")
+    cat("\n")
     st=file.choose()
   }
   

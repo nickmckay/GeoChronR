@@ -13,8 +13,9 @@ plotSummary(
   chron.meas.num = NA,
   chron.depth.var = "depth",
   chron.age.var = "age",
+  chron.age.14c.var = "age14C",
   dot.size = 5,
-  summary.font.size = 10,
+  summary.font.size = 6,
   text.width = 400/summary.font.size,
   legend.position = c(0.7, 0.3),
   ...

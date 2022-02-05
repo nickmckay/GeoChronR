@@ -75,7 +75,7 @@ runOxcal(
     \item{\code{reservoir.age.14c.var}}{Reservoir age variable name}
     \item{\code{reservoir.age.14c.uncertainty.var}}{Reservoir age uncertainty variable name}
     \item{\code{rejected.ages.var}}{Rejected ages variable name}
-    \item{\code{split.ages}}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
+    \item{\code{split.ages}}{if there's an age_type column, and only one age column, intelligently split between age and age14C (default = TRUE)}
   }}
 }
 \value{

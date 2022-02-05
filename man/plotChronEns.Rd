@@ -32,7 +32,8 @@ plotChronEns(
   add.paleo.age.depth = FALSE,
   paleo.number = NA,
   meas.num = NA,
-  color.line.paleo = "cyan"
+  color.line.paleo = "cyan",
+  plot.traces = TRUE
 )
 }
 \arguments{

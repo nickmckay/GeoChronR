@@ -6,13 +6,14 @@
 \usage{
 mapAgeEnsembleToPaleoData(
   L,
-  age.var = "age",
-  depth.var = "depth",
+  age.var = "ageEnsemble",
+  chron.depth.var = "depth",
+  paleo.depth.var = "depth",
   paleo.num = NA,
   paleo.meas.table.num = NA,
   chron.num = NA,
   model.num = NA,
-  ens.table.num = NA,
+  ens.table.num = 1,
   max.ens = NA,
   strict.search = FALSE
 )
@@ -22,7 +23,9 @@ mapAgeEnsembleToPaleoData(
 
 \item{age.var}{name of the age ensemble variable to search for}
 
-\item{depth.var}{name of the depth variable to search for}
+\item{chron.depth.var}{name of the depth variable to search for in the ensemble table}
+
+\item{paleo.depth.var}{name of the depth variable to search for in the paleo measurement table}
 
 \item{paleo.num}{an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify}
 

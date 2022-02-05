@@ -171,7 +171,7 @@ createModel <- function(L,
     }
   }
   
-  if(!is.na(methods)){#if methods are supplied, add them in
+  if(!all(is.na(methods))){#if methods are supplied, add them in
     L[[paleo.or.chron]][[paleo.or.chron.num]]$model[[model.num]]$methods=methods
   }
   
@@ -221,4 +221,103 @@ createModel <- function(L,
  
   return(L) 
 }
+
+
+#' Create a multi-model ensemble
+#'
+#' @param L A lipd object containing the ensembles you want to combine
+#' @param depth.var What is the variable name of the ensemble depth vector? Must be the same for all models. 
+#' @param age.var What is the variable name of the chronEnsemble? Must be the same for all models. 
+#' @param models.to.combine 2 or more integers that correspond to the chronData model objects you want to combine into an ensemble
+#' @param chron.num an integer that corresponds to number of the chronData object (L$chron[[?]])
+#' @param depth.interval The depth spacing that you want the new ensemble to be interpolated to.
+#' @param depth.seq Optionally specify a depth sequence overwhich to create the new ensemble
+#' @param ens.table.number What ensemble table number should we pull the data from (default = 1)
+#' @param n.ens How many ensembles should be included in the final model? The amount from each contributing model will be equal (or very nearly so if it's not evenly divisible)
+#'
+#' @return A lipd object with a new chron model that contains your multimodel ensemble. 
+#' @export 
+createMultiModelEnsemble <- function(L,
+                                     depth.var = "depth",
+                                     age.var = "ageEnsemble",
+                                     models.to.combine,
+                                     chron.num = 1, 
+                                     depth.interval =10 ,
+                                     depth.seq = NA,
+                                     ens.table.number = 1,
+                                     n.ens = 1000){
+  
+  if(is.na(depth.seq)){
+    #figure out the depth sequence
+    depthrange <- function(mod,depth.var,ens.table.number){
+      return(mod$ensembleTable[[ens.table.number]][[depth.var]]$values %>% 
+               range())
+    }
+    
+    ranges <- suppressMessages(purrr::map_dfc(L$chronData[[chron.num]]$model[models.to.combine],depthrange,depth.var,ens.table.number) )
+    
+    ds <- max(ranges[1,],na.rm = TRUE)
+    de <- min(ranges[2,],na.rm = TRUE)
+    
+    depth.seq <- seq(ds,de,by = depth.interval)
+  }
+  
+  ##interpolate ensemble tables
+  interpolateEnsembles <- function(mod,
+                                   depth.seq,
+                                   depth.var,
+                                   age.var,
+                                   ens.table.number,
+                                   n.ens.out){
+    
+    od <- mod$ensembleTable[[ens.table.number]][[depth.var]]$values
+    oa <- mod$ensembleTable[[ens.table.number]][[age.var]]$values %>% purrr::array_branch(margin = 2)
+    ia <- purrr::map_dfc(oa,~ approx(od,.x,depth.seq)$y)
+    neo <- nrow(ia)
+    if(neo >= n.ens.out){
+      replace <- FALSE
+    }else{
+      replace <- TRUE
+    }
+    return(ia[ , sample.int(neo,size = n.ens.out,replace = replace)])
+  }
+  
+  interpolatedEnsembles <- suppressMessages(purrr::map_dfc(L$chronData[[chron.num]]$model[models.to.combine],
+                                                           interpolateEnsembles,
+                                                           depth.seq,
+                                                           depth.var,
+                                                           age.var,
+                                                           ens.table.number,
+                                                           ceiling(n.ens/length(models.to.combine)))) %>% 
+    as.matrix()
+  
+  to.output <- interpolatedEnsembles[,sample.int(ncol(interpolatedEnsembles),n.ens,replace = FALSE)]
+  
+  #make some methods.
+  
+  allMethods <- purrr::map(L$chronData[[chron.num]]$model[models.to.combine],purrr::pluck,"methods")
+  methods <- list(algorithm = "grand model ensemble by geoChronR::createMultiModelEnsemble()", originalMethods = allMethods)
+  
+  L <- createModel(L,
+                   depth.or.age.vector = depth.seq,
+                   ensemble.data = to.output,
+                   model.num = length(L$chronData[[chron.num]]$model) +1,
+                   paleo.or.chron = "chronData",
+                   paleo.or.chron.num = chron.num,
+                   depth.or.age.var = depth.var,
+                   depth.or.age.units = L$chronData[[chron.num]]$model[[models.to.combine[1]]]$ensembleTable[[ens.table.number]][[depth.var]]$units,
+                   ens.var = age.var,
+                   L$chronData[[chron.num]]$model[[models.to.combine[1]]]$ensembleTable[[ens.table.number]][[age.var]]$units,
+                   make.new = TRUE,
+                   create.summary.table = TRUE,
+                   methods = methods)
+  
+  
+  
+  return(L)
+  
+  
+  
+}
+
 

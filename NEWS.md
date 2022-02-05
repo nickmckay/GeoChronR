@@ -1,5 +1,9 @@
 # geoChronR 1.1.0
 
+* A bunch of quality of life improvements
+* Better integration with new lipdR classes
+* A new function to create multi-model ensembles! `createMultiModelEnsemble()`
+
 # geoChronR 1.0.14
 
 * removed unused arima() in `createSyntheticTimeseries()`

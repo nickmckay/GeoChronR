@@ -10,6 +10,7 @@ getVariableIndex(
   alt.names = var.name,
   ignore = NA,
   always.choose = FALSE,
+  ask = TRUE,
   strict.search = FALSE
 )
 }
@@ -23,6 +24,8 @@ getVariableIndex(
 \item{ignore}{A vector of strings of variableNames to ignore}
 
 \item{always.choose}{Force selection of the variable from a list}
+
+\item{ask}{If there is only one option, do you want to be asked whether to use it? (default = TRUE)}
 
 \item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }

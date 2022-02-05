@@ -100,9 +100,9 @@ estimateUncertaintyFromRange = function(L,
   MT$uncEstimate$values <-  uncVal
   MT$uncEstimate$variableName <-  "uncEstimate"
   MT$uncEstimate$TSid <- paste0("EUR", 
-                                 format(Sys.time(), "%y%m%d"), 
-                                 paste0(sample(c(letters,LETTERS, 0:9),
-                                 size = 16, replace = T), collapse = ""))
+                                format(Sys.time(), "%y%m%d"), 
+                                paste0(sample(c(letters,LETTERS, 0:9),
+                                              size = 16, replace = T), collapse = ""))
   
   MT$uncEstimate$units <- v2$units
   
@@ -116,7 +116,8 @@ estimateUncertaintyFromRange = function(L,
 #' @description Copies an ageEnsemble from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 #' @inheritParams selectData
 #' @param age.var name of the age ensemble variable to search for
-#' @param depth.var name of the depth variable to search for
+#' @param chron.depth.var name of the depth variable to search for in the ensemble table
+#' @param paleo.depth.var name of the depth variable to search for in the paleo measurement table
 #' @param paleo.num an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #' @param paleo.meas.table.num an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?
 #' @param chron.num  an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from
@@ -125,7 +126,17 @@ estimateUncertaintyFromRange = function(L,
 #' @import pbapply
 #' @return L a lipd object
 #' @export
-mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo.num=NA,paleo.meas.table.num=NA,chron.num=NA,model.num=NA,ens.table.num = NA,max.ens=NA,strict.search=FALSE){
+mapAgeEnsembleToPaleoData = function(L,
+                                     age.var = "ageEnsemble",
+                                     chron.depth.var = "depth",
+                                     paleo.depth.var = "depth",
+                                     paleo.num=NA,
+                                     paleo.meas.table.num=NA,
+                                     chron.num=NA,
+                                     model.num=NA,
+                                     ens.table.num = 1,
+                                     max.ens=NA,
+                                     strict.search=FALSE){
   print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
@@ -181,12 +192,30 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo
   copyAE  = FALSE
   
   print("Looking for age ensemble....")
-  ensDepth = selectData(L,table.type = "ensemble",var.name = depth.var,paleo.or.chron = "chronData",paleo.or.chron.num = chron.num,strict.search = strict.search,model.num = model.num)$values
-  ensAll = selectData(L,table.type = "ensemble",var.name = age.var,alt.names = c("age","ensemble","year"),paleo.or.chron = "chronData",model.num = model.num,ens.table.num = ens.table.num,paleo.or.chron.num = chron.num,strict.search = strict.search)
+  ensDepth = selectData(L,
+                        table.type = "ensemble",
+                        var.name = chron.depth.var,
+                        paleo.or.chron = "chronData",
+                        paleo.or.chron.num = chron.num,
+                        strict.search = strict.search,
+                        ens.table.num = ens.table.num,
+                        model.num = model.num)$values
+  
+  ensAll = selectData(L,
+                      table.type = "ensemble",
+                      var.name = age.var,
+                      paleo.or.chron = "chronData",
+                      model.num = model.num,
+                      ens.table.num = ens.table.num,
+                      paleo.or.chron.num = chron.num,
+                      strict.search = strict.search)
+  
   if(is.null(ensAll$values)){
     stop("Error: did not find the age ensemble.")
   }
+  
   ens = ensAll$values
+  
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
     #get year, age or depth from paleodata
@@ -195,7 +224,7 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo
       pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = "age",always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = year.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
+      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = age.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
       pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = depth.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
@@ -216,7 +245,7 @@ mapAgeEnsembleToPaleoData = function(L,age.var = "age",depth.var = "depth",paleo
   if(!copyAE){
     #get the depth from the paleo measurement table
     print("getting depth from the paleodata table...")
-    depth = selectData(L,paleo.or.chron.num = paleo.num,var.name = "depth",alt.names = "position",always.choose = FALSE,ens.table.num = ens.table.num,meas.table.num = paleo.meas.table.num)$values
+    depth = selectData(L,paleo.or.chron.num = paleo.num,var.name = paleo.depth.var,always.choose = FALSE,ens.table.num = ens.table.num,meas.table.num = paleo.meas.table.num)$values
     
     #check that depth is numeric
     if(!is.numeric(depth)){
@@ -354,28 +383,29 @@ selectData = function(L,
   
   
   
-  if(tolower(substr(table.type,1,1))=="e"){MT = P[[paleo.or.chron.num]]$model[[model.num]]$ensembleTable}
-  if(tolower(substr(table.type,1,1))=="s"){MT = P[[paleo.or.chron.num]]$model[[model.num]]$summaryTable}
-  
-  
-  
-  #initialize table number
-  if(is.na(meas.table.num)){
-    if(length(MT)==0){
-      stop(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
+  if(tolower(substr(table.type,1,1))=="e"){
+    MTD = P[[paleo.or.chron.num]]$model[[model.num]]$ensembleTable[[ens.table.num]]
+  }else if(tolower(substr(table.type,1,1))=="s"){
+    MTD = P[[paleo.or.chron.num]]$model[[model.num]]$summaryTable[[1]]
+  }else{ #measurementTable
+    #initialize table number
+    if(is.na(meas.table.num)){
+      if(length(MT)==0){
+        stop(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
+      }
+      if(length(MT)==1){
+        #only one pmt
+        meas.table.num=1
+      }else{
+        print(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
+        meas.table.num=as.integer(readline(prompt = "Which table do you want? Enter an integer "))
+      }
     }
-    if(length(MT)==1){
-      #only one pmt
-      meas.table.num=1
-    }else{
-      print(paste0("this object in ",paleo.or.chron,"[[",as.character(paleo.or.chron.num),"]] has ", as.character(length(MT)), " tables"))
-      meas.table.num=as.integer(readline(prompt = "Which table do you want? Enter an integer "))
-    }
-  }
-  
+    
   
   #this is the table of interest  
   MTD=MT[[meas.table.num]]
+  }
   
   ind = getVariableIndex(MTD,var.name = var.name,always.choose = always.choose,alt.names = alt.names,strict.search = strict.search)
   
@@ -390,6 +420,7 @@ selectData = function(L,
 #' @title Get the index of variable list
 #' @family LiPD manipulation
 #' @description Gets the index for a LiPD "variable list"
+#' @param ask If there is only one option, do you want to be asked whether to use it? (default = TRUE)
 #' @inheritParams selectData
 #' @param table a LiPD measurement, ensemble or summary Table
 #' @param ignore A vector of strings of variableNames to ignore
@@ -400,6 +431,7 @@ getVariableIndex = function(table,
                             alt.names=var.name,
                             ignore=NA,
                             always.choose=FALSE,
+                            ask = TRUE,
                             strict.search=FALSE){
   
   #check to see if var.name is null, and return 0 if so
@@ -477,10 +509,12 @@ getVariableIndex = function(table,
         }
         
       }else{
-        cat(paste("Use",cnames[idi], "?"), "\n")
-        q = readline(prompt="y or n?")
-        if(!grepl(pattern="y",q,ignore.case = TRUE)){
-          idi=0
+        if(ask){
+          cat(paste("Use",cnames[idi], "?"), "\n")
+          q = readline(prompt="y or n?")
+          if(!grepl(pattern="y",q,ignore.case = TRUE)){
+            idi=0
+          }
         }
       }
     }

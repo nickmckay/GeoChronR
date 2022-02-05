@@ -43,7 +43,7 @@ askUser <- function(query){
 #' @param reservoir.age.14c.var Reservoir age variable name
 #' @param reservoir.age.14c.uncertainty.var Reservoir age uncertainty variable name
 #' @param rejected.ages.var Rejected ages variable name
-#' @param split.ages if there's an age_type column, and only one age column, intelligently split between age and age14C
+#' @param split.ages if there's an age_type column, and only one age column, intelligently split between age and age14C (default = TRUE)
 #' @importFrom purrr map_dbl map_lgl map_chr
 #' @importFrom crayon bold yellow cyan red green blue 
 #' @importFrom stringr str_sub
@@ -100,6 +100,42 @@ createChronMeasInputDf <- function(L,
   
   MT=C$measurementTable[[meas.table.num]]
   
+  #if there's age_type, but only one age, create age and age14C options.
+  chronnames <- purrr::map(MT,purrr::pluck,"variableName") %>% unlist()
+  
+  if(any(grepl("age_type",chronnames)) & !any(grepl("14c",chronnames,ignore.case = TRUE))){
+    #create an age14C column
+    ati <- getVariableIndex(MT,var.name = "age_type",ask = FALSE)
+    i14c <- which(grepl("14",MT[[ati]]$values))
+    n14c <- which(!grepl("14",MT[[ati]]$values))
+    ai <- getVariableIndex(MT,var.name = "age",ask = FALSE)
+    MT[["age14C"]] <- MT[[ai]]
+    MT$age14C$variableName <- "age14C"
+    MT$age14C$units <- "yr 14C"
+    
+    #remove 14c values from age. 
+    MT[[ai]]$values[i14c] <- NA
+    
+    #remove cal values from age14C. 
+    MT$age14C$values[n14c] <- NA
+    
+    
+    #deal with uncertainty
+    cat("Looking for age uncertainty\n")
+    unci <- getVariableIndex(MT,var.name = "sd",alt.names = "unc",ask = FALSE)
+    MT[["age14CUnc"]] <- MT[[unci]]
+    MT$age14CUnc$variableName <- "age14CUnc"
+    MT$age14CUnc$units <- "yr 14C"
+    
+    
+    #remove 14c values from age. 
+    MT[[unci]]$values[i14c] <- NA
+    
+    #remove cal values from age14C. 
+    MT$age14CUnc$values[n14c] <- NA
+    
+  }
+  
   #NM: move this to google speadsheet import?
   
   age.vars <- c(2,3,4,5,7,8)
@@ -145,7 +181,7 @@ createChronMeasInputDf <- function(L,
             "age",#age.14c.var,
             "unc",#age.14c.uncertainty.var,
             "age",#age.var,
-            "unc",#age.uncertainty.var,
+            "sd",#age.uncertainty.var,
             "depth",#depth.var,
             "reservoir",#reservoir.age.14c.var,
             reservoir.age.14c.uncertainty.var,#reservoir.age.14c.uncertainty.var no good alt name here
@@ -278,6 +314,13 @@ createChronMeasInputDf <- function(L,
     
   }
   
+  #prohibit zeros or negatives in age uncertainty columns
+  if(any(chronDf$age14CUnc < 1,na.rm = TRUE)){
+    chronDf$age14CUnc[chronDf$age14CUnc < 1] <- 1
+  }
+  if(any(chronDf$ageUnc < 1,na.rm = TRUE)){
+    chronDf$ageUnc[chronDf$ageUnc < 1] <- 1
+  }
   
   
   #calculate a few more columns

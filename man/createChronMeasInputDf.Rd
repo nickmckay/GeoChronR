@@ -45,7 +45,7 @@ createChronMeasInputDf(
 
 \item{rejected.ages.var}{Rejected ages variable name}
 
-\item{split.ages}{if there's an age_type column, and only one age column, intelligently split between age and age14C}
+\item{split.ages}{if there's an age_type column, and only one age column, intelligently split between age and age14C (default = TRUE)}
 }
 \value{
 a standardized dataframe of chron measurements

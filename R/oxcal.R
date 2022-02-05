@@ -138,7 +138,7 @@ createOxcalModel <- function(cdf,
   
   
   if(is.na(depths.to.model)){
-    depths.to.model <- data.frame(depth = seq(0,max(cdf$depth),by = depth.interval))
+    depths.to.model <- data.frame(depth = seq(min(cdf$depth),max(cdf$depth),by = depth.interval))
   }
   
   if(!is.data.frame(depths.to.model)){
@@ -268,11 +268,11 @@ loadOxcalOutput <- function(L,
   
   if(length(L$chronData[[chron.num]]$model)<model.num){
     if(make.new){
-      L$chronData[[chron.num]]$model[[model.num]]=NA
+      L$chronData[[chron.num]]$model[[model.num]]=list()
     }else{
       nm=readline(prompt = paste("model",model.num,"doesn't exist. Create it? y or n "))
       if(grepl(pattern = "y",x = tolower(nm))){
-        L$chronData[[chron.num]]$model[[model.num]]=NA
+        L$chronData[[chron.num]]$model[[model.num]]=list()
       }else{
         stop("Stopping, since you didn't want to create a new model")
       }
@@ -295,7 +295,7 @@ loadOxcalOutput <- function(L,
   }
   
   
-  if(is.na(L$chronData[[chron.num]]$model[[model.num]])){
+  if(is.null(L$chronData[[chron.num]]$model[[model.num]]$methods)){
     L$chronData[[chron.num]]$model[[model.num]]=list("methods"=methods)
     
   }else{
