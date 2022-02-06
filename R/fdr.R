@@ -62,7 +62,7 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
     a <- propAlt(pvals,adjustment.method,adjustment.args)
   }
   if(a==1){    # all hypotheses are estimated to be alternatives
-    return(1:n)
+    return(which(pvals<qlevel))
   } else{      # adjust for estimate of a; default is 0
     qlevel <- qlevel/(1-a)
   }

@@ -1681,7 +1681,7 @@ plotChronEnsDiff = function(L,
   cAgeEns <- selectData(L,var.name = ageEnsVar,paleo.or.chron = "paleoData",paleo.or.chron.num = paleo.num,meas.table.num = paleo.meas.table.num)
   
   if(is.null(pAge)){
-    stop("couldn't find the age/year ataaleoData")
+    stop("couldn't find the age/year paleoData")
   }
   if(is.null(cAgeEns)){
     stop("couldn't find the mapped ageEnsemble/yearEnsemble data in paleoData")
