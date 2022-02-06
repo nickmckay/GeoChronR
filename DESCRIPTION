@@ -18,7 +18,7 @@ Maintainer: Nick McKay <nick@nau.edu>
 Description: Time uncertain chronology developement and analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
 License: MIT License
 LazyData: TRUE
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 biocViews: 
 Imports:

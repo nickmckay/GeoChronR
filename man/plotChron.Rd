@@ -59,6 +59,7 @@ plotChron(
     \item{\code{add.paleo.age.depth}}{add a line that shows the paleoData age depth.}
     \item{\code{paleo.number}}{paleo.num number for the paleoData age-depth}
     \item{\code{color.line.paleo}}{line color of the paleoData age-depth (following ggplot rules)}
+    \item{\code{plot.traces}}{Add timeseries lines to the plot (default = TRUE)}
   }}
 }
 \value{

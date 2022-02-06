@@ -36,7 +36,9 @@ plotSummary(
 
 \item{chron.depth.var}{variableName to use for chron depth ("depth" by default)}
 
-\item{chron.age.var}{variableName to use for chron age ("age" by default)}
+\item{chron.age.var}{variableName to use for chron calibrated age ("age" by default)}
+
+\item{chron.age.14c.var}{variableName to use for chron 14C age ("age" by default)}
 
 \item{dot.size}{what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)}
 
@@ -75,6 +77,7 @@ plotSummary(
     \item{\code{paleo.number}}{paleo.num number for the paleoData age-depth}
     \item{\code{meas.num}}{which measurement Table for the paleoData age-depth}
     \item{\code{color.line.paleo}}{line color of the paleoData age-depth (following ggplot rules)}
+    \item{\code{plot.traces}}{Add timeseries lines to the plot (default = TRUE)}
   }}
 }
 \value{

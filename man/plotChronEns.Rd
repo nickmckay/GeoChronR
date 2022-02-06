@@ -92,6 +92,8 @@ plotChronEns(
 \item{meas.num}{which measurement Table for the paleoData age-depth}
 
 \item{color.line.paleo}{line color of the paleoData age-depth (following ggplot rules)}
+
+\item{plot.traces}{Add timeseries lines to the plot (default = TRUE)}
 }
 \value{
 A ggplot object

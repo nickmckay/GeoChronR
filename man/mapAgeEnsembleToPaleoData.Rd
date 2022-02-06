@@ -31,7 +31,7 @@ mapAgeEnsembleToPaleoData(
 
 \item{paleo.meas.table.num}{an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?}
 
-\item{chron.num}{an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from}
+\item{chron.num}{an integer that corresponds to chron.numData object (L$chronData[[?]]) has the model you want to get the ensemble from}
 
 \item{model.num}{an integer that corresponds to chron.num model you want to get the ensemble from?}
 
