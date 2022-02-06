@@ -120,7 +120,7 @@ estimateUncertaintyFromRange = function(L,
 #' @param paleo.depth.var name of the depth variable to search for in the paleo measurement table
 #' @param paleo.num an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #' @param paleo.meas.table.num an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?
-#' @param chron.num  an integer that corresponds to chron.numData object (L$crhonData[[?]]) has the model you want to get the ensemble from
+#' @param chron.num  an integer that corresponds to chron.numData object (L$chronData[[?]]) has the model you want to get the ensemble from
 #' @param model.num an integer that corresponds to chron.num model you want to get the ensemble from?
 #' @param max.ens Maximum number of ensemble members to map
 #' @import pbapply
@@ -227,7 +227,7 @@ mapAgeEnsembleToPaleoData = function(L,
       pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = age.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
-      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = depth.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
+      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = paleo.depth.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
     }
     if(is.null(pdya)){
       stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    

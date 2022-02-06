@@ -462,7 +462,8 @@ kde2d <- function(x,y,n.bins=100,x.bin=NA,y.bin=NA){
 #' @param paleo.meas.num paleo.num measurement table to use (NA by default, will ask if needed)
 #' @param chron.meas.num chron.num measurement table to use (NA by default, will ask if needed)
 #' @param chron.depth.var variableName to use for chron depth ("depth" by default)
-#' @param chron.age.var variableName to use for chron age ("age" by default)
+#' @param chron.age.var variableName to use for chron calibrated age ("age" by default)
+#' @param chron.age.14c.var variableName to use for chron 14C age ("age" by default)
 #' @param dot.size what size dot for the chron plot? Only used if not plotting by plotChronEns() (default = 5)
 #' @param summary.font.size Font size for the summary
 #' @param text.width Width of the text panel
@@ -1672,7 +1673,7 @@ plotChronEnsDiff = function(L,
                             alp.ens.line = 0.7){
   
   
-  L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,depth.var = depth.var,paleo.num = paleo.num, chron.num = chron.num, model.num = model.num,paleo.meas.table.num = paleo.meas.table.num, ens.table.num = ens.table.num)
+  L <- mapAgeEnsembleToPaleoData(L, age.var = ageEnsVar,chron.depth.var = depth.var,paleo.num = paleo.num, chron.num = chron.num, model.num = model.num,paleo.meas.table.num = paleo.meas.table.num, ens.table.num = ens.table.num)
   
   
   #get the paleo and chron Ensemble ages
@@ -1853,6 +1854,7 @@ plotChron <- function(L,
 #' @param paleo.number paleo.num number for the paleoData age-depth
 #' @param meas.num which measurement Table for the paleoData age-depth
 #' @param color.line.paleo line color of the paleoData age-depth (following ggplot rules)
+#' @param plot.traces Add timeseries lines to the plot (default = TRUE)
 #' @return A ggplot object
 plotChronEns = function(L,
                         age.var = "ageEnsemble",
