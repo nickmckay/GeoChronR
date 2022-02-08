@@ -1,3 +1,5 @@
+# geoChronR 1.1.1
+
 # geoChronR 1.1.0
 
 * A bunch of quality of life improvements
