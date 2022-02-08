@@ -58,7 +58,14 @@ pcaEns <-  function(bin.list,
     for(j in 1:nD){
       rn <- sample.int(n.ensSite[j],size=1)
       PCAMAT[,j] = bin.list[[j]]$matrix[,rn]
-      NULLMAT[,j] = createSyntheticTimeseries(time,bin.list[[j]]$matrix[,rn],n.ens = 1,sameTrend = simulateTrendInNull)
+      synSeries <- try(createSyntheticTimeseries(time,bin.list[[j]]$matrix[,rn],n.ens = 1,sameTrend = simulateTrendInNull),silent = TRUE)
+      if(class(synSeries) == "try-error"){
+        NULLMAT[,j] <- sample(PCAMAT[,j])
+      }else{
+        NULLMAT[,j] <- synSeries
+      }
+     #NULLMAT[,j] = ar1Surrogates(time,bin.list[[j]]$matrix[,rn],n.ens = 1,detrend = !simulateTrendInNull)
+      
     }
     
     PCAMAT[is.nan(PCAMAT)]=NA
@@ -97,6 +104,8 @@ pcaEns <-  function(bin.list,
       pca.out=pcaMethods::pca(PCAMAT,method,center=TRUE,scale="none",nPcs=n.pcs)
       null.out=pcaMethods::pca(NULLMAT,method,center=TRUE,scale="none",nPcs=n.pcs)
       
+    }else{
+      stop(glue::glue("pca.type not recognized. You entered {pca.type}, please choose 'corr' or 'cov'"))
     }
     
     loads[,,n]=pcaMethods::loadings(pca.out)

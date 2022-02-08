@@ -616,7 +616,12 @@ bin = function(time,values,bin.vec,bin.fun = mean){
 #'
 #' @author Nick McKay
 #' @return A list of binned years and values.
-binTs = function(TS,time.var="ageEnsemble",bin.vec,bin.fun = mean,max.ens=1000,na.col.rm=TRUE){
+binTs = function(TS,
+                 time.var="ageEnsemble",
+                 bin.vec,
+                 bin.fun = mean,
+                 max.ens=1000,
+                 na.col.rm=TRUE){
   
   #check to see if TS is a tibble
   if(tibble::is_tibble(TS)){#convert back to TS
@@ -630,13 +635,22 @@ binTs = function(TS,time.var="ageEnsemble",bin.vec,bin.fun = mean,max.ens=1000,n
   pb <- txtProgressBar(min=1,max=length(timeList),style=3)
   
   for(i in 1:length(timeList)){
-    binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],bin.vec = bin.vec,max.ens = max.ens,bin.fun = bin.fun)
+    binMat[[i]]=binEns(time = timeList[[i]],
+                       values = valueList[[i]],
+                       bin.vec = bin.vec,max.ens = max.ens,bin.fun = bin.fun)
     if(na.col.rm){
-      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | apply(is.nan(binMat[[i]]$matrix),2,all) | apply(binMat[[i]]$matrix=="nan",2,all))
+      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | 
+                    apply(is.nan(binMat[[i]]$matrix),2,all) | 
+                    apply(binMat[[i]]$matrix=="nan",2,all))
       if(length(allNa)>0){
         binMat[[i]]$matrix = binMat[[i]]$matrix[,-allNa]
       }
     }
+    if(ncol(binMat[[i]]$matrix) == 0){
+      warning(paste("index",i,"has no values within binvec"))
+    }
+    
+    
     
     setTxtProgressBar(pb,i)
   }

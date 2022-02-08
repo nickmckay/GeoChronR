@@ -402,7 +402,7 @@ runOxcal <-  function(L,
                       events.per.unit.length = NA,
                       events.per.unit.length.uncertainty = 0,
                       outlier.prob = .05,
-                      cal.curve = "IntCal13",
+                      cal.curve = "IntCal20",
                       ...){
   
   
