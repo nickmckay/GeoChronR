@@ -1,4 +1,8 @@
+# geoChronR 1.1.2
+
 # geoChronR 1.1.1
+
+* Fix (at least temporarily) rare bugs in `pcaEns()` and `fdr()`
 
 # geoChronR 1.1.0
 
