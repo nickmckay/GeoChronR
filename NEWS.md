@@ -1,4 +1,11 @@
+# geoChronR 1.1.3
+
 # geoChronR 1.1.2
+
+* add time.var option to `runBam()`
+* better error handling in `ar1Surrogates()`
+* better logic and consistency checking in `mapAgeEnsembleToPaleoData()`
+* Create median variable option now included in `mapAgeEnsembleToPaleoData()`
 
 # geoChronR 1.1.1
 
