@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Spectral estimation with and without age uncertainties</h1>
                         <h4 class="author">Julien Emile-Geay</h4>
             
-            <h4 class="date">2021-10-29</h4>
+            <h4 class="date">2022-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/spectral_analysis.Rmd"><code>vignettes/spectral_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>spectral_analysis.Rmd</code></div>
@@ -169,7 +169,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d18O</span> <span class="op">=</span>  <span class="va">I</span><span class="op">$</span><span class="va">chronData</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">model</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">summaryTable</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">d180</span><span class="op">$</span><span class="va">values</span>
 <span class="va">t.med</span> <span class="op">&lt;-</span> <span class="va">I</span><span class="op">$</span><span class="va">chronData</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">model</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">summaryTable</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">median</span><span class="op">$</span><span class="va">values</span>
-<span class="va">L</span> <span class="op">&lt;-</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">I</span>,paleo.meas.table.num <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="va">L</span> <span class="op">&lt;-</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">I</span>,paleo.meas.table.num <span class="op">=</span> <span class="fl">1</span>,age.var <span class="op">=</span> <span class="st">"age"</span><span class="op">)</span>
 <span class="va">age</span> <span class="op">=</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,<span class="st">"ageEnsemble"</span>,meas.table.num <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 <span class="va">temp</span> <span class="op">=</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,<span class="st">"temp muller"</span>,meas.table.num <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span>,X<span class="op">=</span><span class="va">age</span>,Y<span class="op">=</span><span class="va">temp</span>,color.low<span class="op">=</span><span class="st">"orchid"</span>,color.high<span class="op">=</span><span class="st">"darkorange3"</span>,color.line<span class="op">=</span><span class="st">"orange"</span>,line.width<span class="op">=</span><span class="fl">0.5</span>,alp<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_hc.html">theme_hc</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"darkunica"</span><span class="op">)</span></code></pre></div>

@@ -98,12 +98,16 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
   tnai = which(is.na(time))
   vnai = which(is.na(vals))
   
-  trend=predict(lm(vals~time))     #fit a linear trend
+  goodi <-  which(!is.na(time) & !is.na(vals))
+  
+  trend=predict(lm(vals[goodi]~time[goodi]))     #fit a linear trend
   # if detrend option is passed, use detrended values; otherwise, unchanged.
   if(detrend){
     #remove the linear trend
-    vals_used=vals-trend
-  } else {vals_used=vals}
+    vals_used=vals[goodi]-trend
+  } else {
+    vals_used=vals[goodi]
+    }
   
   #extract low-order moments
   m=mean(vals_used,na.rm=TRUE)
@@ -321,8 +325,10 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     #   time <- rev(time, 1)
     # }
     
-    t = time[, 1]
-    v = vals[, 1]
+    goodi <- which(!is.na(time[,1]) & !is.na(vals[, 1]))
+    
+    t = time[goodi, 1]
+    v = vals[goodi, 1]
     
     mcflag = !is.na(probs) # only activate Monte Carlo test if probs is not NA
     
