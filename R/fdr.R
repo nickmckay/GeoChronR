@@ -183,7 +183,7 @@ propAlt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lowe
       stop("adjustment.args$num.steps must be an integer greater than 0")
     }
     stepsize <- (1-adjustment.args$edf.lower)/adjustment.args$num.steps
-    edf.quantiles <- matrix(seq(from=adjustment.args$edf.lower,by=stepsize,len=adjustment.args$num.steps),nr=adjustment.args$num.steps,nc=1)
+    edf.quantiles <- matrix(seq(from=adjustment.args$edf.lower,by=stepsize,len=adjustment.args$num.steps),nrow = adjustment.args$num.steps,ncol = 1)
     a.vec <- apply(edf.quantiles,1,storey,pvals)
     return(mean(a.vec))
   }

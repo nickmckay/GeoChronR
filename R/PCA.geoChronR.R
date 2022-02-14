@@ -59,7 +59,7 @@ pcaEns <-  function(bin.list,
       rn <- sample.int(n.ensSite[j],size=1)
       PCAMAT[,j] = bin.list[[j]]$matrix[,rn]
       synSeries <- try(ar1Surrogates(time,bin.list[[j]]$matrix[,rn],n.ens = 1,detrend = !simulateTrendInNull),silent = TRUE)
-      if(class(synSeries) == "try-error"){
+      if(any(class(synSeries)) == "try-error"){
         NULLMAT[,j] <- sample(PCAMAT[,j])
       }else{
         NULLMAT[,j] <- synSeries
