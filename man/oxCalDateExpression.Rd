@@ -7,7 +7,7 @@
 oxCalDateExpression(
   ...,
   default.outlier.prob = 0.05,
-  cal.curve = "intcal13",
+  cal.curve = "intcal20",
   unknown.delta.r = FALSE
 )
 }

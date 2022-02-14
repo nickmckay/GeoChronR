@@ -283,9 +283,9 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' @param overwrite overwrite files and directories
 #' @param cc An integer, or vector of integers corresponding to age that describes the calibration curve. You can specify here (see below) or if it's NA the code will guess based on archiveType
 #' \itemize{
-#' \item cc=1 IntCal13
-#' \item cc=2 MarineCal 
-#' \item cc=3 SHCal13
+#' \item cc=1 IntCal20
+#' \item cc=2 MarineCal20
+#' \item cc=3 SHCal20
 #' }
 #' @param L a LiPD object
 #' @param site.name the name used for the bacon model (and directories)

@@ -6,7 +6,7 @@
 #' @return ar coefficient estimate of ar1
 #' @family correlation
 ar1 = function(x){
-  fit = arima(x = x, order = c(1, 0, 0))
+  fit = suppressWarnings(arima(x = x, order = c(1, 0, 0)))
   return(fit$coef[[1]])
 }
 
@@ -75,9 +75,12 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
-  rho_dens <- stats::density(rho,from=0,to=1) # estimate density
-  rho_cdf  <- spatstat.core::CDF.density(rho_dens) # turn into CDF
-  #rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
+  if(length(rho) < 1000){
+  rho_dens <- stats::density(rho,from=0,to=1,na.rm = TRUE) # estimate density
+  rho_cdf  <- spatstat.core::CDF.density(rho_dens,warn = FALSE) # turn into CDF
+  }else{
+  rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
+  }
   # estimate test p-value
   pval = 1-rho_cdf(abs(rhoXY))
 
@@ -187,7 +190,11 @@ corMatrix = function(ens.1,
         }
         #calculate isopersist
         if(isopersistent){
-          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent",cor.method = cor.method)
+          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],
+                                                                ens.2[,j],
+                                                                n.sim = p.ens,
+                                                                method = "isopersistent",
+                                                                cor.method = cor.method)
         }
         #calculate isospectral
         if(isospectral){

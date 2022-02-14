@@ -44,6 +44,9 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
   pvals <- pvals[is.finite(pvals)]
   
   n <- length(pvals)
+  if(length(n) == 0){
+    stop("No p-values were passed to FDR")
+  }
 
   a <- 0   # initialize proportion of alternative hypotheses
   if(!is.null(adjustment.method)){
@@ -130,7 +133,8 @@ storey <- function(edf.quantile,pvals){
   if(edf.quantile >=1 | edf.quantile <=0){
     stop('edf.quantile should be between 0 and 1')
   }
-  a <- (mean(pvals<=edf.quantile)-edf.quantile)/(1-edf.quantile)
+  a <- (mean(pvals<=edf.quantile, na.rm =TRUE)-edf.quantile)/(1-edf.quantile)
+
   if(a>0){
     return(a)
   } else{

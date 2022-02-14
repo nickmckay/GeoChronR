@@ -1516,7 +1516,7 @@ plotPcaEns = function(ens.pc.out,
 #' @param model.num number of the model object
 #' @param color distribution color (following ggplot rules)
 #' @param dist.plot vector of distribution tables to plot
-#' @param dist.type "violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down
+#' @param dist.type "violin" (default), "high" for one-sided distributions towards higher depths, "low" for one-sided distributions towards lower depths
 #' @param thick thickness of the line around the distribution
 #' @param truncate.dist truncate probability density values below this number. NA (default) means no truncation
 #' @param scale.frac controls the vertical span of the probability distribution. Approximately the vertical fraction of the plot that the distribution will cover. 
@@ -1606,8 +1606,8 @@ plotModelDistributions = function(L,
     scaler = scale.frac*abs(diff(plot.range))/max(pd)
     pd = pd * scaler
     this.df = data.frame(x= this.dist[[dist.var]]$values,ymin = this.dist[[y.var]] - pd,ymax = this.dist[[y.var]] + pd )
-    if(dist.type == "up"){this.df$ymin =  this.dist[[y.var]]}
-    if(dist.type == "down"){this.df$ymax =  this.dist[[y.var]]}
+    if(dist.type == "up" | dist.type == "high"){this.df$ymin =  this.dist[[y.var]]}
+    if(dist.type == "down" | dist.type == "low"){this.df$ymax =  this.dist[[y.var]]}
     add.to.plot = add.to.plot + geom_ribbon(data = this.df, aes(x = x,ymin = ymin,ymax = ymax),color = color,fill = color, alpha = alp,size = thick)
   }
   add.to.plot = add.to.plot + geoChronRPlotTheme()

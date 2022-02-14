@@ -118,6 +118,8 @@ estimateUncertaintyFromRange = function(L,
 #' @param age.var name of the age ensemble variable to search for
 #' @param chron.depth.var name of the depth variable to search for in the ensemble table
 #' @param paleo.depth.var name of the depth variable to search for in the paleo measurement table
+#' @param paleo.age.var name of the age variable to search for in the paleo measurement table, critical if no depth data are available
+#' @param map.median Do you want to also map the median of the ageEnsemble to paleoData? (TRUE or FALSE, or NA, the default, which will do so unless that variable already exists)
 #' @param paleo.num an integer that corresponds to paleo.numData object (L$paleoData[[?]]) has the measurementTable you want to modify
 #' @param paleo.meas.table.num an integer that corresponds to paleo.num measurementTable you want to add the ensemble to?
 #' @param chron.num  an integer that corresponds to chron.numData object (L$chronData[[?]]) has the model you want to get the ensemble from
@@ -130,6 +132,8 @@ mapAgeEnsembleToPaleoData = function(L,
                                      age.var = "ageEnsemble",
                                      chron.depth.var = "depth",
                                      paleo.depth.var = "depth",
+                                     paleo.age.var = "age",
+                                     map.median = NA,
                                      paleo.num=NA,
                                      paleo.meas.table.num=NA,
                                      chron.num=NA,
@@ -210,6 +214,9 @@ mapAgeEnsembleToPaleoData = function(L,
                       paleo.or.chron.num = chron.num,
                       strict.search = strict.search)
   
+  #do something smarter here?
+  ensAll$variableName <- "ageEnsemble"
+  
   if(is.null(ensAll$values)){
     stop("Error: did not find the age ensemble.")
   }
@@ -219,22 +226,27 @@ mapAgeEnsembleToPaleoData = function(L,
   if(is.null(ensDepth)){#if there are no depth data in the ensemble, try to apply the ensemble straight in (no interpolation)
     #check for the same size
     #get year, age or depth from paleodata
-    pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = "year",always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
+    pdya = selectData(L,
+                      paleo.or.chron.num = paleo.num,
+                      var.name = paleo.age.var,
+                      always.choose = FALSE,
+                      strict.search = strict.search,
+                      meas.table.num = paleo.meas.table.num)$values
+    
     if(is.null(pdya)){
-      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = "age",always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
-    }
-    if(is.null(pdya)){
-      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = age.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
-    }
-    if(is.null(pdya)){
-      pdya = selectData(L,paleo.or.chron.num = paleo.num,var.name = paleo.depth.var,always.choose = FALSE,ens.table.num = ens.table.num,strict.search = strict.search,meas.table.num = paleo.meas.table.num)$values
-    }
-    if(is.null(pdya)){
-      stop("Couldnt find depth in the ensembleTable, or year, age or depth in the paleoTable. I need more help from you.")    
+      stop(glue::glue("We couldnt find depth in the ensembleTable, so we checked for {paleo.age.var} in the paleoTable, and couldn't find it. If there as a time vector in the paleoData measurementTable, specify it in paleo.age.var"))    
     }
     
     #check for length of that variable
     if(length(pdya)  == nrow(ens)){
+      #that's a good start, now let's see if they're correlated
+      ct <- cor(apply(ens,1,median,na.rm = TRUE),pdya)
+      if(abs(ct) < .7){
+        ans <- askUser(glue::glue("Hmm, your mapped age ensemble and paleoData age vectors aren't very similar (r = {ct}), are you sure you want to use {paleo.age.var} to map the ensemble?"))
+        if(tolower(substr(ans,1,1)) != "y"){
+        stop("Stopped. Probably a good choice")
+        }
+      }
       copyAE  = TRUE
     }else{
       stop("Couldnt find depth in the ensembleTable, and the paleoData measurementTable has a different number of rows thant the ensemble.")    
@@ -284,12 +296,37 @@ mapAgeEnsembleToPaleoData = function(L,
   
   
   #assign into measurementTable
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$variableName = ensAll$variableName
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$values = aei
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$units = ensAll$units
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$fromChronData = chron.num
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$frommodel = model.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$variableName =  ensAll$variableName
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$values = aei
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$units = ensAll$units
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$fromChronData = chron.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$frommodel = model.num
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$TSid = lipdR::createTSid("ens")
+  
   L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
+  
+  #create median age model variable too?
+  medianVar <- stringr::str_replace(ensAll$variableName,"Ensemble",replacement = "Median")
+  if(is.na(map.median)){
+    #see if there's already an ageMedian variable
+    allVars <- unlist(purrr::map(L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]],purrr::pluck,"variableName"))
+    
+    if(medianVar %in% allVars){
+      map.median <- FALSE
+    }else{
+      map.median <- TRUE
+    }
+  }
+  
+  if(map.median){
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$variableName = medianVar
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$values = apply(aei,1,median,na.rm =TRUE)
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$units = ensAll$units
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$description = "Median of the age ensemble, created by geoChronR::mapEnsembleToPaleoData()"
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$fromChronData = chron.num
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$frommodel = model.num
+    L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$TSid = lipdR::createTSid("ens")
+  }
   
   
   return(L)

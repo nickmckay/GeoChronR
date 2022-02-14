@@ -39,7 +39,7 @@ runBchron(
 
 \item{model.num}{chron.numModel do you want to use?}
 
-\item{cal.curves}{The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.}
+\item{cal.curves}{The calibration curves to be used. Enter either "marine20", intcal20", "shcal20" or "normal". Will prompt if not provided.}
 
 \item{iter}{number of iterations to use in bchron (default = 10000)}
 
@@ -109,7 +109,7 @@ This is a high-level function that uses Bchron to simulate an age model, and sto
 L = runBchron(L)
 
 #Run in noninteractive mode:
-L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
+L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine20") 
 }
 }
 \author{

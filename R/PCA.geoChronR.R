@@ -58,14 +58,12 @@ pcaEns <-  function(bin.list,
     for(j in 1:nD){
       rn <- sample.int(n.ensSite[j],size=1)
       PCAMAT[,j] = bin.list[[j]]$matrix[,rn]
-      synSeries <- try(createSyntheticTimeseries(time,bin.list[[j]]$matrix[,rn],n.ens = 1,sameTrend = simulateTrendInNull),silent = TRUE)
+      synSeries <- try(ar1Surrogates(time,bin.list[[j]]$matrix[,rn],n.ens = 1,detrend = !simulateTrendInNull),silent = TRUE)
       if(class(synSeries) == "try-error"){
         NULLMAT[,j] <- sample(PCAMAT[,j])
       }else{
         NULLMAT[,j] <- synSeries
       }
-     #NULLMAT[,j] = ar1Surrogates(time,bin.list[[j]]$matrix[,rn],n.ens = 1,detrend = !simulateTrendInNull)
-      
     }
     
     PCAMAT[is.nan(PCAMAT)]=NA

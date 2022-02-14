@@ -5,6 +5,7 @@
 #' @title Generate a Banded Age Model (BAM) and add it into a LiPD object
 #' @description This is a high-level function that uses BAM to simulate age uncertainty in layer counted records, and stores this as an age-ensemble in a paleoData measurementTable, and in a model in chronData. If needed input variables are not entered, and cannot be deduced, it will run in interactive mode. BAM produces reasonable results for non-layer counted data, and can generate ensembles for unevenly spaced data, and thus is useful for generating ensembles for tie-point chronologies that are missing the necessary data to calculate ensembles properly. See Comboul et al. (2015) doi:10.5194/cp-10-825-2014 for details.
 #' @inheritParams selectData
+#' @param time.var What is the time variable we're going to use for the basis of the simulation?
 #' @param chron.num the number of the chronData object that you'll be working in
 #' @param paleo.num the number of the paleoData object that you'll be working in
 #' @param paleo.meas.table.num the number of the measurementTable you'll be working in
@@ -45,6 +46,7 @@
 
 
 runBam <- function(L,
+                   time.var = "year",
                    paleo.num=NA,
                    paleo.meas.table.num=NA,
                    chron.num=1,
@@ -75,7 +77,7 @@ runBam <- function(L,
   }
   
   #Which age/year vector do you want to perturb?
-  yearData = selectData(L,var.name = "year",alt.names = "age", paleo.or.chron.num = paleo.num, meas.table.num=paleo.meas.table.num,always.choose = FALSE)
+  yearData = selectData(L,var.name = time.var, paleo.or.chron.num = paleo.num, meas.table.num=paleo.meas.table.num,always.choose = FALSE)
   
   
   #make sure that the most recent year is first

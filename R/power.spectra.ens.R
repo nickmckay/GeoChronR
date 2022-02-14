@@ -109,11 +109,28 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
   m=mean(vals_used,na.rm=TRUE)
   s=sd(vals_used,na.rm=TRUE)
   if (method=='redfit') {
-    redf.dat <- redfit(vals_used, time, nsim = 50) # 21 is minimum number you can get away with
-    g = redf.dat$rho
+    redf.dat <- try(redfit(vals_used, time, nsim = 50),silent = TRUE) # 21 is minimum number you can get away with
+    if(class(redf.dat) == "try-error"){
+      g = redf.dat
+    }else{
+      g = redf.dat$rho
+    }
   } else {
-    fit = arima(x = vals_used, order = c(1, 0, 0)) # assumes evenly-spaced data
+    fit = try(arima(x = vals_used, order = c(1, 0, 0)),silent = TRUE) # assumes evenly-spaced data
+    if(class(fit) == "try-error"){
+     g = fit
+    }else{
     g = as.numeric(fit$coef[1])
+    }
+  }
+  
+  if(class(g) == "try-error"){
+    #let's do the simplest ar1 estimation then:
+    g <- cor(vals_used[-1],vals_used[-length(vals_used)],use = "pairwise.complete.obs")
+  }
+  
+  if(class(g) == "try-error"){
+   stop("Despite multiple attempts, we cannot estimate an ar1 coefficient for this record. The data are probably weird.")
   }
   
   vals_syn = matrix(NA,nrow=nrow(time),ncol=n.ens)
@@ -310,11 +327,11 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     mcflag = !is.na(probs) # only activate Monte Carlo test if probs is not NA
     
     # blank run on the first ensemble member to obtain matrix dimensions
-    redfit.out <- redfit(v,
+    redfit.out <- suppressWarnings(redfit(v,
                          t,
                          tType = "time",
                          mctest = mcflag,
-                         ofac = ofac)
+                         ofac = ofac))
     noutrow = length(redfit.out$freq)
     # frequency axis (in tests, ends up being very close between ensemble members, 1e-4 to 1e-6)
     freq <-  redfit.out$freq
@@ -333,7 +350,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
       for (k in 1:n.ens) {
         t <- jitter(time[, tind[k]])   # add jitter
         v <- vals[, vind[k]]
-        redfit.out <- redfit(v,t,tType = "time", mctest = mcflag, ofac = ofac, nsim=200)
+        redfit.out <- suppressWarnings(redfit(v,t,tType = "time", mctest = mcflag, ofac = ofac, nsim=200))
         pMatSyn[, k] <- redfit.out$ci95 # 95% limit
         pMat[, k] <- redfit.out$gxx
         if (k %% round(n.ens / 50) == 0) {

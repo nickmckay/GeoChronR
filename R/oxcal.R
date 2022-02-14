@@ -10,21 +10,29 @@
 #' @export
 oxCalDateExpression <- function(...,
                                 default.outlier.prob = 0.05,
-                                cal.curve = "intcal13",
-                                unknown.delta.r = FALSE
-){
+                                cal.curve = "intcal20",
+                                unknown.delta.r = FALSE){
   
   
   #create Curve expression
-  if(tolower(cal.curve) == "intcal13" | grepl(cal.curve,pattern = "atmo")){
+  if(grepl(cal.curve,pattern = "intcal20",ignore.case = TRUE) | grepl(cal.curve,pattern = "atmo",ignore.case = TRUE) ){
+    curveExp <- 'Curve("Atmospheric","IntCal20.14c");\n'
+    cal <- "intcal20"
+  }else if(grepl(cal.curve,pattern = "marine20",ignore.case = TRUE)){
+    curveExp <- 'Curve("Oceanic","Marine20.14c");\n'
+    cal <- "marine20"
+  }else if(grepl(cal.curve,pattern = "shcal20",ignore.case = TRUE) | grepl(cal.curve,pattern = "sh20",ignore.case = TRUE)){
+    curveExp <- 'Curve("SH","shcal20.14c");\n'
+    cal <- "SH20"
+  }else if(tolower(cal.curve) == "intcal13"){
     curveExp <- 'Curve("Atmospheric","IntCal13.14c");\n'
-    cal <- "atmo"
-  }else if(grepl(cal.curve,pattern = "marine")){
+    cal <- "intcal13"
+  }else if(grepl(cal.curve,pattern = "marine13",ignore.case = TRUE)){
     curveExp <- 'Curve("Oceanic","Marine13.14c");\n'
-    cal <- "marine"
-  }else if(grepl(cal.curve,pattern = "south")){
-    curveExp <- 'Curve("SH","SHCal.14c");\n'
-    cal <- "SH"
+    cal <- "marine13"
+  }else if(grepl(cal.curve,pattern = "shcal13",ignore.case = TRUE) | grepl(cal.curve,pattern = "sh13")){
+    curveExp <- 'Curve("SH","shcal13.14c");\n'
+    cal <- "SH13"
   }else{
     stop(paste0("unrecognized calibration curve: ",cal.curve))
   } 
@@ -32,70 +40,70 @@ oxCalDateExpression <- function(...,
   
   adf <- tibble::tibble(...)
   
-
-if("outlier.prob" %in% names(adf)){
-  if(is.na(adf$outlier.prob)){#assign default
+  
+  if("outlier.prob" %in% names(adf)){
+    if(is.na(adf$outlier.prob)){#assign default
+      adf$outlier.prob <- default.outlier.prob
+    }
+  }else{
     adf$outlier.prob <- default.outlier.prob
   }
-}else{
-  adf$outlier.prob <- default.outlier.prob
-}
-
-#figure out date type
-if(!is.na(adf$age14C)){#radiocarbon
-  #check labID
-  if(is.na(adf$labID)){#throw an error - this is required
-    stop("no lab ID, all dated layers must have a unique lab ID")
-  }
-  if(is.na(adf$age14CUnc)){
-    stop("seems like a 14C date, but no uncertainty included (age14CUnc)")
-  }  
   
-  #check for reservoir corrections
-  drExp <- NA #initialize
-  if(cal == "marine"){#only do this for marine curves
-    if(!is.na(adf$reservoirAge)){
-      if(is.na(adf$reservoirAgeUnc)){
-        adf$reservoirAgeUnc <- adf$reservoirAge/2
-        print("no reservoirAgeUnc found...\n using half of the reservoirAge value")
-      }
-      drExp <- paste0('Delta_R("Local Marine",',adf$reservoirAge,',',adf$reservoirAgeUnc,');\n')
-    }else if(unknown.delta.r){#use a uniform distribution here instead
-      drExp <- 'Delta_R("uniform",U(0,800))\n'
+  #figure out date type
+  if(!is.na(adf$age14C)){#radiocarbon
+    #check labID
+    if(is.na(adf$labID)){#throw an error - this is required
+      stop("no lab ID, all dated layers must have a unique lab ID")
     }
+    if(is.na(adf$age14CUnc)){
+      stop("seems like a 14C date, but no uncertainty included (age14CUnc)")
+    }  
+    
+    #check for reservoir corrections
+    drExp <- NA #initialize
+    if(grepl(cal,pattern = "marine",ignore.case = TRUE)){#only do this for marine curves
+      if(!is.na(adf$reservoirAge)){
+        if(is.na(adf$reservoirAgeUnc)){
+          adf$reservoirAgeUnc <- adf$reservoirAge/2
+          print("no reservoirAgeUnc found...\n using half of the reservoirAge value")
+        }
+        drExp <- paste0('Delta_R("Local Marine",',adf$reservoirAge,',',adf$reservoirAgeUnc,');\n')
+      }else if(unknown.delta.r){#use a uniform distribution here instead
+        drExp <- 'Delta_R("uniform",U(0,800))\n'
+      }
+    }
+    
+    #create expression
+    dateLine <- paste0('R_Date("',adf$labID,'",',adf$age14C,',',adf$age14CUnc,'){ z=',adf$depth,'; Outlier(',adf$outlier.prob,'); };\n')
+    
+    #build full expresion
+    if(!is.na(drExp)){
+      dateExp <- paste0(curveExp,drExp,dateLine)
+    }else{
+      dateExp <- paste0(curveExp,dateLine)
+    }
+    
+  }else if(!is.na(adf$age)){#normally distributed cal date
+    if(is.na(adf$ageUnc)){
+      stop("seems like a calibrated date, but no uncertainty included (ageUnc)")
+    } 
+    
+    if(is.na(adf$labID)){#throw an error - this is required
+      stop("no lab ID, all dated layers must have a unique lab ID")
+    }
+    
+    
+    
+    #create expression
+    dateExp <- paste0('C_Date("',adf$labID,'",',convertBP2AD(adf$age),',',adf$ageUnc,'){ z=',adf$depth,'; Outlier(',adf$outlier.prob,'); };\n')
+    
+  }else{#undated layer
+    dateExp <- paste0('Date("D"){ z=',adf$depth,'; };\n')
+    
   }
   
-  #create expression
-  dateLine <- paste0('R_Date("',adf$labID,'",',adf$age14C,',',adf$age14CUnc,'){ z=',adf$depth,'; Outlier(',adf$outlier.prob,'); };\n')
+  return(dateExp)
   
-  #build full expresion
-  if(!is.na(drExp)){
-    dateExp <- paste0(curveExp,drExp,dateLine)
-  }else{
-    dateExp <- paste0(curveExp,dateLine)
-  }
-  
-}else if(!is.na(adf$age)){#normally distributed cal date
-  if(is.na(adf$ageUnc)){
-    stop("seems like a calibrated date, but no uncertainty included (ageUnc)")
-  } 
-  
-  if(is.na(adf$labID)){#throw an error - this is required
-    stop("no lab ID, all dated layers must have a unique lab ID")
-  }
-  
-  
-  
-  #create expression
-  dateExp <- paste0('C_Date("',adf$labID,'",',convertBP2AD(adf$age),',',adf$ageUnc,'){ z=',adf$depth,'; Outlier(',adf$outlier.prob,'); };\n')
-  
-}else{#undated layer
-  dateExp <- paste0('Date("D"){ z=',adf$depth,'; };\n')
-  
-}
-
-return(dateExp)
-
 }
 
 
@@ -112,8 +120,7 @@ return(dateExp)
 #' @param top.boundary What type of Oxcal boundary to use for the top (default = "Boundary")
 #' @param bottom.boundary What type of Oxcal boundary to use for the bottom (default = "Boundary")
 #' @param outlier.prob What's the probability of a date being an outlier if not otherwise specified (default= 0.05)
-#' @param cal.curve What calibration curve to use? (default = "intcal13")
-#'
+#' @param cal.curve What calibration curve to use? Current options are "intcal20" (default), "marine20", "shcal20", "intcal13", "marine13", or "shcal13"
 #' @import dplyr tidyr
 #' @importFrom magrittr %>% 
 #' @importFrom purrr pmap_chr
@@ -131,7 +138,7 @@ createOxcalModel <- function(cdf,
                              top.boundary = "Boundary",
                              bottom.boundary = "Boundary",
                              outlier.prob = 0.05,
-                             cal.curve = "intcal13"){
+                             cal.curve = "intcal20"){
   
   
   
@@ -166,14 +173,14 @@ createOxcalModel <- function(cdf,
     events.per.unit.lengthExp <- events.per.unit.length
   }else{
     events.per.unit.lengthExp <- paste0('"variable",',
-                                     events.per.unit.length,
-                                     ',',
-                                     events.per.unit.length.uncertainty,
-                                     ',U(-',
-                                     events.per.unit.length.uncertainty,
-                                     ',',
-                                     events.per.unit.length.uncertainty,
-                                     ')')
+                                        events.per.unit.length,
+                                        ',',
+                                        events.per.unit.length.uncertainty,
+                                        ',U(-',
+                                        events.per.unit.length.uncertainty,
+                                        ',',
+                                        events.per.unit.length.uncertainty,
+                                        ')')
   }
   
   
@@ -491,7 +498,7 @@ runOxcal <-  function(L,
   
   #remove old MCMC results
   unlink(file.path(tempdir(),"MCMC_Sample.csv"))
-
+  
   #run the file!
   oxcal.result.file.path <- oxcAAR::executeOxcalScript(oxMod$modelText)
   

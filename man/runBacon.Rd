@@ -49,9 +49,9 @@ runBacon(
 
 \item{cc}{An integer, or vector of integers corresponding to age that describes the calibration curve. You can specify here (see below) or if it's NA the code will guess based on archiveType
 \itemize{
-\item cc=1 IntCal13
-\item cc=2 MarineCal 
-\item cc=3 SHCal13
+\item cc=1 IntCal20
+\item cc=2 MarineCal20
+\item cc=3 SHCal20
 }}
 
 \item{max.ens}{the maximum number of ensembles to load in (default = 1000)}
@@ -126,7 +126,7 @@ allow for a large range of posterior memory values. Please note that the default
     \item{\code{cc4}}{Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See \code{ccdir}.}
     \item{\code{ccdir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default \code{ccdir=""}.
 For example, use \code{ccdir="."} to choose current working directory, or \code{ccdir="Curves/"} to choose sub-folder \code{Curves/}. Note that all calibration curves should reside in the same directory. If you want to add a custom-built curve, put it in the directory where the default calibration curves are (probably \code{list.files(paste0(.libPaths(), "/IntCal/extdata"))}).
-Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(ccurve(1), "./3Col_intcal20.14C", sep="\t")}.)}
+Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(copyCalibrationCurve(1), "./3Col_intcal20.14C", sep="\t")}.)}
     \item{\code{postbomb}}{Use a postbomb curve for negative (i.e. postbomb) 14C ages. \code{0 = none, 1 = NH1, 2 = NH2, 3 = NH3, 4 = SH1-2, 5 = SH3}}
     \item{\code{delta.R}}{Mean of core-wide age offsets (e.g., regional marine offsets).}
     \item{\code{delta.STD}}{Error of core-wide age offsets (e.g., regional marine offsets).}

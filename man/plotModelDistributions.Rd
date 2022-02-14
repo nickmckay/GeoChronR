@@ -44,7 +44,7 @@ plotModelDistributions(
 
 \item{dist.plot}{vector of distribution tables to plot}
 
-\item{dist.type}{"violin" (default), "up" for one-sided distributions pointed up, "down" for one-sided distributions pointed down}
+\item{dist.type}{"violin" (default), "high" for one-sided distributions towards higher depths, "low" for one-sided distributions towards lower depths}
 
 \item{thick}{thickness of the line around the distribution}
 

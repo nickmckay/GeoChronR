@@ -16,7 +16,7 @@ createOxcalModel(
   top.boundary = "Boundary",
   bottom.boundary = "Boundary",
   outlier.prob = 0.05,
-  cal.curve = "intcal13"
+  cal.curve = "intcal20"
 )
 }
 \arguments{
@@ -42,7 +42,7 @@ createOxcalModel(
 
 \item{outlier.prob}{What's the probability of a date being an outlier if not otherwise specified (default= 0.05)}
 
-\item{cal.curve}{What calibration curve to use? (default = "intcal13")}
+\item{cal.curve}{What calibration curve to use? Current options are "intcal20" (default), "marine20", "shcal20", "intcal13", "marine13", or "shcal13"}
 }
 \value{
 a list of an oxcal model

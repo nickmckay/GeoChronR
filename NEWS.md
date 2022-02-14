@@ -1,5 +1,8 @@
 # geoChronR 1.1.3
 
+* Fixed bug in `createOxCalModel()` that was causing errors with IntCal20
+* Suppressed non important warning ("Density was normalised within the computed range of x values [0, 1]"") in `pvalMonteCarlo()` that occurred during ecdf estimation
+
 # geoChronR 1.1.2
 
 * add time.var option to `runBam()`
