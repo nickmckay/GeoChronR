@@ -1,7 +1,7 @@
 Package: geoChronR
 Type: Package
 Title: Tools to Analyze and Visualize Time-Uncertain Data
-Version: 1.1.3
+Version: 1.1.4
 Date: 2021-02-01
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),

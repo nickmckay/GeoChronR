@@ -1,3 +1,5 @@
+# geoChronR 1.1.4
+
 # geoChronR 1.1.3
 
 * Fixed bug in `createOxCalModel()` that was causing errors with IntCal20
