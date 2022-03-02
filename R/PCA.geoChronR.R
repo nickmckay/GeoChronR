@@ -52,6 +52,7 @@ pcaEns <-  function(bin.list,
   nullvarExp <- varExp <- array(data = NA,dim = c(n.pcs,n.ens))
   dataDensity = matrix(data = NA, nrow = length(time),ncol=n.ens)
   pb=txtProgressBar(min=1,max=n.ens,style = 3)
+  failed <- c()
   for(n in 1:n.ens){#for each ensemble member
     #build a matrix from the list
     NULLMAT <- PCAMAT <- matrix(NA,nrow=length(time),ncol = nD)
@@ -63,6 +64,9 @@ pcaEns <-  function(bin.list,
         NULLMAT[,j] <- sample(PCAMAT[,j])
       }else{
         NULLMAT[,j] <- synSeries
+      }
+      if(all(!is.finite(NULLMAT[,j]))){
+        NULLMAT[,j] <- sample(PCAMAT[,j])
       }
     }
     
@@ -83,12 +87,24 @@ pcaEns <-  function(bin.list,
     }
     
     #remove any rows that are all NAs
-    goodRows = which(!apply(is.na(PCAMAT),1,all))
+    goodRowsP = which(!apply(is.na(PCAMAT),1,all))
+    goodRowsN = which(!apply(is.na(NULLMAT),1,all))
+    goodRows <- intersect(goodRowsP,goodRowsN)
+    
     PCAMAT = PCAMAT[goodRows,]
     NULLMAT = NULLMAT[goodRows,]
     
+
     
-    
+#check for columns of all NAs
+    allNaPca = apply(is.na(PCAMAT),2,all)
+    allNaNull = apply(is.na(NULLMAT),2,all)
+ 
+    if(any(allNaPca) | any(allNaNull)){
+      failed <- c(failed,n)
+      next
+    }
+
     #remove means, and scale if correlation matrix
     if(pca.type=="corr"){
       if(gaussianize){
@@ -151,6 +167,24 @@ pcaEns <-  function(bin.list,
     setTxtProgressBar(pb,n)
   }
   close(pb)
+  
+  #remove results from failed iterations
+  if(length(failed) > 0){
+    if(length(failed)/n.ens > 0.9){
+      stop("More than 90% of the ensemble members didn't have a full matrix for PCA. Check your settings and rerun")
+    }
+    if(length(failed)/n.ens > 0.5){
+      warning("More than 50% of the ensemble members didn't have a full matrix for PCA. You may want to check your settings and rerun")
+    }
+    loads <- loads[,,-failed]
+    nullloads <- nullloads[,,-failed]
+    PCs <- PCs[,,-failed]
+    nullPCs <- nullPCs[,,-failed]
+    varExp <- varExp[,-failed]
+    nullvarExp <- nullvarExp[,-failed]
+  }
+  
+  
   
   #reorient any PCs that have a negative correlation with PC mean
   for (p in 1:n.pcs){

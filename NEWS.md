@@ -1,5 +1,8 @@
 # geoChronR 1.1.4
 
+* Better error messages in `binTs()`
+* Better error handling in `pcaEns()`
+
 # geoChronR 1.1.3
 
 * Fixed bug in `createOxCalModel()` that was causing errors with IntCal20

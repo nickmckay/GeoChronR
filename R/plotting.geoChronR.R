@@ -1375,8 +1375,7 @@ plotPcaEns = function(ens.pc.out,
   plotlist=list()
   maplist=list()
   leglist <- list()
-  
-  
+
   #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
   median.pcs = apply(ens.pc.out$PCs,MARGIN = c(1,2),median,na.rm=TRUE)
   loadingSDs = apply(ens.pc.out$loadings,MARGIN = c(1,2),sd,na.rm=TRUE)
