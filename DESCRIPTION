@@ -50,7 +50,6 @@ Imports:
     glue,
     BiocManager,
     rEDM,
-    lipdR,
     inline,
     bindrcpp,
     devtools,
@@ -68,6 +67,7 @@ Imports:
     readr
 Suggests: 
     knitr,
+    lipdR,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
