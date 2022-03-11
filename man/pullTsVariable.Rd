@@ -21,6 +21,7 @@ pulls all instances of a single variable out of a TS
 Other LiPD manipulation: 
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
+\code{\link{createMultiModelEnsemble}()},
 \code{\link{createSummaryTableFromEnsembleTable}()},
 \code{\link{createTSid}()},
 \code{\link{estimateUncertaintyFromRange}()},

@@ -16,6 +16,7 @@ Create a random TSid
 Other LiPD manipulation: 
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
+\code{\link{createMultiModelEnsemble}()},
 \code{\link{createSummaryTableFromEnsembleTable}()},
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
