@@ -1,3 +1,24 @@
+# geoChronR 1.1.4
+
+* Better error messages in `binTs()`
+* Better error handling in `pcaEns()`
+
+# geoChronR 1.1.3
+
+* Fixed bug in `createOxCalModel()` that was causing errors with IntCal20
+* Suppressed non important warning ("Density was normalised within the computed range of x values [0, 1]"") in `pvalMonteCarlo()` that occurred during ecdf estimation
+
+# geoChronR 1.1.2
+
+* add time.var option to `runBam()`
+* better error handling in `ar1Surrogates()`
+* better logic and consistency checking in `mapAgeEnsembleToPaleoData()`
+* Create median variable option now included in `mapAgeEnsembleToPaleoData()`
+
+# geoChronR 1.1.1
+
+* Fix (at least temporarily) rare bugs in `pcaEns()` and `fdr()`
+
 # geoChronR 1.1.0
 
 * A bunch of quality of life improvements

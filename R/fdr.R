@@ -44,6 +44,9 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
   pvals <- pvals[is.finite(pvals)]
   
   n <- length(pvals)
+  if(length(n) == 0){
+    stop("No p-values were passed to FDR")
+  }
 
   a <- 0   # initialize proportion of alternative hypotheses
   if(!is.null(adjustment.method)){
@@ -130,7 +133,8 @@ storey <- function(edf.quantile,pvals){
   if(edf.quantile >=1 | edf.quantile <=0){
     stop('edf.quantile should be between 0 and 1')
   }
-  a <- (mean(pvals<=edf.quantile)-edf.quantile)/(1-edf.quantile)
+  a <- (mean(pvals<=edf.quantile, na.rm =TRUE)-edf.quantile)/(1-edf.quantile)
+
   if(a>0){
     return(a)
   } else{
@@ -179,7 +183,7 @@ propAlt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lowe
       stop("adjustment.args$num.steps must be an integer greater than 0")
     }
     stepsize <- (1-adjustment.args$edf.lower)/adjustment.args$num.steps
-    edf.quantiles <- matrix(seq(from=adjustment.args$edf.lower,by=stepsize,len=adjustment.args$num.steps),nr=adjustment.args$num.steps,nc=1)
+    edf.quantiles <- matrix(seq(from=adjustment.args$edf.lower,by=stepsize,len=adjustment.args$num.steps),nrow = adjustment.args$num.steps,ncol = 1)
     a.vec <- apply(edf.quantiles,1,storey,pvals)
     return(mean(a.vec))
   }

@@ -58,6 +58,7 @@ FD2 = purrr::map(FD,
                  mapAgeEnsembleToPaleoData,
                  strict.search = TRUE,
                  age.var = "ageEnsemble",
+                 paleo.age.var = "year",
                  chron.depth.var = NULL,
                  paleo.depth.var = NULL)
 ```

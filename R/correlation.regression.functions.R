@@ -6,7 +6,7 @@
 #' @return ar coefficient estimate of ar1
 #' @family correlation
 ar1 = function(x){
-  fit = arima(x = x, order = c(1, 0, 0))
+  fit = suppressWarnings(arima(x = x, order = c(1, 0, 0)))
   return(fit$coef[[1]])
 }
 
@@ -52,7 +52,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
     X.surr <- try(ar1Surrogates(tdum,X,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE) # replace with 
     Y.surr <- try(ar1Surrogates(tdum,Y,detrend=TRUE,method='redfit',n.ens=n.sim),silent = TRUE)
   }else if(grepl(method,pattern = "spectra",ignore.case = T)){
-
+    
     ix.good <- which(is.finite(X))
     X.surr <- matrix(NA,nrow = length(X),ncol = n.sim)
     X.surr[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
@@ -69,18 +69,21 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
     return(matrix(NA,nrow = length(X)))
   }
   
-
+  
   cor.mat1 = cor(X,Y.surr,use="pairwise.complete.obs",method = cor.method) # X vs Y-like noise
   cor.mat2 = cor(Y,X.surr,use="pairwise.complete.obs",method = cor.method) # Y vs X-like noise
   cor.mat = cbind(cor.mat1,cor.mat2)  # bind together
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
-  rho_dens <- stats::density(rho,from=0,to=1) # estimate density
-  rho_cdf  <- spatstat.core::CDF.density(rho_dens) # turn into CDF
-  #rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
+  if(length(rho) < 1000){
+    rho_dens <- stats::density(rho,from=0,to=1,na.rm = TRUE) # estimate density
+    rho_cdf  <- spatstat.core::CDF.density(rho_dens,warn = FALSE) # turn into CDF
+  }else{
+    rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
+  }
   # estimate test p-value
   pval = 1-rho_cdf(abs(rhoXY))
-
+  
   return(pval)
 }
 
@@ -150,8 +153,8 @@ corMatrix = function(ens.1,
                      p.ens = 100,
                      gaussianize = TRUE,
                      cor.method = "pearson"
-                     ){
-
+){
+  
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
@@ -181,20 +184,24 @@ corMatrix = function(ens.1,
           #calculate adjust p-value (Bretherton 1999)
           pAdj[j+ncol(ens.2)*(i-1)] <- NA
         }else{
-        p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
-        #calculate adjust p-value (Bretherton 1999)
-        pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
+          p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
+          #calculate adjust p-value (Bretherton 1999)
+          pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
         }
         #calculate isopersist
         if(isopersistent){
-          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isopersistent",cor.method = cor.method)
+          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],
+                                                                ens.2[,j],
+                                                                n.sim = p.ens,
+                                                                method = "isopersistent",
+                                                                cor.method = cor.method)
         }
         #calculate isospectral
         if(isospectral){
-        pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral",cor.method = cor.method)
+          pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral",cor.method = cor.method)
         }
         
-
+        
       }
       setTxtProgressBar(pb, j+ncol(ens.2)*(i-1))
     }
@@ -278,19 +285,19 @@ regressEns = function(time.x,
     stop("time.x, time.y, values.x and values.y must all be ``variable lists'' (output of selectData)")
   }
   
-    otx=time.x
-    oty=time.y
-    ovx=values.x
-    ovy=values.y
-    
-    if(gaussianize){
-      values.x$values <- gaussianize(values.x$values)
-      values.y$values <- gaussianize(values.y$values)
-    }
-
-    aligned = alignTimeseriesBin(time.x,values.x,time.y,values.y,bin.vec = bin.vec,bin.step = bin.step ,bin.fun=bin.fun,max.ens=max.ens,min.obs=min.obs)
-      
-
+  otx=time.x
+  oty=time.y
+  ovx=values.x
+  ovy=values.y
+  
+  if(gaussianize){
+    values.x$values <- gaussianize(values.x$values)
+    values.y$values <- gaussianize(values.y$values)
+  }
+  
+  aligned = alignTimeseriesBin(time.x,values.x,time.y,values.y,bin.vec = bin.vec,bin.step = bin.step ,bin.fun=bin.fun,max.ens=max.ens,min.obs=min.obs)
+  
+  
   yearX = aligned$yearBins
   binX = aligned$binX
   binY = aligned$binY
@@ -308,7 +315,7 @@ regressEns = function(time.x,
   n.ensPoss = NCOL(binX)*NCOL(binY)
   n.ens=n.ensPoss
   
-
+  
   
   if(!is.na(max.ens)){
     if(max.ens<n.ensPoss){
@@ -475,7 +482,7 @@ corEns = function(time.1,
   #cormat=c(cor(bin1,bin2,use = "pairwise"))  #faster - but no significance...
   
   cor.df = corMatrix(bin1,bin2,max.ens = max.ens,...)
-
+  
   #calculate the FDR adjusted values
   for(co in 2:ncol(cor.df)){
     cn <- names(cor.df)[co]
@@ -485,7 +492,7 @@ corEns = function(time.1,
     sig_fdr[fdrOut] = 1
     cor.df[ncn] <- sig_fdr
   }
-
+  
   #calculate some default statistics
   if(!all(is.na(percentiles))){
     stats <- cor.df %>% 
@@ -499,7 +506,7 @@ corEns = function(time.1,
     cor.stats <- dplyr::bind_cols(percentiles = percentiles,stats)
     #row.names(cor.stats)=format(cor.stats$percentiles,digits = 2) # it appears that the rows are already well formatted
     corEns.data <- list(cor.df = cor.df,cor.stats = cor.stats,cor.fdr.stats = fdrStats)
-
+    
   }else{
     cor.stats=NA
     corEns.data=list(cor.df = cor.df)
@@ -587,7 +594,7 @@ bin = function(time,values,bin.vec,bin.fun = mean){
   #the bin vector describes the edges of the bins
   #bin.fun is the function to use for the binning, mean, sum, sd are all reasonable options
   
-
+  
   bin_y = rep(NA,times = length(bin.vec)-1)
   bin_x = apply(cbind(bin.vec[-1],bin.vec[-length(bin.vec)]),1,mean)
   
@@ -616,27 +623,54 @@ bin = function(time,values,bin.vec,bin.fun = mean){
 #'
 #' @author Nick McKay
 #' @return A list of binned years and values.
-binTs = function(TS,time.var="ageEnsemble",bin.vec,bin.fun = mean,max.ens=1000,na.col.rm=TRUE){
+binTs = function(TS,
+                 time.var="ageEnsemble",
+                 bin.vec,
+                 bin.fun = mean,
+                 max.ens=1000,
+                 na.col.rm=TRUE){
   
   #check to see if TS is a tibble
   if(tibble::is_tibble(TS)){#convert back to TS
     TS <- lipdR::untidyTs(TS)
   }
   
+  
+  #check for time.var
+  
+  
+  
+  
   timeList = lapply(TS,"[[",time.var)
   valueList = lapply(TS,"[[","paleoData_values")
+  
+  
+  intl <- sapply(timeList,is.null)
+  if(any(intl)){
+    dataSetNames <- pullTsVariable(TS,variable = "dataSetName")
+    stop(glue::glue("{time.var} is missing from {paste(dataSetNames[intl],collapse = ', ')}"))
+  }
   
   binMat = vector(mode="list",length = length(timeList))
   pb <- txtProgressBar(min=1,max=length(timeList),style=3)
   
   for(i in 1:length(timeList)){
-    binMat[[i]]=binEns(time = timeList[[i]],values = valueList[[i]],bin.vec = bin.vec,max.ens = max.ens,bin.fun = bin.fun)
+    binMat[[i]]=binEns(time = timeList[[i]],
+                       values = valueList[[i]],
+                       bin.vec = bin.vec,max.ens = max.ens,bin.fun = bin.fun)
     if(na.col.rm){
-      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | apply(is.nan(binMat[[i]]$matrix),2,all) | apply(binMat[[i]]$matrix=="nan",2,all))
+      allNa=which(apply(is.na(binMat[[i]]$matrix),2,all) | 
+                    apply(is.nan(binMat[[i]]$matrix),2,all) | 
+                    apply(binMat[[i]]$matrix=="nan",2,all))
       if(length(allNa)>0){
         binMat[[i]]$matrix = binMat[[i]]$matrix[,-allNa]
       }
     }
+    if(ncol(binMat[[i]]$matrix) == 0){
+      warning(paste("index",i,"has no values within binvec"))
+    }
+    
+    
     
     setTxtProgressBar(pb,i)
   }

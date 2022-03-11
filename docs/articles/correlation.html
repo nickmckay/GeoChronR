@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 class="author">Nick McKay</h4>
             
-            <h4 class="date">2021-10-29</h4>
+            <h4 class="date">2022-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/correlation.Rmd"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -188,11 +188,11 @@
 <span class="co">#&gt; # A tibble: 5 x 6</span>
 <span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span>
 <span class="co">#&gt;         &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00850       0.0962</span>
-<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.158         0.392 </span>
-<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.432         0.633 </span>
-<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.720         0.842 </span>
-<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982         0.989</span></code></pre></div>
+<span class="co">#&gt; 1       0.025 -0.338    0.194 0.00666        0.00618       0.0972</span>
+<span class="co">#&gt; 2       0.25  -0.176    0.483 0.147          0.154         0.390 </span>
+<span class="co">#&gt; 3       0.5   -0.0584   0.676 0.395          0.418         0.628 </span>
+<span class="co">#&gt; 4       0.75   0.0444   0.837 0.672          0.719         0.848 </span>
+<span class="co">#&gt; 5       0.975  0.170    0.985 0.971          0.982         0.990</span></code></pre></div>
 </div>
 <div id="plotting-the-results" class="section level2">
 <h2 class="hasAnchor">
@@ -239,7 +239,7 @@
            significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,
            use.fdr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"Isopersistent significance testing, with False Discovery Rate effects"</span><span class="op">)</span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
-<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.1% of the ensemble members are significant.</p>
+<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.2% of the ensemble members are significant.</p>
 <p>Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in geoChronR. For our final example we’ll take a look at isospectral significance testing and account for FDR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,

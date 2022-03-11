@@ -11,7 +11,7 @@
 #'@param chron.num the number of the chronData object that you'll be working in
 #'@param site.name the name of the site
 #'@param model.num chron.numModel do you want to use?
-#'@param cal.curves The calibration curves to be used. Enter either "marine13", intcal13", "shcal13" or "normal". Will prompt if not provided.
+#'@param cal.curves The calibration curves to be used. Enter either "marine20", intcal20", "shcal20" or "normal". Will prompt if not provided.
 #'@param iter number of iterations to use in bchron (default = 10000)
 #'@param outlier.probs probability of outliers amongst the dates
 #'@param ask ask for user input? (True/False)
@@ -25,7 +25,7 @@
 #'L = runBchron(L)
 #'
 #'#Run in noninteractive mode:
-#'L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine13") 
+#'L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine20") 
 #'}
 
 runBchron =  function(L,

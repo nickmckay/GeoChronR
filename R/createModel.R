@@ -234,6 +234,7 @@ createModel <- function(L,
 #' @param depth.seq Optionally specify a depth sequence overwhich to create the new ensemble
 #' @param ens.table.number What ensemble table number should we pull the data from (default = 1)
 #' @param n.ens How many ensembles should be included in the final model? The amount from each contributing model will be equal (or very nearly so if it's not evenly divisible)
+#' @family LiPD manipulation
 #'
 #' @return A lipd object with a new chron model that contains your multimodel ensemble. 
 #' @export 

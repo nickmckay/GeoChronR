@@ -6,6 +6,7 @@
 \usage{
 runBam(
   L,
+  time.var = "year",
   paleo.num = NA,
   paleo.meas.table.num = NA,
   chron.num = 1,
@@ -18,6 +19,8 @@ runBam(
 }
 \arguments{
 \item{L}{A LiPD object - an R serialization of a single LiPD file. It's a list, and is typically created by `readLipd()`}
+
+\item{time.var}{What is the time variable we're going to use for the basis of the simulation?}
 
 \item{paleo.num}{the number of the paleoData object that you'll be working in}
 
