@@ -1,5 +1,7 @@
 # geoChronR 1.1.5
 
+* Fixed bug in `writeBacon()` that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.
+
 # geoChronR 1.1.4
 
 * Better error messages in `binTs()`
