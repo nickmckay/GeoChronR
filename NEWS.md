@@ -1,3 +1,5 @@
+# geoChronR 1.1.5
+
 # geoChronR 1.1.4
 
 * Better error messages in `binTs()`
