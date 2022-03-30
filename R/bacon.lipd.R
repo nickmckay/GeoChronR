@@ -5,15 +5,17 @@ geoChronREnv <- new.env()
 #' @author Nick McKay
 #' @title Get the name of bacon core directory
 #' @description This is a mostly internal function that returns the core directory. Interactive if given a NA
+#'
 #' @param bacon.dir if you already have it, it just returns this, (default=NA)
+#' @param overwrite.tmp.dir Erase if using a tempdir before running?
 #' @return bacon.dir the bacon core directory
 #' @family Bacon
-getBaconDir <- function(bacon.dir = NA){
+getBaconDir <- function(bacon.dir = NA,overwrite.tmp.dir = TRUE){
   #initialize bacon directory
   if(is.na(bacon.dir) | !is.character(bacon.dir)){
     #check geoChronR env first
     if(!exists("bacon.dir",where = geoChronREnv)){
-      bacon.dir <- tempdir()
+      bacon.dir <- file.path(tempdir(),"bacon")
     }else{
       bacon.dir=get("bacon.dir",envir = geoChronREnv)
       if(is.na(bacon.dir) | !is.character(bacon.dir)){
@@ -21,6 +23,11 @@ getBaconDir <- function(bacon.dir = NA){
       }
     }
   }
+  
+  if(bacon.dir == file.path(tempdir(),"bacon") & overwrite.tmp.dir){
+    unlink(bacon.dir)
+  }
+  
   #create the directory if it doesn't exist
   if(!dir.exists(bacon.dir)){
     dir.create(bacon.dir)

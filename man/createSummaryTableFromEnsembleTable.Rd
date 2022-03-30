@@ -45,6 +45,7 @@ Create a summary table from an ensemble table
 Other LiPD manipulation: 
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
+\code{\link{createMultiModelEnsemble}()},
 \code{\link{createTSid}()},
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},

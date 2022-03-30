@@ -1,5 +1,7 @@
 # geoChronR 1.1.5
 
+* Add an option to erase the bacon tempdir (if using) before each run, and set to default.
+
 # geoChronR 1.1.4
 
 * Better error messages in `binTs()`
@@ -33,7 +35,7 @@
 
 # geoChronR 1.0.13
 
-* Added explicit references to astrochron function `linterp` in `computeSpectraEns`. [See issue 55](https://github.com/nickmckay/GeoChronR/issues/55)
+* Added explicit references to astrochron function `linterp()` in `computeSpectraEns()`. [See issue 55](https://github.com/nickmckay/GeoChronR/issues/55)
 
 # geoChronR 1.0.12
 
