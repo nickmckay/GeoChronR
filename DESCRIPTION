@@ -50,7 +50,6 @@ Imports:
     glue,
     BiocManager,
     rEDM,
-    lipdR,
     inline,
     bindrcpp,
     devtools,
@@ -68,6 +67,8 @@ Imports:
     readr
 Suggests: 
     knitr,
+    lipdR,
+    neotoma2,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
@@ -75,5 +76,6 @@ URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
+    neotomadb/neotoma2,
     nickmckay/nuspectral,
     dkahle/ggmap

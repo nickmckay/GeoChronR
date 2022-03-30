@@ -1,6 +1,7 @@
 # geoChronR 1.1.5
 
 * Add an option to erase the bacon tempdir (if using) before each run, and set to default.
+* Fixed bug in `writeBacon()` that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.
 
 # geoChronR 1.1.4
 

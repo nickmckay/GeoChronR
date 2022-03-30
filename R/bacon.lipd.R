@@ -131,7 +131,24 @@ runBacon <-  function(L,
   
 #  writeBacon <-  function(L,bacon.dir=NA,remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA,use.marine = NULL,...){
   #write bacon file
-  L=writeBacon(L,bacon.dir = bacon.dir, chron.num = chron.num,remove.rejected = remove.rejected,site.name = site.name,overwrite = overwrite,cc=cc,model.num = model.num,use.marine = use.marine,meas.table.num = meas.table.num,lab.id.var=lab.id.var, age.14c.var = age.14c.var, age.14c.uncertainty.var = age.14c.uncertainty.var, age.var = age.var,age.uncertainty.var = age.uncertainty.var, depth.var = depth.var, reservoir.age.14c.var = reservoir.age.14c.var,reservoir.age.14c.uncertainty.var = reservoir.age.14c.uncertainty.var,rejected.ages.var=rejected.ages.var)
+  L=writeBacon(L,
+               bacon.dir = bacon.dir, 
+               chron.num = chron.num,
+               remove.rejected = remove.rejected,
+               site.name = site.name,
+               overwrite = overwrite,
+               cc=cc,
+               model.num = model.num,
+               use.marine = use.marine,
+               meas.table.num = meas.table.num,
+               lab.id.var=lab.id.var,
+               age.14c.var = age.14c.var, 
+               age.14c.uncertainty.var = age.14c.uncertainty.var, 
+               age.var = age.var,age.uncertainty.var = age.uncertainty.var, 
+               depth.var = depth.var, 
+               reservoir.age.14c.var = reservoir.age.14c.var,
+               reservoir.age.14c.uncertainty.var = reservoir.age.14c.uncertainty.var,
+               rejected.ages.var=rejected.ages.var)
   
   totalDepth <- abs(diff(range(L$chronData[[chron.num]]$model[[model.num]]$inputTable[,4])))
   totalAge <- abs(diff(range(L$chronData[[chron.num]]$model[[model.num]]$inputTable[,2])))
@@ -474,7 +491,7 @@ writeBacon <-  function(L,
   }
   
   setwd(cur.dir)
-  if(model.num>length(L$chronData[[chron.num]]$model)){
+  if(model.num>length(L$chronData[[chron.num]]$model) | overwrite){
     L$chronData[[chron.num]]$model[[model.num]]=list(inputTable = out.table)
   }
   return(L)
