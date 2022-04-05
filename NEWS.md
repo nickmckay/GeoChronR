@@ -1,3 +1,5 @@
+# geoChronR 1.1.6
+
 # geoChronR 1.1.5
 
 * Add an option to erase the bacon tempdir (if using) before each run, and set to default.
