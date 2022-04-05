@@ -1,5 +1,8 @@
 # geoChronR 1.1.6
 
+* Moved *nuspectral* to suggested package, as it's rarely used and requires compilation [See issue 62](https://github.com/nickmckay/GeoChronR/issues/62)
+* Removed *devtools* from required packages - it shouldn't be necessary. 
+
 # geoChronR 1.1.5
 
 * Add an option to erase the bacon tempdir (if using) before each run, and set to default.

@@ -434,6 +434,13 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
   }
   else if ( method=='nuspectral') {
+    if (!requireNamespace("nuspectral", quietly = TRUE)) {
+      stop(
+        "Package \"nuspectral\" must be installed to use this function. Try 'remotes::install_github(\"nickmckay/nuspectral\"",
+        call. = FALSE
+      )
+    }
+    
     nt = length(time)
     tau = seq(min(time),max(time),length = max(nt %/% 5,10))
     
