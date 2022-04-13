@@ -62,7 +62,6 @@ Imports:
     MASS,
     plyr,
     stringr,
-    nuspectral,
     readr
 Suggests: 
     knitr,

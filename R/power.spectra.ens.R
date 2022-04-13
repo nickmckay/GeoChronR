@@ -194,7 +194,6 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' \item power.CL: matrix of confidence limits for spectral power
 #' }
 #' @import dplR
-#' @import nuspectral
 #' @importFrom astrochron mtm mtmPL mtmML96 linterp
 #' @importFrom matrixStats rowMedians
 #' @importFrom lomb lsp
