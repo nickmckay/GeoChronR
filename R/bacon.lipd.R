@@ -93,8 +93,8 @@ runBacon <-  function(L,
                       reservoir.age.14c.uncertainty.var = "reservoirAge14C",
                       rejected.ages.var="rejected",
                       bacon.thick = NA,
-                      bacon.acc.mean = NA
-                      ,...){
+                      bacon.acc.mean = NA,
+                      ...){
   
   
   
@@ -444,7 +444,7 @@ writeBacon <-  function(L,
   
   #replace NAs appropriately
   out.table[is.na(out.table[,1]),1] <- "unknown"
-  out.table[is.na(out.table[,3]),3] <- 1
+  out.table[is.na(out.table[,3]),3] <- out.table[is.na(out.table[,3]),2]*.05 #estimate as five percent of age
   out.table[is.na(out.table[,6]),6] <- 0
   out.table[is.na(out.table[,7]),7] <- 0
   out.table[is.na(out.table[,8]),8] <- 0
