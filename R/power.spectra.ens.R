@@ -432,7 +432,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # allocate output
     spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
   }
-  else if ( method=='nuspectral') {
+  else if (method=='nuspectral') {
     if (!requireNamespace("nuspectral", quietly = TRUE)) {
       stop(
         "Package \"nuspectral\" must be installed to use this function. Try 'remotes::install_github(\"nickmckay/nuspectral\"",
@@ -445,7 +445,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     
     # first iteration to define matrix sizes
     t = time[,tind[1]]; v = vals[,vind[1]] 
-    nuspec <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    nuspec <-  nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     noutrow <- length(nuspec$Frequency)
     
     #preallocate matrices
@@ -461,7 +461,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # pb = txtProgressBar(min=1,max = n.ens,style = 3)  # run the loop with progress bar
     # for (k in 2:n.ens){
     #   t = time[,tind[k]]; v = vals[,vind[k]] 
-    #   nuspec   <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    #   nuspec   <- nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     #   pMat[,k] <- nuspec$Power
     #   fMat[,k] <- nuspec$Frequency
     # 
