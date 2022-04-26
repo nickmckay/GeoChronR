@@ -175,8 +175,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @param ofac oversampling factor for lomb::lsp and dplR::redfit
 #' @param tbw time-bandwidth product for astrochron::mtm___ functions
 #' @param padfac padding factor for astrochron::mtm___ functions
-#' @param wgtrad radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)
-#' @param sigma decay parameter of the nuspectral::nuwaveletcoeff wavelets
+#' @param wgtrad radius of the nuspectral nuwaveletcoeff weight function (non-dimensional units)
+#' @param sigma decay parameter of the nuspectral nuwaveletcoeff wavelets
 #' @param probs vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.
 #' @param method Method used to compute the spectra. Choose from: \itemize{
 #' \item 'mtm': The multi-taper method (MTM) of Thomson (1982), a mainstay of spectral analysis (Ghil et al. 2002) designed for evenly spaced timeseries. From the astrochron package.
