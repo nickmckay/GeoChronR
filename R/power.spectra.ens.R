@@ -439,6 +439,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         call. = FALSE
       )
     }
+
     
     nt = length(time)
     tau = seq(min(time),max(time),length = max(nt %/% 5,10))

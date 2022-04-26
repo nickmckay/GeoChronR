@@ -68,7 +68,8 @@ Suggests:
     lipdR,
     neotoma2,
     rmarkdown,
-    testthat
+    testthat,
+    nuspectral
 VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
