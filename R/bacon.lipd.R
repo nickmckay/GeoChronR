@@ -178,7 +178,13 @@ runBacon <-  function(L,
   print("taking a short break...")
   Sys.sleep(5)
   #pull bacon data into lipd structure
-  L = loadBaconOutput(L,site.name=L$dataSetName,K = K, chron.num=chron.num,bacon.dir=bacon.dir,model.num=model.num,max.ens = max.ens)
+  L = loadBaconOutput(L,
+                      site.name=L$dataSetName,
+                      K = K, 
+                      chron.num=chron.num,
+                      bacon.dir=bacon.dir,
+                      model.num=model.num,
+                      max.ens = max.ens)
   return(L)
 }
 

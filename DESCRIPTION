@@ -75,5 +75,6 @@ URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
+    nickmckay/nuspectral,  
     neotomadb/neotoma2,
     dkahle/ggmap
