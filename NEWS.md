@@ -1,3 +1,5 @@
+# geoChronR 1.1.7
+
 # geoChronR 1.1.6
 
 * Moved *nuspectral* to suggested package, as it's rarely used and requires compilation [See issue 62](https://github.com/nickmckay/GeoChronR/issues/62)
