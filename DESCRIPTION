@@ -62,10 +62,10 @@ Imports:
     MASS,
     plyr,
     stringr,
+    lipdR,
     readr
 Suggests: 
     knitr,
-    lipdR,
     neotoma2,
     rmarkdown,
     testthat,

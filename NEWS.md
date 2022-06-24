@@ -1,5 +1,7 @@
 # geoChronR 1.1.7
 
+* Fixed shape mapping bug with unknown archiveType (thanks Sarah Ivory for reporting)
+
 # geoChronR 1.1.6
 
 * Moved *nuspectral* to suggested package, as it's rarely used and requires compilation [See issue 62](https://github.com/nickmckay/GeoChronR/issues/62)
