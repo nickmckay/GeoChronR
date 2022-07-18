@@ -30,8 +30,7 @@ getPlotRanges <- function(h){
 #' @import ggplot2
 #' @import ggthemes
 #' @inheritParams ggthemes::theme_hc
-#geoChronRPlotTheme = ggplot2::theme_minimal
-geoChronRPlotTheme <- ggthemes::theme_hc
+geoChronRPlotTheme <- ggplot2::theme_bw
 
 
 #' @export

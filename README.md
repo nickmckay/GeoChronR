@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R build status](https://github.com/nickmckay/GeoChronR/workflows/R-CMD-check/badge.svg)](https://github.com/nickmckay/GeoChronR/actions)
 [![R-CMD-check](https://github.com/nickmckay/GeoChronR/workflows/R-CMD-check/badge.svg)](https://github.com/nickmckay/GeoChronR/actions)
+[![R-CMD-check](https://github.com/nickmckay/GeoChronR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nickmckay/GeoChronR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 # geoChronR <img src='man/figures/logo.png' align="right" height="139" />
 

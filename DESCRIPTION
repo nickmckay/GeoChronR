@@ -66,9 +66,9 @@ Imports:
     readr
 Suggests: 
     knitr,
-    neotoma2,
     rmarkdown,
     testthat,
+    neotoma2,
     nuspectral
 VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
