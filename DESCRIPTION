@@ -1,7 +1,7 @@
 Package: geoChronR
 Type: Package
 Title: Tools to Analyze and Visualize Time-Uncertain Data
-Version: 1.1.6
+Version: 1.1.8
 Date: 2021-02-01
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
@@ -52,7 +52,6 @@ Imports:
     rEDM,
     inline,
     bindrcpp,
-    devtools,
     geosphere,
     proto,
     crayon,
@@ -63,19 +62,19 @@ Imports:
     MASS,
     plyr,
     stringr,
-    nuspectral,
+    lipdR,
     readr
 Suggests: 
     knitr,
-    lipdR,
     neotoma2,
     rmarkdown,
-    testthat
+    testthat,
+    nuspectral
 VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
+    nickmckay/nuspectral,  
     neotomadb/neotoma2,
-    nickmckay/nuspectral,
     dkahle/ggmap

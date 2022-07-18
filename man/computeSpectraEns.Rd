@@ -43,9 +43,9 @@ computeSpectraEns(
 
 \item{tbw}{time-bandwidth product for astrochron::mtm___ functions}
 
-\item{wgtrad}{radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)}
+\item{wgtrad}{radius of the nuspectral nuwaveletcoeff weight function (non-dimensional units)}
 
-\item{sigma}{decay parameter of the nuspectral::nuwaveletcoeff wavelets}
+\item{sigma}{decay parameter of the nuspectral nuwaveletcoeff wavelets}
 
 \item{mtm_null}{Method to estimate null hypothesis if method = "mtm". Valid choices are 'AR(1)', 'power_law' (default), or 'ML96'}
 }

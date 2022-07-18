@@ -1359,7 +1359,8 @@ plotPcaEns = function(ens.pc.out,
   }
   
   arch.shape=factor(arch.shape)
-  archiveShapes=c(21,22,24,23)
+  archiveShapes=c(21,22,24,23,25)
+  if(!any(grepl(pattern="unknown",arch.shape))){archiveShapes = archiveShapes[-4] }
   if(!any(grepl(pattern="ice",arch.shape))){archiveShapes = archiveShapes[-4] }
   if(!any(grepl(pattern="speleothem",arch.shape))){archiveShapes = archiveShapes[-3] }
   if(!any(grepl(pattern="marine",arch.shape))){archiveShapes = archiveShapes[-2] }
@@ -1417,10 +1418,10 @@ plotPcaEns = function(ens.pc.out,
       theme(legend.box = "horizontal",legend.position=legend.position) + 
       scale_shape_manual(name = "Archive Type",values = archiveShapes) +
       scale_size(name = "Loading uncertainty",range = c(dot.size,1)) +
-      scale_fill_gradient2(name="Loadings",
-                           low=scaleColors[1],
-                           high=scaleColors[2],
-                           guide="colorbar",limits = crange)
+      scale_fill_gradient2(name = "Loadings",
+                           low = scaleColors[1],
+                           high = scaleColors[2],
+                           guide = "colorbar",limits = crange)
     
     
     leglist[[i]] <- getLegend(testMap)

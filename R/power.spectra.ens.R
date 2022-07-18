@@ -175,8 +175,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' @param ofac oversampling factor for lomb::lsp and dplR::redfit
 #' @param tbw time-bandwidth product for astrochron::mtm___ functions
 #' @param padfac padding factor for astrochron::mtm___ functions
-#' @param wgtrad radius of the nuspectral::nuwaveletcoeff weight function (non-dimensional units)
-#' @param sigma decay parameter of the nuspectral::nuwaveletcoeff wavelets
+#' @param wgtrad radius of the nuspectral nuwaveletcoeff weight function (non-dimensional units)
+#' @param sigma decay parameter of the nuspectral nuwaveletcoeff wavelets
 #' @param probs vector of probabilities for the siginificance levels. To avoid such computations, pass `probs = NA`.
 #' @param method Method used to compute the spectra. Choose from: \itemize{
 #' \item 'mtm': The multi-taper method (MTM) of Thomson (1982), a mainstay of spectral analysis (Ghil et al. 2002) designed for evenly spaced timeseries. From the astrochron package.
@@ -194,7 +194,6 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
 #' \item power.CL: matrix of confidence limits for spectral power
 #' }
 #' @import dplR
-#' @import nuspectral
 #' @importFrom astrochron mtm mtmPL mtmML96 linterp
 #' @importFrom matrixStats rowMedians
 #' @importFrom lomb lsp
@@ -433,13 +432,21 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # allocate output
     spec.ens = list(freqs = f, power = ens.mtm.power, power.CL=pCL, sig.freq=freqs.prob)
   }
-  else if ( method=='nuspectral') {
+  else if (method=='nuspectral') {
+    if (!requireNamespace("nuspectral", quietly = TRUE)) {
+      stop(
+        "Package \"nuspectral\" must be installed to use this function. Try 'remotes::install_github(\"nickmckay/nuspectral\"",
+        call. = FALSE
+      )
+    }
+
+    
     nt = length(time)
     tau = seq(min(time),max(time),length = max(nt %/% 5,10))
     
     # first iteration to define matrix sizes
     t = time[,tind[1]]; v = vals[,vind[1]] 
-    nuspec <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    nuspec <-  nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     noutrow <- length(nuspec$Frequency)
     
     #preallocate matrices
@@ -455,7 +462,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # pb = txtProgressBar(min=1,max = n.ens,style = 3)  # run the loop with progress bar
     # for (k in 2:n.ens){
     #   t = time[,tind[k]]; v = vals[,vind[k]] 
-    #   nuspec   <-  nuspectral::nuwavelet_psd(t,v,sigma=sigma,taus = tau)
+    #   nuspec   <- nuwavelet_psd(t,v,sigma=sigma,taus = tau)
     #   pMat[,k] <- nuspec$Power
     #   fMat[,k] <- nuspec$Frequency
     # 

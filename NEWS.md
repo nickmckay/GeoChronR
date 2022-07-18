@@ -1,9 +1,19 @@
-# geoChronR 1.1.6
+# geoChronR 1.1.8
 
 * Added an `ask.reservoir` option to `runBacon()` that connects to the same parameter in `writeBacon()`. Setting `ask.reservoir = FALSE` will allow for non-interactive code that uses `runBacon()` and includes reservoir corrections. Thanks @JanPetrik1 for reporting - see [issue 70](https://github.com/nickmckay/GeoChronR/issues/70) for details.
 
+# geoChronR 1.1.7
+
+* Fixed shape mapping bug with unknown archiveType (thanks Sarah Ivory for reporting)
+
+# geoChronR 1.1.6
+
+* Moved *nuspectral* to suggested package, as it's rarely used and requires compilation [See issue 62](https://github.com/nickmckay/GeoChronR/issues/62)
+* Removed *devtools* from required packages - it shouldn't be necessary. 
+
 # geoChronR 1.1.5
 
+* Add an option to erase the bacon tempdir (if using) before each run, and set to default.
 * Fixed bug in `writeBacon()` that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.
 
 # geoChronR 1.1.4
@@ -39,7 +49,7 @@
 
 # geoChronR 1.0.13
 
-* Added explicit references to astrochron function `linterp` in `computeSpectraEns`. [See issue 55](https://github.com/nickmckay/GeoChronR/issues/55)
+* Added explicit references to astrochron function `linterp()` in `computeSpectraEns()`. [See issue 55](https://github.com/nickmckay/GeoChronR/issues/55)
 
 # geoChronR 1.0.12
 

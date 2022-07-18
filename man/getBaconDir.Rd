@@ -4,10 +4,12 @@
 \alias{getBaconDir}
 \title{Get the name of bacon core directory}
 \usage{
-getBaconDir(bacon.dir = NA)
+getBaconDir(bacon.dir = NA, overwrite.tmp.dir = TRUE)
 }
 \arguments{
 \item{bacon.dir}{if you already have it, it just returns this, (default=NA)}
+
+\item{overwrite.tmp.dir}{Erase if using a tempdir before running?}
 }
 \value{
 bacon.dir the bacon core directory
