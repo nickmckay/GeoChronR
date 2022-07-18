@@ -1,5 +1,7 @@
 # geoChronR 1.1.6
 
+* Added an `ask.reservoir` option to `runBacon()` that connects to the same parameter in `writeBacon()`. Setting `ask.reservoir = FALSE` will allow for non-interactive code that uses `runBacon()` and includes reservoir corrections. Thanks @JanPetrik1 for reporting - see [issue 70](https://github.com/nickmckay/GeoChronR/issues/70) for details.
+
 # geoChronR 1.1.5
 
 * Fixed bug in `writeBacon()` that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.

@@ -85,6 +85,7 @@ runBacon <-  function(L,
                       reservoir.age.14c.var = "reservoirAge",
                       reservoir.age.14c.uncertainty.var = "reservoirAge14C",
                       rejected.ages.var="rejected",
+                      ask.reservoir = TRUE,
                       bacon.thick = NA,
                       bacon.acc.mean = NA
                       ,...){
@@ -141,7 +142,8 @@ runBacon <-  function(L,
                depth.var = depth.var, 
                reservoir.age.14c.var = reservoir.age.14c.var,
                reservoir.age.14c.uncertainty.var = reservoir.age.14c.uncertainty.var,
-               rejected.ages.var=rejected.ages.var)
+               rejected.ages.var=rejected.ages.var,
+               ask.reservoir = ask.reservoir)
   
   totalDepth <- abs(diff(range(L$chronData[[chron.num]]$model[[model.num]]$inputTable[,4])))
   totalAge <- abs(diff(range(L$chronData[[chron.num]]$model[[model.num]]$inputTable[,2])))

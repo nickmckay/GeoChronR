@@ -25,6 +25,7 @@ runBacon(
   reservoir.age.14c.var = "reservoirAge",
   reservoir.age.14c.uncertainty.var = "reservoirAge14C",
   rejected.ages.var = "rejected",
+  ask.reservoir = TRUE,
   bacon.thick = NA,
   bacon.acc.mean = NA,
   ...
@@ -75,6 +76,8 @@ runBacon(
 \item{reservoir.age.14c.uncertainty.var}{Reservoir age uncertainty variable name}
 
 \item{rejected.ages.var}{Rejected ages variable name}
+
+\item{ask.reservoir}{ask about reservoir corrections}
 
 \item{bacon.thick}{thickness parameter to pass to bacon (How thick is each chunk to model)}
 
