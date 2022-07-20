@@ -5,10 +5,10 @@
 \title{Define a plot theme for GeoChronR}
 \usage{
 geoChronRPlotTheme(
-  base_size = 12,
-  base_family = "sans",
-  style = c("default", "darkunica"),
-  bgcolor = NULL
+  base_size = 11,
+  base_family = "",
+  base_line_size = base_size/22,
+  base_rect_size = base_size/22
 )
 }
 \arguments{
@@ -16,10 +16,9 @@ geoChronRPlotTheme(
 
 \item{base_family}{base font family}
 
-\item{style}{The Highcharts theme to use \code{'default'},
-\code{'darkunica'}.}
+\item{base_line_size}{base size for line elements}
 
-\item{bgcolor}{Deprecated}
+\item{base_rect_size}{base size for rect elements}
 }
 \description{
 Use this to define a theme across geoChronR
