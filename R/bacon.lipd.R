@@ -464,7 +464,7 @@ writeBacon <-  function(L,
   
   which.rejected <- which(!is.na(cdf$rejected))
   
-  if(remove.rejected & length(which.rejected)>1){
+  if(remove.rejected & length(which.rejected) >= 1){
     out.table <- out.table[-which.rejected,]
   }
   

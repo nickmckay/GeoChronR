@@ -1,5 +1,7 @@
 # geoChronR 1.1.9
 
+* Fixed a bug in `writeBacon()` where `remove.rejected` didn't work properly if there was exactly one rejected date. Thanks @JanPetrik1 for reporting - see [issue 71](https://github.com/nickmckay/GeoChronR/issues/71).
+
 # geoChronR 1.1.8
 
 * Added an `ask.reservoir` option to `runBacon()` that connects to the same parameter in `writeBacon()`. Setting `ask.reservoir = FALSE` will allow for non-interactive code that uses `runBacon()` and includes reservoir corrections. Thanks @JanPetrik1 for reporting - see [issue 70](https://github.com/nickmckay/GeoChronR/issues/70) for details.
