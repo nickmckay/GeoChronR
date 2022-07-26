@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-07-20</h4>
+            <h4 data-toc-skip class="date">2022-07-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -252,18 +252,18 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">quantileData</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
-<span><span class="co">##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.054</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.043<span style="text-decoration: underline;">8</span>  0.097<span style="text-decoration: underline;">5</span>  0.149    0.267</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.022<span style="text-decoration: underline;">7</span>  0.092<span style="text-decoration: underline;">7</span>  0.129   0.169    0.254</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.053<span style="text-decoration: underline;">2</span>  0.128   0.164   0.203    0.288</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.103   0.178   0.209   0.236    0.296</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.079<span style="text-decoration: underline;">1</span>  0.142   0.173   0.200    0.257</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">5</span>  0.043<span style="text-decoration: underline;">1</span>  0.087<span style="text-decoration: underline;">8</span>  0.123    0.202</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.046</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.012<span style="text-decoration: underline;">4</span>  0.040<span style="text-decoration: underline;">0</span>  0.063<span style="text-decoration: underline;">0</span>   0.116</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.112</span>  -<span style="color: #BB0000;">0.030</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.008<span style="text-decoration: underline;">94</span> 0.045<span style="text-decoration: underline;">2</span>   0.120</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.069</span><span style="color: #BB0000; text-decoration: underline;">6</span> -<span style="color: #BB0000;">0.011</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.023<span style="text-decoration: underline;">7</span>  0.060<span style="text-decoration: underline;">7</span>   0.125</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.057</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.004<span style="text-decoration: underline;">63</span> 0.043<span style="text-decoration: underline;">2</span>  0.081<span style="text-decoration: underline;">5</span>   0.151</span></span>
+<span><span class="co">##     ages `0.025`    `0.25`   `0.5` `0.75` `0.975`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.064</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.041<span style="text-decoration: underline;">7</span>   0.104   0.162    0.266</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.022<span style="text-decoration: underline;">8</span>  0.091<span style="text-decoration: underline;">2</span>   0.129   0.166    0.244</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.046<span style="text-decoration: underline;">6</span>  0.125    0.162   0.201    0.281</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.121   0.183    0.212   0.235    0.284</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.100   0.148    0.176   0.200    0.249</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.021</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.044<span style="text-decoration: underline;">2</span>   0.083<span style="text-decoration: underline;">9</span>  0.123    0.200</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.045</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.011<span style="text-decoration: underline;">6</span>   0.038<span style="text-decoration: underline;">9</span>  0.067<span style="text-decoration: underline;">3</span>   0.117</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.101</span>  -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">1</span>   0.008<span style="text-decoration: underline;">18</span> 0.048<span style="text-decoration: underline;">2</span>   0.112</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.090</span><span style="color: #BB0000; text-decoration: underline;">3</span> -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">5</span>   0.018<span style="text-decoration: underline;">7</span>  0.057<span style="text-decoration: underline;">2</span>   0.131</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.069</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.000<span style="text-decoration: underline;">411</span> 0.038<span style="text-decoration: underline;">2</span>  0.079<span style="text-decoration: underline;">2</span>   0.160</span></span>
 <span><span class="co">## <span style="color: #949494;"># … with 190 more rows</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span></span></code></pre>
 </div>
