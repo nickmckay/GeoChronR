@@ -215,7 +215,13 @@ mapAgeEnsembleToPaleoData = function(L,
                       strict.search = strict.search)
   
   #do something smarter here?
+  if(grepl(age.var,"age",ignore.case = TRUE)){
   ensAll$variableName <- "ageEnsemble"
+  }else if(grepl(age.var,"year",ignore.case = TRUE)){
+    ensAll$variableName <- "yearEnsemble"
+  }else{
+    ensAll$variableName <- "timeEnsemble"
+  }
   
   if(is.null(ensAll$values)){
     stop("Error: did not find the age ensemble.")

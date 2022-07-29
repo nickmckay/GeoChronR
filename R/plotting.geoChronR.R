@@ -29,7 +29,7 @@ getPlotRanges <- function(h){
 #' @description Use this to define a theme across geoChronR
 #' @import ggplot2
 #' @inheritParams ggplot2::theme_bw
-geoChronRPlotTheme <- ggplot2::theme_bw
+geoChronRPlotTheme <- ggplot2::theme_bw(base_family = "sans",...)
 
 
 #' @export
