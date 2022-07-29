@@ -4,21 +4,7 @@
 \alias{geoChronRPlotTheme}
 \title{Define a plot theme for GeoChronR}
 \usage{
-geoChronRPlotTheme(
-  base_size = 11,
-  base_family = "",
-  base_line_size = base_size/22,
-  base_rect_size = base_size/22
-)
-}
-\arguments{
-\item{base_size}{base font size, given in pts.}
-
-\item{base_family}{base font family}
-
-\item{base_line_size}{base size for line elements}
-
-\item{base_rect_size}{base size for rect elements}
+geoChronRPlotTheme(...)
 }
 \description{
 Use this to define a theme across geoChronR
