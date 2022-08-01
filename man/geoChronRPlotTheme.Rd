@@ -4,7 +4,12 @@
 \alias{geoChronRPlotTheme}
 \title{Define a plot theme for GeoChronR}
 \usage{
-geoChronRPlotTheme(...)
+geoChronRPlotTheme(font.family = "Helvetica", ...)
+}
+\arguments{
+\item{font.family}{Specify a font family to use for the theme (default = "Helvetica")}
+
+\item{...}{parameters to pass to theme function}
 }
 \description{
 Use this to define a theme across geoChronR

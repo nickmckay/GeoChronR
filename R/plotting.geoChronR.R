@@ -28,10 +28,11 @@ getPlotRanges <- function(h){
 #' @title Define a plot theme for GeoChronR
 #' @description Use this to define a theme across geoChronR
 #' @import ggplot2
+#' @param font.family Specify a font family to use for the theme (default = "Helvetica")
 #' @param ... parameters to pass to theme function 
 #' @inheritParams ggplot2::theme_bw
-geoChronRPlotTheme <- function(font_family = "Helvetica",...){
-  ggplot2::theme_bw(base_family = font_family,...)
+geoChronRPlotTheme <- function(font.family = "Helvetica",...){
+  ggplot2::theme_bw(base_family = font.family,...)
 }
 
 

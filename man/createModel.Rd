@@ -6,7 +6,7 @@
 \usage{
 createModel(
   L,
-  depth.or.age.vector,
+  depth.or.age.vector = NA,
   ensemble.data,
   paleo.or.chron = "chronData",
   paleo.or.chron.num = NA,
