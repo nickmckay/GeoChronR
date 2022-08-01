@@ -309,7 +309,7 @@ mapAgeEnsembleToPaleoData = function(L,
   L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$frommodel = model.num
   L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$TSid = lipdR::createTSid("ens")
   
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
   
   print(glue::glue("mapAgeEnsembleToPaleoData created new variable {ensAll$variableName} in paleo {paleo.num} measurement table {paleo.meas.table.num}"))
   

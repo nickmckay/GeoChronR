@@ -30,8 +30,8 @@ getPlotRanges <- function(h){
 #' @import ggplot2
 #' @param ... parameters to pass to theme function 
 #' @inheritParams ggplot2::theme_bw
-geoChronRPlotTheme <- function(...){
-  ggplot2::theme_bw(base_family = "sans",...)
+geoChronRPlotTheme <- function(font_family = "Helvetica",...){
+  ggplot2::theme_bw(base_family = font_family,...)
 }
 
 

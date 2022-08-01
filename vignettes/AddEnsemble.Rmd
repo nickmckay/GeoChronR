@@ -1,0 +1,103 @@
+---
+title: "Adding an ensemble to a LiPD file"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AddEnsemble}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r,echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
+knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
+```
+
+
+```{r setup}
+library(lipdR)
+library(geoChronR)
+library(readr) #to open a csv file
+```
+
+## So you want to add an ensemble table...
+
+geoChronR is great at helping you create ensembles, but sometimes you may want to add ensemble that you've created elsewhere into a LiPD file, and then analyze it using geoChronR. This could be an age ensemble that you've created using a specialized or custom process, or paleo ensemble calculated with a novel approach. Either way, the `createModel()` function is designed to simplify that process. 
+
+In the LiPD framework, chron or paleo ensemble tables are always stored within models, so `createModel()` will simplify adding an ensemble table to a new model object, which is typically the best approach. 
+
+As always, check out the help documentation for details `?createModel` of all the parameters and how they work.
+
+
+### An example with Lake Kurupa
+
+Let's walk through a simple example, using a the Lake Kurupa dataset we explored in the [time-uncertain regression](regression.html) vignette. This time, let's imagine that we've already created an ensemble separately, and have it stored as a csv file, and would like to add it to the LiPD object.
+
+First let's get the data we need. First, we can load in the lipd object:
+
+```{r}
+K <- readLipd("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
+```
+
+And now let's open a csv file that has the depth and age ensemble data
+
+```{r}
+ens <- read_csv("http://lipdverse.org/geoChronR-examples/KurupaChronEnsemble.csv")
+```
+Let's take a quick look at the data.frame we loaded
+
+```{r}
+head(ens)
+```
+So this ensemble table has a depth vector, which is the first column, and 1000 age ensemble members in columns 2 to 1001. Let's put those in separate variables for clarity:
+
+```{r}
+depth <- ens$`depth (mm)`
+ageEns <- ens[,-1] #here we use negative indexing to select all but the first column
+```
+
+Now we can use `createModel()` to add in our ensemble table:
+
+```{r}
+Kens <- createModel(L =  K,#our starting lipd object
+                    depth.or.age.vector = depth,#our depth vector
+                    ensemble.data = ageEns,#our age ensemble
+                    depth.or.age.units = "mm",#and we'll specify that our depth units are different than the default.
+                    create.summary.table = TRUE
+)
+```
+
+And that's it! Note that there are several other options in the function, that you may need to specify depending on your data and goals, but it's often as simple as this.
+
+Let's take a look.
+
+```{r}
+plotChronEns(Kens)
+```
+You can see that the ensemble data are now included, and the plot looks similar to the one in [regression vignette](regression.html) where we created the ensemble with Bacon. The big difference is that there are now age distributions plotted, because of course, adding the ensemble in this way means that we don't know anything about the radiocarbon data, calibrated or otherwise.
+
+### Using the ensembles in geoChronR
+
+You can now go on to use the ensemble in geoChronR any way you'd like. For example, we can map the age ensemble to the paleodata: 
+
+```{r}
+Kens <- mapAgeEnsembleToPaleoData(Kens)
+```
+
+And then make a plot:
+
+```{r}
+mae <- selectData(Kens,"ageEnsemble")
+rabd <- selectData(Kens,"RABD")
+plotTimeseriesEnsRibbons(X = mae,Y = rabd)
+```
+
+
+That's it! You could now save this LiPD file for future analysis with `lipdR::writeLipd()`, or continue on with this workflow in geoChronR.
+
+
+
+
+
+
+
+

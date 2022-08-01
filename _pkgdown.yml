@@ -116,6 +116,8 @@ navbar:
         href: articles/TsFilteringAndMapping.html
       - text: Tidy filtering and mapping (with tidyverse & iso2k)
         href: articles/tidyIso2k.html
+      - text: Add a separate ensemble to LiPD object
+        href: articles/AddEnsemble.html
         
 template:
   params:

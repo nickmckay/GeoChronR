@@ -63,6 +63,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   
   
   #pull the depth data
+  if(!is.na(depth.var)){
   depthVals <- selectData(L,
                           var.name = depth.var,
                           paleo.or.chron = paleo.or.chron,
@@ -70,7 +71,9 @@ createSummaryTableFromEnsembleTable <- function(L,
                           table.type = "ens",
                           ens.table.num = ens.table.num,
                           model.num = model.num)
-  
+  }else{
+    depthVals <- NULL
+  }
   
   
   summaryTable = list()
@@ -82,11 +85,7 @@ createSummaryTableFromEnsembleTable <- function(L,
     
   }
   
-  
-  if(is.null(depthVals)){
-    con <- askUser("It looks like there are no independent variable (typically depth) values. Should we continue without them?")
-    if(!grepl(con,pattern = "y",ignore.case = )){stop("you chose to stop")}  
-  }else{
+  if(!is.null(depthVals)){
     summaryTable[[depthVals$variableName]] <- depthVals
   }
   
@@ -116,7 +115,7 @@ createSummaryTableFromEnsembleTable <- function(L,
 #' @return a model object
 #' @export
 createModel <- function(L,
-                        depth.or.age.vector,
+                        depth.or.age.vector = NA,
                         ensemble.data, 
                         paleo.or.chron = "chronData",
                         paleo.or.chron.num = NA,
@@ -176,6 +175,12 @@ createModel <- function(L,
   }
   
   
+  if(all(is.na(depth.or.age.vector))){
+    noPositionVector <- TRUE
+  }else{
+    noPositionVector <- FALSE
+  }
+  
   #initialize ensemble table number
   if(is.na(ens.table.num)){
     if(is.null(L[[paleo.or.chron]][[paleo.or.chron.num]]$model[[model.num]]$ensembleTable[[1]])){
@@ -195,19 +200,35 @@ createModel <- function(L,
                  units = ens.units,
                  TSid = createTSid())
   
-  colEns <- list(values = as.matrix(depth.or.age.vector),
-                 variableName = depth.or.age.var,
-                 units = depth.or.age.units,
-                 TSid = createTSid())
+  if(!noPositionVector){
+    colEns <- list(values = as.matrix(depth.or.age.vector),
+                   variableName = depth.or.age.var,
+                   units = depth.or.age.units,
+                   TSid = createTSid())
+    et <- list(colEns,valEns)
+    names(et) <- c(colEns$variableName,valEns$variableName)
 
-  et <- list(colEns,valEns)
-  names(et) <- c(colEns$variableName,valEns$variableName)
+  }else{
+    et <- list(valEns)
+    names(et) <- c(valEns$variableName)
+    
+  }
+
   
   #assign in ensembleTable object object
   L[[paleo.or.chron]][[paleo.or.chron.num]]$model[[model.num]]$ensembleTable[[ens.table.num]] <-  et
   
   #create a summary table from the ensemble data?
   if(create.summary.table){
+    if(noPositionVector){
+      L <- createSummaryTableFromEnsembleTable(L,
+                                               paleo.or.chron = paleo.or.chron,
+                                               paleo.or.chron.num = paleo.or.chron.num,
+                                               model.num = model.num,
+                                               ens.table.num = ens.table.num,
+                                               ens.var = valEns$variableName,
+                                               depth.var = NA)
+    }else{
     L <- createSummaryTableFromEnsembleTable(L,
                                              paleo.or.chron = paleo.or.chron,
                                              paleo.or.chron.num = paleo.or.chron.num,
@@ -215,10 +236,15 @@ createModel <- function(L,
                                              ens.table.num = ens.table.num,
                                              ens.var = valEns$variableName,
                                              depth.var = colEns$variableName)
+    }
   }
   
+  print(glue::glue("Created a model in {paleo.or.chron}-{paleo.or.chron.num}, model-{model.num}, ensembleTable {ens.table.num} with variables: {paste(names(et),collapse = ', ')}"))
   #to do- create distribution tables?
- 
+  if(create.summary.table){
+    cat("\n")
+    print(glue::glue("Also created a summary table in {paleo.or.chron}-{paleo.or.chron.num}, model-{model.num}"))
+  }
   return(L) 
 }
 
