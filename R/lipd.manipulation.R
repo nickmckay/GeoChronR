@@ -215,9 +215,9 @@ mapAgeEnsembleToPaleoData = function(L,
                       strict.search = strict.search)
   
   #do something smarter here?
-  if(grepl(age.var,"age",ignore.case = TRUE)){
+  if(grepl(age.var,pattern = "age",ignore.case = TRUE)){
   ensAll$variableName <- "ageEnsemble"
-  }else if(grepl(age.var,"year",ignore.case = TRUE)){
+  }else if(grepl(age.var,pattern = "year",ignore.case = TRUE)){
     ensAll$variableName <- "yearEnsemble"
   }else{
     ensAll$variableName <- "timeEnsemble"
@@ -309,7 +309,9 @@ mapAgeEnsembleToPaleoData = function(L,
   L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$frommodel = model.num
   L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]$TSid = lipdR::createTSid("ens")
   
-  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]]$ageEnsemble$description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
+  L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[ensAll$variableName]]description = paste("age ensemble pulled from chronData", chron.num,"model",model.num,"- fit to paleoData depth with linear interpolation")
+  
+  print(glue::glue("mapAgeEnsembleToPaleoData created new variable {ensAll$variableName} in paleo {paleo.num} measurement table {paleo.meas.table.num}"))
   
   #create median age model variable too?
   medianVar <- stringr::str_replace(ensAll$variableName,"Ensemble",replacement = "Median")
@@ -332,6 +334,8 @@ mapAgeEnsembleToPaleoData = function(L,
     L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$fromChronData = chron.num
     L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$frommodel = model.num
     L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]][[medianVar]]$TSid = lipdR::createTSid("ens")
+    print(glue::glue("mapAgeEnsembleToPaleoData also created new variable {medianVar} in paleo {paleo.num} measurement table {paleo.meas.table.num}"))
+    
   }
   
   
