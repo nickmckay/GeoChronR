@@ -88,6 +88,7 @@ articles:
   - PlotTimeseriesStack
   - TsFilteringAndMapping
   - tidyIso2k
+  - AddEnsemble
 
 navbar:
   components:
