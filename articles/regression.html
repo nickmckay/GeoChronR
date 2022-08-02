@@ -91,6 +91,9 @@
     <li>
       <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
+    <li>
+      <a href="../articles/AddEnsemble.html">Add a separate ensemble to LiPD object</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -126,7 +129,7 @@
       <h1 data-toc-skip>Ensemble regression and calibration-in-time</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-07-26</h4>
+            <h4 data-toc-skip class="date">2022-08-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/regression.Rmd" class="external-link"><code>vignettes/regression.Rmd</code></a></small>
       <div class="hidden name"><code>regression.Rmd</code></div>
@@ -210,7 +213,7 @@
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Preparing ghost graph...</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Mean 95% confidence ranges 317 yr, min. 4 yr at 0 cm, max. 507 yr at 308 cm</span></span></code></pre>
+<span><span class="co">## Mean 95% confidence ranges 319 yr, min. 4 yr at 0 cm, max. 525 yr at 315 cm</span></span></code></pre>
 <pre><code><span><span class="co">## 100% of the dates overlap with the age-depth model (95% ranges)</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-2.png" width="768"></p>
@@ -238,7 +241,9 @@
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "getting depth from the paleodata table..."</span></span>
-<span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
+<span><span class="co">## [1] "Found it! Moving on..."</span></span>
+<span><span class="co">## mapAgeEnsembleToPaleoData created new variable ageEnsemble in paleo 1 measurement table 1</span></span>
+<span><span class="co">## mapAgeEnsembleToPaleoData also created new variable ageMedian in paleo 1 measurement table 1</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate">Select the paleodata age ensemble, and RABD data that we’d like to regress and calibrate<a class="anchor" aria-label="anchor" href="#select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate"></a>

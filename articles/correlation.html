@@ -91,6 +91,9 @@
     <li>
       <a href="../articles/tidyIso2k.html">Tidy filtering and mapping (with tidyverse &amp; iso2k)</a>
     </li>
+    <li>
+      <a href="../articles/AddEnsemble.html">Add a separate ensemble to LiPD object</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -126,7 +129,7 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-07-26</h4>
+            <h4 data-toc-skip class="date">2022-08-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/correlation.Rmd" class="external-link"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -183,11 +186,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">6</span>       0.096<span style="text-decoration: underline;">8</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.176        0.391 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.482        0.631 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.749        0.845 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.982        0.989</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">9</span>       0.099<span style="text-decoration: underline;">2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.170        0.391 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.473        0.633 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.749        0.843 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.982        0.990</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
