@@ -30,7 +30,6 @@ getPlotRanges <- function(h){
 #' @import ggplot2
 #' @param font.family Specify a font family to use for the theme (default = "Helvetica")
 #' @param ... parameters to pass to theme function 
-#' @inheritParams ggplot2::theme_bw
 geoChronRPlotTheme <- function(font.family = "Helvetica",...){
   ggplot2::theme_bw(base_family = font.family,...)
 }
@@ -263,8 +262,11 @@ quantile2d = function(x,
                       x.bin = NA,
                       probs = c(0.025,0.25,0.5,0.75, 0.975),
                       n.ens = max(c(ncol(x),ncol(y))), 
-                      seed = 111, 
-                      limit.outliers.x = .0025){
+                      seed = 111,
+                      interp.method = "linear",
+                      limit.outliers.x = .0025,
+                      na.thresh = 0.50,
+                      ...){
   #error checking
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
@@ -287,12 +289,39 @@ quantile2d = function(x,
   }
   y.int = matrix(NA,ncol = n.ens,nrow= length(x.bin))
   
-  for(int in 1:n.ens){
-    y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin,ties = min)$y
+  if(interp.method == "linear"){
+    for(int in 1:n.ens){
+      y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)], 
+                           y = y[,sample.int(ncol(y),size = 1)],
+                           xout = x.bin,
+                           ties = min)$y
+    }
+  }else if(interp.method == "spread"){
+    if(!requireNamespace("compositeR",quietly = TRUE)){
+      stop("This options requires the compositeR package (github.com/nickmckay/compositeR)")
+    }
+    for(int in 1:n.ens){
+      te <-  compositeR::spreadPaleoData(age = x[,sample.int(ncol(x),size = 1)],
+                                                 value = y[,sample.int(ncol(y),size = 1)],
+                                                 newAge = x.bin,
+                                         ...)
+      
+      #don't include extra values
+      y.int[,int] <- te$spreadVal[which(te$spreadAge %in% x.bin)]
+    }
+  }else{
+    stop(glue::glue("I don't recognize the interp.method {interp.method}. The options are 'linear' or 'spread'"))
   }
+
+  
   
   x = x.bin
   y = y.int
+  
+  #screen out if more than na.frac.screen
+  fracMissing <- apply(is.na(y),1,sum)/ncol(y)
+  
+  y[fracMissing > na.thresh,] <- NA
   
   #now calculate quantiles for 
   quants = matrix(NA,ncol = length(probs),nrow = length(x))
@@ -311,16 +340,19 @@ quantile2d = function(x,
 #' @family bin
 #' @family plot help
 #' @description Calculate the density of samples along a 2-dimensional grid
+#'
 #' @param x n by m matrix where n is the number of observations and m is >= 1
 #' @param y n by j matrix where n is the number of observations and j is >= 1 
 #' @param n.bins number bins over which to calculate intervals. Used to calculate x.bin if not provided.
 #' @param x.bin vector of bin edges over which to bin.
 #' @param y.bin vector of bin edges over which to bin.
 #' @param filter.frac Used to beef up sampling for poorly sampled intervals. Interpolates intervals with less than filter.frac coverage.
+#' @param interp.method Method to use for interpolation "linear" or "spread" (nearest neighbor with optional gaps)
 #' @param interpolate use interpolation? T/F
+#'
 #' @return A list with a matrix of density, x.bin and y.bin
 #' 
-bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate = TRUE){
+bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate = TRUE,interp.method = "linear"){
   if(nrow(x)!=nrow(y)){
     stop("x and y must have the same number of rows")
   }
@@ -332,13 +364,26 @@ bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate =
     
     n.ens = max(c(ncol(x),ncol(y)))
     y.int = matrix(NA,ncol = n.ens,nrow= length(x.bin))
-    for(int in 1:n.ens){
-      y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin )$y
+    if(interp.method == "linear"){
+      for(int in 1:n.ens){
+        y.int[,int] = approx(x = x[,sample.int(ncol(x),size = 1)] , y = y[,sample.int(ncol(y),size = 1)],xout = x.bin )$y
+      }
+    }else if(interp.method == "spread"){
+      if(!requireNamespace("compositeR",quietly = TRUE)){
+        stop("This options requires the compositeR package (github.com/nickmckay/compositeR)")
+      }
+      y.int[,int] = compositeR::spreadPaleoData(age = x[,sample.int(ncol(x),size = 1)] ,
+                                                value = y[,sample.int(ncol(y),size = 1)],
+                                                newAge = x.bin, maxPct = 0.75 )
+      
+    }else{
+      stop(glue::glue("I don't recognize the interp.method {interp.method}. The options are 'linear' or 'spread'"))
     }
     
     x = x.bin
     y = y.int
   }
+  
   
   
   
@@ -1378,7 +1423,7 @@ plotPcaEns = function(ens.pc.out,
   plotlist=list()
   maplist=list()
   leglist <- list()
-
+  
   #   sorted =  apply(dat.mat[[wm]]$PC$ensemblePCs[,1,],MARGIN = c(2),sort)
   median.pcs = apply(ens.pc.out$PCs,MARGIN = c(1,2),median,na.rm=TRUE)
   loadingSDs = apply(ens.pc.out$loadings,MARGIN = c(1,2),sd,na.rm=TRUE)
@@ -1965,8 +2010,8 @@ plotChronEns = function(L,
   
   
   if(plot.traces){
-  #A few traces second
-  chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = alp.ens.line,color = color.ens.line,add.to.plot = chronPlot,n.ens.plot = n.ens.plot)
+    #A few traces second
+    chronPlot = plotTimeseriesEnsLines(X = ageEnsemble,Y = depth,alp = alp.ens.line,color = color.ens.line,add.to.plot = chronPlot,n.ens.plot = n.ens.plot)
   }
   
   #distributions last

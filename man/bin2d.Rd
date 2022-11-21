@@ -11,7 +11,8 @@ bin2d(
   x.bin = NA,
   y.bin = NA,
   filter.frac = NA,
-  interpolate = TRUE
+  interpolate = TRUE,
+  interp.method = "linear"
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ bin2d(
 \item{filter.frac}{Used to beef up sampling for poorly sampled intervals. Interpolates intervals with less than filter.frac coverage.}
 
 \item{interpolate}{use interpolation? T/F}
+
+\item{interp.method}{Method to use for interpolation "linear" or "spread" (nearest neighbor with optional gaps)}
 }
 \value{
 A list with a matrix of density, x.bin and y.bin

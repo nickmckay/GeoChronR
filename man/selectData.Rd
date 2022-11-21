@@ -60,6 +60,7 @@ Other LiPD manipulation:
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{mapPaleoEnsembleToPaleoData}()},
 \code{\link{pullTsVariable}()}
 }
 \concept{LiPD manipulation}

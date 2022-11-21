@@ -1,0 +1,93 @@
+---
+title: "timeAndDataUncertainties"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{timeAndDataUncertainties}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Visualizing uncertainties in time and proxy value
+
+Paleoclimate data are our best tools for understanding past climates, but they also are indirect observations of past climates, and have many, important uncertainties that are critical to consider. `geoChronR` is mostly focused on quantifying and visualizing the impacts of time uncertainties, but proxy uncertainties also have important impacts on our understanding. 
+
+This example highlights how geoChronR can visualize uncertainties in both time and proxies, either separately, or their combined effects. 
+
+We'll need a few libraries to run through this example.
+
+```{r setup}
+library(lipdR)
+library(geoChronR)
+library(ggplot2)
+```
+
+
+Let's load in an example data set that includes both age and proxy ensembles, this SST reconstruction from core MD97_2151.
+
+```{r}
+L <- readLipd("/Volumes/data/Dropbox/lipdverse/html/geoChronR-examples/MD97_2151.Yamamoto.2013.lpd")
+```
+We can take advantage of `lipdR`'s summary function to learn more about the dataset
+
+```{r}
+summary(L)
+```
+
+
+
+
+
+
+```{r}
+age <- selectData(L,"age")
+ageEnsemble <- selectData(L,"ageEnsemble")
+temperature <- selectData(L,"temperature")
+temperatureEnsemble <- selectData(L, "temperature",table.type = "ensemble")
+```
+
+
+```{r,warning=FALSE,message=FALSE,fig.width=10, fig.height=6,fig.retina=TRUE}
+plotTimeseriesEnsRibbons(X = age, Y = temperature) + 
+  coord_cartesian(xlim = c(12000,2000),ylim = c(24,33)) +
+  ggtitle("MD97_2151 Holocene SSTs, median time and proxy estimates")
+```
+
+```{r,warning=FALSE,message=FALSE,fig.width=10, fig.height=6,fig.retina=TRUE}
+plotTimeseriesEnsRibbons(X = ageEnsemble, Y = temperature) + 
+  coord_cartesian(xlim = c(12000,2000),ylim = c(24,33)) +
+  ggtitle("MD97_2151 Holocene SSTs, with time uncertainties")
+```
+
+```{r,warning=FALSE,message=FALSE,fig.width=10, fig.height=6,fig.retina=TRUE}
+plotTimeseriesEnsRibbons(X = age, Y = temperatureEnsemble) +
+  coord_cartesian(xlim = c(12000,2000),ylim = c(24,33)) +
+   ggtitle("MD97_2151 Holocene SSTs, with proxy uncertainties")
+
+```
+
+```{r,warning=FALSE,message=FALSE,fig.width=10, fig.height=6,fig.retina=TRUE}
+plotTimeseriesEnsRibbons(X = ageEnsemble, Y = temperatureEnsemble) +
+  coord_cartesian(xlim = c(12000,2000),ylim = c(24,33))  +
+  ggtitle("MD97_2151 Holocene SSTs, median time and proxy uncertainties")
+
+
+```
+
+
+```{r,warning=FALSE,message=FALSE,fig.width=10, fig.height=6,fig.retina=TRUE}
+plotTimeseriesEnsRibbons(X = ageEnsemble, 
+                         Y = temperatureEnsemble,
+                         x.bin = seq(0000,13000,by = 10)) + 
+  coord_cartesian(xlim = c(12000,2000),
+                  ylim = c(24,33)) +
+  ggtitle("MD97_2151 Holocene SSTs, median time and proxy uncertainties, estimated at 10 yr resolution")
+
+
+```
