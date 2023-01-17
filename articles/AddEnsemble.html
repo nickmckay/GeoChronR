@@ -151,18 +151,35 @@
 <div class="section level2">
 <h2 id="so-you-want-to-add-an-ensemble-table">So you want to add an ensemble table…<a class="anchor" aria-label="anchor" href="#so-you-want-to-add-an-ensemble-table"></a>
 </h2>
-<p>geoChronR is great at helping you create ensembles, but sometimes you may want to add ensemble that you’ve created elsewhere into a LiPD file, and then analyze it using geoChronR. This could be an age ensemble that you’ve created using a specialized or custom process, or paleo ensemble calculated with a novel approach. Either way, the <code><a href="../reference/createModel.html">createModel()</a></code> function is designed to simplify that process.</p>
-<p>In the LiPD framework, chron or paleo ensemble tables are always stored within models, so <code><a href="../reference/createModel.html">createModel()</a></code> will simplify adding an ensemble table to a new model object, which is typically the best approach.</p>
-<p>As always, check out the help documentation for details <code><a href="../reference/createModel.html">?createModel</a></code> of all the parameters and how they work.</p>
+<p>geoChronR is great at helping you create ensembles, but sometimes you
+may want to add ensemble that you’ve created elsewhere into a LiPD file,
+and then analyze it using geoChronR. This could be an age ensemble that
+you’ve created using a specialized or custom process, or paleo ensemble
+calculated with a novel approach. Either way, the
+<code><a href="../reference/createModel.html">createModel()</a></code> function is designed to simplify that
+process.</p>
+<p>In the LiPD framework, chron or paleo ensemble tables are always
+stored within models, so <code><a href="../reference/createModel.html">createModel()</a></code> will simplify adding
+an ensemble table to a new model object, which is typically the best
+approach.</p>
+<p>As always, check out the help documentation for details
+<code><a href="../reference/createModel.html">?createModel</a></code> of all the parameters and how they work.</p>
 <div class="section level3">
 <h3 id="an-example-with-lake-kurupa">An example with Lake Kurupa<a class="anchor" aria-label="anchor" href="#an-example-with-lake-kurupa"></a>
 </h3>
-<p>Let’s walk through a simple example, using a the Lake Kurupa dataset we explored in the <a href="regression.html">time-uncertain regression</a> vignette. This time, let’s imagine that we’ve already created an ensemble separately, and have it stored as a csv file, and would like to add it to the LiPD object.</p>
-<p>First let’s get the data we need. First, we can load in the lipd object:</p>
+<p>Let’s walk through a simple example, using a the Lake Kurupa dataset
+we explored in the <a href="regression.html">time-uncertain
+regression</a> vignette. This time, let’s imagine that we’ve already
+created an ensemble separately, and have it stored as a csv file, and
+would like to add it to the LiPD object.</p>
+<p>First let’s get the data we need. First, we can load in the lipd
+object:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
-<p>And now let’s open a csv file that has the depth and age ensemble data</p>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp0XtySG/Kurupa.Boldt.2015.lpd..."</span></span>
+<span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
+<p>And now let’s open a csv file that has the depth and age ensemble
+data</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/KurupaChronEnsemble.csv"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">85</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">1001</span></span></span>
@@ -190,13 +207,15 @@
 <span><span class="co">## <span style="color: #949494;">#   ens23 &lt;dbl&gt;, ens24 &lt;dbl&gt;, ens25 &lt;dbl&gt;, ens26 &lt;dbl&gt;, ens27 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ens28 &lt;dbl&gt;, ens29 &lt;dbl&gt;, ens30 &lt;dbl&gt;, ens31 &lt;dbl&gt;, ens32 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ens33 &lt;dbl&gt;, ens34 &lt;dbl&gt;, ens35 &lt;dbl&gt;, ens36 &lt;dbl&gt;, ens37 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens38 &lt;dbl&gt;, ens39 &lt;dbl&gt;, ens40 &lt;dbl&gt;, ens41 &lt;dbl&gt;, ens42 &lt;dbl&gt;, …</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ Use `colnames()` to see all variable names</span></span></span></code></pre>
-<p>So this ensemble table has a depth vector, which is the first column, and 1000 age ensemble members in columns 2 to 1001. Let’s put those in separate variables for clarity:</p>
+<span><span class="co">## <span style="color: #949494;">#   ens38 &lt;dbl&gt;, ens39 &lt;dbl&gt;, ens40 &lt;dbl&gt;, ens41 &lt;dbl&gt;, ens42 &lt;dbl&gt;, …</span></span></span></code></pre>
+<p>So this ensemble table has a depth vector, which is the first column,
+and 1000 age ensemble members in columns 2 to 1001. Let’s put those in
+separate variables for clarity:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depth</span> <span class="op">&lt;-</span> <span class="va">ens</span><span class="op">$</span><span class="va">`depth (mm)`</span></span>
 <span><span class="va">ageEns</span> <span class="op">&lt;-</span> <span class="va">ens</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="co">#here we use negative indexing to select all but the first column</span></span></code></pre></div>
-<p>Now we can use <code><a href="../reference/createModel.html">createModel()</a></code> to add in our ensemble table:</p>
+<p>Now we can use <code><a href="../reference/createModel.html">createModel()</a></code> to add in our ensemble
+table:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createModel.html">createModel</a></span><span class="op">(</span>L <span class="op">=</span>  <span class="va">K</span>,<span class="co">#our starting lipd object</span></span>
 <span>                    depth.or.age.vector <span class="op">=</span> <span class="va">depth</span>,<span class="co">#our depth vector</span></span>
@@ -209,21 +228,30 @@
 <span><span class="co">## Created a model in chronData-1, model-1, ensembleTable 1 with variables: depth, ageEnsemble</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Also created a summary table in chronData-1, model-1</span></span></code></pre>
-<p>And that’s it! Note that there are several other options in the function, that you may need to specify depending on your data and goals, but it’s often as simple as this.</p>
+<p>And that’s it! Note that there are several other options in the
+function, that you may need to specify depending on your data and goals,
+but it’s often as simple as this.</p>
 <p>Let’s take a look.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre>
-<pre><code><span><span class="co">## Scale for 'x' is already present. Adding another scale for 'x', which will</span></span>
-<span><span class="co">## replace the existing scale.</span></span></code></pre>
-<p><img src="AddEnsemble_files/figure-html/unnamed-chunk-7-1.png" width="768"> You can see that the ensemble data are now included, and the plot looks similar to the one in <a href="regression.html">regression vignette</a> where we created the ensemble with Bacon. The big difference is that there are now age distributions plotted, because of course, adding the ensemble in this way means that we don’t know anything about the radiocarbon data, calibrated or otherwise.</p>
+<pre><code><span><span class="co">## Scale for <span style="color: #00BB00;">x</span> is already present.</span></span>
+<span><span class="co">## Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre>
+<p><img src="AddEnsemble_files/figure-html/unnamed-chunk-7-1.png" width="768">
+You can see that the ensemble data are now included, and the plot looks
+similar to the one in <a href="regression.html">regression vignette</a>
+where we created the ensemble with Bacon. The big difference is that
+there are now age distributions plotted, because of course, adding the
+ensemble in this way means that we don’t know anything about the
+radiocarbon data, calibrated or otherwise.</p>
 </div>
 <div class="section level3">
 <h3 id="using-the-ensembles-in-geochronr">Using the ensembles in geoChronR<a class="anchor" aria-label="anchor" href="#using-the-ensembles-in-geochronr"></a>
 </h3>
-<p>You can now go on to use the ensemble in geoChronR any way you’d like. For example, we can map the age ensemble to the paleodata:</p>
+<p>You can now go on to use the ensemble in geoChronR any way you’d
+like. For example, we can map the age ensemble to the paleodata:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Kurupa.Boldt.2015"</span></span>
@@ -244,7 +272,9 @@
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">mae</span>,Y <span class="op">=</span> <span class="va">rabd</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AddEnsemble_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
-<p>That’s it! You could now save this LiPD file for future analysis with <code><a href="https://rdrr.io/pkg/lipdR/man/writeLipd.html" class="external-link">lipdR::writeLipd()</a></code>, or continue on with this workflow in geoChronR.</p>
+<p>That’s it! You could now save this LiPD file for future analysis with
+<code><a href="https://rdrr.io/pkg/lipdR/man/writeLipd.html" class="external-link">lipdR::writeLipd()</a></code>, or continue on with this workflow in
+geoChronR.</p>
 </div>
 </div>
   </div>
@@ -266,7 +296,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

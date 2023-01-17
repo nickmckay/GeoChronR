@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Intro to OxCal in geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/oxCal.Rmd" class="external-link"><code>vignettes/oxCal.Rmd</code></a></small>
       <div class="hidden name"><code>oxCal.Rmd</code></div>
@@ -150,7 +150,11 @@
 <div class="section level3">
 <h3 id="setting-up-oxcal">Setting up oxCal<a class="anchor" aria-label="anchor" href="#setting-up-oxcal"></a>
 </h3>
-<p>The <code>oxcAAR</code> package provides efficient access from R to the oxCal executables, which will need to be set up on your computer before you can use it. Once it’s installed you won’t need to repeat this step, just point to where it’s installed. If it’s already installed, it will tell you.</p>
+<p>The <code>oxcAAR</code> package provides efficient access from R to
+the oxCal executables, which will need to be set up on your computer
+before you can use it. Once it’s installed you won’t need to repeat this
+step, just point to where it’s installed. If it’s already installed, it
+will tell you.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/oxcAAR/man/quickSetupOxcal.html" class="external-link">quickSetupOxcal</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"~/OxCal"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Oxcal doesn't seem to be installed. Downloading it now:</span></span>
@@ -160,13 +164,43 @@
 <p>OK, let’s get a LiPD file from the LinkedEarth Wiki:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&amp;lipdid=BJ8-03-70GGC.Linsley.2010"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></span>
-<span><span class="co">#&gt; [1] "Error: update_lipd_v1_3: Error in update_lipd_v1_3_keys(d): this shouldn't be a list\n"</span></span></code></pre></div>
-<p>Now we can run it through oxcal. First, we specify our oxcal path, then use the <code>runOxcal</code> function. Like the other <code>run{AgeModel}</code> functions in geoChronR, you can leave the parameters empty and specify the choicecs interactively, or you can specify everything for replicability. For choosing the variable names, if you did it interactively and would like to recall those choices, try the <code>getLastVarString</code> function.</p>
-<p>Here, in addition to the variable choices, there are a few key parameters to note. First, we specify a “static” reservoir age and uncertainty. You can use this if you want to apply the same deltaR (and uncertainty) to all the ages. Alternatively, these can be columns in the chron measurement tables.</p>
-<p>Also, note that we’ve specified the surface age and uncertainty, as that was not included in the measurent table.</p>
-<p>Finally, there are two more key parameters, the <code>depth.interval</code> and the <code>events.per.unit.length</code>. These have a substantial impact the output. The <code>depth.interval</code> controls the spacing at which to calculate the age model uncertainty distributions, and the <code>events.per.unit.length</code> is the key parameter for the poisson distribution. As the number events increases, the modeled sequence will become more monitonic (linear) between ages. If you’re having trouble getting OxCal to produce a valid model for your sequence, tinker with these two parameters. Fewer <code>events.per.unit.length</code> and a larger <code>depth.interval</code> will increase the flexibility of the model and likelihood of convergence.</p>
-<p>Optionally, you can set <code>events.per.unit.length.uncertainty</code> to a positive number to indicate a prior uncertainty estimate (in orders of magnitude) on <code>events.per.unit.length</code>. This will tell OxCal to treat <code>events.per.unit.length</code> as a variable and optimize it to fit the data. This often returns better results, especially in the absence of an informed prior on <code>events.per.unit.length</code>, but <strong>greatly</strong> increases the run time (expect a run to take multiple hours).</p>
+<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpj5XUsM/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
+<span><span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></span></code></pre></div>
+<p>Now we can run it through oxcal. First, we specify our oxcal path,
+then use the <code>runOxcal</code> function. Like the other
+<code>run{AgeModel}</code> functions in geoChronR, you can leave the
+parameters empty and specify the choicecs interactively, or you can
+specify everything for replicability. For choosing the variable names,
+if you did it interactively and would like to recall those choices, try
+the <code>getLastVarString</code> function.</p>
+<p>Here, in addition to the variable choices, there are a few key
+parameters to note. First, we specify a “static” reservoir age and
+uncertainty. You can use this if you want to apply the same deltaR (and
+uncertainty) to all the ages. Alternatively, these can be columns in the
+chron measurement tables.</p>
+<p>Also, note that we’ve specified the surface age and uncertainty, as
+that was not included in the measurent table.</p>
+<p>Finally, there are two more key parameters, the
+<code>depth.interval</code> and the <code>events.per.unit.length</code>.
+These have a substantial impact the output. The
+<code>depth.interval</code> controls the spacing at which to calculate
+the age model uncertainty distributions, and the
+<code>events.per.unit.length</code> is the key parameter for the poisson
+distribution. As the number events increases, the modeled sequence will
+become more monitonic (linear) between ages. If you’re having trouble
+getting OxCal to produce a valid model for your sequence, tinker with
+these two parameters. Fewer <code>events.per.unit.length</code> and a
+larger <code>depth.interval</code> will increase the flexibility of the
+model and likelihood of convergence.</p>
+<p>Optionally, you can set
+<code>events.per.unit.length.uncertainty</code> to a positive number to
+indicate a prior uncertainty estimate (in orders of magnitude) on
+<code>events.per.unit.length</code>. This will tell OxCal to treat
+<code>events.per.unit.length</code> as a variable and optimize it to fit
+the data. This often returns better results, especially in the absence
+of an informed prior on <code>events.per.unit.length</code>, but
+<strong>greatly</strong> increases the run time (expect a run to take
+multiple hours).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runOxcal.html">runOxcal</a></span><span class="op">(</span><span class="va">L</span>,</span>
 <span>              lab.id.var <span class="op">=</span> <span class="st">'id'</span>, </span>
@@ -210,15 +244,21 @@
 <span><span class="co"><span style="color: #00BB00; font-weight: bold;">#&gt; </span><span style="color: #00BB00;">lab.id.var = 'id', age.14c.var = 'age14c', age.14c.uncertainty.var = 'age14cuncertainty', age.var = 'calendarage', age.uncertainty.var = 'calendarageuncertainty', depth.var = 'depth', reservoir.age.14c.var = NULL, reservoir.age.14c.uncertainty.var = NULL, rejected.ages.var = NULL, </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #0000BB;">Oxcal is now running, depending on your settings and your computer, this may take a few minutes to several hours. The model is complete when a table of model diagnostics appears.</span></span></span>
 <span><span class="co"><span style="color: #0000BB;">#&gt; </span></span></span></code></pre></div>
-<p>Great. After OxCal finishes running successfully, it will return this table showing some diagnostics of the MCMC statistics for the dated levels. If the table is empty, that’s a sure sign that there was an error in your run.</p>
-<p>Now that the age model has been generated, you can plot your age model with <code>plotChronEns</code>, just like with the other methods.</p>
+<p>Great. After OxCal finishes running successfully, it will return this
+table showing some diagnostics of the MCMC statistics for the dated
+levels. If the table is empty, that’s a sure sign that there was an
+error in your run.</p>
+<p>Now that the age model has been generated, you can plot your age
+model with <code>plotChronEns</code>, just like with the other
+methods.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Found it! Moving on..."</span></span>
 <span><span class="co">#&gt; [1] "Found it! Moving on..."</span></span>
 <span><span class="co">#&gt; [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre></div>
 <p><img src="oxCal_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
-<p>To map the the age ensembles onto the proxy data, use <code>mapAgeEnsembleToPaleoData</code>:</p>
+<p>To map the the age ensembles onto the proxy data, use
+<code>mapAgeEnsembleToPaleoData</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">L</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "BJ8-03-70GGC.Linsley.2010"</span></span>
@@ -237,10 +277,11 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">ageEns</span>, Y <span class="op">=</span> <span class="va">SST</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">ageEns</span>, Y <span class="op">=</span> <span class="va">SST</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Scale for 'x' is already present. Adding another scale for 'x', which will</span></span>
-<span><span class="co">#&gt; replace the existing scale.</span></span></code></pre></div>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">x</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="oxCal_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
-<p>It looks reasonable, so we can now proceed to use this ensemble like it’s any other.</p>
+<p>It looks reasonable, so we can now proceed to use this ensemble like
+it’s any other.</p>
 <p>Happy modeling!</p>
 </div>
 </div>
@@ -263,7 +304,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

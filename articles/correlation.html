@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/correlation.Rmd" class="external-link"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -143,8 +143,10 @@
 </h2>
 <ol style="list-style-type: decimal">
 <li><a href="Introduction.html">Introduction to geoChronR</a></li>
-<li><a href="correlation.html"><strong>Age-uncertain correlation</strong></a></li>
-<li><a href="regression.html">Age-uncertain regression and calibration-in-time</a></li>
+<li><a href="correlation.html"><strong>Age-uncertain
+correlation</strong></a></li>
+<li><a href="regression.html">Age-uncertain regression and
+calibration-in-time</a></li>
 <li><a href="spectral.html">Age-uncertain spectral analysis</a></li>
 <li><a href="pca.html">Age-uncertain PCA analysis</a></li>
 </ol>
@@ -152,7 +154,9 @@
 <div class="section level2">
 <h2 id="age-uncertain-correlation">Age-uncertain correlation<a class="anchor" aria-label="anchor" href="#age-uncertain-correlation"></a>
 </h2>
-<p>This vignette picks up where the <a href="Introduction.html">introduction</a> leaves off, we’ve generated age ensembles for two datasets, and now want to explore the relationship between these two datasets. First we’ll load the packages we need.</p>
+<p>This vignette picks up where the <a href="Introduction.html">introduction</a> leaves off, we’ve generated
+age ensembles for two datasets, and now want to explore the relationship
+between these two datasets. First we’ll load the packages we need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -163,7 +167,14 @@
 <div class="section level3">
 <h3 id="the-corens-function">The corEns() function<a class="anchor" aria-label="anchor" href="#the-corens-function"></a>
 </h3>
-<p>Let’s take another look at the the two timeseries over the period of overlap. To calculate age uncertian correlation let use geoChronR’s <code>corEns</code> function. Note that this approach is, in many ways, simplistic. Correlating the two age-uncertain datasets will characterize the relationship, but ignores ancillary evidence that may support a mechanistic relationship between two timeseries. Still, it illustrates how age uncertainty can affect apparent alignment between two datasets, which is the purpose of this example.</p>
+<p>Let’s take another look at the the two timeseries over the period of
+overlap. To calculate age uncertian correlation let use geoChronR’s
+<code>corEns</code> function. Note that this approach is, in many ways,
+simplistic. Correlating the two age-uncertain datasets will characterize
+the relationship, but ignores ancillary evidence that may support a
+mechanistic relationship between two timeseries. Still, it illustrates
+how age uncertainty can affect apparent alignment between two datasets,
+which is the purpose of this example.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span>time.1 <span class="op">=</span> <span class="va">gisp2.ens</span>,</span>
 <span>                 values.1 <span class="op">=</span> <span class="va">gisp2.d18O</span>,</span>
@@ -174,28 +185,47 @@
 <span>                 isopersistent  <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                 isospectral <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                 gaussianize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>Note that there are many parameters available for the <code>corEns</code> function (check out the help at <code><a href="../reference/corEns.html">?corEns</a></code>). Some of the key ones to pay attention to are:</p>
+<p>Note that there are many parameters available for the
+<code>corEns</code> function (check out the help at
+<code><a href="../reference/corEns.html">?corEns</a></code>). Some of the key ones to pay attention to are:</p>
 <ul>
-<li><p><strong>bin.step</strong> This variable sets the size of the bins that the data will be averaged into to align before correlation. Smaller bins will focus allow examination of shorter timescales, and increase the the sample size, but also increase the number of empty bins, and tend to increase autocorrelation. The right bin size varies depends on the distribution of resolutions in your datasets.</p></li>
-<li><p><strong>isopersistent</strong> and <strong>isospectral</strong> These need to be set to TRUE if you want to calculate null significance models for significance testing with these methods. On the other hand, turning it off will speed up calculation if you don’t need it.</p></li>
-<li><p><strong>gaussianize</strong> You’ll find the gaussianize option throughout geoChronR, and it’s typically the default option. <code>gaussianize</code> will transform the data into a Gaussian distribution, recognizing that many of the methods and/or their significance testing assume that the input data are normally distributed. This options ensures that this is the case.</p></li>
+<li><p><strong>bin.step</strong> This variable sets the size of the bins
+that the data will be averaged into to align before correlation. Smaller
+bins will focus allow examination of shorter timescales, and increase
+the the sample size, but also increase the number of empty bins, and
+tend to increase autocorrelation. The right bin size varies depends on
+the distribution of resolutions in your datasets.</p></li>
+<li><p><strong>isopersistent</strong> and <strong>isospectral</strong>
+These need to be set to TRUE if you want to calculate null significance
+models for significance testing with these methods. On the other hand,
+turning it off will speed up calculation if you don’t need it.</p></li>
+<li><p><strong>gaussianize</strong> You’ll find the gaussianize option
+throughout geoChronR, and it’s typically the default option.
+<code>gaussianize</code> will transform the data into a Gaussian
+distribution, recognizing that many of the methods and/or their
+significance testing assume that the input data are normally
+distributed. This options ensures that this is the case.</p></li>
 </ul>
-<p><code>corEns</code> returns a list that has the key correlation and significance results for all the selected methods. If percentiles are provided to corEns, and they are by default, the function will output a data.frame that summarizes the output.</p>
+<p><code>corEns</code> returns a list that has the key correlation and
+significance results for all the selected methods. If percentiles are
+provided to corEns, and they are by default, the function will output a
+data.frame that summarizes the output.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corout</span><span class="op">$</span><span class="va">cor.stats</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">9</span>       0.099<span style="text-decoration: underline;">2</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.170        0.391 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.473        0.633 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.749        0.843 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.982        0.990</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">2</span>        0.107</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.181         0.393</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.467         0.620</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.753         0.842</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.981         0.988</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
 </h3>
-<p>This gives us a first order sense of the results, but let’s use the <code>plotCorEns</code> function to dig in deeper.</p>
+<p>This gives us a first order sense of the results, but let’s use the
+<code>plotCorEns</code> function to dig in deeper.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
@@ -206,11 +236,29 @@
 <div class="section level4">
 <h4 id="significance-testing-options">Significance testing options<a class="anchor" aria-label="anchor" href="#significance-testing-options"></a>
 </h4>
-<p>OK, here we see the distribution of correlation coefficients, and their significance. Note that we chose “significance.option = ‘raw’”, so in green we see the distribution of significant correlations as determined by a standard T-test, without any consideration of autocorrelation. In this case, we observe that 13.5% of the correlations are signficant. Of course we know this is a very simplistic approach, and that with many paleoclimate datasets we must consider the impact of temporal autocorrelation, which can readily cause spurious correlations. geoChronR addresses this point using three approaches, which are elaborated on in the <a href="https://doi.org/10.5194/gchron-2020-25" class="external-link">geoChronR manuscript</a>, and summarized here:</p>
+<p>OK, here we see the distribution of correlation coefficients, and
+their significance. Note that we chose “significance.option = ‘raw’”, so
+in green we see the distribution of significant correlations as
+determined by a standard T-test, without any consideration of
+autocorrelation. In this case, we observe that 13.5% of the correlations
+are signficant. Of course we know this is a very simplistic approach,
+and that with many paleoclimate datasets we must consider the impact of
+temporal autocorrelation, which can readily cause spurious correlations.
+geoChronR addresses this point using three approaches, which are
+elaborated on in the <a href="https://doi.org/10.5194/gchron-2020-25" class="external-link">geoChronR manuscript</a>,
+and summarized here:</p>
 <ol style="list-style-type: decimal">
-<li><p>The simplest approach (“eff-n”) is to adjust the test’s sample size to reflect the reduction in degrees of freedom due to autocorrelation.</p></li>
-<li><p>Alternatively, the “isopersistent” option will generate surrogates, or random synthetic timeseries, that emulate the persistence characteristics of the series, and use those to estiamte significance.</p></li>
-<li><p>The final option, “isospectral” also generates surrogates to estimate significance, but does so by scrambling the spectral phases of the two datasets, thus preserving their power spectrum while destroying the correlated signal.</p></li>
+<li><p>The simplest approach (“eff-n”) is to adjust the test’s sample
+size to reflect the reduction in degrees of freedom due to
+autocorrelation.</p></li>
+<li><p>Alternatively, the “isopersistent” option will generate
+surrogates, or random synthetic timeseries, that emulate the persistence
+characteristics of the series, and use those to estiamte
+significance.</p></li>
+<li><p>The final option, “isospectral” also generates surrogates to
+estimate significance, but does so by scrambling the spectral phases of
+the two datasets, thus preserving their power spectrum while destroying
+the correlated signal.</p></li>
 </ol>
 <p>Let’s take a look at each of these three options,</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -220,7 +268,13 @@
 <span>           significance.option <span class="op">=</span> <span class="st">"eff-n"</span>,</span>
 <span>           use.fdr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Effective-N significance testing"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
-<p>Here we see a dramatic effect of accounting for serial autocorrelation in our significance testing. Using the “effective-N” method drops the percentage of significant correlations (at the 0.05 level) to 0. However when autocorrelation is large, this approach dramatically reduces the effective degrees of freedom and has been shown to be overly conservative in many cases. So let’s take a look at the surrogate-based approaches.</p>
+<p>Here we see a dramatic effect of accounting for serial
+autocorrelation in our significance testing. Using the “effective-N”
+method drops the percentage of significant correlations (at the 0.05
+level) to 0. However when autocorrelation is large, this approach
+dramatically reduces the effective degrees of freedom and has been shown
+to be overly conservative in many cases. So let’s take a look at the
+surrogate-based approaches.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
@@ -228,8 +282,26 @@
 <span>           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,</span>
 <span>           use.fdr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Isopersistent significance testing"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<p>Using the “isopersistent” approach, where we simulate thousands of synthetic correlations with the same autocorrelation characteristics as the real data, and see how frequently we observe r-values at the observed levels, gives a much less conservative result. In this case the fraction of significant correlations is only slightly smaller than when not accounting for autocorrelation at all.</p>
-<p>This is a good point to note that we have another statistical problem on our hands. In addition to the impact of autocorrelation on this analysis, repeating the test over multiple ensemble members raises the issue of test multiplicity <span class="citation">[@Ventura2004]</span>, or the “look elsewhere effect”. At a 5% significance level, one would expect a 1000 member ensemble to contain 50 spurious “discoveries” – instances of the null hypothesis, here “no correlation” being rejected. To overcome this problem, we control for this false discovery rate (FDR) using the simple approach of <span class="citation">@BenjaminiHochberg95</span>, coded in R by <span class="citation">@Ventura2004</span>. FDR takes this effect into account to minimize the risk of identifying such spurious correlations merely on account of repeated testing. In effect, it filters the set of “significant” results identified by each hypothesis test (effective-N, isopersistent, or isospectral). Let’s plot this again, but turn the <code>use.fdr</code> option to <code>TRUE</code>.</p>
+<p>Using the “isopersistent” approach, where we simulate thousands of
+synthetic correlations with the same autocorrelation characteristics as
+the real data, and see how frequently we observe r-values at the
+observed levels, gives a much less conservative result. In this case the
+fraction of significant correlations is only slightly smaller than when
+not accounting for autocorrelation at all.</p>
+<p>This is a good point to note that we have another statistical problem
+on our hands. In addition to the impact of autocorrelation on this
+analysis, repeating the test over multiple ensemble members raises the
+issue of test multiplicity <span class="citation">[@Ventura2004]</span>,
+or the “look elsewhere effect”. At a 5% significance level, one would
+expect a 1000 member ensemble to contain 50 spurious “discoveries” –
+instances of the null hypothesis, here “no correlation” being rejected.
+To overcome this problem, we control for this false discovery rate (FDR)
+using the simple approach of <span class="citation">@BenjaminiHochberg95</span>, coded in R by <span class="citation">@Ventura2004</span>. FDR takes this effect into account
+to minimize the risk of identifying such spurious correlations merely on
+account of repeated testing. In effect, it filters the set of
+“significant” results identified by each hypothesis test (effective-N,
+isopersistent, or isospectral). Let’s plot this again, but turn the
+<code>use.fdr</code> option to <code>TRUE</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
@@ -237,8 +309,16 @@
 <span>           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,</span>
 <span>           use.fdr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Isopersistent significance testing, with False Discovery Rate effects"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
-<p>Now we see how accounting for FDR can further reduce our significance levels. In this case, all but a small fraction of the significant correlations are expected due to test multiplicity - the randomness that we’re sampling by repeating the correlation across 1000 ensemble members. After acccounting for this, only 0.1% of the ensemble members are significant.</p>
-<p>Note that accounting for False Discovery Rate is a separate process than deriving p-values, and can be applied to any of the significance.options in geoChronR. For our final example we’ll take a look at isospectral significance testing and account for FDR.</p>
+<p>Now we see how accounting for FDR can further reduce our significance
+levels. In this case, all but a small fraction of the significant
+correlations are expected due to test multiplicity - the randomness that
+we’re sampling by repeating the correlation across 1000 ensemble
+members. After acccounting for this, only 0% of the ensemble members are
+significant.</p>
+<p>Note that accounting for False Discovery Rate is a separate process
+than deriving p-values, and can be applied to any of the
+significance.options in geoChronR. For our final example we’ll take a
+look at isospectral significance testing and account for FDR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
@@ -246,13 +326,37 @@
 <span>           significance.option <span class="op">=</span> <span class="st">"isospectral"</span>,</span>
 <span>           use.fdr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Isospectral significance testing"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
-<p>In the isospectral test, only a few of the ensembles members are significant, none of which remain upon adjusting for FDR. This method makes the fewest assumptions as to the structure of the series, and its computational cost is moderate, and so it is the default in geoChronR. We also recommend including FDR adjustment to avoid test-multiplicitly corrections.</p>
+<p>In the isospectral test, only a few of the ensembles members are
+significant, none of which remain upon adjusting for FDR. This method
+makes the fewest assumptions as to the structure of the series, and its
+computational cost is moderate, and so it is the default in geoChronR.
+We also recommend including FDR adjustment to avoid test-multiplicitly
+corrections.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="judging-the-overall-significance-of-an-age-uncertain-correlation">Judging the overall significance of an age-uncertain correlation<a class="anchor" aria-label="anchor" href="#judging-the-overall-significance-of-an-age-uncertain-correlation"></a>
+<h3 id="judging-the-overall-significance-of-an-age-uncertain-correlation">Judging the overall significance of an age-uncertain
+correlation<a class="anchor" aria-label="anchor" href="#judging-the-overall-significance-of-an-age-uncertain-correlation"></a>
 </h3>
-<p>So, with all of the methods, only a small subset of the correlations are significant, so it’s probably fair to say to that this is not a significant correlation after accounting for age uncertainty. But this begs the question, what fraction of the correlation ensemble needs to be significant to consider an age-uncertain relation significant? There is no hard and fast theoretical justification for what fraction of ensemble correlation results should be expected to pass such a significance test, and so evaluating the significance of age uncertain correlation remains somewhat subjective. Indeed, two truly correlated timeseries, when afflicted with age uncertainty, will commonly return some fraction of insignificant results when random ensemble members are correlated against each other. The frequency of these “false negatives” depends on the structure of the age uncertainties and the timeseries, and will vary to some extent by random chance. One way to get a sense of the vulnerability of a timeseries to false negatives is to perform an age-uncertain correlation of a dataset with itself. It is appropriate to consider the results of this analysis as a best-case scenario, and to consider the correlation results in this light. For illustration, we perform this calculation with the Hulu Cave <span class="math inline">\(\delta^{18}\)</span>O record</p>
+<p>So, with all of the methods, only a small subset of the correlations
+are significant, so it’s probably fair to say to that this is not a
+significant correlation after accounting for age uncertainty. But this
+begs the question, what fraction of the correlation ensemble needs to be
+significant to consider an age-uncertain relation significant? There is
+no hard and fast theoretical justification for what fraction of ensemble
+correlation results should be expected to pass such a significance test,
+and so evaluating the significance of age uncertain correlation remains
+somewhat subjective. Indeed, two truly correlated timeseries, when
+afflicted with age uncertainty, will commonly return some fraction of
+insignificant results when random ensemble members are correlated
+against each other. The frequency of these “false negatives” depends on
+the structure of the age uncertainties and the timeseries, and will vary
+to some extent by random chance. One way to get a sense of the
+vulnerability of a timeseries to false negatives is to perform an
+age-uncertain correlation of a dataset with itself. It is appropriate to
+consider the results of this analysis as a best-case scenario, and to
+consider the correlation results in this light. For illustration, we
+perform this calculation with the Hulu Cave <span class="math inline">\(\delta^{18}\)</span>O record</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coroutHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,<span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,bin.step <span class="op">=</span> <span class="fl">200</span>,max.ens <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">corPlotHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">coroutHulu</span>,</span>
@@ -264,13 +368,30 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">corPlotHulu</span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
-<p>The impact of age uncertainty on the correlation of this record is apparent; even when correlated against itself, only 3.1% of the ensembles have r-values greater than 0.9, and the median correlation is 0.8. However, all of the correlations remain significant, even after accounting for autocorrelation, indicating that age uncertainty and the structure of the timeseries does not preclude the possibility of significant correlations.</p>
+<p>The impact of age uncertainty on the correlation of this record is
+apparent; even when correlated against itself, only 3.1% of the
+ensembles have r-values greater than 0.9, and the median correlation is
+0.8. However, all of the correlations remain significant, even after
+accounting for autocorrelation, indicating that age uncertainty and the
+structure of the timeseries does not preclude the possibility of
+significant correlations.</p>
 </div>
 <div class="section level3">
 <h3 id="conclusions">Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"></a>
 </h3>
-<p>So, to wrap up, generally, age uncertainties obscure relationships between records, while in rare cases creating the appearance of spurious correlations. It is appropriate to think of the ensemble correlation results produced by geoChronR as a first-order estimate of the age-uncertain correlation characteristics between timeseries, rather than a binary answer to the question “Are these two datasets significantly correlated?”. However, as a rule of thumb, if more than half of the ensemble correlation results are significant, it is reasonable to characterize that correlation as robust to age uncertainty.</p>
-<p>Ready to move on to regression? Learn about ensemble regression and calibration in time in <a href="regression.html">the next vignette</a> on a whole new use case.</p>
+<p>So, to wrap up, generally, age uncertainties obscure relationships
+between records, while in rare cases creating the appearance of spurious
+correlations. It is appropriate to think of the ensemble correlation
+results produced by geoChronR as a first-order estimate of the
+age-uncertain correlation characteristics between timeseries, rather
+than a binary answer to the question “Are these two datasets
+significantly correlated?”. However, as a rule of thumb, if more than
+half of the ensemble correlation results are significant, it is
+reasonable to characterize that correlation as robust to age
+uncertainty.</p>
+<p>Ready to move on to regression? Learn about ensemble regression and
+calibration in time in <a href="regression.html">the next vignette</a>
+on a whole new use case.</p>
 </div>
 </div>
   </div>
@@ -292,7 +413,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

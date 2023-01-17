@@ -126,10 +126,11 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Tidy filtering, mapping and plotting in iso2k</h1>
+      <h1 data-toc-skip>Tidy filtering, mapping and plotting in
+iso2k</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/tidyIso2k.Rmd" class="external-link"><code>vignettes/tidyIso2k.Rmd</code></a></small>
       <div class="hidden name"><code>tidyIso2k.Rmd</code></div>
@@ -147,20 +148,31 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
-<p>This vignette highlights how to filter, plot and map a library of LiPD data, but this time using the tidyverse framework. <a href="TsFilteringAndMapping.html">As before</a> first let’s load version 1.0.0 of the iso2k database. Check out the details of the iso2k dataset <a href="https://essd.copernicus.org/articles/12/2261/2020/" class="external-link">Earth System Science Data</a>.</p>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
+<p>This vignette highlights how to filter, plot and map a library of
+LiPD data, but this time using the tidyverse framework. <a href="TsFilteringAndMapping.html">As before</a> first let’s load version
+1.0.0 of the iso2k database. Check out the details of the iso2k dataset
+<a href="https://essd.copernicus.org/articles/12/2261/2020/" class="external-link">Earth
+System Science Data</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iso</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/iso2k/1_0_0/iso2k1_0_0.zip"</span><span class="op">)</span></span></code></pre></div>
-<p>That was easy - note that readLipd() can take individual LiPD files (ending in .lpd), or zip files full of LiPD files, directly from the web.</p>
-<p>Now that the data are loaded, we can quickly map a bunch of LiPD files using <code><a href="../reference/mapLipd.html">mapLipd()</a></code>.</p>
+<p>That was easy - note that readLipd() can take individual LiPD files
+(ending in .lpd), or zip files full of LiPD files, directly from the
+web.</p>
+<p>Now that the data are loaded, we can quickly map a bunch of LiPD
+files using <code><a href="../reference/mapLipd.html">mapLipd()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">iso</span>, global <span class="op">=</span> <span class="cn">TRUE</span>,size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"iso2k v1.0.0"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tidyIso2k_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
-<p>Now we’ve seen an overview of all the files we’ve loaded, but now we’d like to filter the data.</p>
-<p>First, we’ll extract a TS object, the primary way to work with multiple LiPD files. A TS is a list object that has an entry for each, column, and is readily queryable.</p>
+<p>Now we’ve seen an overview of all the files we’ve loaded, but now
+we’d like to filter the data.</p>
+<p>First, we’ll extract a TS object, the primary way to work with
+multiple LiPD files. A TS is a list object that has an entry for each,
+column, and is readily queryable.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/extractTs.html" class="external-link">extractTs</a></span><span class="op">(</span><span class="va">iso</span><span class="op">)</span></span></code></pre></div>
-<p>If you’re used to working in the <a href="http://tidyverse.org" class="external-link">tidyverse</a> paradigm, you can also convert the TS object into a “tidyTs”, which is a large, long, tidy, tibble.</p>
+<p>If you’re used to working in the <a href="http://tidyverse.org" class="external-link">tidyverse</a> paradigm, you can also convert
+the TS object into a “tidyTs”, which is a large, long, tidy, tibble.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tTS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs</a></span><span class="op">(</span><span class="va">TS</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></code></pre></div>
 <p>Now we’ll filter it based on a range of criteria.</p>
@@ -170,7 +182,9 @@
 <span>              <span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">year</span>,<span class="fl">1000</span>,<span class="fl">2000</span><span class="op">)</span>,</span>
 <span>              <span class="va">paleoData_variableName</span> <span class="op">==</span> <span class="st">"d18O"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">geo_latitude</span><span class="op">)</span></span></code></pre></div>
-<p>OK, now we’ve filtered down to just Arctic <span class="math inline">\(\delta^{18}O\)</span> data during the past Millennium. We can use <code><a href="../reference/mapTs.html">mapTs()</a></code> to map the data coverage represented in <code>iTS</code>.</p>
+<p>OK, now we’ve filtered down to just Arctic <span class="math inline">\(\delta^{18}O\)</span> data during the past
+Millennium. We can use <code><a href="../reference/mapTs.html">mapTs()</a></code> to map the data coverage
+represented in <code>iTS</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapTs.html">mapTs</a></span><span class="op">(</span><span class="va">iTS</span>,</span>
 <span>      projection <span class="op">=</span> <span class="st">"stereographic"</span>,<span class="co">#for polar projections</span></span>
@@ -183,7 +197,9 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tidyIso2k_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
-<p>You can change the mapping options by passing options to <code>basemap()</code> which creates the base map. Try <code>?basemap</code> for options.</p>
+<p>You can change the mapping options by passing options to
+<code>basemap()</code> which creates the base map. Try
+<code>?basemap</code> for options.</p>
 <div class="section level3">
 <h3 id="time-availability">Time availability<a class="anchor" aria-label="anchor" href="#time-availability"></a>
 </h3>
@@ -195,7 +211,11 @@
 <div class="section level3">
 <h3 id="plot-a-stack">Plot a stack<a class="anchor" aria-label="anchor" href="#plot-a-stack"></a>
 </h3>
-<p>Finally, because we’re working with a “tidy” TS (a tibble), we can plot all the data using <code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code>. See <a href="PlotTimeseriesStack.html">the vignette on plotTimeseriesStack()</a> for more details of how to use this function. Here we’ll plot all of these Arctic <span class="math inline">\(\delta^{18}O\)</span> datasets for the past millennium.</p>
+<p>Finally, because we’re working with a “tidy” TS (a tibble), we can
+plot all the data using <code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code>. See <a href="PlotTimeseriesStack.html">the vignette on
+plotTimeseriesStack()</a> for more details of how to use this function.
+Here we’ll plot all of these Arctic <span class="math inline">\(\delta^{18}O\)</span> datasets for the past
+millennium.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">iTS</span>,color.var <span class="op">=</span> <span class="st">"paleoData_inferredMaterialGroup"</span>,</span>
 <span>                    color.ramp <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">nColors</span><span class="op">)</span><span class="op">{</span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="va">nColors</span>,<span class="st">"Set1"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> </span></code></pre></div>
@@ -204,7 +224,8 @@
 <div class="section level3">
 <h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h3>
-<p>Of course, now that the data are tidy, there’s a lot more you can do with these data using tidyverse tools.</p>
+<p>Of course, now that the data are tidy, there’s a lot more you can do
+with these data using tidyverse tools.</p>
 </div>
 </div>
   </div>
@@ -226,7 +247,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -144,24 +144,30 @@
 <ol style="list-style-type: decimal">
 <li><a href="Introduction.html">Introduction to geoChronR</a></li>
 <li><a href="correlation.html">Age-uncertain correlation</a></li>
-<li><a href="regression.html">Age-uncertain regression and calibration-in-time</a></li>
+<li><a href="regression.html">Age-uncertain regression and
+calibration-in-time</a></li>
 <li><a href="spectral.html">Age-uncertain spectral analysis</a></li>
-<li><a href="pca.html"><strong>Age-uncertain PCA analysis</strong></a></li>
+<li><a href="pca.html"><strong>Age-uncertain PCA
+analysis</strong></a></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="age-uncertain-principal-component-analysis">Age-Uncertain Principal Component Analysis<a class="anchor" aria-label="anchor" href="#age-uncertain-principal-component-analysis"></a>
 </h2>
-<p>This vignette showcases the ability to perform principal component analysis (PCA, also known as empirical orthogonal function (EOF) analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426" class="external-link">Arctic 2k</a> compilation, which we load here:</p>
+<p>This vignette showcases the ability to perform principal component
+analysis (PCA, also known as empirical orthogonal function (EOF)
+analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426" class="external-link">Arctic 2k</a>
+compilation, which we load here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">FD</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
+<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp3UAHjW/lpdDownload..."</span></span>
+<span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Austfonna.Isaksson.2005.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-CampCentury.Fisher.1969.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Crete.Vinther.2010.lpd"</span></span>
@@ -179,15 +185,20 @@
 <span><span class="co">## [1] "reading: Arc-NGTB16.Schwager.1998.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-NGTB18.Schwager.1998.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-NGTB21.Schwager.1998.lpd"</span></span>
-<span><span class="co">## [1] "reading: Arc-Renland.Vinther.2008.lpd"</span></span></code></pre>
+<span><span class="co">## [1] "reading: Arc-Renland.Vinther.2008.lpd"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## [1] "Successfully loaded 19 datasets, with 0 failure(s)."</span></span></code></pre>
 <div class="section level3">
 <h3 id="make-a-map">Make a map<a class="anchor" aria-label="anchor" href="#make-a-map"></a>
 </h3>
-<p>First, let’s take a quick look at where these records are located. geoChronR’s <code>mapLipd</code> function can create quick maps:</p>
+<p>First, let’s take a quick look at where these records are located.
+geoChronR’s <code>mapLipd</code> function can create quick maps:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">FD</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
-<p>More map projections are available too. A list is available here: <code>?mapproject</code></p>
+<p>More map projections are available too. A list is available here:
+<code>?mapproject</code></p>
 </div>
 <div class="section level3">
 <h3 id="prepare-the-data-for-pca">Prepare the data for PCA<a class="anchor" aria-label="anchor" href="#prepare-the-data-for-pca"></a>
@@ -195,7 +206,11 @@
 <div class="section level4">
 <h4 id="grab-the-age-ensembles-for-each-record-">Grab the age ensembles for each record.<a class="anchor" aria-label="anchor" href="#grab-the-age-ensembles-for-each-record-"></a>
 </h4>
-<p>Now we need to “map” (I know, a different kind of mapping) the age ensembles to paleo for all of these datasets. We’ll use purrr::map for this, but you could also do it with sapply(). In this case we’re going to specify that all of the age ensembles are named “ageEnsemble”, and that they don’t have a depth variable because they’re layer counted.</p>
+<p>Now we need to “map” (I know, a different kind of mapping) the age
+ensembles to paleo for all of these datasets. We’ll use purrr::map for
+this, but you could also do it with sapply(). In this case we’re going
+to specify that all of the age ensembles are named “ageEnsemble”, and
+that they don’t have a depth variable because they’re layer counted.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">FD2</span> <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">FD</span>,</span>
 <span>                 <span class="va">mapAgeEnsembleToPaleoData</span>,</span>
@@ -204,17 +219,24 @@
 <span>                 paleo.age.var <span class="op">=</span> <span class="st">"year"</span>,</span>
 <span>                 chron.depth.var <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                 paleo.depth.var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p>Now extract all the “timeseries” into at “TS object” that will facilitate working with multiple records.</p>
+<p>Now extract all the “timeseries” into at “TS object” that will
+facilitate working with multiple records.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/extractTs.html" class="external-link">extractTs</a></span><span class="op">(</span><span class="va">FD2</span><span class="op">)</span></span></code></pre></div>
-<p>and filter the TS object to only include variables that have been interpreted as temperature. Here we’ll use <code><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">lipdR::filterTs</a></code> to filter the TS object.</p>
+<p>and filter the TS object to only include variables that have been
+interpreted as temperature. Here we’ll use <code><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">lipdR::filterTs</a></code>
+to filter the TS object.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TS.filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="va">TS</span>,<span class="st">"interpretation1_variable == T"</span><span class="op">)</span></span></code></pre></div>
 <p>OK, let’s make a quick plot stack to see what we’re dealing with.</p>
-<p>The <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">lipdR::tidyTs</a></code> function will convert a TS into a long, “tidy” data.frame, where each observation has a row in a data.frame. This can be verbose, but is also useful for data analysis in the tidyverse framework.</p>
+<p>The <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">lipdR::tidyTs</a></code> function will convert a TS into a
+long, “tidy” data.frame, where each observation has a row in a
+data.frame. This can be verbose, but is also useful for data analysis in
+the tidyverse framework.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tidyDf</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs</a></span><span class="op">(</span><span class="va">TS.filtered</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></code></pre></div>
-<p>A tidy data.frame is also the input for the <code>plotTimeseriesStack</code> function in geoChronR.</p>
+<p>A tidy data.frame is also the input for the
+<code>plotTimeseriesStack</code> function in geoChronR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyDf</span>, </span>
 <span>                    color.var <span class="op">=</span> <span class="st">"paleoData_variableName"</span>, </span>
@@ -224,7 +246,8 @@
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    lab.space <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
-<p>Now bin all the data in the TS from 1400 to 2000, an interval of pretty good data coverage, into 5 year bins.</p>
+<p>Now bin all the data in the TS from 1400 to 2000, an interval of
+pretty good data coverage, into 5 year bins.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">binned.TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">TS.filtered</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,time.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <p>We’re now ready to calculate the PCA!</p>
@@ -236,20 +259,33 @@
 <p>Calculate PCA on each ensemble member:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pcout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS</span><span class="op">)</span></span></code></pre></div>
-<p>That was easy (because of all the work we did beforehand). But before we look at the results let’s take a look at a scree plot to get a sense of how many significant components we should expect.</p>
+<p>That was easy (because of all the work we did beforehand). But before
+we look at the results let’s take a look at a scree plot to get a sense
+of how many significant components we should expect.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
-<p>It looks like the first two components, shown in black with gray uncertainty shading, stand out above the null model (in red), but the third and beyond look marginal to insignficant. Let’s focus on the first two components.</p>
+<p>It looks like the first two components, shown in black with gray
+uncertainty shading, stand out above the null model (in red), but the
+third and beyond look marginal to insignficant. Let’s focus on the first
+two components.</p>
 <div class="section level4">
 <h4 id="plot-the-ensemble-pca-results">Plot the ensemble PCA results<a class="anchor" aria-label="anchor" href="#plot-the-ensemble-pca-results"></a>
 </h4>
-<p>Now let’s visualize the results. The <code>plotPcaEns</code> function will create multiple diagnostic figures of the results, and stitch them together.</p>
+<p>Now let’s visualize the results. The <code>plotPcaEns</code> function
+will create multiple diagnostic figures of the results, and stitch them
+together.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plotPCA</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotPcaEns.html">plotPcaEns</a></span><span class="op">(</span><span class="va">pcout</span>,TS <span class="op">=</span> <span class="va">TS.filtered</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,bound.circ <span class="op">=</span> <span class="cn">T</span>,restrict.map.range <span class="op">=</span> <span class="cn">T</span>,f<span class="op">=</span><span class="fl">.1</span>,legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">.6</span><span class="op">)</span>,which.pcs <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,which.leg <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
-<p>Nice! A summary plot that combines the major features is produced, but all of the components, are included in the “plotPCA” list that was exported.</p>
-<p>For comparison with other datasets it can be useful to export quantile timeseries shown in the figures. <code><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons()</a></code> can optionally be used to export the data rather than plotting them. The following will export the PC1 timeseries:</p>
+<p>Nice! A summary plot that combines the major features is produced,
+but all of the components, are included in the “plotPCA” list that was
+exported.</p>
+<p>For comparison with other datasets it can be useful to export
+quantile timeseries shown in the figures.
+<code><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons()</a></code> can optionally be used to export
+the data rather than plotting them. The following will export the PC1
+timeseries:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">quantileData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">age</span>,Y <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">PCs</span><span class="op">[</span>,<span class="fl">1</span>,<span class="op">]</span>,export.quantiles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -257,28 +293,31 @@
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
 <span><span class="co">##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.055</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.053<span style="text-decoration: underline;">7</span>  0.101   0.165    0.273</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.026<span style="text-decoration: underline;">2</span>  0.095<span style="text-decoration: underline;">5</span>  0.134   0.175    0.247</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.048<span style="text-decoration: underline;">0</span>  0.127   0.167   0.207    0.280</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.105   0.172   0.205   0.237    0.297</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.074<span style="text-decoration: underline;">5</span>  0.144   0.170   0.199    0.257</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.022</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.055<span style="text-decoration: underline;">0</span>  0.086<span style="text-decoration: underline;">1</span>  0.127    0.204</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.040</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.016<span style="text-decoration: underline;">2</span>  0.041<span style="text-decoration: underline;">3</span>  0.067<span style="text-decoration: underline;">7</span>   0.122</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.097</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.009<span style="text-decoration: underline;">08</span> 0.047<span style="text-decoration: underline;">4</span>   0.121</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.075</span><span style="color: #BB0000; text-decoration: underline;">3</span> -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">42</span> 0.023<span style="text-decoration: underline;">2</span>  0.059<span style="text-decoration: underline;">4</span>   0.122</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.063</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.006<span style="text-decoration: underline;">93</span> 0.044<span style="text-decoration: underline;">6</span>  0.077<span style="text-decoration: underline;">2</span>   0.150</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 190 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.050</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.047<span style="text-decoration: underline;">0</span>  0.101   0.158    0.273</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.026<span style="text-decoration: underline;">3</span>  0.092<span style="text-decoration: underline;">8</span>  0.130   0.177    0.250</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.059<span style="text-decoration: underline;">5</span>  0.125   0.164   0.209    0.284</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.112   0.177   0.205   0.238    0.295</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.091<span style="text-decoration: underline;">3</span>  0.144   0.173   0.201    0.253</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.022</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.053<span style="text-decoration: underline;">0</span>  0.089<span style="text-decoration: underline;">8</span>  0.127    0.199</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.041</span><span style="color: #BB0000; text-decoration: underline;">5</span>  0.012<span style="text-decoration: underline;">5</span>  0.041<span style="text-decoration: underline;">9</span>  0.069<span style="text-decoration: underline;">5</span>   0.112</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.093</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.027</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.006<span style="text-decoration: underline;">51</span> 0.044<span style="text-decoration: underline;">5</span>   0.111</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.072</span><span style="color: #BB0000; text-decoration: underline;">2</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">16</span> 0.019<span style="text-decoration: underline;">8</span>  0.056<span style="text-decoration: underline;">9</span>   0.121</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.066</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.008<span style="text-decoration: underline;">15</span> 0.040<span style="text-decoration: underline;">2</span>  0.075<span style="text-decoration: underline;">0</span>   0.149</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 190 more rows</span></span></span></code></pre>
 </div>
 </div>
 <div class="section level3">
 <h3 id="ensemble-pca-take-two---using-a-covariance-matrix-">Ensemble PCA take two - using a covariance matrix.<a class="anchor" aria-label="anchor" href="#ensemble-pca-take-two---using-a-covariance-matrix-"></a>
 </h3>
-<p>Let’s repeat much of this analysis, but this time we’re only going to analyze the <span class="math inline">\(\delta^{18}O\)</span> data, keep them in their native values, and use a covariance matrix in the PCA analysis.</p>
+<p>Let’s repeat much of this analysis, but this time we’re only going to
+analyze the <span class="math inline">\(\delta^{18}O\)</span> data, keep
+them in their native values, and use a covariance matrix in the PCA
+analysis.</p>
 <p>First, it looks like let’s look at all the names in the TS</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"variableName"</span><span class="op">)</span></span></code></pre></div>
-<p>Oops - looks like we didn’t use quite the correct name. Next time use:</p>
+<p>Oops - looks like we didn’t use quite the correct name. Next time
+use:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"paleoData_variableName"</span><span class="op">)</span></span></code></pre></div>
 <p>and take a look at the unique variableNames in the TS</p>
@@ -288,20 +327,23 @@
 <span><span class="co">## [3] "ageEnsemble"             "ageMedian"              </span></span>
 <span><span class="co">## [5] "thickness"               "X_radiograph_dark_layer"</span></span>
 <span><span class="co">## [7] "massacum"</span></span></code></pre>
-<p>OK. Let’s filter the timeseries again, this time pulling all the <span class="math inline">\(\delta^{18}O\)</span> data.</p>
+<p>OK. Let’s filter the timeseries again, this time pulling all the
+<span class="math inline">\(\delta^{18}O\)</span> data.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d18OTS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="va">TS</span>,<span class="st">"paleoData_variableName == d18O"</span><span class="op">)</span></span></code></pre></div>
 <p>And we’ll tidy up the data for a plotStack</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tidyd18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></code></pre></div>
-<p>Before plotting, let’s do some tidyverse gymnastics to reorder the data by the length of the observations</p>
+<p>Before plotting, let’s do some tidyverse gymnastics to reorder the
+data by the length of the observations</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#arrange the tidy dataframe by record length</span></span>
 <span><span class="va">tidyd18O</span> <span class="op">&lt;-</span> <span class="va">tidyd18O</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co">#use the magrittr pipe for clarity</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">paleoData_TSid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co">#group the data by column</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>duration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co">#create a new column for the duration</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">duration</span><span class="op">)</span> <span class="co"># and arrange the data by duration</span></span></code></pre></div>
-<p>Again we’ll use <code>plotTimeseriesStack</code> to show all the data, now nicely arranged.</p>
+<p>Again we’ll use <code>plotTimeseriesStack</code> to show all the
+data, now nicely arranged.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyd18O</span>, </span>
 <span>                    color.var <span class="op">=</span> <span class="st">"paleoData_variableName"</span>, <span class="co"># Color the data by the variable name (all the same in the case)</span></span>
@@ -312,10 +354,16 @@
 <span>                    lab.space <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    lab.buff <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
-<p>Well that sure is nice and tidy. Again, it looks like binning from 1400-2000 will give us good data coverage.</p>
+<p>Well that sure is nice and tidy. Again, it looks like binning from
+1400-2000 will give us good data coverage.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">binned.TS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,na.col.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
-<p>And calculate the ensemble PCA, this time using a covariance matrix. By using a covariance, we’ll allow records that have larger variability in <span class="math inline">\(\delta^{18}O\)</span> to influence the PCA more, and those that have little variability will have little impact. This may or may not be a good idea, but it’s an important option to consider when possible.</p>
+<p>And calculate the ensemble PCA, this time using a covariance matrix.
+By using a covariance, we’ll allow records that have larger variability
+in <span class="math inline">\(\delta^{18}O\)</span> to influence the
+PCA more, and those that have little variability will have little
+impact. This may or may not be a good idea, but it’s an important option
+to consider when possible.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pcout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS2</span>,pca.type <span class="op">=</span> <span class="st">"cov"</span><span class="op">)</span></span></code></pre></div>
 <p>Once again, let’s take a look at the scree plot:</p>
@@ -335,7 +383,12 @@ plotPCA2 &lt;-  plotPcaEns(pcout2,
                         restrict.map.range = T,
                         f=.2)</code></pre>
 <p><img src="PCA_files/figure-html/unnamed-chunk-25-1.png" width="768"></p>
-<p>Using only the <span class="math inline">\(\delta^{18}O\)</span> data and a covariance matrix, we get somewhat different results. The first PC timeseries looks similar to the first one, but the spatial pattern is somewhat difference, with stronger loadings in the northeast. The second PC looks to be a new pattern, although the third resembles PC2 from the first analysis.</p>
+<p>Using only the <span class="math inline">\(\delta^{18}O\)</span> data
+and a covariance matrix, we get somewhat different results. The first PC
+timeseries looks similar to the first one, but the spatial pattern is
+somewhat difference, with stronger loadings in the northeast. The second
+PC looks to be a new pattern, although the third resembles PC2 from the
+first analysis.</p>
 </div>
 </div>
   </div>
@@ -357,7 +410,7 @@ plotPCA2 &lt;-  plotPcaEns(pcout2,
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

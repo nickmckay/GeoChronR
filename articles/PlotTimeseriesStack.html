@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Plot a stack of proxy timeseries</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/PlotTimeseriesStack.Rmd" class="external-link"><code>vignettes/PlotTimeseriesStack.Rmd</code></a></small>
       <div class="hidden name"><code>PlotTimeseriesStack.Rmd</code></div>
@@ -141,8 +141,14 @@
 <div class="section level2">
 <h2 id="plotting-a-stack-of-proxy-timeseries">Plotting a stack of proxy timeseries<a class="anchor" aria-label="anchor" href="#plotting-a-stack-of-proxy-timeseries"></a>
 </h2>
-<p>A stalwart of paleoclimate data visualization, for good or bad, is stacking a bunch of timeseries vertically to examine similarities and differences. Although comparing timeseries in this way can be problematic, it remains a space-efficient way to visualize many records. It is straightforward to create such a plot with LiPD data in geoChronR.</p>
-<p>Here we’ll load in a handful of data from PAGES2k v2.1.0 database, and explore some of these options.</p>
+<p>A stalwart of paleoclimate data visualization, for good or bad, is
+stacking a bunch of timeseries vertically to examine similarities and
+differences. Although comparing timeseries in this way can be
+problematic, it remains a space-efficient way to visualize many records.
+It is straightforward to create such a plot with LiPD data in
+geoChronR.</p>
+<p>Here we’ll load in a handful of data from PAGES2k v2.1.0 database,
+and explore some of these options.</p>
 <div class="section level3">
 <h3 id="load-the-requisite-libraries">Load the requisite libraries<a class="anchor" aria-label="anchor" href="#load-the-requisite-libraries"></a>
 </h3>
@@ -157,35 +163,58 @@
 <div class="section level3">
 <h3 id="load-in-your-data">Load in your data<a class="anchor" aria-label="anchor" href="#load-in-your-data"></a>
 </h3>
-<p>Load in some data. Below is an example of loading a zip file of LiPDs directly from the web. You can also load individual LiPD files from a url. You also might specify the path to a local file or folder here <code>D &lt;- readLipd("~/MyLipds/")</code>, or use it interactive mode <code>D &lt;- readLipd()</code>. If you’re selecting a directory in interactive mode, just click on any file in the directory that you want.</p>
+<p>Load in some data. Below is an example of loading a zip file of LiPDs
+directly from the web. You can also load individual LiPD files from a
+url. You also might specify the path to a local file or folder here
+<code>D &lt;- readLipd("~/MyLipds/")</code>, or use it interactive mode
+<code>D &lt;- readLipd()</code>. If you’re selecting a directory in
+interactive mode, just click on any file in the directory that you
+want.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/euro/Euro2k.zip"</span><span class="op">)</span> </span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="extract-those-data-into-a-timeseries-object">Extract those data into a timeseries object<a class="anchor" aria-label="anchor" href="#extract-those-data-into-a-timeseries-object"></a>
 </h3>
-<p>OK, now you have a large list of all your files. It’s almost always to work with the data as a “timeseries object”, so let’s extract one of those.</p>
+<p>OK, now you have a large list of all your files. It’s almost always
+to work with the data as a “timeseries object”, so let’s extract one of
+those.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/extractTs.html" class="external-link">extractTs</a></span><span class="op">(</span><span class="va">D</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="filtering-the-ts-object-for-the-data-you-want-">Filtering the TS object for the data you want.<a class="anchor" aria-label="anchor" href="#filtering-the-ts-object-for-the-data-you-want-"></a>
 </h3>
-<p>There will be two opportunities to filter your potentially very large collection of data down to what you want to analyze. Our next step, creating a “tidy” data frame, can be <em>very</em> slow with large TS options, so it’s best to filter what you can with the TS object first. See <code><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">?filterTs</a></code> for options on how to do that. Here, we’re going to grab all the records with the “paleoData_useInGlobalTemperatureAnalysis” flag, and filter geographically a bit.</p>
+<p>There will be two opportunities to filter your potentially very large
+collection of data down to what you want to analyze. Our next step,
+creating a “tidy” data frame, can be <em>very</em> slow with large TS
+options, so it’s best to filter what you can with the TS object first.
+See <code><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">?filterTs</a></code> for options on how to do that. Here, we’re
+going to grab all the records with the
+“paleoData_useInGlobalTemperatureAnalysis” flag, and filter
+geographically a bit.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"paleoData_useInGlobalTemperatureAnalysis == TRUE"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="st">"geo_longitude &gt; 0"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="st">"geo_latitude &gt; 20"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="now-create-a-tidy-data-frame-for-querying-filtering-and-plotting-">Now create a “tidy” data.frame for querying, filtering and plotting.<a class="anchor" aria-label="anchor" href="#now-create-a-tidy-data-frame-for-querying-filtering-and-plotting-"></a>
+<h3 id="now-create-a-tidy-data-frame-for-querying-filtering-and-plotting-">Now create a “tidy” data.frame for querying, filtering and
+plotting.<a class="anchor" aria-label="anchor" href="#now-create-a-tidy-data-frame-for-querying-filtering-and-plotting-"></a>
 </h3>
-<p>The <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs()</a></code> function will take a timeseries object and turn it into a long, “tidy”, data frame, where each row is an observation, and each column a variable. This will play very nicely with the <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a> and facilitate efficient data analysis and visualzation. <em>With large TS objects, this can result in data.frames with millions of rows, and can be quite slow to create</em>.</p>
+<p>The <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs()</a></code> function will take a timeseries object and
+turn it into a long, “tidy”, data frame, where each row is an
+observation, and each column a variable. This will play very nicely with
+the <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a> and facilitate
+efficient data analysis and visualzation. <em>With large TS objects,
+this can result in data.frames with millions of rows, and can be quite
+slow to create</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tidyData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs</a></span><span class="op">(</span><span class="va">mts</span>,age.var <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="now-we-can-filter-and-structure-our-tidy-data-frame-with-just-what-we-want-using-tidyverse-tools">Now we can filter and structure our tidy data frame with just what we want using tidyverse tools<a class="anchor" aria-label="anchor" href="#now-we-can-filter-and-structure-our-tidy-data-frame-with-just-what-we-want-using-tidyverse-tools"></a>
+<h3 id="now-we-can-filter-and-structure-our-tidy-data-frame-with-just-what-we-want-using-tidyverse-tools">Now we can filter and structure our tidy data frame with just what
+we want using tidyverse tools<a class="anchor" aria-label="anchor" href="#now-we-can-filter-and-structure-our-tidy-data-frame-with-just-what-we-want-using-tidyverse-tools"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#filter for plotting</span></span>
@@ -196,28 +225,38 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">interpretation1_variable</span> <span class="op">==</span> <span class="st">"T"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co">#only variables sensitive temperature</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">paleoData_TSid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co">#group by column</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">archiveType</span><span class="op">)</span> <span class="co">#and sort by archiveType</span></span></code></pre></div>
-<p>That last <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> command controls the order of the data frame, and will also control the order of the stack.</p>
+<p>That last <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code> command controls the order of the
+data frame, and will also control the order of the stack.</p>
 </div>
 <div class="section level3">
-<h3 id="ok-we-have-a-tidy-data-frame-that-includes-the-data-we-want-to-plot-">OK, we have a tidy data.frame that includes the data we want to plot.<a class="anchor" aria-label="anchor" href="#ok-we-have-a-tidy-data-frame-that-includes-the-data-we-want-to-plot-"></a>
+<h3 id="ok-we-have-a-tidy-data-frame-that-includes-the-data-we-want-to-plot-">OK, we have a tidy data.frame that includes the data we want to
+plot.<a class="anchor" aria-label="anchor" href="#ok-we-have-a-tidy-data-frame-that-includes-the-data-we-want-to-plot-"></a>
 </h3>
-<p>The key function for this is plotTimeseriesStack(), and has many options (<code><a href="../reference/plotTimeseriesStack.html">?plotTimeseriesStack</a></code>). We can start simply by giving it the data frame and using the default options:</p>
+<p>The key function for this is plotTimeseriesStack(), and has many
+options (<code><a href="../reference/plotTimeseriesStack.html">?plotTimeseriesStack</a></code>). We can start simply by
+giving it the data frame and using the default options:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#plot the stack and color by Archive type</span></span>
 <span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-8-1.png" width="768"> ## Adjusting the options</p>
-<p>OK! We have a plot! It looks decent, and by default it colors it by the TSid, but we might rather color it by archiveType. We do that simply:</p>
+<p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-8-1.png" width="768">
+## Adjusting the options</p>
+<p>OK! We have a plot! It looks decent, and by default it colors it by
+the TSid, but we might rather color it by archiveType. We do that
+simply:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,color.var <span class="op">=</span>  <span class="st">"archiveType"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
-<p>Better. But we need to make the axis labels smaller, and want to give it some more intuitive colors for each archive</p>
+<p>Better. But we need to make the axis labels smaller, and want to give
+it some more intuitive colors for each archive</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,</span>
 <span>                    color.var <span class="op">=</span>  <span class="st">"archiveType"</span>,</span>
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    color.ramp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"coral"</span>,<span class="st">"black"</span>,<span class="st">"blue"</span>,<span class="st">"magenta"</span>,<span class="st">"dark green"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
-<p>That looks pretty good! Perhaps we think this is too colorful for a journal submission, and we don’t want the shading along each line. And we also want to arrange the lines by latitude instead of archive.</p>
+<p>That looks pretty good! Perhaps we think this is too colorful for a
+journal submission, and we don’t want the shading along each line. And
+we also want to arrange the lines by latitude instead of archive.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">plot.df</span>,<span class="va">geo_latitude</span><span class="op">)</span> <span class="co">#order by latitude</span></span>
 <span>                   </span>
@@ -233,8 +272,12 @@
 <div class="section level3">
 <h3 id="additional-manipulation-of-the-plot-with-ggplot2">Additional manipulation of the plot with ggplot2<a class="anchor" aria-label="anchor" href="#additional-manipulation-of-the-plot-with-ggplot2"></a>
 </h3>
-<p>The output of plotTimeseriesStack is a standard ggplot object, which means you can customize and adjust axes and add additional layers. As an example, let’s add rectangular box to highlight an interval of interest, the Maunder Minimum.</p>
-<p>The x-axis for our plot is time, and the y-axis is the number of records, counting from the bottom.</p>
+<p>The output of plotTimeseriesStack is a standard ggplot object, which
+means you can customize and adjust axes and add additional layers. As an
+example, let’s add rectangular box to highlight an interval of interest,
+the Maunder Minimum.</p>
+<p>The x-axis for our plot is time, and the y-axis is the number of
+records, counting from the bottom.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myPlot</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span>geom <span class="op">=</span> <span class="st">"rect"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, fill <span class="op">=</span> <span class="st">"yellow"</span>, xmin <span class="op">=</span> <span class="fl">1645</span>, xmax <span class="op">=</span> <span class="fl">1715</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">plot.df</span><span class="op">$</span><span class="va">dataSetName</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span>,alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span>geom <span class="op">=</span> <span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">1675</span>, y <span class="op">=</span> <span class="fl">1</span>, label <span class="op">=</span> <span class="st">"Maunder Minimum"</span><span class="op">)</span></span></code></pre></div>
@@ -244,7 +287,9 @@
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
-<p>plotTimeseriesStack() is handy for quick visualization, but also can be tinkered to near-publication-quality. For now, this does not work with ageEnsembles, although we hope to include this in the future.</p>
+<p>plotTimeseriesStack() is handy for quick visualization, but also can
+be tinkered to near-publication-quality. For now, this does not work
+with ageEnsembles, although we hope to include this in the future.</p>
 </div>
   </div>
 
@@ -265,7 +310,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

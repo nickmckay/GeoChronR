@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Ensemble regression and calibration-in-time</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2022-08-02</h4>
+            <h4 data-toc-skip class="date">2023-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/regression.Rmd" class="external-link"><code>vignettes/regression.Rmd</code></a></small>
       <div class="hidden name"><code>regression.Rmd</code></div>
@@ -141,15 +141,22 @@
 <ol style="list-style-type: decimal">
 <li><a href="Introduction.html">Introduction to geoChronR</a></li>
 <li><a href="correlation.html">Age-uncertain correlation</a></li>
-<li><a href="regression.html"><strong>Age-uncertain regression and calibration-in-time</strong></a></li>
+<li><a href="regression.html"><strong>Age-uncertain regression and
+calibration-in-time</strong></a></li>
 <li><a href="spectral.html">Age-uncertain spectral analysis</a></li>
 <li><a href="pca.html">Age-uncertain PCA analysis</a></li>
 </ol>
 <div class="section level2">
 <h2 id="ensemble-regression-and-calibration-in-time">Ensemble Regression and Calibration-in-time<a class="anchor" aria-label="anchor" href="#ensemble-regression-and-calibration-in-time"></a>
 </h2>
-<p>Here, we replicate the analysis of Boldt et al. (2015), performing age-uncertain calibration-in-time on a chlorophyll reflectance record from northern Alaska, using geoChronR.</p>
-<p>The challenge of age-uncertain calibration-in-time is that age uncertainty affects both the calibration model (the relation between the proxy data and instrumental data) and the reconstruction (the timing of events in the reconstruction). geoChronR simplifies handling these issues.</p>
+<p>Here, we replicate the analysis of Boldt et al. (2015), performing
+age-uncertain calibration-in-time on a chlorophyll reflectance record
+from northern Alaska, using geoChronR.</p>
+<p>The challenge of age-uncertain calibration-in-time is that age
+uncertainty affects both the calibration model (the relation between the
+proxy data and instrumental data) and the reconstruction (the timing of
+events in the reconstruction). geoChronR simplifies handling these
+issues.</p>
 <p>Let’s start by loading the packages we’ll need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span> <span class="co">#to read and write LiPD files</span></span>
@@ -159,10 +166,14 @@
 <div class="section level3">
 <h3 id="load-the-lipd-file">Load the LiPD file<a class="anchor" aria-label="anchor" href="#load-the-lipd-file"></a>
 </h3>
-<p>OK, we’ll begin by loading in the Kurupa Lake record from Boldt et al., 2015. <code>The system.file(...)</code> part of this pulls the example file from the package directory. You’d like just enter the path as a string for typical use.</p>
+<p>OK, we’ll begin by loading in the Kurupa Lake record from Boldt et
+al., 2015. <code>The system.file(...)</code> part of this pulls the
+example file from the package directory. You’d like just enter the path
+as a string for typical use.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpMOgYKe/Kurupa.Boldt.2015.lpd..."</span></span>
+<span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="check-out-the-contents">Check out the contents<a class="anchor" aria-label="anchor" href="#check-out-the-contents"></a>
@@ -206,14 +217,14 @@
 <span>              close.connection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  Using a mix of cal BP and calibrated C-14 dates</span></span></code></pre>
 <pre><code><span><span class="co">##  Run Kurupa.Boldt.2015 with 86 sections? (Y/n)</span></span></code></pre>
-<pre><code><span><span class="co">##  Will run 17776000 iterations and store around 2019</span></span></code></pre>
+<pre><code><span><span class="co">##  Will run 16,500,000 iterations and store 4,000</span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <pre><code><span><span class="co">## Warning, this will take quite some time to calculate. I suggest increasing d.by to, e.g.10</span></span></code></pre>
 <pre><code><span><span class="co">## Calculating age ranges...</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Preparing ghost graph...</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Mean 95% confidence ranges 319 yr, min. 4 yr at 0 cm, max. 525 yr at 315 cm</span></span></code></pre>
+<span><span class="co">## Mean 95% confidence ranges 316 yr, min. 4 yr at 0 cm, max. 525 yr at 322 cm</span></span></code></pre>
 <pre><code><span><span class="co">## 100% of the dates overlap with the age-depth model (95% ranges)</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-2.png" width="768"></p>
@@ -226,14 +237,15 @@
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre>
-<pre><code><span><span class="co">## Scale for 'x' is already present. Adding another scale for 'x', which will</span></span>
-<span><span class="co">## replace the existing scale.</span></span></code></pre>
+<pre><code><span><span class="co">## Scale for <span style="color: #00BB00;">x</span> is already present.</span></span>
+<span><span class="co">## Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="map-the-age-ensemble-to-the-paleodata-table">Map the age ensemble to the paleodata table<a class="anchor" aria-label="anchor" href="#map-the-age-ensemble-to-the-paleodata-table"></a>
 </h3>
-<p>This is to get ensemble age estimates for each depth in the paleoData measurement table</p>
+<p>This is to get ensemble age estimates for each depth in the paleoData
+measurement table</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">K</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Kurupa.Boldt.2015"</span></span>
@@ -246,7 +258,8 @@
 <span><span class="co">## mapAgeEnsembleToPaleoData also created new variable ageMedian in paleo 1 measurement table 1</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate">Select the paleodata age ensemble, and RABD data that we’d like to regress and calibrate<a class="anchor" aria-label="anchor" href="#select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate"></a>
+<h3 id="select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate">Select the paleodata age ensemble, and RABD data that we’d like to
+regress and calibrate<a class="anchor" aria-label="anchor" href="#select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate"></a>
 </h3>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,<span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
@@ -256,7 +269,8 @@
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains">Now load in the instrumental data we want to correlate and regress agains<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains"></a>
+<h3 id="now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains">Now load in the instrumental data we want to correlate and regress
+agains<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-agains"></a>
 </h3>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/KurupaInstrumental.csv"</span><span class="op">)</span></span></code></pre></div>
@@ -293,7 +307,8 @@
 <span><span class="va">kinst</span><span class="op">$</span><span class="va">units</span> <span class="op">&lt;-</span> <span class="st">"deg (C)"</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data">Calculate an ensmeble correlation between the RABD and local summer temperature data<a class="anchor" aria-label="anchor" href="#calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data"></a>
+<h3 id="calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data">Calculate an ensmeble correlation between the RABD and local summer
+temperature data<a class="anchor" aria-label="anchor" href="#calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data"></a>
 </h3>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">kae</span>,<span class="va">rabd</span>,<span class="va">kyear</span>,<span class="va">kinst</span>,bin.step<span class="op">=</span><span class="fl">2</span>,percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>,<span class="fl">.5</span>,<span class="fl">.95</span> <span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -301,7 +316,8 @@
 <div class="section level3">
 <h3 id="and-plot-the-output">And plot the output<a class="anchor" aria-label="anchor" href="#and-plot-the-output"></a>
 </h3>
-<p>Note that here we use the “Effective-N” significance option as we mimic the Boldt et al. (2015) paper.</p>
+<p>Note that here we use the “Effective-N” significance option as we
+mimic the Boldt et al. (2015) paper.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,significance.option <span class="op">=</span> <span class="st">"eff-n"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
@@ -310,7 +326,10 @@
 <div class="section level3">
 <h3 id="perform-ensemble-regression">Perform ensemble regression<a class="anchor" aria-label="anchor" href="#perform-ensemble-regression"></a>
 </h3>
-<p>OK, you’ve convinced yourself that you want to use RABD to model temperature back through time. We can do this simply (perhaps naively) with regession, and lets do it with age uncertainty, both in the building of the model, and the reconstructing</p>
+<p>OK, you’ve convinced yourself that you want to use RABD to model
+temperature back through time. We can do this simply (perhaps naively)
+with regession, and lets do it with age uncertainty, both in the
+building of the model, and the reconstructing</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regressEns.html">regressEns</a></span><span class="op">(</span>time.x <span class="op">=</span> <span class="va">kae</span>,</span>
 <span>                    values.x <span class="op">=</span> <span class="va">rabd</span>,</span>
@@ -326,7 +345,8 @@
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regPlots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotRegressEns.html">plotRegressEns</a></span><span class="op">(</span><span class="va">regout</span>,alp <span class="op">=</span> <span class="fl">0.01</span>,font.size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
-<p>This result is consistent with that produced by Boldt et al., (2015), and was much simpler to produce with geoChronR.</p>
+<p>This result is consistent with that produced by Boldt et al., (2015),
+and was much simpler to produce with geoChronR.</p>
 <p>In the next vignette learn about <a href="spectral_analysis.html">spectral analysis in geoChronR</a>.</p>
 <p>```</p>
 </div>
@@ -350,7 +370,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
