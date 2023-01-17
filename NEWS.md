@@ -1,3 +1,5 @@
+# geoChronR 1.1.10
+
 # geoChronR 1.1.9
 
 * Fixed a bug in `writeBacon()` where `remove.rejected` didn't work properly if there was exactly one rejected date. Thanks @JanPetrik1 for reporting - see [issue 71](https://github.com/nickmckay/GeoChronR/issues/71).
