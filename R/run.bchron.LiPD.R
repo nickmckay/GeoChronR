@@ -101,7 +101,7 @@ runBchron =  function(L,
 
   
   # Prompt the user for the calibration curve
-  if(is.na(cal.curves)){
+  if(any(is.na(cal.curves))){
     if(!is.null(L$archiveType)){#make an educated guess
       if(grepl(L$archiveType,pattern = "marine")){
         cal.curves <- "marine20"

@@ -16,7 +16,7 @@ ar1 = function(x){
 #' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
-#' @importFrom spatstat.core CDF.density
+#' @importFrom spatstat.explore CDF.density
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
 #' @param n.sim number of simulations
@@ -77,7 +77,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   #  compute sampling distribution 
   if(length(rho) < 1000){
     rho_dens <- stats::density(rho,from=0,to=1,na.rm = TRUE) # estimate density
-    rho_cdf  <- spatstat.core::CDF.density(rho_dens,warn = FALSE) # turn into CDF
+    rho_cdf  <- spatstat.explore::CDF.density(rho_dens,warn = FALSE) # turn into CDF
   }else{
     rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
   }
@@ -440,7 +440,7 @@ corEns = function(time.1,
   if(nrow(time.2) != nrow(values.2)){stop("time.2 and values.2 must have the same number of rows (observations)")}
   
   if(all(is.na(bin.vec))){
-    if(is.na(bin.step)){
+    if(any(is.na(bin.step))){
       stop("Either a bin.vec or bin.step must be specified")
     }else{
       #look for common overlap

@@ -206,14 +206,14 @@ mapTs <- function(TS,
   dfp <- dfp[!is.na(dfp$lat) & !is.na(dfp$lon),]
   
   #which coords to use for basemap?
-  if(is.na(lon.range)){
+  if(any(is.na(lon.range))){
     blon <- dfp$lon
   }else{
     blon <- lon.range
     dfp <- dplyr::filter(dfp,between(lon,min(blon),max(blon)))
     
   }
-  if(is.na(lat.range)){
+  if(any(is.na(lat.range))){
     blat <- dfp$lat
   }else{
     blat <- lat.range
@@ -269,7 +269,7 @@ mapLipd <- function(D,
                     label.site = TRUE,
                     ...){
   if(any(names(D) == "paleoData")){#single lipd file
-    if(is.na(color)){
+    if(any(is.na(color))){
       color <- "red"
     }
     L <- D
@@ -282,7 +282,7 @@ mapLipd <- function(D,
     }
     
   }else{ #multiple lipd datasets
-    if(is.na(color)){
+    if(any(is.na(color))){
       af <- function(L){
         if("archiveType" %in% names(L)){
           return(as.character(L$archiveType))

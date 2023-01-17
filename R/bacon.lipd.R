@@ -156,7 +156,7 @@ runBacon <-  function(L,
   totalAge <- abs(diff(range(L$chronData[[chron.num]]$model[[model.num]]$inputTable[,2])))
   
   #estimate thickness parameter
-  if(is.na(bacon.thick)){
+  if(any(is.na(bacon.thick))){
     thick <- totalDepth/100
     K <- 100
   }else{
@@ -166,7 +166,7 @@ runBacon <-  function(L,
   
   #estimate acc mean
   #estimate thickness parameter
-  if(is.na(bacon.acc.mean)){
+  if(any(is.na(bacon.acc.mean))){
     bacon.acc.mean <- totalAge/totalDepth
   }
   
@@ -376,7 +376,7 @@ writeBacon <-  function(L,
   cdf$ta <- 3
   cdf$tb <- 4
   
-  if(is.na(cc)){
+  if(any(is.na(cc))){
     if(any(names(L)=="archiveType")){
       if(grepl("marine",tolower(L$archiveType))){#assume a marine cal curve if it's marine
         cdf$cc <- rep(2,len=nrows)
@@ -623,7 +623,7 @@ loadBaconOutput <- function(L,
   }
   
   #summary table!
-  if(is.na(K)){
+  if(any(is.na(K))){
     st=dir(pattern="*ages.txt")
   }else{
     st=dir(pattern=paste0("*_",K,"_ages.txt"))
@@ -659,7 +659,7 @@ loadBaconOutput <- function(L,
     summaryTable[[newNames[n]]]$values = summTable[,origNames[n]]
     summaryTable[[newNames[n]]]$units = units[n]
     summaryTable[[newNames[n]]]$description = description[n]
-    if(!is.na(uncertaintyLevel[n])){
+    if(!any(is.na(uncertaintyLevel[n]))){
       summaryTable[[newNames[n]]]$uncertaintyLevel = uncertaintyLevel[n]
     }
   }

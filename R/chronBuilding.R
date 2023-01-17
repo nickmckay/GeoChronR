@@ -216,7 +216,7 @@ createChronMeasInputDf <- function(L,
   for(tv in 1:length(v2go)){#loop through the variables
     cat(crayon::cyan(paste("Looking for",crayon::bold(v2gv[tv]),"\n")))
     ci <- getVariableIndex(MT,v2gu[tv],alt.names = v2ga[tv])
-    if(!is.na(ci)){
+    if(!any(is.na(ci))){
       if(MT[[ci]]$variableName %in% v2gUsed){
         cont <- askUser(paste0("The variable ",crayon::red(MT[[ci]]$variableName)," has already been used\n Do you want to continue?\n If not you can select a different variable, or specify in function input"))
         if(tolower(stringr::str_sub(cont,1,1)) == "n"){
@@ -225,14 +225,14 @@ createChronMeasInputDf <- function(L,
         }
       }
     }
-    if(!is.na(ci)){  
+    if(!any(is.na(ci))){  
       if(tv %in% age.vars){
         unitConversionFactor <- 1
         
         #check units
         u <- MT[[ci]]$units
         if(!is.null(u)){
-          if(!is.na(u)){
+          if(!any(is.na(u))){
             if(grepl(pattern = "k",x = u,ignore.case = T)){#it's probably ka
               unitConversionFactor <- 1000
               cat(crayon::red(paste("converting",v2gv[tv],"from ka to yr BP")),"\n")

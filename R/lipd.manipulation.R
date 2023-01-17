@@ -315,7 +315,7 @@ mapAgeEnsembleToPaleoData = function(L,
   
   #create median age model variable too?
   medianVar <- stringr::str_replace(ensAll$variableName,"Ensemble",replacement = "Median")
-  if(is.na(map.median)){
+  if(any(is.na(map.median))){
     #see if there's already an ageMedian variable
     allVars <- unlist(purrr::map(L$paleoData[[paleo.num]]$measurementTable[[paleo.meas.table.num]],purrr::pluck,"variableName"))
     
@@ -495,7 +495,7 @@ getVariableIndex = function(table,
   allNames = tolower(names(table))
   listI=which(!sapply(table,class)=="list")
   
-  if(!is.na(ignore)){
+  if(!any(is.na(ignore))){
     if(is.numeric(ignore)){
       ti=ignore
     }else{
@@ -512,7 +512,7 @@ getVariableIndex = function(table,
       cnames=allNames
     }
   }
-  if(is.na(var.name)){
+  if(any(is.na(var.name))){
     cat("Select a variable from this list", "\n")
     for(p in 1:length(cnames)){
       cat(paste(p,"-",cnames[p]), "\n")
@@ -572,7 +572,7 @@ getVariableIndex = function(table,
     }
   }
   
-  if(is.na(idi)){
+  if(any(is.na(idi))){
     index=NA
   }else if(idi==0){
     index=NA
@@ -631,7 +631,7 @@ alignTimeseriesBin = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.s
   if(nrow(time.2) != nrow(values.2)){stop("time.2 and values.2 must have the same number of rows (observations)")}
   
   if(all(is.na(bin.vec))){
-    if(is.na(bin.step)){
+    if(any(is.na(bin.step))){
       stop("Either a bin.vec or bin.step must be specified")
     }else{
       #look for common overlap
@@ -662,7 +662,7 @@ alignTimeseriesBin = function(time.1,values.1,time.2,values.2,bin.vec = NA,bin.s
   binY = as.matrix(binY[,good])
   
   
-  if(is.na(bin.step)){#if the bin.step isn't specified
+  if(any(is.na(bin.step))){#if the bin.step isn't specified
     bin.step=abs(mean(diff(bin.vec,na.rm=TRUE)))
   }
   

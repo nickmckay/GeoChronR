@@ -287,7 +287,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
         t = jitter(time[,tind[k]])   # add jitter
         v = vals[,vind[k]] 
         out = lsp(v,times=t,ofac=ofac,plot = F) # Lomb-Scargle Periodogram
-        if(!is.na(probs)) {
+        if(!any(is.na(probs))) {
           syn = ar1Surrogates(time = t, vals = v) #create matrix of synthetic timeseries
           synOut = lsp(syn,
                        times = t,
@@ -308,7 +308,7 @@ computeSpectraEns = function(time,values,max.ens=NA,method='mtm',probs=0.95,gaus
     # establish confidence limits
     pCL = matrix(NA, ncol = length(probs),nrow = noutrow)
     
-    if(!is.na(probs)) {
+    if(!any(is.na(probs))){
       for(i in 1:noutrow){
         pCL[i,] = quantile(pMatSyn[i,],probs = probs,na.rm  = T)
       } 

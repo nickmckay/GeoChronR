@@ -116,7 +116,7 @@ plotSpectraEns = function (spec.ens,
     specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),color=color.cl)
   }
   
-  #if(!is.na(spec.ens$powerSyn)){
+  #if(any(!is.na(spec.ens$powerSyn))){
   #  specPlot = plotTimeseriesEnsRibbons(X = spec.ens$freqs, Y = spec.ens$powerSyn,add.to.plot = specPlot,probs = c(.9,.95),color.high = "red",alp = .5)
   #}
   
@@ -277,7 +277,7 @@ quantile2d = function(x,
   sx = sort(c(x))
   
   #cut the range to exclude outliers
-  if(!is.na(limit.outliers.x)){
+  if(!any(is.na(limit.outliers.x))){
     cuts <- quantile(sx,probs = c(limit.outliers.x,1-limit.outliers.x))
     sx <- sx[sx > min(cuts) & sx < max(cuts)]
   }
@@ -395,7 +395,7 @@ bin2d = function(x,y,n.bins=100,x.bin=NA,y.bin=NA,filter.frac = NA,interpolate =
   freq2D[cbind(freq[,2], freq[,1])] <- freq[,3]
   
   #beef up sampling with interpolation? for plotting...
-  if(!is.na(filter.frac)){
+  if(!any(is.na(filter.frac))){
     sumX = apply(freq2D,MARGIN = 1,FUN = sum)
     sumY =  apply(freq2D,MARGIN = 2,FUN = sum)
     freq2D = freq2D[sumX > (length(x.bin)*filter.frac) ,sumY > (length(y.bin)*filter.frac)]
@@ -503,7 +503,7 @@ plotSummary = function(L,
   
   #plot paleoData
   
-  if(is.na(paleo.age.var)){
+  if(any(is.na(paleo.age.var))){
     print("What should we plot on the X-axis?")
     print("We'll look for age or year...")
     age=selectData(L,var.name = "age",alt.names = "year",meas.table.num = paleo.meas.num)
@@ -511,7 +511,7 @@ plotSummary = function(L,
     age=selectData(L,var.name = paleo.age.var, meas.table.num = paleo.meas.num)
   }
   
-  if(is.na(paleo.data.var)){
+  if(any(is.na(paleo.data.var))){
     print("What should we plot on the Y-axis?")
     variable=selectData(L,meas.table.num = paleo.meas.num)
   }else{
@@ -525,7 +525,7 @@ plotSummary = function(L,
   chronPlot <- plotChron(L,chron.number = chron.number, meas.num = chron.meas.num, depth.var = chron.depth.var, age.var = chron.age.var,age.14c.var = chron.age.14c.var, dot.size = dot.size,legend.position = legend.position, ...)
   
   if(!is.list(chronPlot)){
-    if(is.na(chronPlot)){
+    if(any(is.na(chronPlot))){
       chronPlot = grid::grobTree(grid::rectGrob(gp = grid::gpar(fill = 1,alpha=.1)),grid::textGrob("No chronData"))
     }
   }
@@ -1542,7 +1542,7 @@ plotModelDistributions = function(L,
   
   
   P = L[[paste0(mode,"Data")]]
-  if(is.na(paleo.or.chron.num)){
+  if(any(is.na(paleo.or.chron.num))){
     if(length(P)==1){
       paleo.or.chron.num=1
     }else{
@@ -1557,7 +1557,7 @@ plotModelDistributions = function(L,
     stop(paste0("There are no models in ",mode,"Data[[",as.character(paleo.or.chron.num),"]]. This makes it difficult to plot distributions from the model"))
   }
   
-  if(is.na(model.num)){
+  if(any(is.na(model.num))){
     if(length(MT)==1){
       #only one pmt
       meas.table.num=1
@@ -1577,7 +1577,7 @@ plotModelDistributions = function(L,
   }
   
   #if not specified, plot all distributions
-  if(is.na(dist.plot)){
+  if(any(is.na(dist.plot))){
     dist.plot = 1:length(dist)
   }
   
@@ -1589,7 +1589,7 @@ plotModelDistributions = function(L,
   
   #guess at the scaler...
   this.dist = dist[[dist.plot[[1]]]]
-  if(!is.na(truncate.dist)){
+  if(!any(is.na(truncate.dist))){
     tgood = which(this.dist$probabilityDensity$values > truncate.dist)
     this.dist$probabilityDensity$values = this.dist$probabilityDensity$values[tgood]
     this.dist$age$values = this.dist$age$values[tgood]
@@ -1889,7 +1889,7 @@ plotChronEns = function(L,
                         plot.traces = TRUE){
   
   C = L$chronData
-  if(is.na(chron.number)){
+  if(any(is.na(chron.number))){
     if(length(C)==1){
       chron.number = 1
     }else{
@@ -1898,7 +1898,7 @@ plotChronEns = function(L,
     }
   }
   
-  if(is.na(model.num)){
+  if(any(is.na(model.num))){
     if(length(C[[chron.number]]$model)==1){
       model.num = 1
     }else{
@@ -1914,7 +1914,7 @@ plotChronEns = function(L,
   
   if(add.paleo.age.depth){#then add a line that shows depth vs age in the paleoTable
     P <- L$paleoData
-    if(is.na(paleo.number)){
+    if(any(is.na(paleo.number))){
       if(length(P)==1){
         paleo.number = 1
       }else{
@@ -1923,7 +1923,7 @@ plotChronEns = function(L,
       }
     }
     
-    if(is.na(meas.num)){
+    if(any(is.na(meas.num))){
       if(length(P[[paleo.number]]$measurementTable)==1){
         meas.num = 1
       }else{

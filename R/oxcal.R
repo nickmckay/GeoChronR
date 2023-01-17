@@ -42,7 +42,7 @@ oxCalDateExpression <- function(...,
   
   
   if("outlier.prob" %in% names(adf)){
-    if(is.na(adf$outlier.prob)){#assign default
+    if(any(is.na(adf$outlier.prob))){#assign default
       adf$outlier.prob <- default.outlier.prob
     }
   }else{
@@ -50,20 +50,20 @@ oxCalDateExpression <- function(...,
   }
   
   #figure out date type
-  if(!is.na(adf$age14C)){#radiocarbon
+  if(!any(is.na(adf$age14C))){#radiocarbon
     #check labID
-    if(is.na(adf$labID)){#throw an error - this is required
+    if(any(is.na(adf$labID))){#throw an error - this is required
       stop("no lab ID, all dated layers must have a unique lab ID")
     }
-    if(is.na(adf$age14CUnc)){
+    if(any(is.na(adf$age14CUnc))){
       stop("seems like a 14C date, but no uncertainty included (age14CUnc)")
     }  
     
     #check for reservoir corrections
     drExp <- NA #initialize
     if(grepl(cal,pattern = "marine",ignore.case = TRUE)){#only do this for marine curves
-      if(!is.na(adf$reservoirAge)){
-        if(is.na(adf$reservoirAgeUnc)){
+      if(!any(is.na(adf$reservoirAge))){
+        if(any(is.na(adf$reservoirAgeUnc))){
           adf$reservoirAgeUnc <- adf$reservoirAge/2
           print("no reservoirAgeUnc found...\n using half of the reservoirAge value")
         }
@@ -77,18 +77,18 @@ oxCalDateExpression <- function(...,
     dateLine <- paste0('R_Date("',adf$labID,'",',adf$age14C,',',adf$age14CUnc,'){ z=',adf$depth,'; Outlier(',adf$outlier.prob,'); };\n')
     
     #build full expresion
-    if(!is.na(drExp)){
+    if(!any(is.na(drExp))){
       dateExp <- paste0(curveExp,drExp,dateLine)
     }else{
       dateExp <- paste0(curveExp,dateLine)
     }
     
-  }else if(!is.na(adf$age)){#normally distributed cal date
-    if(is.na(adf$ageUnc)){
+  }else if(!any(is.na(adf$age))){#normally distributed cal date
+    if(any(is.na(adf$ageUnc))){
       stop("seems like a calibrated date, but no uncertainty included (ageUnc)")
     } 
     
-    if(is.na(adf$labID)){#throw an error - this is required
+    if(any(is.na(adf$labID))){#throw an error - this is required
       stop("no lab ID, all dated layers must have a unique lab ID")
     }
     
@@ -144,7 +144,7 @@ createOxcalModel <- function(cdf,
   
   
   
-  if(is.na(depths.to.model)){
+  if(any(is.na(depths.to.model))){
     depths.to.model <- data.frame(depth = seq(min(cdf$depth),max(cdf$depth),by = depth.interval))
   }
   
@@ -169,7 +169,8 @@ createOxcalModel <- function(cdf,
                              cal.curve = cal.curve)
   
   
-  if(is.na(events.per.unit.length.uncertainty) | events.per.unit.length.uncertainty <= 0){#no uncertainty on K
+  if(any(is.na(events.per.unit.length.uncertainty)) | 
+     events.per.unit.length.uncertainty <= 0){#no uncertainty on K
     events.per.unit.lengthExp <- events.per.unit.length
   }else{
     events.per.unit.lengthExp <- paste0('"variable",',
@@ -247,7 +248,7 @@ loadOxcalOutput <- function(L,
   #setup storage in LiPD file
   
   #initialize chron.num
-  if(is.na(chron.num)){
+  if(any(is.na(chron.num))){
     if(length(L$chronData)==1){
       chron.num=1
     }else{
@@ -258,7 +259,7 @@ loadOxcalOutput <- function(L,
   
   
   #initialize model number
-  if(is.na(model.num)){
+  if(any(is.na(model.num))){
     if(is.null(L$chronData[[chron.num]]$model[[1]])){
       #no models, this is first
       model.num=1
@@ -269,7 +270,7 @@ loadOxcalOutput <- function(L,
     }
   }
   
-  if(is.na(make.new)){
+  if(any(is.na(make.new))){
     make.new = FALSE
   }
   
@@ -417,7 +418,7 @@ runOxcal <-  function(L,
   oxcAAR::quickSetupOxcal(path = oxcal.path)
   
   #initialize chron.num
-  if(is.na(chron.num)){
+  if(any(is.na(chron.num))){
     if(length(L$chronData)==1){
       chron.num=1
     }else{
@@ -427,7 +428,7 @@ runOxcal <-  function(L,
   
   
   #initialize model number
-  if(is.na(model.num)){
+  if(any(is.na(model.num))){
     if(is.null(L$chronData[[chron.num]]$model[[1]])){
       #no models, this is first
       model.num=1
@@ -444,17 +445,17 @@ runOxcal <-  function(L,
   cdf <- createChronMeasInputDf(L,...)
   
   #assign in reservoir ages?
-  if(!is.na(static.reservoir.age)){
+  if(!any(is.na(static.reservoir.age))){
     cdf$reservoirAge <- static.reservoir.age
   }
-  if(!is.na(static.reservoir.age.unc)){
+  if(!any(is.na(static.reservoir.age.unc))){
     cdf$reservoirAgeUnc <- static.reservoir.age.unc
   }
   
   #add surface age estimate?
-  if(!is.na(surface.age)){
+  if(!any(is.na(surface.age))){
     
-    if(is.na(surface.age.unc)){
+    if(any(is.na(surface.age.unc))){
       stop("you cannot add a surface age without an uncertainty")
     }
     
@@ -473,13 +474,13 @@ runOxcal <-  function(L,
   }
   
   #prepare for model input
-  if(is.na(depth.interval)){
+  if(any(is.na(depth.interval))){
     #take a stab at it
     depth.interval <- abs(diff(range(cdf$depth)))/50
     cat(crayon::bold(paste("No depth.interval entered, trying",crayon::red(depth.interval),"\n Specify your own depth.interval if preferred\n")))
   }
   
-  if(is.na(events.per.unit.length)){
+  if(any(is.na(events.per.unit.length))){
     #take a stab at it
     events.per.unit.length <- 1/depth.interval
     cat(crayon::bold(paste("No events.per.unit.length entered, trying",crayon::red(events.per.unit.length),"\n Specify your own events.per.unit.length if preferred\n")))

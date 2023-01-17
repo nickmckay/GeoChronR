@@ -19,7 +19,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   
   
   #initialize chron.num
-  if(is.na(paleo.or.chron.num)){
+  if(any(is.na(paleo.or.chron.num))){
     if(length(L[[paleo.or.chron]])==1){
       paleo.or.chron.num=1
     }else{
@@ -28,7 +28,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   }
   
   #initialize model number
-  if(is.na(model.num)){
+  if(any(is.na(model.num))){
     if(is.null(L[[paleo.or.chron]][[paleo.or.chron.num]]$model[[1]])){
       #no models, this is first
       model.num=1
@@ -39,7 +39,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   }
   
   #initialize ensemble table number
-  if(is.na(ens.table.num)){
+  if(any(is.na(ens.table.num))){
     if(length(model$ensembleTable) == 1){
       #no models, this is first
       ens.table.num=1
@@ -63,7 +63,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   
   
   #pull the depth data
-  if(!is.na(depth.var)){
+  if(!any(is.na(depth.var))){
   depthVals <- selectData(L,
                           var.name = depth.var,
                           paleo.or.chron = paleo.or.chron,
@@ -274,7 +274,7 @@ createMultiModelEnsemble <- function(L,
                                      ens.table.number = 1,
                                      n.ens = 1000){
   
-  if(is.na(depth.seq)){
+  if(any(is.na(depth.seq))){
     #figure out the depth sequence
     depthrange <- function(mod,depth.var,ens.table.number){
       return(mod$ensembleTable[[ens.table.number]][[depth.var]]$values %>% 

@@ -58,7 +58,7 @@ Imports:
     tidyr,
     magrittr,
     astrochron,
-    spatstat.core,
+    spatstat.explore,
     MASS,
     plyr,
     stringr,
