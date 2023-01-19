@@ -110,7 +110,7 @@ estimateUncertaintyFromRange = function(L,
   return(L)
 }
 
-#' @title  Map an age variable from a chron model sumamary to a paleoMeasurement Table
+#' @title  Map an age variable from a chron model summary to a paleoMeasurement Table
 #' @family LiPD manipulation
 #' @description Copies a summary age from chronData (model) to paleoData (measurementTable), by matching depth and interpolating (extrapolating) as necessary.
 #' @inheritParams selectData

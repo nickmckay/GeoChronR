@@ -2,7 +2,7 @@
 % Please edit documentation in R/lipd.manipulation.R
 \name{mapAgeSummaryToPaleoData}
 \alias{mapAgeSummaryToPaleoData}
-\title{Map an age variable from a chron model sumamary to a paleoMeasurement Table}
+\title{Map an age variable from a chron model summary to a paleoMeasurement Table}
 \usage{
 mapAgeSummaryToPaleoData(
   L,

@@ -1902,6 +1902,7 @@ plotChron <- function(L,
 #' @param meas.num which measurement Table for the paleoData age-depth
 #' @param color.line.paleo line color of the paleoData age-depth (following ggplot rules)
 #' @param plot.traces Add timeseries lines to the plot (default = TRUE)
+#' @param ... Pass parameters to plotTimeseriesEnsRibbons
 #' @return A ggplot object
 plotChronEns = function(L,
                         age.var = "ageEnsemble",
@@ -1931,7 +1932,8 @@ plotChronEns = function(L,
                         paleo.number = NA, 
                         meas.num = NA,
                         color.line.paleo = "cyan",
-                        plot.traces = TRUE){
+                        plot.traces = TRUE,
+                        ...){
   
   C = L$chronData
   if(is.na(chron.number)){
@@ -2006,7 +2008,7 @@ plotChronEns = function(L,
   print("plotting your chron ensemble. This make take a few seconds...")
   
   #Ribbons first
-  chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = alp,probs = probs,x.bin = x.bin,y.bin = y.bin, n.bins = n.bins, color.low = color.low,color.high = color.high,color.line = color.line,line.width = line.width,add.to.plot = add.to.plot)
+  chronPlot = plotTimeseriesEnsRibbons(X = ageEnsemble,Y = depth,alp = alp,probs = probs,x.bin = x.bin,y.bin = y.bin, n.bins = n.bins, color.low = color.low,color.high = color.high,color.line = color.line,line.width = line.width,add.to.plot = add.to.plot,...)
   
   
   if(plot.traces){

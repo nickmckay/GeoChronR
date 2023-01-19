@@ -35,13 +35,13 @@ Let's walk through a simple example, using a the Lake Kurupa dataset we explored
 First let's get the data we need. First, we can load in the lipd object:
 
 ```{r}
-K <- readLipd("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
+K <- readLipd("https://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
 ```
 
 And now let's open a csv file that has the depth and age ensemble data
 
 ```{r}
-ens <- read_csv("http://lipdverse.org/geoChronR-examples/KurupaChronEnsemble.csv")
+ens <- read_csv("https://lipdverse.org/geoChronR-examples/KurupaChronEnsemble.csv")
 ```
 Let's take a quick look at the data.frame we loaded
 

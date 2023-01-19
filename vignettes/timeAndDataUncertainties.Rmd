@@ -32,7 +32,7 @@ library(ggplot2)
 Let's load in an example data set that includes both age and proxy ensembles, this SST reconstruction from core MD97_2151.
 
 ```{r}
-L <- readLipd("/Volumes/data/Dropbox/lipdverse/html/geoChronR-examples/MD97_2151.Yamamoto.2013.lpd")
+L <- readLipd("http://lipdverse.org/geoChronR-examples/MD97_2151.Yamamoto.2013.lpd")
 ```
 We can take advantage of `lipdR`'s summary function to learn more about the dataset
 
