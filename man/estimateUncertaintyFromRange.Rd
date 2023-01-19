@@ -44,6 +44,7 @@ Other LiPD manipulation:
 \code{\link{createTSid}()},
 \code{\link{getVariableIndex}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{mapAgeSummaryToPaleoData}()},
 \code{\link{mapPaleoEnsembleToPaleoData}()},
 \code{\link{pullTsVariable}()},
 \code{\link{selectData}()}

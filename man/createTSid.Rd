@@ -21,6 +21,7 @@ Other LiPD manipulation:
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
 \code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{mapAgeSummaryToPaleoData}()},
 \code{\link{mapPaleoEnsembleToPaleoData}()},
 \code{\link{pullTsVariable}()},
 \code{\link{selectData}()}
