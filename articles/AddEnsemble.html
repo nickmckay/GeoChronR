@@ -176,7 +176,7 @@ would like to add it to the LiPD object.</p>
 object:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpHCuUbZ/Kurupa.Boldt.2015.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpVFhrh2/Kurupa.Boldt.2015.lpd..."</span></span>
 <span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
 <p>And now let’s open a csv file that has the depth and age ensemble
 data</p>
@@ -201,13 +201,13 @@ data</p>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span>        21.2  185.    2.07<span style="color: #949494;">e</span>+2 211.   245.   254.   251.   201.    164.   124.  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span>        28.3  211.    2.60<span style="color: #949494;">e</span>+2 243.   276.   272.   267.   223.    195.   194.  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">6</span>        35.3  333.    3.39<span style="color: #949494;">e</span>+2 295.   356.   366.   377.   333.    315.   313.  </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 991 more variables: ens10 &lt;dbl&gt;, ens11 &lt;dbl&gt;, ens12 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens13 &lt;dbl&gt;, ens14 &lt;dbl&gt;, ens15 &lt;dbl&gt;, ens16 &lt;dbl&gt;, ens17 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens18 &lt;dbl&gt;, ens19 &lt;dbl&gt;, ens20 &lt;dbl&gt;, ens21 &lt;dbl&gt;, ens22 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens23 &lt;dbl&gt;, ens24 &lt;dbl&gt;, ens25 &lt;dbl&gt;, ens26 &lt;dbl&gt;, ens27 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens28 &lt;dbl&gt;, ens29 &lt;dbl&gt;, ens30 &lt;dbl&gt;, ens31 &lt;dbl&gt;, ens32 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens33 &lt;dbl&gt;, ens34 &lt;dbl&gt;, ens35 &lt;dbl&gt;, ens36 &lt;dbl&gt;, ens37 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ens38 &lt;dbl&gt;, ens39 &lt;dbl&gt;, ens40 &lt;dbl&gt;, ens41 &lt;dbl&gt;, ens42 &lt;dbl&gt;, …</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;"># ℹ 991 more variables: ens10 &lt;dbl&gt;, ens11 &lt;dbl&gt;, ens12 &lt;dbl&gt;, ens13 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens14 &lt;dbl&gt;, ens15 &lt;dbl&gt;, ens16 &lt;dbl&gt;, ens17 &lt;dbl&gt;, ens18 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens19 &lt;dbl&gt;, ens20 &lt;dbl&gt;, ens21 &lt;dbl&gt;, ens22 &lt;dbl&gt;, ens23 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens24 &lt;dbl&gt;, ens25 &lt;dbl&gt;, ens26 &lt;dbl&gt;, ens27 &lt;dbl&gt;, ens28 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens29 &lt;dbl&gt;, ens30 &lt;dbl&gt;, ens31 &lt;dbl&gt;, ens32 &lt;dbl&gt;, ens33 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens34 &lt;dbl&gt;, ens35 &lt;dbl&gt;, ens36 &lt;dbl&gt;, ens37 &lt;dbl&gt;, ens38 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ens39 &lt;dbl&gt;, ens40 &lt;dbl&gt;, ens41 &lt;dbl&gt;, ens42 &lt;dbl&gt;, ens43 &lt;dbl&gt;, …</span></span></span></code></pre>
 <p>So this ensemble table has a depth vector, which is the first column,
 and 1000 age ensemble members in columns 2 to 1001. Let’s put those in
 separate variables for clarity:</p>
