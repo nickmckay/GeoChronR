@@ -33,7 +33,8 @@ plotChronEns(
   paleo.number = NA,
   meas.num = NA,
   color.line.paleo = "cyan",
-  plot.traces = TRUE
+  plot.traces = TRUE,
+  ...
 )
 }
 \arguments{
@@ -94,6 +95,8 @@ plotChronEns(
 \item{color.line.paleo}{line color of the paleoData age-depth (following ggplot rules)}
 
 \item{plot.traces}{Add timeseries lines to the plot (default = TRUE)}
+
+\item{...}{Pass parameters to plotTimeseriesEnsRibbons}
 }
 \value{
 A ggplot object

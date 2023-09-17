@@ -12,7 +12,10 @@ quantile2d(
   probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
   n.ens = max(c(ncol(x), ncol(y))),
   seed = 111,
-  limit.outliers.x = 0.0025
+  interp.method = "linear",
+  limit.outliers.x = 0.0025,
+  na.thresh = 0.5,
+  ...
 )
 }
 \arguments{

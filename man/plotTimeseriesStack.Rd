@@ -16,7 +16,9 @@ plotTimeseriesStack(
   lab.buff = 0.02,
   lab.size = 3,
   lab.space = 2,
-  color.ramp = function(nColors) {     RColorBrewer::brewer.pal(nColors, "Dark2") }
+  color.ramp = function(nColors) {
+     RColorBrewer::brewer.pal(nColors, "Dark2")
+ }
 )
 }
 \arguments{
