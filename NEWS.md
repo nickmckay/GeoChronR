@@ -1,3 +1,5 @@
+# geoChronR 1.1.11
+
 # geoChronR 1.1.10
 
 * Fixed the many `if(is.na(parameter))...` statements that broke with R version 4.2
