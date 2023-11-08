@@ -1,5 +1,7 @@
 # geoChronR 1.1.11
 
+* Attempted to fix the bug that resulted from the rEDM v1.15.0 name change of `make_surrogate_data` to `SurrogateData`
+
 # geoChronR 1.1.10
 
 * Fixed the many `if(is.na(parameter))...` statements that broke with R version 4.2
