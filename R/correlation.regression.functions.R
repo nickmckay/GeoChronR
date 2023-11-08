@@ -1,3 +1,20 @@
+
+#' Use the write function from rEDM depending on the version
+#'
+#' @param ... Arguments to pass to surrogate
+#'
+#' @return Surrogate output
+#' @export
+surrogateDataFun <- function(...){
+  if(packageVersion("rEDM") < "1.15"){
+    out <- rEDM::make_surrogate_data(...)
+  }else{
+    out <- rEDM::SurrogateData(...)
+  }
+  return(out)
+}
+
+
 #' @export
 #' @title Estimate Auto-Regressive coefficient at 1-timesetep
 #' @description estimates ar1 using the arima() function
@@ -11,7 +28,6 @@ ar1 = function(x){
 }
 
 #' @export
-#' @importFrom rEDM make_surrogate_data
 #' @title Correlations and their significance according to AR(1) benchmarks
 #' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
@@ -55,11 +71,11 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
     
     ix.good <- which(is.finite(X))
     X.surr <- matrix(NA,nrow = length(X),ncol = n.sim)
-    X.surr[ix.good,] <- try(rEDM::make_surrogate_data(X[ix.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
+    X.surr[ix.good,] <- try(surrogateDataFun(X[ix.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
     
     iy.good <- which(is.finite(Y))
     Y.surr <- matrix(NA,nrow = length(Y),ncol = n.sim)
-    Y.surr[iy.good,] <- try(rEDM::make_surrogate_data(Y[iy.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
+    Y.surr[iy.good,] <- try(surrogateDataFun(Y[iy.good],method = 'ebisuzaki',num_surr = n.sim),silent = TRUE)
   }else{
     stop("method must be 'isopersistent' or 'isospectral'")
   }
