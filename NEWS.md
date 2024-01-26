@@ -1,3 +1,5 @@
+# geoChronR 1.1.12
+
 # geoChronR 1.1.11
 
 * Attempted to fix the bug that resulted from the rEDM v1.15.0 name change of `make_surrogate_data` to `SurrogateData`
