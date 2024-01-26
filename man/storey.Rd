@@ -19,9 +19,9 @@ This is an internal function that calculates the basic Storey (2002) estimator o
 }
 \seealso{
 Other FDR: 
+\code{\link{fdr}()},
 \code{\link{fdr.master}()},
 \code{\link{fdrBasic}()},
-\code{\link{fdr}()},
 \code{\link{propAlt}()}
 }
 \author{

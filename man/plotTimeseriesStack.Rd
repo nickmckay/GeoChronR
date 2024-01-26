@@ -59,9 +59,9 @@ Creates a suite of plots to characterize the results of an ensemble regression.
 
 \seealso{
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -73,8 +73,8 @@ Other plot:
 \code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTrendLinesEns}()}

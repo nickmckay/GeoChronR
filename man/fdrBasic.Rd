@@ -19,8 +19,8 @@ This is an internal function that performs the basic FDR of Benjamini & Hochberg
 }
 \seealso{
 Other FDR: 
-\code{\link{fdr.master}()},
 \code{\link{fdr}()},
+\code{\link{fdr.master}()},
 \code{\link{propAlt}()},
 \code{\link{storey}()}
 }

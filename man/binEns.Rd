@@ -26,8 +26,8 @@ takes ensembles in time and/or values and creates a matrix of data for future an
 \seealso{
 Other bin: 
 \code{\link{alignTimeseriesBin}()},
+\code{\link{bin}()},
 \code{\link{bin2d}()},
-\code{\link{binTs}()},
-\code{\link{bin}()}
+\code{\link{binTs}()}
 }
 \concept{bin}

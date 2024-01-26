@@ -37,9 +37,9 @@ Plot a a single spectrum, with confidence limits (no age ensemble). Useful for c
 }
 \seealso{
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -50,8 +50,8 @@ Other plot:
 \code{\link{plotScatterEns}()},
 \code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},

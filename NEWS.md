@@ -1,5 +1,7 @@
 # geoChronR 1.1.12
 
+* added `oxcal.code.export.path` option to `runOxcal()` to allow users to optionally save the oxcal model code before it runs
+
 # geoChronR 1.1.11
 
 * Attempted to fix the bug that resulted from the rEDM v1.15.0 name change of `make_surrogate_data` to `SurrogateData`

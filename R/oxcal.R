@@ -379,6 +379,7 @@ loadOxcalOutput <- function(L,
 #' @param surface.age specify the age of the surface
 #' @param surface.age.unc surface age uncertainty
 #' @param surface.age.depth depth of the surface age
+#' @param oxcal.code.export.path optionally output the oxcal code by specifying a path (default = NA)
 #' @inheritParams createChronMeasInputDf
 #' @inheritParams writeBacon
 #' @inheritDotParams createChronMeasInputDf
@@ -411,6 +412,7 @@ runOxcal <-  function(L,
                       events.per.unit.length.uncertainty = 0,
                       outlier.prob = .05,
                       cal.curve = "IntCal20",
+                      oxcal.code.export.path = NA,
                       ...){
   
   
@@ -495,6 +497,11 @@ runOxcal <-  function(L,
                             events.per.unit.length.uncertainty = events.per.unit.length.uncertainty,
                             outlier.prob = outlier.prob,
                             cal.curve = cal.curve)
+  
+  #optionally export the model code
+  if(!is.na(oxcal.code.export.path)){
+    readr::write_file(oxMod$modelText,file = oxcal.code.export.path)
+  }
   
   
   #remove old MCMC results

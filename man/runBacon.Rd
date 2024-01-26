@@ -96,7 +96,7 @@ Thinner (and thus more) sections will result in smoother age-models, but too man
     \item{\code{d.min}}{Minimum depth of age-depth model (use this to extrapolate to depths higher than the top dated depth).}
     \item{\code{d.max}}{Maximum depth of age-depth model (use this to extrapolate to depths below the bottom dated depth).}
     \item{\code{add.bottom}}{Add a model section at the bottom of the core, in order to ensure the bottommost date is taken into account. Default \code{add.bottom=TRUE}. This is a new option and can cause age-models to differ from previous version. Please re-run the model if in doubt.}
-    \item{\code{d.by}}{Depth intervals at which ages are calculated. Defaults to \code{d.by=1}.}
+    \item{\code{d.by}}{Depth intervals at which ages are calculated. Defaults to \code{d.by=1}. Please ensure that the value of d.by is smaller than that of 'thick', otherwise plots might turn out wrong.}
     \item{\code{seed}}{Seed used for C++ executions. If it is not assigned (\code{seed=NA}; default) then the seed is set by system.}
     \item{\code{depths.file}}{By default, Bacon will calculate the ages for the depths \code{d.min} to \code{d.max} in steps of \code{d.by}.
 If \code{depths.file=TRUE}, Bacon will read a file containing the depths for which you require ages.
@@ -126,22 +126,20 @@ allow for a large range of posterior memory values. Please note that the default
     \item{\code{cc1}}{For northern hemisphere terrestrial 14C dates (IntCal20).}
     \item{\code{cc2}}{For marine 14C dates (Marine20).}
     \item{\code{cc3}}{For southern hemisphere 14C dates (SHCal20).}
-    \item{\code{cc4}}{Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See \code{ccdir}.}
-    \item{\code{ccdir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default \code{ccdir=""}.
-For example, use \code{ccdir="."} to choose current working directory, or \code{ccdir="Curves/"} to choose sub-folder \code{Curves/}. Note that all calibration curves should reside in the same directory. If you want to add a custom-built curve, put it in the directory where the default calibration curves are (probably \code{list.files(paste0(.libPaths(), "/IntCal/extdata"))}).
-Alternatively produce a new folder, and add your curve as well as the default calibration curves there (cc1, cc2 and cc3; e.g., \code{write.table(ccurve(1), "./3Col_intcal20.14C", sep="\t")}.)}
+    \item{\code{cc4}}{Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See \code{cc.dir}.}
+    \item{\code{cc.dir}}{Directory where the calibration curves for C14 dates \code{cc} are located. By default uses the location of the rintcal package which provides the calibration curves. If you want to use custom-made calibration curves, first set up a new folder using the function new.ccdir() in the rintcal package, e.g., \code{new.ccdir="MyCurves"}, then place the custom curve in that folder using \code{mix.ccurves(, cc.dir="MyCurves", save=TRUE)}.}
     \item{\code{postbomb}}{Use a postbomb curve for negative (i.e. postbomb) 14C ages. \code{0 = none, 1 = NH1, 2 = NH2, 3 = NH3, 4 = SH1-2, 5 = SH3}}
     \item{\code{delta.R}}{Mean of core-wide age offsets (e.g., regional marine offsets).}
     \item{\code{delta.STD}}{Error of core-wide age offsets (e.g., regional marine offsets).}
-    \item{\code{t.a}}{The dates are treated using the student's t distribution by default (\code{normal=FALSE}).
-The student's t-distribution has two parameters, t.a and t.b, set at 3 and 4 by default (see Christen and Perez, 2010).
+    \item{\code{t.a}}{The dates are treated using the t distribution (Christen and Perez 2009) by default (\code{normal=FALSE}).
+This t-distribution has two parameters, t.a and t.b, set at 3 and 4 by default (see Christen and Perez, 2010).
 If you want to assign narrower error distributions (more closely resembling the normal distribution), set t.a and t.b at for example 33 and 34 respectively (e.g., for specific dates in your .csv file).
 For symmetry reasons, t.a must always be equal to t.b-1.}
-    \item{\code{t.b}}{The dates are treated using the student's t distribution by default (\code{normal=FALSE}).
-The student's t-distribution has two parameters, t.a and t.b, set at 3 and 4 by default (see Christen and Perez, 2010).
+    \item{\code{t.b}}{The dates are treated using t distribution by default (\code{normal=FALSE}).
+The t-distribution has two parameters, t.a and t.b, set at 3 and 4 by default (see Christen and Perez, 2009).
 If you want to assign narrower error distributions (more closely resembling the normal distribution), set t.a and t.b at for example 33 and 34 respectively (e.g., for specific dates in your .csv file).
 For symmetry reasons, t.a must always be equal to t.b-1.}
-    \item{\code{normal}}{By default, Bacon uses the student's t-distribution to treat the dates. Use \code{normal=TRUE} to use the normal/Gaussian distribution. This will generally give higher weight to the dates.}
+    \item{\code{normal}}{By default, Bacon uses the t-distribution to treat the dates. Use \code{normal=TRUE} to use the normal/Gaussian distribution. This will generally give higher weight to the dates.}
     \item{\code{suggest}}{If initial analysis of the data indicates abnormally slow or fast accumulation rates, Bacon will suggest to change the prior.}
     \item{\code{accept.suggestions}}{Automatically accept the suggested values. Use with care. Default \code{accept.suggestions=FALSE}.
 Also, if the length of the core would cause too few or too many sections with the default settings, Bacon will suggest an alternative section thickness \code{thick}.
@@ -160,13 +158,13 @@ try running your core again with \code{remember=FALSE}, or, start cleanly by typ
     \item{\code{slump}}{Upper and lower depths of any sections of assumed abrupt accumulation, that require excising before age-modelling (and adding after age-modelling). Requires pairs of depths, e.g., \code{slump=c(10,15,60,67)} for slumps at 67-60 and 15-10 cm core depth.}
     \item{\code{remove}}{Whether or not to remove depths within slumps. Defaults to \code{remove=FALSE}.}
     \item{\code{BCAD}}{The calendar scale of graphs and age output-files is in cal BP (calendar or calibrated years before the present, where the present is AD 1950) by default, but can be changed to BC/AD using \code{BCAD=TRUE}.}
-    \item{\code{ssize}}{The approximate amount of iterations to store at the end of the MCMC run. Default 2000; decrease for faster (but less reliable) runs or increase for cores where the MCMC mixing (panel at upper-left corner of age-model graph) appears problematic.}
-    \item{\code{th0}}{Starting years for the MCMC iterations.}
+    \item{\code{ssize}}{The amount of iterations to store at the end of the MCMC run. Default 4000; decrease for faster (but less reliable) runs or increase for cores where the MCMC mixing (panel at upper-left corner of age-model graph) appears problematic.}
+    \item{\code{th0}}{Starting years for the MCMC iterations. These are randomly chosen by default.}
     \item{\code{burnin}}{Amount of initial, likely sub-optimal MCMC iterations that will be removed.}
-    \item{\code{MinAge}}{Minimum age limit for Bacon runs, default at current year in cal BP. To set plot limits, use \code{yr.min} instead.}
-    \item{\code{MaxAge}}{Maximum age limit for Bacon runs, default at 1,000,000 cal BP. To set plot limits, use \code{yr.max} instead.}
-    \item{\code{MinYr}}{Deprecated - use MinAge instead.}
-    \item{\code{MaxYr}}{Deprecated - use MaxAge instead.}
+    \item{\code{youngest.age}}{Minimum age limit for Bacon runs, default at current year in cal BP. To set plot limits, use \code{age.min} instead.}
+    \item{\code{oldest.age}}{Maximum age limit for Bacon runs, default at 1,000,000 cal BP. To set plot limits, use \code{age.max} instead.}
+    \item{\code{MinAge}}{Deprecated - use youngest.age instead.}
+    \item{\code{MaxAge}}{Deprecated - use oldest.age instead.}
     \item{\code{cutoff}}{Avoid plotting very low probabilities of date distributions (default \code{cutoff=0.001}).}
     \item{\code{plot.pdf}}{Produce a pdf file of the age-depth plot. Defaults to \code{plot.pdf=TRUE} after a Bacon run.}
     \item{\code{dark}}{Darkness of the greyscale age-depth model. The darkest grey value is \code{dark=1} by default.
@@ -175,6 +173,9 @@ Lower values will result in lighter grey but values >1 are not allowed.}
     \item{\code{age.res}}{Resolution or amount of greyscale pixels to cover the age scale of the age-model plot. Default \code{yr.res=200}.}
     \item{\code{yr.res}}{Deprecated - use age.res instead}
     \item{\code{close.connections}}{Internal option to close connections after a run. Default \code{close.connections=TRUE}.}
+    \item{\code{older.than}}{an option to enable dates at the limit of C-14 dating. If there are older.than dates, they tell us that the core should be older than a certain age at that depth. For example, if the 7th and 8th dates in the core's .csv file are older-than dates, use as \code{older.than=c(7,8)}. The MCMC run could be problematic if the older-than ages do not fit with the other information.}
+    \item{\code{younger.than}}{an option to provide younger-than ages, for example a historical pollen marker. If there are younger-than dates, they tell us that the core should be younger than a certain age at that depth. For example, if the 7th and 8th dates in the core's .csv file are younger.than dates, use as \code{younger.than=c(7,8)}. The MCMC run could be problematic if the younger.than ages do not fit with the other information.}
+    \item{\code{save.elbowages}}{If you want to have a file with the MCMC-derived ages for all the age-depth model's elbows, set \code{save.elbowages=TRUE} and a file with the ages will be saved in the core's folder, starting with the core name, followed by its number of sections, d.min, and section thickness, and ending in "_elbowages.txt".}
     \item{\code{verbose}}{Provide feedback on what is happening (default \code{verbose=TRUE}).}
   }}
 }

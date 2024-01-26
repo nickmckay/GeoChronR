@@ -30,9 +30,9 @@ a <- propAlt(pvals,adjustment.method="mean")
 }
 \seealso{
 Other FDR: 
+\code{\link{fdr}()},
 \code{\link{fdr.master}()},
 \code{\link{fdrBasic}()},
-\code{\link{fdr}()},
 \code{\link{storey}()}
 }
 \author{

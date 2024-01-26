@@ -40,8 +40,8 @@ Calculates correlations and associated p-values for two ensemble matrices (or ve
 }
 \seealso{
 Other correlation: 
-\code{\link{ar1Surrogates}()},
 \code{\link{ar1}()},
+\code{\link{ar1Surrogates}()},
 \code{\link{effectiveN}()},
 \code{\link{plotCorEns}()},
 \code{\link{pvalMonteCarlo}()},

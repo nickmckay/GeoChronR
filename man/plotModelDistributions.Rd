@@ -58,9 +58,9 @@ Plot or add probability distributions from a paleo or chron model to a plot.
 }
 \seealso{
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -71,17 +71,17 @@ Other plot:
 \code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
 \code{\link{plotTrendLinesEns}()}
 
 Other chron: 
-\code{\link{plotChronEnsDiff}()},
+\code{\link{plotChron}()},
 \code{\link{plotChronEns}()},
-\code{\link{plotChron}()}
+\code{\link{plotChronEnsDiff}()}
 }
 \author{
 Nick McKay

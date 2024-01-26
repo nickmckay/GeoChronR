@@ -46,9 +46,9 @@ Other pca:
 \code{\link{plotPcaEns}()}
 
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -59,8 +59,8 @@ Other plot:
 \code{\link{plotScatterEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},

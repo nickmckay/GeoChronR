@@ -42,9 +42,9 @@ Other gridding:
 
 Other bin: 
 \code{\link{alignTimeseriesBin}()},
+\code{\link{bin}()},
 \code{\link{binEns}()},
-\code{\link{binTs}()},
-\code{\link{bin}()}
+\code{\link{binTs}()}
 
 Other plot help: 
 \code{\link{AD2BP_trans}()},

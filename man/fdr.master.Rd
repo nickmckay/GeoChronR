@@ -21,8 +21,8 @@ This is an internal function that performs various versions of the FDR procedure
 }
 \seealso{
 Other FDR: 
-\code{\link{fdrBasic}()},
 \code{\link{fdr}()},
+\code{\link{fdrBasic}()},
 \code{\link{propAlt}()},
 \code{\link{storey}()}
 }

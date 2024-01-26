@@ -70,8 +70,8 @@ Plot a chronology, either from a chron model (preferred) or from a chron measure
 }
 \seealso{
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -83,16 +83,16 @@ Other plot:
 \code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()},
 \code{\link{plotTrendLinesEns}()}
 
 Other chron: 
-\code{\link{plotChronEnsDiff}()},
 \code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotModelDistributions}()}
 }
 \author{

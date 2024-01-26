@@ -34,9 +34,9 @@ Plot an ensemble of trendlines based on slope and intercept.
 }
 \seealso{
 Other plot: 
-\code{\link{plotChronEnsDiff}()},
-\code{\link{plotChronEns}()},
 \code{\link{plotChron}()},
+\code{\link{plotChronEns}()},
+\code{\link{plotChronEnsDiff}()},
 \code{\link{plotCorEns}()},
 \code{\link{plotHistEns}()},
 \code{\link{plotLine}()},
@@ -48,8 +48,8 @@ Other plot:
 \code{\link{plotScreeEns}()},
 \code{\link{plotSpectraEns}()},
 \code{\link{plotSpectrum}()},
-\code{\link{plotSummaryTs}()},
 \code{\link{plotSummary}()},
+\code{\link{plotSummaryTs}()},
 \code{\link{plotTimeseriesEnsLines}()},
 \code{\link{plotTimeseriesEnsRibbons}()},
 \code{\link{plotTimeseriesStack}()}
@@ -57,8 +57,8 @@ Other plot:
 Other regress: 
 \code{\link{plotRegressEns}()},
 \code{\link{plotScatterEns}()},
-\code{\link{regressEns}()},
-\code{\link{regress}()}
+\code{\link{regress}()},
+\code{\link{regressEns}()}
 }
 \author{
 Nick McKay

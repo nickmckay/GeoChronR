@@ -35,9 +35,9 @@ Aggregate data from a timeseries object into the same timeline through binning.
 \seealso{
 Other bin: 
 \code{\link{alignTimeseriesBin}()},
+\code{\link{bin}()},
 \code{\link{bin2d}()},
-\code{\link{binEns}()},
-\code{\link{bin}()}
+\code{\link{binEns}()}
 }
 \author{
 Nick McKay

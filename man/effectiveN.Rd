@@ -19,8 +19,8 @@ Bretherton et al., 1999 estimate of effective sample size.
 }
 \seealso{
 Other correlation: 
-\code{\link{ar1Surrogates}()},
 \code{\link{ar1}()},
+\code{\link{ar1Surrogates}()},
 \code{\link{corMatrix}},
 \code{\link{plotCorEns}()},
 \code{\link{pvalMonteCarlo}()},

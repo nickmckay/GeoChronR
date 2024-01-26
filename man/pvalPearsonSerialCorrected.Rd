@@ -19,8 +19,8 @@ Calculate Pearson p-values accounting for effective sample size
 }
 \seealso{
 Other correlation: 
-\code{\link{ar1Surrogates}()},
 \code{\link{ar1}()},
+\code{\link{ar1Surrogates}()},
 \code{\link{corMatrix}},
 \code{\link{effectiveN}()},
 \code{\link{plotCorEns}()},

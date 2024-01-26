@@ -49,10 +49,10 @@ Use this to put two timeseries on different timesteps onto equivalent bins
 }
 \seealso{
 Other bin: 
+\code{\link{bin}()},
 \code{\link{bin2d}()},
 \code{\link{binEns}()},
-\code{\link{binTs}()},
-\code{\link{bin}()}
+\code{\link{binTs}()}
 }
 \author{
 Nick McKay

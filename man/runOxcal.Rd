@@ -23,6 +23,7 @@ runOxcal(
   events.per.unit.length.uncertainty = 0,
   outlier.prob = 0.05,
   cal.curve = "IntCal20",
+  oxcal.code.export.path = NA,
   ...
 )
 }
@@ -62,6 +63,8 @@ runOxcal(
 \item{outlier.prob}{What's the probability of a date being an outlier if not otherwise specified (default= 0.05)}
 
 \item{cal.curve}{What calibration curve to use? Current options are "intcal20" (default), "marine20", "shcal20", "intcal13", "marine13", or "shcal13"}
+
+\item{oxcal.code.export.path}{optionally output the oxcal code by specifying a path (default = NA)}
 
 \item{...}{
   Arguments passed on to \code{\link[=createChronMeasInputDf]{createChronMeasInputDf}}
