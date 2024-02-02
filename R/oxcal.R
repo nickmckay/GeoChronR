@@ -500,6 +500,7 @@ runOxcal <-  function(L,
   
   #optionally export the model code
   if(!is.na(oxcal.code.export.path)){
+    saveRDS(oxMod,file = stringr::str_c(oxcal.code.export.path,".RDS"))
     readr::write_file(oxMod$modelText,file = oxcal.code.export.path)
   }
   
