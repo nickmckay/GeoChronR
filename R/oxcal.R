@@ -213,6 +213,81 @@ createOxcalModel <- function(cdf,
 }
 
 
+#' Pull model parameters from OxCal Code
+#'
+#' @param modText The model text
+#'
+#' @return The list of model parameters
+#' @export
+getModelParametersFromOxcalText <- function(modText){
+  
+  #get thin and n.it
+  
+  matches <- stringr::str_match(modText, "MCMC_Sample\\((\\d+),(\\d+)\\);")
+  
+  if(is.na(matches[1])){
+    stop("To extract an ensemble from OxCal you must include 'MCMC_Sample(...)' in the model text")
+  }
+  
+  thin <- as.numeric(matches[2])
+  n.it <- as.numeric(matches[3])
+  
+  events.per.unit.length <- as.numeric(stringr::str_match(modText,"_Sequence\\((\\d+\\.?\\d*)\\)")[2])
+  
+  
+  #sequence type:
+  seq.type <- stringr::str_match(modText,"^([^\\(]+)\\(")[2]
+  
+  #Boundarys:
+  
+  pattern_start <- "^([^\\n;]+Boundary\\(\\));"
+  pattern_end <- "\\n([^\\n;]+Boundary\\(\\))\\n\\};"
+  
+  bounds <- stringr::str_extract_all(modText, "\\w*Boundary\\(\\)")[[1]]
+  
+  top.boundary <-  bounds[1]
+  bottom.boundary <- bounds[length(bounds)]
+  
+  
+  parameters <- list( thin = thin,
+                      n.it = n.it,
+                      events.per.unit.length = events.per.unit.length,
+                      seq.type = seq.type,
+                      top.boundary = top.boundary,
+                      bottom.boundary = bottom.boundary)
+  
+  #now get all the depths:
+  
+  age2m <- stringr::str_extract_all(modText, "(?<=z=)\\d+\\.?\\d*") |> 
+     unlist() |> 
+    as.numeric() |> 
+    as.data.frame() |> 
+    setNames("depth")
+  
+  # now get all the lab IDs
+  labIds <- stringr::str_extract_all(modText, "(?<=Date\\()(.+?)(?=\\))") |> 
+    unlist() |> 
+    stringr::str_remove_all('"') |> 
+    stringr::str_remove_all('\\\\')
+    
+  
+  if(length(labIds) == nrow(age2m)){#it seems right!
+    bad <- which(!stringr::str_detect(labIds,",")) #these are not dates
+    
+    if(length(bad) > 0){
+      labIds[bad] <- NA
+    }
+    labIds <- stringr::str_split(labIds,",") |> 
+      purrr::map_chr(purrr::pluck,1)
+    age2m$labID <- labIds
+  }
+
+  return(list(modelText = modText,
+              parameters= parameters,
+              inputData = age2m))
+  
+}
+
 
 #' Load oxcal output
 #' @inheritParams selectData
@@ -240,6 +315,14 @@ loadOxcalOutput <- function(L,
   if(!file.exists(file.path(dirname(oxcal.result.file.path),"MCMC_Sample.csv"))){
     stop("It doesn't look like the model ran properly. Typically this is because of parameter choices. If all else seems right, consider increasing the depth.interval, or increasing events.per.unit.length")
   }
+  
+  
+  #see if model.parameters is a list (exported from createOxcalModel) or is oxCal model code itself
+  if(!is.list(model.parameters)){
+    model.parameters <- getModelParametersFromOxcalText(model.parameters)
+  }
+    
+    
   
   
   # setup storage -----------------------------------------------------------
@@ -515,6 +598,59 @@ runOxcal <-  function(L,
   L <- loadOxcalOutput(L,
                        oxcal.result.file.path,
                        oxMod,
+                       chron.num = chron.num,
+                       max.ens = max.ens,
+                       model.num = model.num,
+                       make.new = overwrite)
+  return(L)
+}
+
+runOxcalModel <- function(L,
+                          model.text,
+                          model.num=NA,
+                          chron.num=NA,
+                          meas.table.num = NA,
+                          oxcal.path="~/OxCal/",
+                          overwrite=TRUE,
+                          max.ens = 1000){
+  
+  #get oxcal directory
+  oxcAAR::quickSetupOxcal(path = oxcal.path)
+  
+  #initialize chron.num
+  if(any(is.na(chron.num))){
+    if(length(L$chronData)==1){
+      chron.num=1
+    }else{
+      chron.num=as.integer(readline(prompt = "Which chronData do you want to run oxcal for? "))
+    }
+  }
+  
+  
+  #initialize model number
+  if(any(is.na(model.num))){
+    if(is.null(L$chronData[[chron.num]]$model[[1]])){
+      #no models, this is first
+      model.num=1
+    }else{
+      print(paste("You already have", length(L$chronData[[chron.num]]$model), "chron model(s) in chronData" ,chron.num))
+      print(paste("If you want to create a new model, enter", length(L$chronData[[chron.num]]$model)+1))
+      
+      model.num=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+    }
+  }
+  
+  
+  #remove old MCMC results
+  unlink(file.path(tempdir(),"MCMC_Sample.csv"))
+  
+  #run the file!
+  oxcal.result.file.path <- oxcAAR::executeOxcalScript(model.text)
+  
+  
+  L <- loadOxcalOutput(L,
+                       oxcal.result.file.path,
+                       model.parameters = model.text,
                        chron.num = chron.num,
                        max.ens = max.ens,
                        model.num = model.num,
