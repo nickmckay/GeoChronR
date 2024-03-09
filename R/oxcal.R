@@ -265,7 +265,7 @@ getModelParametersFromOxcalText <- function(modText){
     setNames("depth")
   
   # now get all the lab IDs
-  labIds <- stringr::str_extract_all(modText, "(?<=Date\\()(.+?)(?=\\))") |> 
+  labIds <- stringr::str_extract_all(modText, '(?<=Date\\(|Prior\\(|Boundary\\(")(.+?)(?=\\))') |> 
     unlist() |> 
     stringr::str_remove_all('"') |> 
     stringr::str_remove_all('\\\\')
@@ -280,6 +280,8 @@ getModelParametersFromOxcalText <- function(modText){
     labIds <- stringr::str_split(labIds,",") |> 
       purrr::map_chr(purrr::pluck,1)
     age2m$labID <- labIds
+  }else{
+    stop("Couldn't extract lab IDs properly")
   }
 
   return(list(modelText = modText,
