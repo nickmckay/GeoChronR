@@ -222,6 +222,8 @@ createOxcalModel <- function(cdf,
 getModelParametersFromOxcalText <- function(modText){
   
   #get thin and n.it
+  #remove lines that start with //
+    modText <- gsub("//.*?\\\n", "", modText)
   
   matches <- stringr::str_match(modText, "MCMC_Sample\\((\\d+),(\\d+)\\);")
   
@@ -429,7 +431,10 @@ loadOxcalOutput <- function(L,
   goodColumns <- seq(3,ncol(oxEns)-2)
   
   if(length(goodColumns) != length( ensembleTable$depth$values)){
-    stop("depths and age ensemble levels don't match!")
+    goodColumns <- seq(2,ncol(oxEns)-2)
+    if(length(goodColumns) != length( ensembleTable$depth$values)){
+      stop("depths and age ensemble levels don't match!")
+    }
   }
   
   #only take the end of the posterior
@@ -607,6 +612,16 @@ runOxcal <-  function(L,
   return(L)
 }
 
+#' Title
+#'
+#' @param model.text a character vector of the model input
+#' @param oxcal.path path to Oxcal executable
+#' @param overwrite overwrite the previous run
+#' @param max.ens the maximum number of ensembles to load in (default = 1000)
+#' @param oxcal.path path to oxcal binaries
+#' @inheritParams writeBacon
+#'
+#' @return a LiPD object
 runOxcalModel <- function(L,
                           model.text,
                           model.num=NA,
