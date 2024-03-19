@@ -218,6 +218,7 @@ createOxcalModel <- function(cdf,
 #' @param modText The model text
 #'
 #' @return The list of model parameters
+#' @family oxcal
 #' @export
 getModelParametersFromOxcalText <- function(modText){
   

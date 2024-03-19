@@ -4,6 +4,7 @@
 #' @param ... Arguments to pass to surrogate
 #' @importFrom rEDM SurrogateData
 #' @return Surrogate output
+#' @family utility
 #' @export
 surrogateDataFun <- function(...){
     out <- rEDM::SurrogateData(...)
