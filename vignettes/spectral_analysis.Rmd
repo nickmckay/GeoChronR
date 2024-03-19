@@ -36,7 +36,6 @@ We first remotely load the data using the LiPD utilities. Depending on your conn
 ```{r load data, message=FALSE, results = 'hide', warning = FALSE}
 library(lipdR) # to load the file
 library(geoChronR) # to analyze it
-library(ggthemes) # to define plotting theme
 library(ggplot2)  # to plot
 
 I <- readLipd("http://lipdverse.org/geoChronR-examples/ODP846.Lawrence.2006.lpd")
@@ -51,7 +50,7 @@ t.med <- I$chronData[[1]]$model[[1]]$summaryTable[[1]]$median$values
 L <- geoChronR::mapAgeEnsembleToPaleoData(I,paleo.meas.table.num = 1,age.var = "age")
 age = geoChronR::selectData(L,"ageEnsemble",meas.table.num = 1)
 temp = geoChronR::selectData(L,"temp muller",meas.table.num = 1)
-plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,color.low="orchid",color.high="darkorange3",color.line="orange",line.width=0.5,alp=0.3) + scale_x_reverse() + theme_hc(style = "darkunica")
+plotTimeseriesEnsRibbons(ggplot(),X=age,Y=temp,color.low="orchid",color.high="darkorange3",color.line="orange",line.width=0.5,alp=0.3) + scale_x_reverse() 
 ```
 
 
@@ -73,7 +72,7 @@ X <- X - mean(X)
 #dfs = dplyr::filter(df,t<=1000)
 dt = diff(t)
 ggplot() + xlim(c(0,10)) +
-  geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + theme_hc(style = "darkunica") + xlab(expression(Delta*"t"))
+  geom_histogram(aes(x=dt,y = ..density..), bins = 25, ,alpha = 0.8, fill = "orange") + ggtitle("Distribution of time intervals") + xlab(expression(Delta*"t"))
 ```
 
 We see that over the past 1 Ma, the time increments ($\Delta t$) are sharply peaked around 2 ka, but they range from 0 to about 7.5 ka. For now, let us assume that the time axis, albeit uneven, is well-known (no uncertainty).
@@ -104,14 +103,14 @@ names(cl.df)[4] <- "99% CL"
 # plot this
 pticks = c(10, 20, 50, 100, 200, 500, 1000)
 prange = c(10,1000)
-yl = c(0.01,1000)
+yl = c(0.0001,10)
 p.ls <- plotSpectrum(ls.df,cl.df,x.lims = prange,x.ticks = pticks, y.lims = yl,
-                     color.line='orange', color.cl='white') +
+                     color.line='purple', color.cl='red') +
   ggtitle("IODP 846 d18O, Lomb-Scargle periodogram") +
-  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
+  geoChronRPlotTheme()
 
 # label periodicities of interest
-p.ls <- periodAnnotate(p.ls, periods = c(19,23,41,100), y.lims =c(0.01,100))
+p.ls <- periodAnnotate(p.ls, periods = c(19,23,41,100), y.lims =c(0.01,8),color = "purple")
 show(p.ls)
 ```
 
@@ -130,12 +129,11 @@ pticks = c(10, 20, 50, 100, 200, 500, 1000)
 prange = c(10,1000)
 yl = c(0.01,1000)
 p.ls <- plotSpectrum(redfit.df,cl.df,x.lims=prange,x.ticks = pticks, y.lims = yl,
-                     color.line='orange', color.cl='white') +
-  ggtitle("IODP 846 d18O, REDFIT estimation") +
-  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
+                     color.line='purple', color.cl='red') +
+  ggtitle("IODP 846 d18O, REDFIT estimation") + geoChronRPlotTheme()
 
 # label periodicities of interest
-p.ls <- periodAnnotate(p.ls, periods = c(19,23,41,100), y.lims =c(0.01,100))
+p.ls <- periodAnnotate(p.ls, periods = c(19,23,41,100), y.lims =c(0.01,100),color = "purple")
 show(p.ls)
 ```
 
@@ -167,13 +165,13 @@ mtm.df <- data.frame("freq" = spec.mtm$freqs, "pwr" = spec.mtm$power)
 # plot this
 prange = c(5,1000)
 
-p.mtm <- plotSpectrum(mtm.df,x.lims=prange,x.ticks = pticks, y.lims = c(1e-6,10), color.line='orange') +
+p.mtm <- plotSpectrum(mtm.df,x.lims=prange,x.ticks = pticks, y.lims = c(1e-6,10), color.line='purple') +
   ggtitle("IODP 846 d18O, Multi-taper method, AR(1) null") + xlab("Period (ky)") +
-  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
+  geoChronRPlotTheme()
 
 # label periodicities of interest
-p.mtm <- periodAnnotate(p.mtm, periods = c(19,23,41,100), y.lims = c(1e-6,1))
-p.mtm <- periodAnnotate(p.mtm, periods = 1/sig.freq$Frequency,color = "chartreuse",y.lims = c(1e-6,.1))
+p.mtm <- periodAnnotate(p.mtm, periods = c(19,23,41,100), y.lims = c(1e-6,1),color = "purple")
+p.mtm <- periodAnnotate(p.mtm, periods = 1/sig.freq$Frequency,color = "darkgreen",y.lims = c(1e-6,.1))
 show(p.mtm)
 ```
 
@@ -202,13 +200,13 @@ names(cl.df)[2] <- "95% CL"
 
 # plot it
 p.mtmPL <- plotSpectrum(mtm.df,cl.df,x.lims = prange,x.ticks = pticks,
-                        y.lims = c(1e-6,10),color.line='orange', color.cl='white') +
+                        y.lims = c(1e-6,10),color.line='purple', color.cl='red') +
   ggtitle("IODP 846 d18O, Multi-taper method, power-law null") + xlab("Period (ky)") +
-  theme_hc(style = "darkunica") + theme(axis.ticks.x = element_line(color = "gray"))
+  geoChronRPlotTheme()
 
 # label periodicities of interest
-p.mtmPL <- periodAnnotate(p.mtmPL, periods = c(19,23,41,100), y.lims = c(1e-6,1))
-p.mtmPL <- periodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,color = "chartreuse",y.lims = c(1e-6,.1))
+p.mtmPL <- periodAnnotate(p.mtmPL, periods = c(19,23,41,100), y.lims = c(1e-6,1),color = "purple")
+p.mtmPL <- periodAnnotate(p.mtmPL, periods = 1/sig.freqPL$Frequency,color = "darkgreen",y.lims = c(1e-6,.1))
 show(p.mtmPL)
 ```
 
@@ -250,9 +248,9 @@ names(ar1.df)[2] <- "95% CL"
 p.mtm.ens <- plotSpectraEns(spec.ens = mtm.ens.spec, cl.df = ar1.df, x.lims = c(10,150), y.lims = c(1e-5,1e-1),
                             color.line='darkorange',
                             color.low='darkorange2',
-                            color.high='coral4',color.cl = 'white') +
-  ggtitle("IODP 846 age ensemble, MTM") + theme_hc(style = "darkunica") +
-  theme(axis.ticks.x = element_line(color = "gray"))
+                            color.high='coral4',color.cl = 'Red') +
+  ggtitle("IODP 846 age ensemble, MTM") + 
+  geoChronRPlotTheme()
 
 # label periodicities of interest
 p.mtm.ens <- periodAnnotate(p.mtm.ens, periods = c(19,23,41,100), y.lims =c(0.01,0.05))
@@ -264,7 +262,7 @@ To this we can add the periods identified as significant owing to MTM's harmonic
 ```{r, MTM ensemble, with significant frequencies, message=FALSE, results = 'hide', warning = FALSE}
 per = 1/cl.df$freq
 sig_per =  which(mtm.ens.spec$sig.freq>0.5)
-p.mtm.ens <- periodAnnotate(p.mtm.ens, periods = per[sig_per],color = "chartreuse",y.lims = c(1e-5,5e-4))
+p.mtm.ens <- periodAnnotate(p.mtm.ens, periods = per[sig_per],color = "darkgreen",y.lims = c(1e-5,5e-4))
 show(p.mtm.ens)
 ```
 
@@ -289,11 +287,9 @@ p.redfit.ens <- plotSpectraEns(spec.ens = spec.redfit.ens,
                                color.line='darkorange',
                                color.low='darkorange2',
                                color.high='coral4',
-                               color.cl = 'white') +
+                               color.cl = 'red') +
   ggtitle("IODP 846 age ensemble, redfit") +
-  theme_hc(style = "darkunica") +
-  theme(axis.ticks.x = element_line(color = "gray"))
-
+geoChronRPlotTheme()
 # label periodicities of interest
 p.redfit.ens <- periodAnnotate(p.redfit.ens, periods = c(19,23,41,100), y.lims =c(0.01,500))
 show(p.redfit.ens)

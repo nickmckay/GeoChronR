@@ -103,7 +103,7 @@ plotTimeseriesEnsRibbons(X = ageEns, Y = SST) %>%
   plotTimeseriesEnsLines(X = ageEns, Y = SST,n.ens.plot = 10)
 ```
 
-It looks reasonable, so we can now proceed to use this ensemble like it's any other. 
+It looks reasonable, so we can now proceed to use this ensemble like any other. 
 
 Happy modeling!
 

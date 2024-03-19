@@ -428,9 +428,7 @@ loadOxcalOutput <- function(L,
   ensembleTable$depth$variableName  <-  "depth"
   ensembleTable$depth$units <- depth.units
   
-  names(oxEns)
   goodColumns <- seq(3,ncol(oxEns)-2)
-  
   if(length(goodColumns) != length( ensembleTable$depth$values)){
     goodColumns <- seq(2,ncol(oxEns)-2)
     if(length(goodColumns) != length( ensembleTable$depth$values)){
