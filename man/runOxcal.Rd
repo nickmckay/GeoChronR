@@ -104,6 +104,7 @@ L = runOxcal(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/
 \seealso{
 Other oxcal: 
 \code{\link{createOxcalModel}()},
+\code{\link{getModelParametersFromOxcalText}()},
 \code{\link{loadOxcalOutput}()},
 \code{\link{oxCalDateExpression}()}
 }

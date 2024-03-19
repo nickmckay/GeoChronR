@@ -29,6 +29,7 @@ Other utility:
 \code{\link{getOs}()},
 \code{\link{heuristicUnits}()},
 \code{\link{loadRemote}()},
-\code{\link{pullInstance}()}
+\code{\link{pullInstance}()},
+\code{\link{surrogateDataFun}()}
 }
 \concept{utility}

@@ -41,6 +41,7 @@ Load oxcal output
 \seealso{
 Other oxcal: 
 \code{\link{createOxcalModel}()},
+\code{\link{getModelParametersFromOxcalText}()},
 \code{\link{oxCalDateExpression}()},
 \code{\link{runOxcal}()}
 }

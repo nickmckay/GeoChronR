@@ -29,6 +29,7 @@ Other utility:
 \code{\link{getOs}()},
 \code{\link{loadRemote}()},
 \code{\link{pullInstance}()},
-\code{\link{stringifyVariables}()}
+\code{\link{stringifyVariables}()},
+\code{\link{surrogateDataFun}()}
 }
 \concept{utility}

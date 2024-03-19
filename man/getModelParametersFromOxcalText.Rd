@@ -15,3 +15,11 @@ The list of model parameters
 \description{
 Pull model parameters from OxCal Code
 }
+\seealso{
+Other oxcal: 
+\code{\link{createOxcalModel}()},
+\code{\link{loadOxcalOutput}()},
+\code{\link{oxCalDateExpression}()},
+\code{\link{runOxcal}()}
+}
+\concept{oxcal}

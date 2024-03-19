@@ -52,6 +52,7 @@ Create the oxcal model script
 }
 \seealso{
 Other oxcal: 
+\code{\link{getModelParametersFromOxcalText}()},
 \code{\link{loadOxcalOutput}()},
 \code{\link{oxCalDateExpression}()},
 \code{\link{runOxcal}()}

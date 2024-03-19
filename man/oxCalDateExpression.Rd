@@ -29,6 +29,7 @@ write oxcal expression for each date.
 \seealso{
 Other oxcal: 
 \code{\link{createOxcalModel}()},
+\code{\link{getModelParametersFromOxcalText}()},
 \code{\link{loadOxcalOutput}()},
 \code{\link{runOxcal}()}
 }

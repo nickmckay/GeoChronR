@@ -27,6 +27,7 @@ Other utility:
 \code{\link{getOs}()},
 \code{\link{heuristicUnits}()},
 \code{\link{loadRemote}()},
-\code{\link{stringifyVariables}()}
+\code{\link{stringifyVariables}()},
+\code{\link{surrogateDataFun}()}
 }
 \concept{utility}

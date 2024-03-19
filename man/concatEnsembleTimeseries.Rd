@@ -33,6 +33,7 @@ Other utility:
 \code{\link{heuristicUnits}()},
 \code{\link{loadRemote}()},
 \code{\link{pullInstance}()},
-\code{\link{stringifyVariables}()}
+\code{\link{stringifyVariables}()},
+\code{\link{surrogateDataFun}()}
 }
 \concept{utility}
