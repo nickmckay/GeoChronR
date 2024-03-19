@@ -2,15 +2,11 @@
 #' Use the write function from rEDM depending on the version
 #'
 #' @param ... Arguments to pass to surrogate
-#'
+#' @importFrom rEDM SurrogateData
 #' @return Surrogate output
 #' @export
 surrogateDataFun <- function(...){
-  if(packageVersion("rEDM") < "1.15"){
-    out <- rEDM::make_surrogate_data(...)
-  }else{
     out <- rEDM::SurrogateData(...)
-  }
   return(out)
 }
 

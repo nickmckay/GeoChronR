@@ -24,11 +24,9 @@ biocViews:
 Imports:
     Bchron,
     RColorBrewer,
-    arsenal,
     dplR,
     dplyr,
     ggplot2,
-    ggthemes,
     ggmap,
     grDevices,
     grid,
@@ -49,11 +47,7 @@ Imports:
     Hmisc,
     glue,
     BiocManager,
-    rEDM,
-    inline,
-    bindrcpp,
-    geosphere,
-    proto,
+    rEDM (>= 1.15),
     crayon,
     tidyr,
     magrittr,
@@ -76,5 +70,3 @@ BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
     nickmckay/nuspectral,  
-    neotomadb/neotoma2,
-    dkahle/ggmap

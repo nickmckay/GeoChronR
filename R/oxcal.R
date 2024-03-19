@@ -626,7 +626,6 @@ runOxcalModel <- function(L,
                           model.text,
                           model.num=NA,
                           chron.num=NA,
-                          meas.table.num = NA,
                           oxcal.path="~/OxCal/",
                           overwrite=TRUE,
                           max.ens = 1000){
