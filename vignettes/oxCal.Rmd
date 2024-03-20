@@ -39,7 +39,7 @@ quickSetupOxcal(path = "~/OxCal")
 OK, let's get a LiPD file from the LinkedEarth Wiki:
 
 ```{r}
- L <- readLipd("http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&lipdid=BJ8-03-70GGC.Linsley.2010")
+L <- readLipd("https://lipdverse.org/geoChronR-examples/BJ8-03-70GGC.Linsley.2010.lpd")
 ```
 
 
