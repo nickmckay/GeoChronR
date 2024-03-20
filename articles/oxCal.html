@@ -42,7 +42,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.12</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Intro to OxCal in geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2023-08-24</h4>
+            <h4 data-toc-skip class="date">2024-03-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/oxCal.Rmd" class="external-link"><code>vignettes/oxCal.Rmd</code></a></small>
       <div class="hidden name"><code>oxCal.Rmd</code></div>
@@ -164,7 +164,7 @@ will tell you.</p>
 <p>OK, let’s get a LiPD file from the LinkedEarth Wiki:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://wiki.linked.earth/wiki/index.php/Special:WTLiPD?op=export&amp;lipdid=BJ8-03-70GGC.Linsley.2010"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpO2X2r1/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
+<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/h1/8hndypj13nsbj5pn4xsnv1tm0000gn/T//RtmpIUarPL/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
 <span><span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></span></code></pre></div>
 <p>Now we can run it through oxcal. First, we specify our oxcal path,
 then use the <code>runOxcal</code> function. Like the other
@@ -281,7 +281,7 @@ methods.</p>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre></div>
 <p><img src="oxCal_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
 <p>It looks reasonable, so we can now proceed to use this ensemble like
-it’s any other.</p>
+any other.</p>
 <p>Happy modeling!</p>
 </div>
 </div>

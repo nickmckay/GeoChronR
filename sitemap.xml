@@ -160,6 +160,9 @@
     <loc>https://nickmckay.github.io/geoChronR/reference/getLegend.html</loc>
   </url>
   <url>
+    <loc>https://nickmckay.github.io/geoChronR/reference/getModelParametersFromOxcalText.html</loc>
+  </url>
+  <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/getOs.html</loc>
   </url>
   <url>
@@ -313,6 +316,9 @@
     <loc>https://nickmckay.github.io/geoChronR/reference/runOxcal.html</loc>
   </url>
   <url>
+    <loc>https://nickmckay.github.io/geoChronR/reference/runOxcalModel.html</loc>
+  </url>
+  <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/sampleBaconAges.html</loc>
   </url>
   <url>
@@ -329,6 +335,9 @@
   </url>
   <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/stringifyVariables.html</loc>
+  </url>
+  <url>
+    <loc>https://nickmckay.github.io/geoChronR/reference/surrogateDataFun.html</loc>
   </url>
   <url>
     <loc>https://nickmckay.github.io/geoChronR/reference/writeBacon.html</loc>

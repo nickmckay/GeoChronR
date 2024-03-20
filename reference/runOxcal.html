@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.12</span>
       </span>
     </div>
 
@@ -118,6 +118,7 @@
 <span>  events.per.unit.length.uncertainty <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  outlier.prob <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  cal.curve <span class="op">=</span> <span class="st">"IntCal20"</span>,</span>
+<span>  oxcal.code.export.path <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -196,6 +197,10 @@
 <dd><p>What calibration curve to use? Current options are "intcal20" (default), "marine20", "shcal20", "intcal13", "marine13", or "shcal13"</p></dd>
 
 
+<dt>oxcal.code.export.path</dt>
+<dd><p>optionally output the oxcal code by specifying a path (default = NA)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="createChronMeasInputDf.html">createChronMeasInputDf</a></code></p><dl><dt><code>lab.id.var</code></dt>
 <dd><p>Lab Id variable name</p></dd>
@@ -247,6 +252,7 @@
     <h2>See also</h2>
     <div class="dont-index"><p>Other oxcal: 
 <code><a href="createOxcalModel.html">createOxcalModel</a>()</code>,
+<code><a href="getModelParametersFromOxcalText.html">getModelParametersFromOxcalText</a>()</code>,
 <code><a href="loadOxcalOutput.html">loadOxcalOutput</a>()</code>,
 <code><a href="oxCalDateExpression.html">oxCalDateExpression</a>()</code></p></div>
     </div>
