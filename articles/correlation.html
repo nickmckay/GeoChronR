@@ -129,7 +129,7 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2024-03-21</h4>
+            <h4 data-toc-skip class="date">2024-04-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/correlation.Rmd" class="external-link"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -215,11 +215,11 @@ data.frame that summarizes the output.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   percentiles       r pSerial    pRaw pIsopersistent pIsospectral</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">9</span>        0.107</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.177         0.383</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.482         0.625</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.751         0.843</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.981         0.989</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0.025 -<span style="color: #BB0000;">0.338</span>    0.194 0.006<span style="text-decoration: underline;">66</span>         0.014<span style="text-decoration: underline;">6</span>       0.095<span style="text-decoration: underline;">6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       0.25  -<span style="color: #BB0000;">0.176</span>    0.483 0.147           0.179        0.393 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       0.5   -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">4</span>   0.676 0.395           0.463        0.627 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       0.75   0.044<span style="text-decoration: underline;">4</span>   0.837 0.672           0.748        0.837 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       0.975  0.170    0.985 0.971           0.979        0.990</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting-the-results">Plotting the results<a class="anchor" aria-label="anchor" href="#plotting-the-results"></a>
@@ -313,8 +313,8 @@ isopersistent, or isospectral). Let’s plot this again, but turn the
 levels. In this case, all but a small fraction of the significant
 correlations are expected due to test multiplicity - the randomness that
 we’re sampling by repeating the correlation across 1000 ensemble
-members. After acccounting for this, only 0.2% of the ensemble members
-are significant.</p>
+members. After acccounting for this, only 0% of the ensemble members are
+significant.</p>
 <p>Note that accounting for False Discovery Rate is a separate process
 than deriving p-values, and can be applied to any of the
 significance.options in geoChronR. For our final example we’ll take a
