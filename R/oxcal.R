@@ -619,7 +619,7 @@ runOxcal <-  function(L,
 #' @param max.ens the maximum number of ensembles to load in (default = 1000)
 #' @param oxcal.path path to oxcal binaries
 #' @inheritParams writeBacon
-#'
+#' @export
 #' @return a LiPD object
 runOxcalModel <- function(L,
                           model.text,
