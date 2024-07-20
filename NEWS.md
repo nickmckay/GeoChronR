@@ -1,5 +1,7 @@
 # geoChronR 1.1.13
 
+* Reference to `spatstat.explore::CDF.density` replaced with `spatstat.univar::CDF.density` following update to spatstat v3.0.0
+
 # geoChronR 1.1.12
 
 * added `oxcal.code.export.path` option to `runOxcal()` to allow users to optionally save the oxcal model code before it runs
