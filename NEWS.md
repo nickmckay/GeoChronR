@@ -1,3 +1,5 @@
+# geoChronR 1.1.13
+
 # geoChronR 1.1.12
 
 * added `oxcal.code.export.path` option to `runOxcal()` to allow users to optionally save the oxcal model code before it runs
