@@ -298,7 +298,7 @@ getModelParametersFromOxcalText <- function(modText){
 #' @inheritParams selectData
 #' @param chron.num Which chronData object to select?
 #' @param oxcal.result.file.path Path to oxcal output data (from oxcAAR::executeOxcalScript())
-#' @param model.parameters model parameters to write into the lipd file
+#' @param model.parameters model parameters to write into the lipd file or the text of the oxcal model
 #' @param depth.units Depth units to assign in (default = "cm")
 #' @param make.new Create a new model?
 #' @param max.ens Maximum number of ensemble members to import (default = 1000)
@@ -421,6 +421,15 @@ loadOxcalOutput <- function(L,
   MCMCfile <- file.path(dirname(oxcal.result.file.path),"MCMC_Sample.csv")
   
   oxEns <- read.csv(MCMCfile)
+  
+  log.file <- readr::read_file(file.path(dirname(oxcal.result.file.path),paste0(stripExtension(oxcal.result.file.path),".log")))
+  print(log.file)
+  # nMCMC <- stringr::str_extract()
+
+  
+  if(nrow(oxEns) >= model.parameters$parameters$n.it){
+   cat(crayon::red(crayon::bold(glue::glue("It looks like youre MCMC_Sample parameters aren't large enough.")))) 
+  }
   
   
   ensembleTable=list()
