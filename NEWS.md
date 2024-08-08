@@ -1,3 +1,5 @@
+# geoChronR 1.1.14
+
 # geoChronR 1.1.13
 
 * Reference to `spatstat.explore::CDF.density` replaced with `spatstat.univar::CDF.density` following update to spatstat v3.0.0
