@@ -125,6 +125,7 @@ estimateUncertaintyFromRange = function(L,
 #' @param chron.num  an integer that corresponds to chron.numData object (L$chronData[[?]]) has the model you want to get the ensemble from
 #' @param model.num an integer that corresponds to chron.num model you want to get the ensemble from?
 #' @param max.ens Maximum number of ensemble members to map
+#' @param paleo.depth.range A two element vector eg: c(min,max), that describes the range of in the paleo data depth over which to map the data. Depths outside this range will correspond to NAs in the age ensemble. By default (default = NA) this is the full range of the paleo.depth.var.
 #' @import pbapply
 #' @return L a lipd object
 #' @export
@@ -140,6 +141,7 @@ mapAgeEnsembleToPaleoData = function(L,
                                      model.num=NA,
                                      ens.table.num = 1,
                                      max.ens=NA,
+                                     paleo.depth.range = NA,
                                      strict.search=FALSE){
   print(L$dataSetName)
   #check on the model first
@@ -279,7 +281,22 @@ mapAgeEnsembleToPaleoData = function(L,
     }
     
     #interpolate
-    na.depth.i = which(!is.na(depth))
+    
+    
+    if(length(paleo.depth.range) != 2 & !all(is.na(paleo.depth.range))){
+      stop("paleo.depth.range must be either NA (to use the full range) or a two element numeric vector describing the depth range")
+    }
+    
+    
+    
+    if(any(is.na(paleo.depth.range))){
+      paleo.depth.range <- range(depth)
+    }
+    
+
+      
+    
+    na.depth.i = which(!is.na(depth) & depth >= min(paleo.depth.range) & depth <= max(paleo.depth.range))
     aei = matrix(nrow = length(depth),ncol = ncol(ens))
     aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
     aei[na.depth.i,] = aeig

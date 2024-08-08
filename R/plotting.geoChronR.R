@@ -7,8 +7,8 @@
 #' @param h a ggplot object
 #' @return a list of x and y ranges
 getPlotRanges <- function(h){
-  if(packageVersion("ggplot2") >= 2){ #deal with ggplot versions
-    if(packageVersion("ggplot2") >= 3){#then version > 3
+  if(packageVersion("ggplot2") >= "2"){ #deal with ggplot versions
+    if(packageVersion("ggplot2") >= "3"){#then version > 3
       y.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits())
       x.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits())
     }else{#version 2
@@ -2278,7 +2278,7 @@ plotTimeseriesStack <- function(plot.df,
   
   nlines <- length(unique(plot.df$paleoData_TSid))
   
-  if(getRversion() >= 4){
+  if(getRversion() >= "4"){
     nColors <- min(length(axisStats$color.var),nlines)
   }else{
     nColors <- min(length(levels(axisStats$color.var)),nlines)

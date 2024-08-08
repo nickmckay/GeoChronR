@@ -1,5 +1,8 @@
 # geoChronR 1.1.14
 
+* Dealt with changes to R's handling of package versions that was throwing errors. 
+* Added some better error messages in `storey()` to try to help [with issue 89](https://github.com/nickmckay/GeoChronR/issues/89)
+
 # geoChronR 1.1.13
 
 * Reference to `spatstat.explore::CDF.density` replaced with `spatstat.univar::CDF.density` following update to spatstat v3.0.0

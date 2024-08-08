@@ -20,7 +20,7 @@ loadOxcalOutput(
 
 \item{oxcal.result.file.path}{Path to oxcal output data (from oxcAAR::executeOxcalScript())}
 
-\item{model.parameters}{model parameters to write into the lipd file}
+\item{model.parameters}{model parameters to write into the lipd file or the text of the oxcal model}
 
 \item{depth.units}{Depth units to assign in (default = "cm")}
 

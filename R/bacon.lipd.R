@@ -234,7 +234,7 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   while(sline<10000){
     bacData=try(read.table(bfname,skip=sline,sep=c(",",";")),silent=TRUE)
     if(!is.character(bacData)){
-      if(getRversion()>=4){
+      if(getRversion() >= "4"){
         toTest <- bacData$V1
       }else{
         toTest <- levels(bacData$V1)
@@ -258,26 +258,9 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
     end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
   }
   
-  #Old strategy. Updated 1/8/21 by NPM.
-  # if(getRversion()>=4){
-  #   end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
-  # }else{
-  #   if(packageVersion("rbacon") < '2.5.0'){
-  #     end.depth=as.numeric(gsub(levels(bacData$V12),pattern=";",replacement=""))
-  #   }else{
-  #     end.depth=as.numeric(gsub(bacData$V12,pattern=";",replacement=""))
-  #   }
-  # }
-  # 
-  
-  
   start.depth=bacData$V11
   Dc=(end.depth-start.depth)/(K-1)
   depths=seq(start.depth,end.depth,by=Dc)
-  
-  
-  #out_file <- out.file[,1:(ncol(out.file)-2)]
-  
   
   
   BACages = kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))

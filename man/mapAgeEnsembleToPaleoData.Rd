@@ -17,6 +17,7 @@ mapAgeEnsembleToPaleoData(
   model.num = NA,
   ens.table.num = 1,
   max.ens = NA,
+  paleo.depth.range = NA,
   strict.search = FALSE
 )
 }
@@ -44,6 +45,8 @@ mapAgeEnsembleToPaleoData(
 \item{ens.table.num}{an integer that corresponds to ensembleTable you want to get the variable from?}
 
 \item{max.ens}{Maximum number of ensemble members to map}
+
+\item{paleo.depth.range}{A two element vector eg: c(min,max), that describes the range of in the paleo data depth over which to map the data. Depths outside this range will correspond to NAs in the age ensemble. By default (default = NA) this is the full range of the paleo.depth.var.}
 
 \item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
 }
