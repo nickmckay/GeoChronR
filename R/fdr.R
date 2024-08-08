@@ -129,13 +129,22 @@ fdrBasic <- function(pvals,qlevel=0.05){
 #' @param pvals (required):  a vector of pvals on which to conduct the multiple testing
 #' @return  estimate of a, the number of alternative hypotheses
 storey <- function(edf.quantile,pvals){
+  
+  if(length(edf.quantile) > 1){
+    stop("edf.quantile needs to be length 1")
+  }
 
-  if(edf.quantile >=1 | edf.quantile <=0){
+  if(edf.quantile >= 1 | edf.quantile <= 0){
     stop('edf.quantile should be between 0 and 1')
   }
-  a <- (mean(pvals<=edf.quantile, na.rm =TRUE)-edf.quantile)/(1-edf.quantile)
+  
+  if(all(!is.finite(pvals))){
+    stop("all of the p-values are non-finite (NAs, NANs, inf)")
+  }
+  
+  a <- (mean(pvals <= edf.quantile, na.rm =TRUE)-edf.quantile)/(1-edf.quantile)
 
-  if(a>0){
+  if(a > 0){
     return(a)
   } else{
     return(0)
