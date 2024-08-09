@@ -16,9 +16,7 @@ plotTimeseriesStack(
   lab.buff = 0.02,
   lab.size = 3,
   lab.space = 2,
-  color.ramp = function(nColors) {
-     RColorBrewer::brewer.pal(nColors, "Dark2")
- }
+  color.ramp = NA
 )
 }
 \arguments{
@@ -44,13 +42,13 @@ plotTimeseriesStack(
 
 \item{lab.space}{Multiplier on lab.buff for the axis label separation from the y-scale}
 
-\item{color.ramp}{Specify the colors to use in the plot arranged along color.var. (default = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")})}
+\item{color.ramp}{Specify the colors to use in the plot arranged along color.var. You can do this as single color as a character that will be repeated, as a vector of characters, or a function that creates colors given nColors input  (default = NA, which becomes RColorBrewer::brewer.pal(nColors,"Dark2"))}
 }
 \value{
 A ggplot object of the plot
 }
 \description{
-Creates a suite of plots to characterize the results of an ensemble regression.
+Creates a stack of timeseries plots
 }
 \section{Long-form example}{
 

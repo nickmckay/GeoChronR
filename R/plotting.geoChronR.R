@@ -2152,8 +2152,6 @@ plotRegressEns = function(reg.ens,
 }
 
 #' @export
-#' @family plot
-#' @author Nick McKay
 #' @title Plot a bunch of timeseries in a vertical stack
 #' @description Creates a stack of timeseries plots
 #' @import ggplot2
@@ -2172,9 +2170,11 @@ plotRegressEns = function(reg.ens,
 #' @param lab.buff Fraction of the x axis to space the tick marks away from the axes bars (default = 0.02)
 #' @param lab.size Font size for the ylabels
 #' @param line.size thickness of the line (default = 0.5)
-#' @param color.ramp Specify the colors to use in the plot arranged along color.var. (default = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")})
+#' @param color.ramp Specify the colors to use in the plot arranged along color.var. You can do this as single color as a character that will be repeated, as a vector of characters, or a function that creates colors given nColors input  (default = NA, which becomes RColorBrewer::brewer.pal(nColors,"Dark2"))
 #' @param lab.space Multiplier on lab.buff for the axis label separation from the y-scale
 #' @return A ggplot object of the plot
+#' @family plot
+#' @author Nick McKay
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/PlotTimeseriesStack.html}{View a full-fledged example of how to use this function.} 
 plotTimeseriesStack <- function(plot.df,
@@ -2188,7 +2188,7 @@ plotTimeseriesStack <- function(plot.df,
                                 lab.buff = 0.02, 
                                 lab.size = 3,  
                                 lab.space= 2,
-                                color.ramp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}){
+                                color.ramp = NA){
   
   
   #force grouping by TSid
@@ -2196,6 +2196,10 @@ plotTimeseriesStack <- function(plot.df,
   
   #create the color function
   #start with some error checking...
+  if(is.na(color.ramp)){
+    color.ramp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}
+  }
+  
   if(is.character(color.ramp)){#then use that for the ramp
     #color.fun <- function(nColors,color.ramp){rep(grDevices::rgb(maxColorValue = 255,t(grDevices::col2rgb(color.ramp))),nColors)}
     color.fun <- function(nColors,color.ramp){rep(color.ramp,nColors)}
