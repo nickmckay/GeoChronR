@@ -9,7 +9,7 @@ bamCorrect(X, t, model = NULL)
 \arguments{
 \item{X}{data (vector or matrix n*p)}
 
-\item{t}{chronology for data X (n*1) The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.}
+\item{t}{chronology for data X (n*1)}
 
 \item{model}{a list that describes the model to use in BAM
 \itemize{
@@ -18,7 +18,7 @@ bamCorrect(X, t, model = NULL)
 \item model$param: probability of growth band being perturbed (default: prob of missing band = prob of doubly-counted band = 0.05)
 \itemize{
      \item if model$param is a single argument, then the perturbations are symmetric (prob of missing band = prob of doubly-counted band)
-     \item if model$param a1 != a2 the model is asymmetric
+     \item if model$param = [a1 a2] and a1 neq a2 the model is asymmetric
      \itemize{
                  \item a1 = prob(missing layer) - undercounted
                  \item a2 = prob(layer counted multiple times) - overcounted
@@ -40,10 +40,16 @@ where tn is the chronology length = n (default), shortest sample or longest samp
 }
 \description{
 Generate an ensemble of possible age corrected data:See www.clim-past-discuss.net/9/6077/2013/ for a detailed description of the model.
+The time series in X are automatically flipped to range from most recent to oldest measurements when the intput t is given in increasing order.
 }
 \examples{
 \dontrun{
-res <- bamCorrect(X,t) #' #will generate an ensemble of 1000 age models randomly following a Poisson process with rate parameter theta=0.05 used to perturb data X
+res <- bamCorrect(X,t) 
+#will generate an ensemble of 1000 age models randomly following
+#a Poisson process with rate parameter theta=0.05 used to perturb data X
+res <- bamCorrect(X,t,model) 
+#will correct data X  with the model specified in
+#the model structure
 }
 }
 \seealso{

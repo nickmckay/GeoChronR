@@ -2196,8 +2196,8 @@ plotTimeseriesStack <- function(plot.df,
   
   #create the color function
   #start with some error checking...
-  if(is.na(color.ramp)){
-    color.ramp = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}
+  if(all(is.na(color.ramp))){
+    color.ramp <-  function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")}
   }
   
   if(is.character(color.ramp)){#then use that for the ramp
