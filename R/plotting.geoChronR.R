@@ -2155,14 +2155,13 @@ plotRegressEns = function(reg.ens,
 #' @family plot
 #' @author Nick McKay
 #' @title Plot a bunch of timeseries in a vertical stack
-#' @description Creates a suite of plots to characterize the results of an ensemble regression.
+#' @description Creates a stack of timeseries plots
 #' @import ggplot2
 #' @importFrom ggridges geom_ridgeline theme_ridges
 #' @import dplyr
 #' @import RColorBrewer
 #' @import grDevices
 #' @import scales
-#'
 #' @param plot.df A tidy data.frame, typically the output of tidyTs()
 #' @param time.var Which variable to put on the x-axis. Must be in plot.df. Typically "year", "age", or "depth"
 #' @param color.var Which variable to color the timeseries by. The default ("paleoData_TSid") will give each timeseries it's own color. Common other options include "paleoData_variable", "archiveType", or "paleoData_units", but any variable in plot.df should work.
@@ -2175,7 +2174,6 @@ plotRegressEns = function(reg.ens,
 #' @param line.size thickness of the line (default = 0.5)
 #' @param color.ramp Specify the colors to use in the plot arranged along color.var. (default = function(nColors){RColorBrewer::brewer.pal(nColors,"Dark2")})
 #' @param lab.space Multiplier on lab.buff for the axis label separation from the y-scale
-#'
 #' @return A ggplot object of the plot
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/PlotTimeseriesStack.html}{View a full-fledged example of how to use this function.} 
