@@ -6,13 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Intro to OxCal in geoChronR • geoChronR</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -20,15 +14,13 @@
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Intro to OxCal in geoChronR">
-<meta property="og:description" content="geoChronR">
-<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -42,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.14</span>
       </span>
     </div>
 
@@ -54,7 +46,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -104,7 +96,7 @@
 <li>
   <a href="https://github.com/nickmckay/GeoChronR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -113,7 +105,7 @@
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
       </form>
-      
+
     </div>
 <!--/.nav-collapse -->
   </div>
@@ -121,7 +113,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -129,9 +121,9 @@
       <h1 data-toc-skip>Intro to OxCal in geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2024-04-03</h4>
+            <h4 data-toc-skip class="date">2024-08-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/oxCal.Rmd" class="external-link"><code>vignettes/oxCal.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/oxCal.Rmd" class="external-link"><code>vignettes/oxCal.Rmd</code></a></small>
       <div class="hidden name"><code>oxCal.Rmd</code></div>
 
     </div>
@@ -164,7 +156,7 @@ will tell you.</p>
 <p>OK, let’s get a LiPD file from the LinkedEarth Wiki:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"https://lipdverse.org/geoChronR-examples/BJ8-03-70GGC.Linsley.2010.lpd"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/h1/8hndypj13nsbj5pn4xsnv1tm0000gn/T//Rtmpin0HDt/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
+<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/m_/cksx93ys47x4621g0zbw_m4m0000gn/T//RtmpicbcsR/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
 <span><span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></span></code></pre></div>
 <p>Now we can run it through oxcal. First, we specify our oxcal path,
 then use the <code>runOxcal</code> function. Like the other
@@ -243,7 +235,8 @@ multiple hours).</p>
 <span><span class="co"><span style="color: #00BB00; font-weight: bold;">#&gt;  Find later with getLastVarString()</span></span></span>
 <span><span class="co"><span style="color: #00BB00; font-weight: bold;">#&gt; </span><span style="color: #00BB00;">lab.id.var = 'id', age.14c.var = 'age14c', age.14c.uncertainty.var = 'age14cuncertainty', age.var = 'calendarage', age.uncertainty.var = 'calendarageuncertainty', depth.var = 'depth', reservoir.age.14c.var = NULL, reservoir.age.14c.uncertainty.var = NULL, rejected.ages.var = NULL, </span></span></span>
 <span><span class="co"><span style="color: #00BB00;">#&gt; </span><span style="color: #0000BB;">Oxcal is now running, depending on your settings and your computer, this may take a few minutes to several hours. The model is complete when a table of model diagnostics appears.</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span>[1] "OxCal v4.4.4 Bronk Ramsey (2021); r:5\nAtmospheric data from Reimer et al (2020)\n405.5\n400\n393.5\n390\n380\n370\n361.5\n360\n350\n340\n330\n320.5\n320\n310\n300\n290\n280\n270\n260\n250\n241.5\n240\n230\n220\n210\n201.5\n200\n190\n180\n176\n170\n160\n150\n140\n130\n120\n110\n104\n100\n90\n80\n70\n63.5\n60\n50\n40\n30\n20\n10\n0\nWarning! Duplicate names - Atmospheric\nWarning! Duplicate names - Atmospheric\nWarning! Duplicate names - Atmospheric\nBoundary()\nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-45436 R_Date(12900,45)\n  68.3% probability\n    13563BC (68.3%) 13372BC\n  95.4% probability\n    13644BC (95.4%) 13310BC\nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-65581 R_Date(12550,50)\n  68.3% probability\n    13106BC (59.4%) 12886BC\n    12728BC ( 8.9%) 12677BC\n  95.4% probability\n    13180BC (71.0%) 12847BC\n    12774BC (24.5%) 12560BC\nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-60748 R_Date(10250,40)\n  68.3% probability\n    10049BC (58.3%) 9922BC\n    9912BC ( 9.9%) 9884BC\n  95.4% probability\n    10480BC ( 2.0%) 10450BC\n    10217BC ( 0.4%) 10206BC\n    10192BC ( 0.6%) 10176BC\n    10154BC (91.3%) 9864BC\n    9832BC ( 1.0%) 9811BC\nD \nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-60737 R_Date(7190,45)\n  68.3% probability\n    6076BC (68.3%) 6010BC\n  95.4% probability\n    6217BC (10.2%) 6139BC\n    6096BC (83.9%) 5982BC\n    5940BC ( 1.3%) 5928BC\nD \nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-54154 R_Date(6160,60)\n  68.3% probability\n    5208BC (68.3%) 5040BC\n  95.4% probability\n    5298BC ( 4.5%) 5258BC\n    5221BC (91.0%) 4941BC\nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-60750 R_Date(5410,35)\n  68.3% probability\n    4330BC (68.3%) 4249BC\n  95.4% probability\n    4346BC (85.2%) 4228BC\n    4196BC ( 7.7%) 4166BC\n    4094BC ( 2.5%) 4070BC\nD \nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-60747 R_Date(4850,40)\n  68.3% probability\n    3700BC ( 8.2%) 3684BC\n    3655BC (37.1%) 3626BC\n    3562BC (23.0%) 3533BC\n  95.4% probability\n    3708BC (14.5%) 3670BC\n    3660BC (81.0%) 3527BC\nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-54153 R_Date(4240,50)\n  68.3% probability\n    2910BC (35.2%) 2861BC\n    2805BC (26.1%) 2754BC\n    2720BC ( 7.0%) 2703BC\n  95.4% probability\n    3004BC ( 0.8%) 2992BC\n    2928BC (43.7%) 2831BC\n    2822BC (49.6%) 2662BC\n    2652BC ( 1.4%) 2632BC\nD \nD \nD \nD \nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-54152 R_Date(2750,50)\n  68.3% probability\n    964BC ( 1.5%) 961BC\n    930BC (66.8%) 826BC\n  95.4% probability\n    1006BC (95.4%) 810BC\nD \nD \nD \nD \nAtmospheric Curve(IntCal20.14c)\nAtmospheric data from Reimer et al (2020)\nOS-45435 R_Date(1310,30)\n  68.3% probability\n    664AD (29.2%) 689AD\n    698AD ( 3.2%) 701AD\n    742AD (35.9%) 772AD\n  95.4% probability\n    656AD (95.4%) 774AD\nD \nD \nD \nD \nD \nD \nsurface C_Date(1950,25)\n  68.3% probability\n    1923AD (68.3%) 1976AD\n  95.4% probability\n    1900AD (95.4%) 2000AD\nBoundary()\nMCMC_Sample()\n( P_Sequence \nP_Sequence(0.1)\n) P_Sequence \nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nWarning! No outlier model specified - use Outlier_Model()\nPosterior \n( MCMC(30000)\nOverall agreement 101.0%\nDynamic agreement 101.1%\nPosterior \n  68.3% probability\n    13541BC (68.3%) 13351BC\n  95.4% probability\n    13638BC (95.4%) 13292BC\nOS-45436 Posterior \n  68.3% probability\n    13541BC (68.3%) 13351BC\n  95.4% probability\n    13638BC (95.4%) 13292BC\n Agreement 100.1%\nD Posterior \n  68.3% probability\n    13451BC (68.3%) 13036BC\n  95.4% probability\n    13590BC (92.5%) 12847BC\n    12812BC ( 2.9%) 12714BC\nOS-65581 Posterior \n  68.3% probability\n    13115BC (63.3%) 12884BC\n    12723BC ( 5.0%) 12692BC\n  95.4% probability\n    13185BC (73.7%) 12844BC\n    12776BC (21.7%) 12566BC\n Agreement 102.1%\nD Posterior \n  68.3% probability\n    13102BC (68.3%) 12497BC\n  95.4% probability\n    13183BC (95.4%) 11529BC\nD Posterior \n  68.3% probability\n    12630BC (68.1%) 11084BC\n    11074BC ( 0.1%) 11070BC\n  95.4% probability\n    12936BC (95.4%) 10361BC\nD Posterior \n  68.3% probability\n    11062BC (68.3%) 9953BC\n  95.4% probability\n    12102BC (95.4%) 9892BC\nOS-60748 Posterior \n  68.3% probability\n    10050BC (58.4%) 9920BC\n    9913BC ( 9.9%) 9884BC\n  95.4% probability\n    10481BC ( 2.2%) 10448BC\n    10370BC ( 0.3%) 10363BC\n    10218BC ( 0.6%) 10202BC\n    10196BC ( 1.1%) 10170BC\n    10155BC (90.0%) 9860BC\n    9834BC ( 1.3%) 9808BC\n Agreement  99.5%\nD Posterior \n  68.3% probability\n    10096BC (68.3%) 9814BC\n  95.4% probability\n    10490BC ( 2.3%) 10396BC\n    10381BC ( 0.6%) 10346BC\n    10314BC ( 0.5%) 10278BC\n    10242BC (92.2%) 9053BC\nD Posterior \n  68.3% probability\n    9954BC (68.3%) 8490BC\n  95.4% probability\n    10076BC (95.4%) 7239BC\nD Posterior \n  68.3% probability\n    8856BC ( 0.2%) 8846BC\n    8840BC (67.9%) 6918BC\n    6898BC ( 0.1%) 6893BC\n  95.4% probability\n    9556BC (95.4%) 6341BC\nD Posterior \n  68.3% probability\n    7258BC ( 0.2%) 7252BC\n    7244BC (68.1%) 6039BC\n  95.4% probability\n    8511BC (95.4%) 6004BC\nOS-60737 Posterior \n  68.3% probability\n    6080BC (68.3%) 6000BC\n  95.4% probability\n    6220BC (15.8%) 6126BC\n    6104BC (79.1%) 5982BC\n    5936BC ( 0.5%) 5931BC\n Agreement  96.7%\nD Posterior \n  68.3% probability\n    6083BC (68.3%) 5986BC\n  95.4% probability\n    6222BC (95.4%) 5901BC\nD Posterior \n  68.3% probability\n    6046BC (68.3%) 5687BC\n  95.4% probability\n    6148BC (95.4%) 5395BC\nD Posterior \n  68.3% probability\n    5813BC (68.3%) 5340BC\n  95.4% probability\n    5986BC (95.4%) 5164BC\nD Posterior \n  68.3% probability\n    5476BC (68.3%) 5101BC\n  95.4% probability\n    5756BC (95.4%) 5009BC\nOS-54154 Posterior \n  68.3% probability\n    5208BC (68.3%) 5042BC\n  95.4% probability\n    5298BC ( 4.4%) 5256BC\n    5223BC (91.1%) 4942BC\n Agreement 101.4%\nD Posterior \n  68.3% probability\n    5112BC (68.3%) 4760BC\n  95.4% probability\n    5200BC (95.4%) 4512BC\nD Posterior \n  68.3% probability\n    4868BC (68.3%) 4444BC\n  95.4% probability\n    5050BC (95.4%) 4316BC\nD Posterior \n  68.3% probability\n    4548BC (68.3%) 4265BC\n  95.4% probability\n    4830BC (95.4%) 4182BC\nOS-60750 Posterior \n  68.3% probability\n    4330BC (68.3%) 4251BC\n  95.4% probability\n    4350BC (87.1%) 4225BC\n    4198BC ( 6.9%) 4166BC\n    4093BC ( 1.4%) 4074BC\n Agreement 102.8%\nD Posterior \n  68.3% probability\n    4332BC (68.3%) 4234BC\n  95.4% probability\n    4346BC (95.4%) 4062BC\nD Posterior \n  68.3% probability\n    4269BC (68.3%) 3989BC\n  95.4% probability\n    4316BC (95.4%) 3796BC\nD Posterior \n  68.3% probability\n    4071BC (68.3%) 3736BC\n  95.4% probability\n    4216BC (95.4%) 3632BC\nD Posterior \n  68.3% probability\n    3825BC (68.3%) 3574BC\n  95.4% probability\n    4030BC (95.4%) 3537BC\nOS-60747 Posterior \n  68.3% probability\n    3696BC ( 3.3%) 3689BC\n    3654BC (33.1%) 3626BC\n    3576BC (31.9%) 3532BC\n  95.4% probability\n    3710BC (95.4%) 3522BC\n Agreement  97.8%\nD Posterior \n  68.3% probability\n    3696BC ( 3.6%) 3684BC\n    3655BC (31.2%) 3600BC\n    3586BC (33.5%) 3521BC\n  95.4% probability\n    3752BC ( 0.4%) 3737BC\n    3714BC (95.1%) 3284BC\nD Posterior \n  68.3% probability\n    3538BC (68.3%) 3074BC\n  95.4% probability\n    3637BC (95.4%) 2866BC\nD Posterior \n  68.3% probability\n    3036BC (68.3%) 2755BC\n  95.4% probability\n    3337BC (95.4%) 2672BC\nOS-54153 Posterior \n  68.3% probability\n    2912BC (39.3%) 2859BC\n    2805BC (24.6%) 2756BC\n    2718BC ( 4.4%) 2706BC\n  95.4% probability\n    3008BC ( 1.6%) 2984BC\n    2934BC (93.0%) 2664BC\n    2650BC ( 0.9%) 2634BC\n Agreement 102.5%\nD Posterior \n  68.3% probability\n    2898BC (68.3%) 2600BC\n  95.4% probability\n    2957BC (95.4%) 2199BC\nD Posterior \n  68.3% probability\n    2760BC (68.3%) 2213BC\n  95.4% probability\n    2876BC (95.4%) 1806BC\nD Posterior \n  68.3% probability\n    2529BC (68.3%) 1848BC\n  95.4% probability\n    2731BC (95.4%) 1476BC\nD Posterior \n  68.3% probability\n    2220BC (68.3%) 1496BC\n  95.4% probability\n    2516BC (95.4%) 1206BC\nD Posterior \n  68.3% probability\n    1866BC (68.3%) 1188BC\n  95.4% probability\n    2244BC (95.4%) 999BC\nD Posterior \n  68.3% probability\n    1485BC (68.3%) 956BC\n  95.4% probability\n    1905BC (95.4%) 866BC\nD Posterior \n  68.3% probability\n    1107BC (68.3%) 838BC\n  95.4% probability\n    1493BC (95.4%) 809BC\nOS-54152 Posterior \n  68.3% probability\n    930BC (68.3%) 820BC\n  95.4% probability\n    1010BC (95.4%) 806BC\n Agreement 101.8%\nD Posterior \n  68.3% probability\n    971BC (68.3%) 690BC\n  95.4% probability\n    1028BC (95.4%) 215BC\nD Posterior \n  68.3% probability\n    814BC (68.3%) 117BC\n  95.4% probability\n    905BC (95.4%) 344AD\nD Posterior \n  68.3% probability\n    238BC ( 0.3%) 234BC\n    228BC (67.9%) 528AD\n  95.4% probability\n    615BC (95.4%) 672AD\nD Posterior \n  68.3% probability\n    384AD (68.3%) 760AD\n  95.4% probability\n    142BC (95.4%) 773AD\nOS-45435 Posterior \n  68.3% probability\n    662AD (40.4%) 701AD\n    742AD (27.8%) 770AD\n  95.4% probability\n    652AD (95.4%) 775AD\n Agreement  98.4%\nD Posterior \n  68.3% probability\n    664AD (68.3%) 798AD\n  95.4% probability\n    650AD (95.4%) 1063AD\nD Posterior \n  68.3% probability\n    735AD (68.3%) 1080AD\n  95.4% probability\n    676AD (95.4%) 1372AD\nD Posterior \n  68.3% probability\n    892AD (68.3%) 1358AD\n  95.4% probability\n    768AD (95.4%) 1610AD\nD Posterior \n  68.3% probability\n    1130AD (68.3%) 1622AD\n  95.4% probability\n    924AD (95.4%) 1800AD\nD Posterior \n  68.3% probability\n    1410AD (68.3%) 1840AD\n  95.4% probability\n    1135AD (95.4%) 1928AD\nD Posterior \n  68.3% probability\n    1689AD (68.3%) 1958AD\n  95.4% probability\n    1386AD (95.4%) 1988AD\nsurface Posterior \n  68.3% probability\n    1924AD (68.3%) 1978AD\n  95.4% probability\n    1894AD (95.4%) 2008AD\n Agreement 100.6%\nPosterior \n  68.3% probability\n    1924AD (68.3%) 1978AD\n  95.4% probability\n    1894AD (95.4%) 2008AD\n) MCMC(4032000)\n"</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">It looks like youre MCMC_Sample parameters aren't large enough.</span></span></span></code></pre></div>
 <p>Great. After OxCal finishes running successfully, it will return this
 table showing some diagnostics of the MCMC statistics for the dated
 levels. If the table is empty, that’s a sure sign that there was an
@@ -289,9 +282,7 @@ any other.</p>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -304,17 +295,17 @@ any other.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
   docsearch({
-    
-    
+
+
     apiKey: '21c1c99b27cf4a45be9f8db70183f6c7',
     indexName: 'lipd-utilities',
     inputSelector: 'input#search-input.form-control',

@@ -1,19 +1,18 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   AddEnsemble: AddEnsemble.html
+  correlation: correlation.html
   Introduction: Introduction.html
+  oxCal: oxCal.html
   PCA: PCA.html
   PlotTimeseriesStack: PlotTimeseriesStack.html
-  TsFilteringAndMapping: TsFilteringAndMapping.html
-  correlation: correlation.html
-  oxCal: oxCal.html
   regression: regression.html
   spectral_analysis: spectral_analysis.html
   tidyIso2k: tidyIso2k.html
-last_built: 2024-04-03T22:30Z
+  TsFilteringAndMapping: TsFilteringAndMapping.html
+last_built: 2024-08-09T19:23Z
 urls:
   reference: https://nickmckay.github.io/geoChronR/reference
   article: https://nickmckay.github.io/geoChronR/articles
-

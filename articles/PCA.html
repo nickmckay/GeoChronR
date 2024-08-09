@@ -6,13 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ensemble PCA • geoChronR</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -20,15 +14,13 @@
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Ensemble PCA">
-<meta property="og:description" content="geoChronR">
-<meta property="og:image" content="https://nickmckay.github.io/geoChronR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -42,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.14</span>
       </span>
     </div>
 
@@ -54,7 +46,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Tutorials
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -104,7 +96,7 @@
 <li>
   <a href="https://github.com/nickmckay/GeoChronR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -113,7 +105,7 @@
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
 </div>
       </form>
-      
+
     </div>
 <!--/.nav-collapse -->
   </div>
@@ -121,7 +113,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -129,9 +121,9 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2024-04-03</h4>
+            <h4 data-toc-skip class="date">2024-08-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/HEAD/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
 
     </div>
@@ -166,7 +158,7 @@ analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426
 compilation, which we load here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">FD</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/h1/8hndypj13nsbj5pn4xsnv1tm0000gn/T//RtmpX74YKE/lpdDownload..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/m_/cksx93ys47x4621g0zbw_m4m0000gn/T//Rtmpc0gc6O/lpdDownload..."</span></span>
 <span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Austfonna.Isaksson.2005.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-CampCentury.Fisher.1969.lpd"</span></span>
@@ -291,18 +283,18 @@ timeseries:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">quantileData</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
-<span><span class="co">##     ages `0.025`     `0.25`  `0.5` `0.75` `0.975`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.068</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.050<span style="text-decoration: underline;">7</span>    0.102  0.163    0.292</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.027<span style="text-decoration: underline;">5</span>  0.094<span style="text-decoration: underline;">9</span>    0.136  0.175    0.253</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.059<span style="text-decoration: underline;">7</span>  0.128     0.168  0.208    0.282</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.101   0.177     0.210  0.236    0.297</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.083<span style="text-decoration: underline;">7</span>  0.148     0.177  0.202    0.250</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.018</span><span style="color: #BB0000; text-decoration: underline;">5</span>  0.055<span style="text-decoration: underline;">3</span>    0.093<span style="text-decoration: underline;">7</span> 0.134    0.206</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.030</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.021<span style="text-decoration: underline;">4</span>    0.047<span style="text-decoration: underline;">6</span> 0.070<span style="text-decoration: underline;">2</span>   0.115</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.097</span><span style="color: #BB0000; text-decoration: underline;">5</span> -<span style="color: #BB0000;">0.024</span><span style="color: #BB0000; text-decoration: underline;">7</span>    0.012<span style="text-decoration: underline;">9</span> 0.047<span style="text-decoration: underline;">5</span>   0.120</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.074</span><span style="color: #BB0000; text-decoration: underline;">0</span> -<span style="color: #BB0000;">0.013</span><span style="color: #BB0000; text-decoration: underline;">6</span>    0.017<span style="text-decoration: underline;">6</span> 0.055<span style="text-decoration: underline;">2</span>   0.128</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.073</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.000<span style="text-decoration: underline;">070</span>0 0.038<span style="text-decoration: underline;">0</span> 0.078<span style="text-decoration: underline;">6</span>   0.149</span></span>
+<span><span class="co">##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.051</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.047<span style="text-decoration: underline;">7</span>  0.103   0.155    0.259</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.024<span style="text-decoration: underline;">1</span>  0.093<span style="text-decoration: underline;">4</span>  0.132   0.167    0.241</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.049<span style="text-decoration: underline;">3</span>  0.123   0.163   0.207    0.274</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.100   0.178   0.208   0.233    0.294</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.082<span style="text-decoration: underline;">8</span>  0.148   0.176   0.201    0.248</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.024</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.053<span style="text-decoration: underline;">1</span>  0.094<span style="text-decoration: underline;">6</span>  0.132    0.212</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.039</span><span style="color: #BB0000; text-decoration: underline;">4</span>  0.017<span style="text-decoration: underline;">0</span>  0.045<span style="text-decoration: underline;">5</span>  0.072<span style="text-decoration: underline;">9</span>   0.126</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.093</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.026</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.009<span style="text-decoration: underline;">69</span> 0.044<span style="text-decoration: underline;">2</span>   0.117</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.071</span><span style="color: #BB0000; text-decoration: underline;">0</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">51</span> 0.026<span style="text-decoration: underline;">7</span>  0.061<span style="text-decoration: underline;">0</span>   0.135</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.052</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.007<span style="text-decoration: underline;">41</span> 0.042<span style="text-decoration: underline;">7</span>  0.083<span style="text-decoration: underline;">2</span>   0.159</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 190 more rows</span></span></span></code></pre>
 </div>
 </div>
@@ -310,9 +302,10 @@ timeseries:</p>
 <h3 id="ensemble-pca-take-two---using-a-covariance-matrix-">Ensemble PCA take two - using a covariance matrix.<a class="anchor" aria-label="anchor" href="#ensemble-pca-take-two---using-a-covariance-matrix-"></a>
 </h3>
 <p>Let’s repeat much of this analysis, but this time we’re only going to
-analyze the <span class="math inline">\(\delta^{18}O\)</span> data, keep
-them in their native values, and use a covariance matrix in the PCA
-analysis.</p>
+analyze the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>δ</mi><mn>18</mn></msup><mi>O</mi></mrow><annotation encoding="application/x-tex">\delta^{18}O</annotation></semantics></math>
+data, keep them in their native values, and use a covariance matrix in
+the PCA analysis.</p>
 <p>First, it looks like let’s look at all the names in the TS</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"variableName"</span><span class="op">)</span></span></code></pre></div>
@@ -328,7 +321,8 @@ use:</p>
 <span><span class="co">## [5] "thickness"               "X_radiograph_dark_layer"</span></span>
 <span><span class="co">## [7] "massacum"</span></span></code></pre>
 <p>OK. Let’s filter the timeseries again, this time pulling all the
-<span class="math inline">\(\delta^{18}O\)</span> data.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>δ</mi><mn>18</mn></msup><mi>O</mi></mrow><annotation encoding="application/x-tex">\delta^{18}O</annotation></semantics></math>
+data.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d18OTS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/filterTs.html" class="external-link">filterTs</a></span><span class="op">(</span><span class="va">TS</span>,<span class="st">"paleoData_variableName == d18O"</span><span class="op">)</span></span></code></pre></div>
 <p>And we’ll tidy up the data for a plotStack</p>
@@ -360,10 +354,11 @@ data, now nicely arranged.</p>
 <code class="sourceCode R"><span><span class="va">binned.TS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,na.col.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p>And calculate the ensemble PCA, this time using a covariance matrix.
 By using a covariance, we’ll allow records that have larger variability
-in <span class="math inline">\(\delta^{18}O\)</span> to influence the
-PCA more, and those that have little variability will have little
-impact. This may or may not be a good idea, but it’s an important option
-to consider when possible.</p>
+in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>δ</mi><mn>18</mn></msup><mi>O</mi></mrow><annotation encoding="application/x-tex">\delta^{18}O</annotation></semantics></math>
+to influence the PCA more, and those that have little variability will
+have little impact. This may or may not be a good idea, but it’s an
+important option to consider when possible.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pcout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS2</span>,pca.type <span class="op">=</span> <span class="st">"cov"</span><span class="op">)</span></span></code></pre></div>
 <p>Once again, let’s take a look at the scree plot:</p>
@@ -373,7 +368,7 @@ to consider when possible.</p>
 <pre><code>Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
 
 
-```r
+``` r
 plotPCA2 &lt;-  plotPcaEns(pcout2,
                         TS = d18OTS,
                         which.pcs = 1:3,  
@@ -383,21 +378,20 @@ plotPCA2 &lt;-  plotPcaEns(pcout2,
                         restrict.map.range = T,
                         f=.2)</code></pre>
 <p><img src="PCA_files/figure-html/unnamed-chunk-25-1.png" width="768"></p>
-<p>Using only the <span class="math inline">\(\delta^{18}O\)</span> data
-and a covariance matrix, we get somewhat different results. The first PC
-timeseries looks similar to the first one, but the spatial pattern is
-somewhat difference, with stronger loadings in the northeast. The second
-PC looks to be a new pattern, although the third resembles PC2 from the
-first analysis.</p>
+<p>Using only the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>δ</mi><mn>18</mn></msup><mi>O</mi></mrow><annotation encoding="application/x-tex">\delta^{18}O</annotation></semantics></math>
+data and a covariance matrix, we get somewhat different results. The
+first PC timeseries looks similar to the first one, but the spatial
+pattern is somewhat difference, with stronger loadings in the northeast.
+The second PC looks to be a new pattern, although the third resembles
+PC2 from the first analysis.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -410,17 +404,17 @@ first analysis.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
   docsearch({
-    
-    
+
+
     apiKey: '21c1c99b27cf4a45be9f8db70183f6c7',
     indexName: 'lipd-utilities',
     inputSelector: 'input#search-input.form-control',
