@@ -41,12 +41,10 @@ Imports:
     gridExtra,
     purrr,
     matrixStats,
-    pcaMethods,
     pbapply,
     oxcAAR,
     Hmisc,
     glue,
-    BiocManager,
     rEDM (>= 1.15),
     crayon,
     tidyr,
@@ -62,10 +60,12 @@ Suggests:
     rmarkdown,
     testthat,
     neotoma2,
+    BiocManager,
+    pcaMethods,
     nuspectral
 VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
     nickmckay/lipdR,  
-    nickmckay/nuspectral,  
+    nickmckay/nuspectral

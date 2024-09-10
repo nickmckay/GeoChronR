@@ -27,11 +27,16 @@ pcaEns <-  function(bin.list,
   #check for the pcaMethods package
   if (!requireNamespace("pcaMethods", quietly = TRUE)){
     print("pcaMethods package needed for this function. Would you like to install it?")
-    ans=as.character(readline(prompt = "pcaMethods package needed for this function. Would you like to install it?"))
+    if (!require("BiocManager", quietly = TRUE)){
+      stop("You'll need the pcaMethods package to run pcaEns(), which is a bioconductor package. You can install it with these commands:\n\n     install.packages('BiocManager') \n\n BiocManager::install('pcaMethods')")
+
+    }else{
+    ans = as.character(readline(prompt = "pcaMethods package needed for this function. Would you like to install it?"))
     if(grepl("y",tolower(ans))){
       BiocManager::install("pcaMethods")
     }else{
       stop("pcaEns cannot run without pcaMethods")
+    }
     }
   }
   

@@ -88,7 +88,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
   if(length(rho) < 1000){
-    rho_cdf  <- cdfDensity(rho_dens) # turn into CDF
+    rho_cdf  <- cdfDensity(rho) # turn into CDF
   }else{
     rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
   }
