@@ -61,11 +61,9 @@ Suggests:
     testthat,
     neotoma2,
     BiocManager,
-    pcaMethods,
-    nuspectral
+    pcaMethods
 VignetteBuilder: knitr
 URL: https://github.com/nickmckay/GeoChronR
 BugReports: https://github.com/nickmckay/GeoChronR/issues
 Remotes: 
-    nickmckay/lipdR,  
-    nickmckay/nuspectral
+    nickmckay/lipdR

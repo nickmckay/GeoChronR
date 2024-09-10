@@ -2,7 +2,7 @@
 % Please edit documentation in R/oxcal.R
 \name{runOxcalModel}
 \alias{runOxcalModel}
-\title{Title}
+\title{Generate an oxcal Age Model from Oxcal model code, then add it into a LiPD object}
 \usage{
 runOxcalModel(
   L,
@@ -33,5 +33,5 @@ runOxcalModel(
 a LiPD object
 }
 \description{
-Title
+Generate an oxcal Age Model from Oxcal model code, then add it into a LiPD object
 }
