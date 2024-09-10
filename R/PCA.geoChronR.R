@@ -10,7 +10,6 @@
 #' @param n.ens how many ensemble members to calculate
 #' @param simulateTrendInNull Should the null include the trend?
 #' @param n.pcs number of PCs/EOFs to calculate
-#' @import BiocManager
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/PCA.html}{View a full-fledged example of how to use this function.}
 
