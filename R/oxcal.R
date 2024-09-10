@@ -620,10 +620,9 @@ runOxcal <-  function(L,
   return(L)
 }
 
-#' Title
-#'
 #' @param model.text a character vector of the model input
 #' @param oxcal.path path to Oxcal executable
+#' @title Generate an oxcal Age Model from Oxcal model code, then add it into a LiPD object
 #' @param overwrite overwrite the previous run
 #' @param max.ens the maximum number of ensembles to load in (default = 1000)
 #' @param oxcal.path path to oxcal binaries
