@@ -52,7 +52,6 @@ Imports:
     tidyr,
     magrittr,
     astrochron,
-    spatstat.univar (>= 3.0-0),
     MASS,
     plyr,
     stringr,

@@ -29,7 +29,6 @@ ar1 = function(x){
 #' @description Generate parametric or non-parametric surrogates of two series X & Y 
 #' @author Julien Emile-Geay
 #' @author Nick McKay
-#' @importFrom spatstat.univar CDF.density
 #' @param X a 1-column vector
 #' @param Y a 1-column vector of the same 
 #' @param n.sim number of simulations
@@ -89,8 +88,7 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   rho = abs(cor.mat[1,])  # convert to vector
   #  compute sampling distribution 
   if(length(rho) < 1000){
-    rho_dens <- stats::density(rho,from=0,to=1,na.rm = TRUE) # estimate density
-    rho_cdf  <- spatstat.univar::CDF.density(rho_dens,warn = FALSE) # turn into CDF
+    rho_cdf  <- cdfDensity(rho_dens) # turn into CDF
   }else{
     rho_cdf <- ecdf(rho)  # this is the empirical way; OK if large ensemble
   }
@@ -100,7 +98,17 @@ pvalMonteCarlo = function(X,Y,n.sim=100,method = "isospectral",cor.method = "pea
   return(pval)
 }
 
-
+cdfDensity <- function(x){
+  f <- stats::density(x,from=0,to=1,na.rm = TRUE) # estimate density
+#modified from spatstat.univar::CDF.density  
+  xx <- f$x
+  yy <- f$y
+  nn <- length(xx)
+  Fx <- cumsum(yy * c(0, diff(xx)))
+  Fx <- Fx/Fx[nn]
+  FF <- approxfun(xx, Fx, method = "linear", rule = 2)
+  return(FF)
+}
 
 #' @export
 #' @title Estimate effective sample size accounting for autocorrelation
