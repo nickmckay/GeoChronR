@@ -1,5 +1,7 @@
 # geoChronR 1.1.15
 
+* fixed a bug in `ar1Surrogates()` that would pop up with the isosopersistent option in rare occasions. [See issue 89](https://github.com/nickmckay/GeoChronR/issues/89), and thanks @laurastreib for the bug report.
+
 # geoChronR 1.1.14
 
 * Dealt with changes to R's handling of package versions that was throwing errors. 

@@ -219,7 +219,11 @@ corMatrix = function(ens.1,
         }
         #calculate isospectral
         if(isospectral){
-          pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],ens.2[,j],n.sim = p.ens,method = "isospectral",cor.method = cor.method)
+          pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],
+                                                              ens.2[,j],
+                                                              n.sim = p.ens,
+                                                              method = "isospectral",
+                                                              cor.method = cor.method)
         }
         
         

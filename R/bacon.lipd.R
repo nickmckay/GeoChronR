@@ -594,7 +594,7 @@ loadBaconOutput <- function(L,
   }
   methods = list("parameters"=parameters)
   methods$algorithm = "bacon"
-  methods$version = 2.3
+  methods$version = as.character(packageVersion("rbacon"))
   
   
   

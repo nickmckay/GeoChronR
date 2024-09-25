@@ -107,33 +107,34 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
     vals_used=vals[goodi]-trend
   } else {
     vals_used=vals[goodi]
-    }
+  }
   
+  time_used <- time[goodi] 
   #extract low-order moments
   m=mean(vals_used,na.rm=TRUE)
   s=sd(vals_used,na.rm=TRUE)
   if (method=='redfit') {
-    redf.dat <- try(redfit(vals_used, time, nsim = 50),silent = TRUE) # 21 is minimum number you can get away with
-    if(class(redf.dat) == "try-error"){
+    redf.dat <- try(redfit(vals_used, time_used, nsim = 50),silent = TRUE) # 21 is minimum number you can get away with
+    if(is(redf.dat,"try-error")){
       g = redf.dat
     }else{
       g = redf.dat$rho
     }
   } else {
     fit = try(arima(x = vals_used, order = c(1, 0, 0)),silent = TRUE) # assumes evenly-spaced data
-    if(class(fit) == "try-error"){
+    if(is(fit,"try-error")){
      g = fit
     }else{
     g = as.numeric(fit$coef[1])
     }
   }
   
-  if(class(g) == "try-error"){
+  if(is(g,"try-error")){
     #let's do the simplest ar1 estimation then:
     g <- cor(vals_used[-1],vals_used[-length(vals_used)],use = "pairwise.complete.obs")
   }
   
-  if(class(g) == "try-error"){
+  if(is(g,"try-error")){
    stop("Despite multiple attempts, we cannot estimate an ar1 coefficient for this record. The data are probably weird.")
   }
   
@@ -144,8 +145,8 @@ ar1Surrogates = function(time,vals,detrend=TRUE,method='redfit',n.ens=1){
     ar1=arima.sim(model=list(g),n=length(vals_used))
     
     ar1=scale(ar1)*s+m   #scale the same as original values
-    ar1[vnai]=NA # put NA values in same place as original
-    vals_syn[,jj]=ar1 
+  
+    vals_syn[goodi,jj] = ar1 
   }
   # if trend needs to stay in, add it back in
   if(!detrend){

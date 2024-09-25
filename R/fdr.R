@@ -44,7 +44,7 @@ fdr <- function(pvals,qlevel=0.05,method="original",adjustment.method=NULL,adjus
   pvals <- pvals[is.finite(pvals)]
   
   n <- length(pvals)
-  if(length(n) == 0){
+  if(n == 0){
     stop("No p-values were passed to FDR")
   }
 
@@ -193,6 +193,9 @@ propAlt <- function(pvals,adjustment.method="mean",adjustment.args=list(edf.lowe
     }
     stepsize <- (1-adjustment.args$edf.lower)/adjustment.args$num.steps
     edf.quantiles <- matrix(seq(from=adjustment.args$edf.lower,by=stepsize,len=adjustment.args$num.steps),nrow = adjustment.args$num.steps,ncol = 1)
+    if(length(pvals) == 0){
+      stop("pvals can't be empty")
+    }
     a.vec <- apply(edf.quantiles,1,storey,pvals)
     return(mean(a.vec))
   }
