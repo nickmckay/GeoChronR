@@ -1,3 +1,5 @@
+# geoChronR 1.1.15
+
 # geoChronR 1.1.14
 
 * Dealt with changes to R's handling of package versions that was throwing errors. 
