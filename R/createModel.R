@@ -30,8 +30,9 @@ createSummaryTableFromEnsembleTable <- function(L,
   #initialize model number
   if(any(is.na(model.num))){
     if(is.null(L[[paleo.or.chron]][[paleo.or.chron.num]]$model[[1]])){
-      #no models, this is first
-      model.num=1
+      stop("There aren't any models in this object")
+    }else if(length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model) == 1){
+      model.num <- 1
     }else{
       print(paste("You already have", length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model), "model(s) in",paleo.or.chron,paleo.or.chron.num))
       model.num=as.integer(readline(prompt = "Enter the number for this model you want to use"))
