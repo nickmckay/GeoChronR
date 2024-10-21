@@ -232,6 +232,8 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
     out.file <- data.table::fread(file = paste0(corename, "_", as.character(K),".out"),sep = " ")
   }
   
+  out.file <- as.matrix(out.file)
+  
   if(ncol(out.file) == 1){
     stop("no good")
   }
