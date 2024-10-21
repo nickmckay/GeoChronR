@@ -54,7 +54,8 @@ Imports:
     plyr,
     stringr,
     lipdR,
-    readr
+    readr,
+    data.table
 Suggests: 
     knitr,
     rmarkdown,

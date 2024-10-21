@@ -202,6 +202,7 @@ runBacon <-  function(L,
 #' @param max.ens the maximum number of ensemble members to import
 #' @return An ensemble table in the LiPD structure
 #' @importFrom plyr laply
+#' @importFrom data.table fread
 #' @examples 
 #' \dontrun{
 #' ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
@@ -224,8 +225,16 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
     K=as.numeric(regmatches(t[1], gregexpr("[0-9]*?(?=\\.bacon)", t[1], perl=TRUE))[[1]])[1]
   }
   
-  out.file=read.table(paste0(corename,'_',as.character(K),'.out'))
+  #make sure it's numeric
+  out.file <- data.table::fread(file = paste0(corename, "_", as.character(K),".out"),sep = ",")
   
+  if(ncol(out.file) == 1){# try comma separated
+    out.file <- data.table::fread(file = paste0(corename, "_", as.character(K),".out"),sep = " ")
+  }
+  
+  if(ncol(out.file) == 1){
+    stop("no good")
+  }
   #get start and end depths
   bfname=paste0(corename,'_',as.character(K),'.bacon')
   
@@ -261,7 +270,6 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   start.depth=bacData$V11
   Dc=(end.depth-start.depth)/(K-1)
   depths=seq(start.depth,end.depth,by=Dc)
-  
   
   BACages = kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
   BACages = cbind(out.file[,1],BACages[,-ncol(BACages)])

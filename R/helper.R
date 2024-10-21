@@ -207,5 +207,68 @@ modeSelektor <- function(x){
 }
 
 
+#' Simulate uncertainty in a dataset
+#' @description Simulate uncertainty in a dataset given an estimate of standard deviation and an ARIMA model
+#' @param n length of output vector
+#' @param sd standard deviation of the output vector
+#' @param mean mean of the output vector
+#' @param ar Autocorrelation coefficient to use for modelling uncertainty, what fraction of the uncertainties are autocorrelated? (default = sqrt(0.5); or 50 percent autocorrelated uncertainty)
+#' @param arima.order Order to use for ARIMA model used in modelling uncertainty (default = c(1,0,0))
+#' @param seed Optionally enter an integer to set a seed for the random number generation
+#'
+#' @return ts simulated from a from an ARIMA model with a defined mean and variance
+#' @export
+simulateAutoCorrelatedUncertainty <- function(n, sd, mean = 0, ar = sqrt(.5),arima.order = c(1,0,0),seed = NA){
+  if(any(!is.na(seed))){
+    set.seed(seed)
+  }
+  unc <- stats::arima.sim(list(order = arima.order, ar = ar), n = n)
+  unc <- (scale(unc,center = TRUE, scale = TRUE) * sd) + mean
+  unc <- as.matrix(unc)
+  return(unc)
+}
+
+#' Create an ensemble from an uncertainty and AR1 estimate
+#'
+#' @param variable LiPD variable object or vector of data
+#' @param n.ens 
+#' @param sd 
+#' @param ar 
+#' @param arima.order 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+generateEnsembleFromUncertainty <- function(variable,n.ens,sd,ar = sqrt(.5),arima.order = c(1,0,0)){
+  if(is.list(variable)){
+    dat <- as.matrix(variable$values)
+  }else{
+    dat <- as.matrix(values)
+  }
+  
+  if(nrow(dat) < ncol(dat)){
+    dat <- t(dat)
+  }
+  
+  if(ncol(dat) != 1){
+    stop("variable should be a vector or 1 column matrix")
+  }
+  
+  
+  repMat <- matrix(rep(dat,times = n.ens),nrow = length(dat),ncol = n.ens,byrow = FALSE)
+  nr <- nrow(repMat)
+
+  unc <- purrr::map(seq_len(n.ens),\(x) simulateAutoCorrelatedUncertainty(seed = x,n = nr,sd = sd, ar = ar, arima.order = arima.order)) %>% 
+    unlist()  %>%  
+    matrix(nrow = nr,ncol = n.ens,byrow = FALSE)
+  
+  ens.out <- repMat + unc
+  
+  return(ens.out)
+}
+
+
+
 
 
