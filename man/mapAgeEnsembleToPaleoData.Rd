@@ -18,7 +18,9 @@ mapAgeEnsembleToPaleoData(
   ens.table.num = 1,
   max.ens = NA,
   paleo.depth.range = NA,
-  strict.search = FALSE
+  strict.search = FALSE,
+  interp.method = "linear",
+  monotonic.gam.k = NA
 )
 }
 \arguments{
@@ -49,6 +51,10 @@ mapAgeEnsembleToPaleoData(
 \item{paleo.depth.range}{A two element vector eg: c(min,max), that describes the range of in the paleo data depth over which to map the data. Depths outside this range will correspond to NAs in the age ensemble. By default (default = NA) this is the full range of the paleo.depth.var.}
 
 \item{strict.search}{Use a strict.search to look for the ageEnsemble and depth variables. TRUE(default) or FALSE.}
+
+\item{interp.method}{How should we interpolate the age ensemble to the paleodata table? Linear interpolation ('linear') is the default and works well for regularly spaced ensembles. For irregularly spaced ensembles 'monotonicGam' may give better results, especially if you're interested in sedimentation rate.}
+
+\item{monotonic.gam.k}{number of knots to use in monotonicGam. Higher values will be more flexible. By default, it will be n(agePoints)/3}
 }
 \value{
 L a lipd object

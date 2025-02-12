@@ -126,6 +126,8 @@ estimateUncertaintyFromRange = function(L,
 #' @param model.num an integer that corresponds to chron.num model you want to get the ensemble from?
 #' @param max.ens Maximum number of ensemble members to map
 #' @param paleo.depth.range A two element vector eg: c(min,max), that describes the range of in the paleo data depth over which to map the data. Depths outside this range will correspond to NAs in the age ensemble. By default (default = NA) this is the full range of the paleo.depth.var.
+#' @param interp.method How should we interpolate the age ensemble to the paleodata table? Linear interpolation ('linear') is the default and works well for regularly spaced ensembles. For irregularly spaced ensembles 'monotonicGam' may give better results, especially if you're interested in sedimentation rate.
+#' @param monotonic.gam.k number of knots to use in monotonicGam. Higher values will be more flexible. By default, it will be n(agePoints)/3
 #' @import pbapply
 #' @return L a lipd object
 #' @export
@@ -142,7 +144,9 @@ mapAgeEnsembleToPaleoData = function(L,
                                      ens.table.num = 1,
                                      max.ens=NA,
                                      paleo.depth.range = NA,
-                                     strict.search=FALSE){
+                                     strict.search=FALSE,
+                                     interp.method = "linear",
+                                     monotonic.gam.k = NA){
   print(L$dataSetName)
   #check on the model first
   if(is.null(L$chronData)){
@@ -215,6 +219,16 @@ mapAgeEnsembleToPaleoData = function(L,
                       ens.table.num = ens.table.num,
                       paleo.or.chron.num = chron.num,
                       strict.search = strict.search)
+  
+  
+  if( diff(range(diff(ensDepth)))/diff(range(ensDepth)) > .02 & interp.method == "linear"){
+    warning("There appears to be irregular spacing in your age ensemble, consider using 'interp.method = monotonicGam' rather than 'linear' to avoid jumps in apparent sedimentation rate. ")
+  }
+  
+  if(interp.method == "monotonicGam" & any(is.na(monotonic.gam.k))){
+    monotonic.gam.k <- length(ensDepth)/3
+    message(crayon::red(glue::glue(("Using default setting for K of {monotonic.gam.k} (number of age control points/3) for monotonic spline. Consider specifying higher or lower values for a more or less flexible spline (respectively)"))))
+  }
   
   #do something smarter here?
   if(grepl(age.var,pattern = "age",ignore.case = TRUE)){
@@ -298,9 +312,18 @@ mapAgeEnsembleToPaleoData = function(L,
     
     na.depth.i = which(!is.na(depth) & depth >= min(paleo.depth.range) & depth <= max(paleo.depth.range))
     aei = matrix(nrow = length(depth),ncol = ncol(ens))
-    aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
-    aei[na.depth.i,] = aeig
     
+    if(interp.method == "linear"){
+      aeig <- pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
+    }else if(interp.method == "monotonicGam"){
+      aeig = pbapply::pbapply(X = ens, MARGIN = 2, FUN = function(y) {
+        scam_fit = scam::scam(y ~ s(ensDepth, bs = "mpi",k = monotonic.gam.k),sp = 0.01)  # "mpi" ensures a monotonic increasing smooth
+        predict(scam_fit, newdata = data.frame(ensDepth = depth[na.depth.i]))
+      })
+    }
+    
+    #add NAs back in
+    aei[na.depth.i,] = aeig
     
   }else{
     #check to see if the ensemble needs to be flipped
