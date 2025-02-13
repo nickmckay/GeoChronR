@@ -304,8 +304,8 @@ mapAgeEnsembleToPaleoData = function(L,
     
     
     
-    if(any(is.na(paleo.depth.range))){
-      paleo.depth.range <- range(depth)
+    if(any(!is.finite(paleo.depth.range))){
+      paleo.depth.range <- range(depth[is.finite(depth)])
     }
     
 
