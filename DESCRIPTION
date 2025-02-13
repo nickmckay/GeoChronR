@@ -55,7 +55,8 @@ Imports:
     stringr,
     lipdR,
     readr,
-    data.table
+    data.table,
+    scam
 Suggests: 
     knitr,
     rmarkdown,

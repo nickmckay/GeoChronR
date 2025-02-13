@@ -129,6 +129,7 @@ estimateUncertaintyFromRange = function(L,
 #' @param interp.method How should we interpolate the age ensemble to the paleodata table? Linear interpolation ('linear') is the default and works well for regularly spaced ensembles. For irregularly spaced ensembles 'monotonicGam' may give better results, especially if you're interested in sedimentation rate.
 #' @param monotonic.gam.k number of knots to use in monotonicGam. Higher values will be more flexible. By default, it will be n(agePoints)/3
 #' @import pbapply
+#' @importFrom scam scam
 #' @return L a lipd object
 #' @export
 mapAgeEnsembleToPaleoData = function(L,
@@ -310,14 +311,20 @@ mapAgeEnsembleToPaleoData = function(L,
 
       
     
-    na.depth.i = which(!is.na(depth) & depth >= min(paleo.depth.range) & depth <= max(paleo.depth.range))
+    na.depth.i = which(is.finite(depth) & depth >= min(paleo.depth.range) & depth <= max(paleo.depth.range))
     aei = matrix(nrow = length(depth),ncol = ncol(ens))
     
     if(interp.method == "linear"){
       aeig <- pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
     }else if(interp.method == "monotonicGam"){
+      if(cor(ensDepth,ens[,1],use = "pairwise.complete.obs") >= 0){ #if the age-depth relation is positive, use monotonic increasing
+        bs <- "mpi"
+      }else{#if the age-depth relation is negative, use monotonic decreasing
+        bs <- "mpd"
+      }
+      
       aeig = pbapply::pbapply(X = ens, MARGIN = 2, FUN = function(y) {
-        scam_fit = scam::scam(y ~ s(ensDepth, bs = "mpi",k = monotonic.gam.k),sp = 0.01)  # "mpi" ensures a monotonic increasing smooth
+        scam_fit = scam::scam(y ~ s(ensDepth, bs = bs,k = monotonic.gam.k),sp = 0.01)  
         predict(scam_fit, newdata = data.frame(ensDepth = depth[na.depth.i]))
       })
     }
