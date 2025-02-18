@@ -208,7 +208,7 @@ runBacon <-  function(L,
 #' ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
 #' }
 #' 
-sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA,bacon.thick){
+sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   #from Simon Goring, modified by Nick McKay
   
   #get bacon directory
