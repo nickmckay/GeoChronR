@@ -208,42 +208,43 @@ runBacon <-  function(L,
 #' ensTable = sampleBaconAges("MSB2K",max.ens = 1000)
 #' }
 #' 
-sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
+sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA,bacon.thick){
   #from Simon Goring, modified by Nick McKay
   
   #get bacon directory
   bacon.dir <- getBaconDir(bacon.dir)
   
-  
-  setwd(bacon.dir)
-  setwd(corename)
-  
-  
+  core.path <- file.path(bacon.dir,corename)
+
   if(is.na(K)){
-    t=dir(pattern=".bacon")
+    t <- dir(path = core.path,pattern=".bacon")
+    if(length(t) > 1){
+      message(glue::glue("Multiple .bacon files, choosing the first one ({t[1]})"))
+    }
     #To do? pick from multiple? 
-    K=as.numeric(regmatches(t[1], gregexpr("[0-9]*?(?=\\.bacon)", t[1], perl=TRUE))[[1]])[1]
+    K <- as.numeric(regmatches(t[1], gregexpr("[0-9]*?(?=\\.bacon)", t[1], perl=TRUE))[[1]])[1]
   }
   
   #make sure it's numeric
-  out.file <- data.table::fread(file = paste0(corename, "_", as.character(K),".out"),sep = ",")
+  out.file <- data.table::fread(file = file.path(core.path,paste0(corename, "_", as.character(K),".out")),sep = ",")
   
   if(ncol(out.file) == 1){# try comma separated
-    out.file <- data.table::fread(file = paste0(corename, "_", as.character(K),".out"),sep = " ")
+    out.file <- data.table::fread(file = file.path(core.path,paste0(corename, "_", as.character(K),".out")),sep = " ")
   }
   
   out.file <- as.matrix(out.file)
   
   if(ncol(out.file) == 1){
-    stop("no good")
+    stop("issue reading .bacon file in `sampleBaconAges()`")
   }
+  
   #get start and end depths
-  bfname=paste0(corename,'_',as.character(K),'.bacon')
+  bfname <- paste0(corename,'_',as.character(K),'.bacon')
   
   
   sline=1
   while(sline<10000){
-    bacData=try(read.table(bfname,skip=sline,sep=c(",",";")),silent=TRUE)
+    bacData=try(read.table(file.path(core.path,bfname),skip=sline,sep=c(",",";")),silent=TRUE)
     if(!is.character(bacData)){
       if(getRversion() >= "4"){
         toTest <- bacData$V1
@@ -270,11 +271,11 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   }
   
   start.depth=bacData$V11
-  Dc=(end.depth-start.depth)/(K-1)
+  Dc=(end.depth-start.depth)/(K)
   depths=seq(start.depth,end.depth,by=Dc)
   
   BACages = kronecker(matrix(1,1,K),out.file[,1])+t(Dc*apply(out.file[,2:(K+1)],1,cumsum))
-  BACages = cbind(out.file[,1],BACages[,-ncol(BACages)])
+  BACages = cbind(out.file[,1],BACages)
   
   
   
