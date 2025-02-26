@@ -23,6 +23,9 @@ generateEnsembleFromUncertainty(
 
 \item{arima.order}{}
 }
+\value{
+a matrix of ensemble values
+}
 \description{
 Create an ensemble from an uncertainty and AR1 estimate
 }

@@ -236,10 +236,8 @@ simulateAutoCorrelatedUncertainty <- function(n, sd, mean = 0, ar = sqrt(.5),ari
 #' @param ar 
 #' @param arima.order 
 #'
-#' @return
+#' @return a matrix of ensemble values
 #' @export
-#'
-#' @examples
 generateEnsembleFromUncertainty <- function(variable,n.ens,sd,ar = sqrt(.5),arima.order = c(1,0,0)){
   if(is.list(variable)){
     dat <- as.matrix(variable$values)
