@@ -224,10 +224,10 @@ getModelParametersFromOxcalText <- function(modText){
   
   #get thin and n.it
   #remove lines that start with //
-    modText <- gsub("//.*?\\\n", "", modText)
+  modText <- gsub("//.*?\\\n", "", modText)
   
-  matches <- stringr::str_match(modText, "MCMC_Sample\\((\\d+),(\\d+)\\);")
-  
+  matches <- stringr::str_match(modText, "MCMC_Sample\\((\\d+),(\\d+)\\)")
+  #matches <- stringr::str_match(modText, "MCMC_Sample")
   if(is.na(matches[1])){
     stop("To extract an ensemble from OxCal you must include 'MCMC_Sample(...)' in the model text")
   }
@@ -259,10 +259,17 @@ getModelParametersFromOxcalText <- function(modText){
                       top.boundary = top.boundary,
                       bottom.boundary = bottom.boundary)
   
-  #now get all the depths:
+  #now get all the c14data:
+  
+  matches <- stringr::str_match_all(modText, "R_Date\\(\"[^\"]+\",\\s*(\\d+),\\s*(\\d+)\\)\\s*\\{[^}]*z=([\\d\\.]+);"  )
+  
+  # Extracting values into separate vectors
+  c14Data <- data.frame(ages = as.numeric(matches[[1]][,2]),
+                        uncertainties = as.numeric(matches[[1]][,3]),
+                        depths = as.numeric(matches[[1]][,4]))
   
   age2m <- stringr::str_extract_all(modText, "(?<=z=)\\d+\\.?\\d*") |> 
-     unlist() |> 
+    unlist() |> 
     as.numeric() |> 
     as.data.frame() |> 
     setNames("depth")
@@ -272,7 +279,7 @@ getModelParametersFromOxcalText <- function(modText){
     unlist() |> 
     stringr::str_remove_all('"') |> 
     stringr::str_remove_all('\\\\')
-    
+  
   
   if(length(labIds) == nrow(age2m)){#it seems right!
     bad <- which(!stringr::str_detect(labIds,",")) #these are not dates
@@ -286,10 +293,11 @@ getModelParametersFromOxcalText <- function(modText){
   }else{
     stop("Couldn't extract lab IDs properly")
   }
-
+  
   return(list(modelText = modText,
               parameters= parameters,
-              inputData = age2m))
+              inputData = age2m,
+              c14Data = c14Data))
   
 }
 
@@ -326,8 +334,8 @@ loadOxcalOutput <- function(L,
   if(!is.list(model.parameters)){
     model.parameters <- getModelParametersFromOxcalText(model.parameters)
   }
-    
-    
+  
+  
   
   
   # setup storage -----------------------------------------------------------
@@ -423,12 +431,11 @@ loadOxcalOutput <- function(L,
   oxEns <- read.csv(MCMCfile)
   
   log.file <- readr::read_file(file.path(dirname(oxcal.result.file.path),paste0(stripExtension(oxcal.result.file.path),".log")))
-  print(log.file)
+  #print(log.file)
   # nMCMC <- stringr::str_extract()
-
   
-  if(nrow(oxEns) >= model.parameters$parameters$n.it){
-   cat(crayon::red(crayon::bold(glue::glue("It looks like youre MCMC_Sample parameters aren't large enough.")))) 
+  if(nrow(oxEns) > model.parameters$parameters$n.it){
+    cat(crayon::blue(crayon::bold(glue::glue("It looks like youre MCMC_Sample parameters aren't large enough.")))) 
   }
   
   
@@ -607,7 +614,7 @@ runOxcal <-  function(L,
   unlink(file.path(tempdir(),"MCMC_Sample.csv"))
   
   #run the file!
-  oxcal.result.file.path <- oxcAAR::executeOxcalScript(oxMod$modelText)
+  oxcal.result.file.path <- executeOxcalAndUpdate(oxMod$modelText)
   
   
   L <- loadOxcalOutput(L,
@@ -618,6 +625,133 @@ runOxcal <-  function(L,
                        model.num = model.num,
                        make.new = overwrite)
   return(L)
+}
+
+executeOxcalAndUpdate <- function(oxcal_script){
+  #see if we can plot
+  if("plotly" %in% rownames(installed.packages())){
+    updatePlots <- TRUE
+  }else{
+    updatePlots <- FALSE
+    message("If you would like to (optionally) see a plot that shows how OxCal is working while it runs automatic update, install the plotly package (`install.packages('plotly'))")
+  }
+
+  
+  modParams <- getModelParametersFromOxcalText(oxcal_script)
+  plotData <- data.frame(depth = modParams$inputData$depth)
+  
+  
+  c14Data <- modParams$c14Data
+  oxData <- oxcAAR::oxcalCalibrate(c14Data$ages,c14Data$uncertainties)
+  
+  L$chronData[[1]]$model[[1]]$distributionTable <- vector(mode = "list",length = length(oxData))
+  for(dd in 1:length(oxData)){
+    dTable = list()
+    dTable$age = list(values = 1950 - (oxData[[dd]]$raw_probabilities$dates),
+                      units =  "BP", 
+                      variableName = "age")
+    dTable$probabilityDensity = list(values = oxData[[dd]]$raw_probabilities$probabilities , 
+                                     variableName = "probabilityDensity")
+    dTable$labId <- oxData[[dd]]$name
+    dTable$depth  <- c14Data$depths[dd]
+    dTable$depth.units = "cm"
+    L$chronData[[1]]$model[[1]]$distributionTable[[dd]] = dTable
+  }
+  
+  oxcal_path <- oxcAAR:::getOxcalExecutablePath()
+  option_file <- tempfile()
+  output_file <- paste(option_file, ".js", sep = "")
+  progress_file <- paste(option_file, ".work", sep = "")
+  
+  cat(oxcal_script, file = option_file)
+  suppressWarnings(system(paste(shQuote(normalizePath(oxcal_path)),option_file), wait = FALSE, intern = FALSE))
+
+  # Check if the progress file exists
+  if (!file.exists(progress_file)) {
+    cat("Progress updates forthcoming...\n")
+    while (!file.exists(progress_file)) {
+      Sys.sleep(1)
+    }
+  }
+  
+  if(updatePlots){
+    d <- plotModelDistributions(L) + 
+    scale_y_reverse("Depth") + 
+    xlab("Age (cal yr BP") +
+      ggtitle("Radiocarbon dates - doing prework, MCMC will start in a bit") +
+    theme_bw() 
+    print(plotly::ggplotly(d))  
+  }
+  
+  
+  
+  # Read progress updates
+  last_size <- 0
+  repeat {
+    if (!file.exists(progress_file)) break
+    
+    # Read the new content from the progress file
+    lines <- readr::read_file(progress_file) |> stringr::str_remove_all("\\n")
+    
+    pctDone <- as.numeric(regmatches(lines, regexpr("(?<=work\\.done=)[0-9\\.]+", lines, perl = TRUE)))
+    if(length(pctDone) == 0){
+      pctDone <- 0
+    }
+
+    if(is.na(pctDone)){
+      pctDone <- 0
+    }
+    
+    # Print status update on the same line
+    cat(sprintf("\r%s", lines))
+    
+    # Check if the external program is done
+    if (pctDone >= 100) {
+      cat("\rNearly done...")
+      if(as.numeric(lubridate::as.duration(lubridate::now() - file.mtime(output_file))) < 30){
+      cat("\rFinished!")
+      Sys.sleep(5)
+      break
+      }
+    }
+    
+    if(updatePlots){
+ 
+      #update a graph
+    if (file.exists(file.path(tempdir(),"MCMC_Sample.csv"))){
+      file_size <- file.size(file.path(tempdir(),"MCMC_Sample.csv"))
+      if(file_size > 10000 & file_size != last_size){
+    ens <- read.csv(file.path(tempdir(),"MCMC_Sample.csv"))
+    last_size <- file_size
+    recent <- as.data.frame(t(as.matrix(ens[max(1,nrow(ens)-9):(nrow(ens)-1),-1][,1:nrow(plotData)])))
+    recent$depth <- plotData$depth
+    
+    tp <- tidyr::pivot_longer(recent,-depth,names_to = "ensemble_member",values_to = "AD") |> 
+      mutate(age = convertAD2BP(AD),
+             ensemble_member = as.numeric(ensemble_member) * modParams$parameters$thin)
+    
+    # Plot progress dynamically
+    p <- d + 
+      geom_line(data = tp,aes(x = as.numeric(age), y = depth,alpha = ensemble_member,color = as.character(ensemble_member))) +
+      scale_color_brewer("Ensemble Member") + 
+      scale_alpha_continuous("Ensemble Member",range = c(.4,1),guide = FALSE) + 
+      ggtitle(glue::glue("Updated age model - {max(as.numeric(tp$ensemble_member))}"))
+    
+    # Print the updated plot (refreshes the plot window)
+    #print(p)
+    #remove the plot files
+    pfs <- list.files(tempdir(),pattern = "viewhtml")
+    unlink(file.path(tempdir(),pfs),recursive = TRUE)
+    print(plotly::ggplotly(p))  
+    }}}
+    Sys.sleep(5)  # Avoid high CPU usage
+  }
+  
+  
+  
+  return(output_file)
+  
+  
 }
 
 #' @param model.text a character vector of the model input
@@ -668,7 +802,7 @@ runOxcalModel <- function(L,
   unlink(file.path(tempdir(),"MCMC_Sample.csv"))
   
   #run the file!
-  oxcal.result.file.path <- oxcAAR::executeOxcalScript(model.text)
+  oxcal.result.file.path <- executeOxcalAndUpdate(model.text)
   
   
   L <- loadOxcalOutput(L,

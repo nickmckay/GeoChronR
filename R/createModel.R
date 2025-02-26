@@ -41,7 +41,7 @@ createSummaryTableFromEnsembleTable <- function(L,
   
   #initialize ensemble table number
   if(any(is.na(ens.table.num))){
-    if(length(model$ensembleTable) == 1){
+    if(length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model$ensembleTable) == 1){
       #no models, this is first
       ens.table.num=1
     }else{
