@@ -1,6 +1,6 @@
 #sample radiocarbon dates from LiPD distribution table
 
-DT <- L$chronData[[1]]$model[[1]]$distributionTable
+#DT <- L$chronData[[1]]$model[[1]]$distributionTable
 
 #sample 1 from LiPD distribution object
 sampleAge <- function(dto){
@@ -8,6 +8,57 @@ sampleAge <- function(dto){
   cdf <- (cumsum(dto$probabilityDensity$values) + seq(0,0.00000001,length.out = length(dto$probabilityDensity$values)))/sum(dto$probabilityDensity$values)
   sampledAge <- approx(x = cdf, y = dto$age$values, xout = runif(1))$y
   return(sampledAge)
+}
+
+fitMonotonicSpline <- function(age,depth,model.depths,kFrac){
+    k <- min(max(round(kFrac * sum(is.finite(age))),5),sum(is.finite(age)))
+    
+    scam_fit <- scam::scam(age ~ s(depth, bs = "mpi",k = k,sp = NULL)) |>   
+      predict(newdata = data.frame(depth = model.depths))
+    
+    return(scam_fit)
+  }
+
+
+
+removeOutliers <- function(age,depth) {
+  #first sort by depth
+  di <- sort(depth,index.return = TRUE)$ix
+  origIndex <- seq_along(di)[di]
+  
+  age <- age[di]
+  
+  ageOrig <- age
+  
+  diffs <- diff(age)
+  # 
+  # #removal probabilities
+  # diffs[diffs > 0] <- 0
+  # removeWeights <- diffs/sum(diffs)
+  # removeWeights[removeWeights < 1/length(diffs)] <- 1/length(diffs)
+  # removeWeights <- c(1/length(diffs),removeWeights) #add in another for the first age
+  removeWeights <- rep(1,times = length(age))
+  
+  
+  while(any(diff(na.omit(age)) <= 0,na.rm = TRUE)){
+    tr <- sample(seq_along(age),prob = removeWeights,size = 1)
+    age[tr] <- NA
+    removeWeights[tr] <- 0
+  }
+  
+  #now let's try to add as many back in as we can.
+  removed <- which(is.na(age))
+  shuffled <- sample(removed)
+  
+  for(i in 1:length(shuffled)){
+    age[shuffled[i]] <- ageOrig[shuffled[i]]
+    if(any(diff(na.omit(age)) <= 0,na.rm = TRUE)){
+      #reversal! take it back out
+      age[shuffled[i]] <- NA
+    }
+  }
+  
+  return(age[order(di)])
 }
 
 
@@ -40,19 +91,26 @@ createVarveAgePriors <- function(DT,
                                  model.depths  = NA,
                                  model.depth.step = 1,
                                  varveScalingFactor = 30,#prior
-                                 H = 0.99, #prior
-                                 k = 20, #prior
-                                 sp = 0.01,#prior
+                                 H = NULL, #prior
+                                 ar1 = NULL, #prior
+                                 kFrac = 1/3, #prior
                                  n.ms.ens = 100,
-                                 n.varve.ens = 100){
+                                 n.varve.ens = 100,
+                                 heuristicOutlierRemoval = TRUE){
   
   
   sampledAgeEns <- purrr::map(1:n.ms.ens,\(x) map_dbl(DT,sampleAge)) |> 
   purrr::list_c() |> 
   matrix(nrow = length(DT),ncol = n.ms.ens)
+  
+  
+  sampleDepths <- purrr::map_dbl(DT,"depth")
+  
+  if(heuristicOutlierRemoval){
+    sampledAgeEns <- apply(sampledAgeEns,2, removeOutliers, sampleDepths)
+  }
 
 
-sampleDepths <- purrr::map_dbl(DT,"depth")
 
 if(all(is.na(model.depths))){
   model.depths <- seq(0,ceiling(max(sampleDepths)),by = model.depth.step)
@@ -61,10 +119,7 @@ if(all(is.na(model.depths))){
 depthStep <- median(diff(model.depths),na.rm = TRUE)
 
 message(crayon::blue("Estimating low-frequency variability in the model..."))
-aeig <- pbapply::pbapply(X = sampledAgeEns, MARGIN = 2, FUN = function(y) {
-  scam_fit <- scam::scam(y ~ s(sampleDepths, bs = "mpi",k = k),sp = sp) |>   
-    predict(newdata = data.frame(sampleDepths = model.depths))
-})
+aeig <- pbapply::pbapply(X = sampledAgeEns, MARGIN = 2, FUN = fitMonotonicSpline, sampleDepths, model.depths, kFrac)
 
 #calculate accum rates
 mgDepthSteps <- matrix(rep(diff(model.depths),times = n.ms.ens),ncol = n.ms.ens,nrow = length(model.depths) - 1) 
@@ -80,8 +135,10 @@ varvedPrior <- addVarves(ages = aeig,
                         model.depths = model.depths,
                         yrPerDepth = yrPerDepth,
                         varveMean = varveMean,
-                        H = H, 
-                        n.varve.ens = n.ms.ens)
+                        H = H,
+                        ar1 = ar1, 
+                        n.varve.ens = n.ms.ens,
+                        DT = DT)
 
 return(varvedPrior)
 }
@@ -89,11 +146,15 @@ return(varvedPrior)
 
 
 
-addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, n.varve.ens){
-  nYears <- ceiling(max(ages)) - floor(min(ages))
+addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varve.ens, DT){
+  nYears <- apply(ages, 2, \(x) ceiling(max(x)) - floor(min(x)))
   
-  #speed up here?
-  v1 <- simulateVarves(nYears,n.ens = n.varve.ens,H = H,mean = varveMean)
+  #speed up here? Arima (AR1) is much faster
+  v1 <- purrr::map(nYears,simulateVarves,H = H,ar1 = ar1,mean = varveMean,n.ens = 1,length.out = max(nYears)) |> 
+    purrr::list_c() |> 
+    matrix(ncol = length(nYears), nrow = max(nYears))
+  
+  #v1 <- simulateVarves(nYears,n.ens = n.varve.ens,H = H,ar1 = ar1,mean = varveMean)
   vInv <- 1/v1
   d <- seq_len(nrow(vInv))
   
@@ -136,7 +197,7 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, n.varve.ens
   agePriors <- matrix(minAge,ncol = ncol(prior),nrow = nrow(prior),byrow = TRUE) + cumAges
   
   #assess fit
-  varvedPriorLogObj <- ageProbsDT(L$chronData[[1]]$model[[1]]$distributionTable, agePriors,ageDepths)
+  varvedPriorLogObj <- ageProbsDT(L$chronData[[1]]$model[[1]]$distributionTable, ages,ageDepths)
   
   
   return(list(agePriors = agePriors, 
@@ -145,7 +206,7 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, n.varve.ens
 }
 
 
-getAgeLikelihoodFromEns <- function(i,DT,ageEstimates){
+getAgeLikelihoodFromEns <- function(i,DT,sampleAE){
   oneEns <- sampleAE[,i]
   logObj <- sum(purrr::map_dbl(seq_along(DT),\(x) ageProb(DT[[x]],ageToTest = oneEns[x])))
   return(logObj)
@@ -159,7 +220,7 @@ ageProbsDT <- function(DT, ageEstimates,depths){
   sampleAE <- ageEstimates[whichSample,]
   aeDepths <- depths[whichSample]
   
-  ensObj <- purrr::map_dbl(seq_len(ncol(ageEstimates)), getAgeLikelihoodFromEns,DT,ageEstimates)
+  ensObj <- purrr::map_dbl(seq_len(ncol(ageEstimates)), getAgeLikelihoodFromEns,DT,sampleAE)
   
   return(ensObj)
 }

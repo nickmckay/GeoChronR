@@ -1,25 +1,34 @@
-simulateVarves <- function(n, n.ens = 100, ar1 = NULL, H = NULL, shape = 2, mean = 1) {
+simulateVarves <- function(n, n.ens = 100, ar1 = NULL, H = NULL, shape = 2, mean = 1,length.out = NA) {
   if (!is.null(ar1) && !is.null(H)) {
     stop("Specify either AR(1) coefficient 'ar1' or Hurst parameter 'H', not both.")
   }
   
-  varveMat <- matrix(NA,nrow = n, ncol = n.ens)
-  
     if (!is.null(ar1)) {
       # AR(1) Process with given ar1
-      white_noise <- rnorm(n)  # Gaussian white noise
-      ar_series <-  purrr::map(rep(n,times = n.ens),\(x) stats::arima.sim(n = x, list(ar = ar1), innov = white_noise)) |> list_c()  |> matrix(nrow = n, ncol = n.ens,byrow = FALSE)# Simulate fBm
-      gamma_series <- gammify(ar_series, shape = shape, mean = mean)  # Convert to Gamma
+      gamma_series <-  purrr::map(rep(n,times = n.ens),\(x) stats::arima.sim(n = x, list(ar = ar1,ma = 0), innov = rnorm(n)),.progress = TRUE) |> 
+        purrr::list_c()  |> 
+        matrix(nrow = n, ncol = n.ens,byrow = FALSE) |> 
+        gammify(shape = shape, mean = mean)  # Convert to Gamma
     } else if (!is.null(H)) {
       # Fractal Brownian Motion (fBM) using fractional differencing
-      fbm_series <- purrr::map(rep(n,times = n.ens),\(x) fracdiff::fracdiff.sim(n = x,d = H - 0.5)$series) |> list_c()  |> matrix(nrow = n, ncol = n.ens,byrow = FALSE)# Simulate fBm
-      gamma_series <- gammify(fbm_series, shape = shape, mean = mean)  # Convert to Gamma
+      # This is MUCH slower...
+      gamma_series <- purrr::map(rep(n,times = n.ens),\(x) fracdiff::fracdiff.sim(n = x,d = H - 0.5,)$series.,progress = TRUE) |> 
+        purrr::list_c()  |> 
+        matrix(nrow = n, ncol = n.ens,byrow = FALSE) |> 
+        gammify(shape = shape, mean = mean)  # Convert to Gamma
     } else {
       stop("You must specify either 'ar1' for AR(1) or 'H' for fBM.")
     }
+  
+  if(!is.na(length.out)){
+    out <- matrix(NA, nrow = length.out,ncol = n.ens)
+    out[seq_len(nrow(gamma_series)), ] <- gamma_series
+    return(out)
+  }else{
+    return(gamma_series)
+  }
 
   
-  return(gamma_series)
 }
 
 gammify <- function (X,shape = 1.5, mean = 1,jitter=FALSE){ 
