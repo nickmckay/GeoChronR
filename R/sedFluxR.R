@@ -13,7 +13,7 @@ sampleAge <- function(dto){
 fitMonotonicSpline <- function(age,depth,model.depths,kFrac){
     k <- min(max(round(kFrac * sum(is.finite(age))),5),sum(is.finite(age)))
     
-    scam_fit <- scam::scam(age ~ s(depth, bs = "mpi",k = k,sp = NULL)) |>   
+    scam_fit <- scam::scam(age ~ s(depth, bs = "mpi",k = k), sp = 1) |>   
       predict(newdata = data.frame(depth = model.depths))
     
     return(scam_fit)
@@ -66,9 +66,10 @@ ageProb <- function(dto,ageToTest){
   #calculate the cumulative probabilites, after adding in a tiny slope to avoid ties, and normalizing to sum to 1.
   pdf <- dto$probabilityDensity$values
   prob <- approx(y = pdf, x = dto$age$values, xout = ageToTest)$y
+  min.prob <- min(pdf[pdf > 0])
+  
   if(is.na(prob)){#then its off the scale, interpolate between 0 and the lowest point
-    min.prob <- min(pdf[pdf > 0])
-    
+
     if(ageToTest < min(dto$age$values)){#too young
       prob <- approx(x = c(0,dto$age$values[which.min(dto$age$values)]), y = c(0,min.prob), xout = ageToTest)$y
     }else{
@@ -96,7 +97,9 @@ createVarveAgePriors <- function(DT,
                                  kFrac = 1/3, #prior
                                  n.ms.ens = 100,
                                  n.varve.ens = 100,
-                                 heuristicOutlierRemoval = TRUE){
+                                 heuristicOutlierRemoval = TRUE,
+                                 outlierRemovedFraction = .95,
+                                 progress = TRUE){
   
   
   sampledAgeEns <- purrr::map(1:n.ms.ens,\(x) map_dbl(DT,sampleAge)) |> 
@@ -107,7 +110,9 @@ createVarveAgePriors <- function(DT,
   sampleDepths <- purrr::map_dbl(DT,"depth")
   
   if(heuristicOutlierRemoval){
-    sampledAgeEns <- apply(sampledAgeEns,2, removeOutliers, sampleDepths)
+    filteredSampledAgeEns <- apply(sampledAgeEns,2, removeOutliers, sampleDepths)
+    wc <- sample(seq_len(ncol(sampledAgeEns)),size = round(ncol(sampledAgeEns) * outlierRemovedFraction))
+    sampledAgeEns[,wc] <- filteredSampledAgeEns[,wc]
   }
 
 
@@ -118,9 +123,23 @@ if(all(is.na(model.depths))){
 
 depthStep <- median(diff(model.depths),na.rm = TRUE)
 
-message(crayon::blue("Estimating low-frequency variability in the model..."))
-aeig <- pbapply::pbapply(X = sampledAgeEns, MARGIN = 2, FUN = fitMonotonicSpline, sampleDepths, model.depths, kFrac)
+if(progress){message(crayon::blue("Estimating low-frequency variability in the model..."))}
 
+if(progress){
+aeig <- pbapply::pbapply(X = sampledAgeEns, 
+                         MARGIN = 2, 
+                         FUN = fitMonotonicSpline, 
+                         depth = sampleDepths, 
+                         model.depth = model.depths, 
+                         kFrac = kFrac)
+}else{
+  aeig <- apply(X = sampledAgeEns, 
+                           MARGIN = 2, 
+                           FUN = fitMonotonicSpline, 
+                           depth = sampleDepths, 
+                           model.depth = model.depths, 
+                           kFrac = kFrac)
+}
 #calculate accum rates
 mgDepthSteps <- matrix(rep(diff(model.depths),times = n.ms.ens),ncol = n.ms.ens,nrow = length(model.depths) - 1) 
 mgAgeSteps <- apply(X = aeig, MARGIN = 2,FUN = diff)
@@ -130,7 +149,7 @@ varveMean <- meanScamSedrate * varveScalingFactor
 
 
 #add the high frequency bit
-message(crayon::blue("Estimating high-frequency variability in the model..."))
+if(progress){message(crayon::blue("Estimating high-frequency variability in the model..."))}
 varvedPrior <- addVarves(ages = aeig,
                         model.depths = model.depths,
                         yrPerDepth = yrPerDepth,
@@ -138,7 +157,8 @@ varvedPrior <- addVarves(ages = aeig,
                         H = H,
                         ar1 = ar1, 
                         n.varve.ens = n.ms.ens,
-                        DT = DT)
+                        DT = DT,
+                        progress = progress)
 
 return(varvedPrior)
 }
@@ -146,17 +166,25 @@ return(varvedPrior)
 
 
 
-addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varve.ens, DT){
+addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varve.ens, DT,progress = TRUE){
   nYears <- apply(ages, 2, \(x) ceiling(max(x)) - floor(min(x)))
   
   #speed up here? Arima (AR1) is much faster
-  v1 <- purrr::map(nYears,simulateVarves,H = H,ar1 = ar1,mean = varveMean,n.ens = 1,length.out = max(nYears)) |> 
+  v1 <- purrr::map(nYears,
+                   simulateVarves,
+                   H = H,
+                   ar1 = ar1,
+                   mean = varveMean,
+                   n.ens = 1,
+                   length.out = max(nYears),
+                   .progress = progress) |> 
     purrr::list_c() |> 
     matrix(ncol = length(nYears), nrow = max(nYears))
   
   #v1 <- simulateVarves(nYears,n.ens = n.varve.ens,H = H,ar1 = ar1,mean = varveMean)
   vInv <- 1/v1
   d <- seq_len(nrow(vInv))
+  depthStep <- median(abs(diff(d)))
   
   #speed up here? yep, dplyr is MUCH faster
   #bvInv <- geoChronR::binEns(time = d, values = vInv,bin.vec = model.depths)
@@ -197,7 +225,8 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   agePriors <- matrix(minAge,ncol = ncol(prior),nrow = nrow(prior),byrow = TRUE) + cumAges
   
   #assess fit
-  varvedPriorLogObj <- ageProbsDT(L$chronData[[1]]$model[[1]]$distributionTable, ages,ageDepths)
+  #ages and depths may not match?
+  varvedPriorLogObj <- ageProbsDT(DT,ages,ageDepths)
   
   
   return(list(agePriors = agePriors, 
