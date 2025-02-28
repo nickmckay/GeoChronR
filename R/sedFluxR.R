@@ -226,7 +226,7 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   
   #assess fit
   #ages and depths may not match?
-  varvedPriorLogObj <- ageProbsDT(DT,ages,ageDepths)
+  varvedPriorLogObj <- ageProbsDT(DT,agePriors,ageDepths)
   
   
   return(list(agePriors = agePriors, 
