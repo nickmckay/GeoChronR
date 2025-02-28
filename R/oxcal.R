@@ -639,18 +639,18 @@ executeOxcalAndUpdate <- function(oxcal_script){
   
   modParams <- getModelParametersFromOxcalText(oxcal_script)
   plotData <- data.frame(depth = modParams$inputData$depth)
-  
-  
+
+
   c14Data <- modParams$c14Data
   oxData <- oxcAAR::oxcalCalibrate(c14Data$ages,c14Data$uncertainties)
-  
+
   L$chronData[[1]]$model[[1]]$distributionTable <- vector(mode = "list",length = length(oxData))
   for(dd in 1:length(oxData)){
     dTable = list()
     dTable$age = list(values = 1950 - (oxData[[dd]]$raw_probabilities$dates),
-                      units =  "BP", 
+                      units =  "BP",
                       variableName = "age")
-    dTable$probabilityDensity = list(values = oxData[[dd]]$raw_probabilities$probabilities , 
+    dTable$probabilityDensity = list(values = oxData[[dd]]$raw_probabilities$probabilities ,
                                      variableName = "probabilityDensity")
     dTable$labId <- oxData[[dd]]$name
     dTable$depth  <- c14Data$depths[dd]
