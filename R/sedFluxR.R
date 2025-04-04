@@ -166,7 +166,7 @@ return(varvedPrior)
 
 
 
-addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varve.ens, DT,progress = TRUE){
+addVarves <- function(ages, model.depths,  yrPerDepth, totalDepth, varveMean, H, ar1, n.varve.ens, DT,progress = TRUE){
   nYears <- apply(ages, 2, \(x) ceiling(max(x)) - floor(min(x)))
   
   #speed up here? Arima (AR1) is much faster
@@ -183,25 +183,52 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   
   #v1 <- simulateVarves(nYears,n.ens = n.varve.ens,H = H,ar1 = ar1,mean = varveMean)
   vInv <- 1/v1
-  d <- seq_len(nrow(vInv))
-  depthStep <- median(abs(diff(d)))
   
-  #speed up here? yep, dplyr is MUCH faster
-  #bvInv <- geoChronR::binEns(time = d, values = vInv,bin.vec = model.depths)
   
-  ageDepths <- model.depths[map_dbl(d, \(x) which.min(abs(x - model.depths)))]
+  depths <- apply(v1,2,cumsum)
+  totalDepths <- apply(depths,2,max,na.rm = TRUE)
+
+  #scale depth
   
-  df <- as.data.frame(cbind(ageDepths,vInv)) |> 
-    pivot_longer(-ageDepths,values_to = "accRate", names_to = "ens") |> 
-    group_by(ageDepths, ens) |> 
-    summarize(binned = mean(accRate,na.rm = TRUE)) |> 
-    pivot_wider(names_from = ens,values_from = binned)
+  adjustFactor <- totalDepth/totalDepths
+  adjustedDepths <- matrix(adjustFactor,ncol = ncol(depths),nrow = nrow(depths), byrow = TRUE) * depths
+  depthStep <- median(abs(diff(adjustedDepths)),na.rm = TRUE)
+  modelDepthStep <- median(diff(model.depths))
+  
+  if(sd(diff(model.depths))/modelDepthStep < 0.1){#typical use case, standard gaps much faster
+    nearestDepths <- round_any(adjustedDepths,accuracy = modelDepthStep)
+  }else{#irregular depths, much slower
+    nearestDepths <- apply(adjustedDepths,2,\(x) model.depths[map_dbl(d, \(x) ifelse(is.na(x),NA,which.min(abs(x - model.depths))))])
+  }  
+  
+  if(depthStep > modelDepthStep){#then interpolate
+    stop("Using depth steps that are finer than annual is not yet supported.")
+  }else{#then bin
+    dfAccrate <- pivot_longer(as.data.frame(vInv),everything(),values_to = "accRate", names_to = "ens")
+    dfDepth <- pivot_longer(as.data.frame(nearestDepths),everything(),values_to = "depth", names_to = "ens")
+    df <- bind_cols(dfAccrate,select(dfDepth,-ens)) |> 
+      group_by(depth, ens) |> 
+      summarize(binned = mean(accRate,na.rm = TRUE)) |> 
+      pivot_wider(names_from = ens,values_from = binned) |> 
+      filter(!is.na(depth))
+  }
   
   bvInv <- as.matrix(df)[,-1]
-  ageDepths <- df$ageDepths
+  bvInv[is.na(bvInv)] <- 0
   
-  if(ncol(bvInv) == ncol(yrPerDepth)){
-    prior <- bvInv * yrPerDepth
+  new.depths.to.model <- df$depth
+  depthStep <- median(diff(new.depths.to.model))
+
+  #interpolate yrPerDepth to match new model.depth
+  nypd <- apply(yrPerDepth,
+                MARGIN = 2,
+                \(sr) Hmisc::approxExtrap(x = model.depths, y = sr,xout = new.depths.to.model,method = "linear")$y)
+  
+  
+  
+  
+  if(all(dim(bvInv) == dim(nypd))){
+    prior <- bvInv * nypd
   }else{
     stop("Feature is not set up yet - n.varve.ens and n.ms.ens need to be the same for now")
   }
@@ -209,7 +236,7 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   totalAge <- colSums(prior * depthStep)
   
   #scale to total age
-  adjustFactor <- nYears/totalAge * depthStep
+  adjustFactor <- nYears/totalAge
   adjustedForTotalAgePrior <- matrix(adjustFactor,ncol = ncol(prior),nrow = nrow(prior), byrow = TRUE) * prior
   
   
@@ -218,7 +245,7 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   }
   
   #sum up the ages
-  cumAges <- apply(adjustedForTotalAgePrior,MARGIN = 2,cumsum)
+  cumAges <- apply(adjustedForTotalAgePrior * depthStep,MARGIN = 2,cumsum)
   
   #adjust for starting age
   minAge <- apply(X = ages,MARGIN = 2,min)
@@ -226,11 +253,11 @@ addVarves <- function(ages, model.depths,  yrPerDepth, varveMean, H, ar1, n.varv
   
   #assess fit
   #ages and depths may not match?
-  varvedPriorLogObj <- ageProbsDT(DT,agePriors,ageDepths)
+  varvedPriorLogObj <- ageProbsDT(DT,ageEstimates = agePriors,depths = new.depths.to.model)
   
   
   return(list(agePriors = agePriors, 
-              ageDepths = ageDepths,
+              ageDepths = new.depths.to.model,
               varvedPriorLogObj = varvedPriorLogObj))
 }
 

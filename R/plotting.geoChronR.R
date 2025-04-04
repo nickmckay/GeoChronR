@@ -65,7 +65,8 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @author Julien Emile-Geay
 #' @import ggplot2
 #' @import reshape2
-plotSpectraEns = function (spec.ens,
+plotSpectraEns = function (add.to.plot = ggplot2::ggplot(), 
+                           spec.ens,
                            cl.df = NULL,
                            x.lims = NULL,
                            x.ticks = c(10, 20, 50, 100, 200, 500, 1000),
@@ -82,11 +83,10 @@ plotSpectraEns = function (spec.ens,
   period <- 1 / freq 
   
   if (is.null(x.lims)) {
-    x.lims = c(min(period), max(period))
-  } else {
-    f.low = 1 / x.lims[2]
-    f.high = 1 / x.lims[1]
+    x.lims = range(period)
   }
+  f.low = 1 / x.lims[2]
+  f.high = 1 / x.lims[1]
   freq_range = which(freq >= f.low & freq <= f.high)
   
   if (is.null(y.lims)) {
@@ -98,7 +98,8 @@ plotSpectraEns = function (spec.ens,
     M <- log10(y.lims[2])
   }
   
-  specPlot = plotTimeseriesEnsRibbons(X = period,
+  specPlot = plotTimeseriesEnsRibbons(add.to.plot = add.to.plot,
+                                      X = period,
                                       Y = spec.ens$power,
                                       color.low = color.low,
                                       color.high = color.high,
