@@ -1,5 +1,7 @@
 # geoChronR 1.1.16
 
+* Moved installation of BChron to github, since it was removed from CRAN. [See issue 90](https://github.com/nickmckay/GeoChronR/issues/90), and thanks @kurtlindberg for the bug report. 
+
 # geoChronR 1.1.15
 
 * fixed a bug in `ar1Surrogates()` that would pop up with the isosopersistent option in rare occasions. [See issue 89](https://github.com/nickmckay/GeoChronR/issues/89), and thanks @laurastreib for the bug report.
