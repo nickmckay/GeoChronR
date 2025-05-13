@@ -1,0 +1,110 @@
+shortname: geoChronR
+title:  geoChronR Vignettes (McKay et al., 2021)
+author: Nick McKay
+type: Paleobook
+thumbnail: logo.png
+parts:
+  - caption: Core Methods
+    chapters:
+      - shortname: Introduction
+        filename: Introduction
+        thumbnail: introduction.png
+        tags:
+          domains:
+            - age modeling
+            - uncertainty quantification
+          packages:
+            - geoChronR
+            - lipdR
+      - shortname: Ensemble Correlation
+        filename: correlation
+        thumbnail: correlation.png
+        tags:
+          domains:
+            - correlation
+            - age uncertainty
+          packages:
+            - geoChronR
+            - ggplot2
+      - shortname: Regression & Calibration-in-Time
+        filename: regression
+        thumbnail: regression.png
+        tags:
+          domains:
+            - regression
+            - calibration
+          packages:
+            - geoChronR
+            - readr
+            - ggplot2
+      - shortname: Spectral Analysis
+        filename: spectral_analysis
+        thumbnail: spectral_analysis.png
+        tags:
+          domains:
+            - spectral analysis
+            - wavelets
+          packages:
+            - geoChronR
+      - shortname: Ensemble PCA
+        filename: PCA
+        thumbnail: PCA.png
+        tags:
+          domains:
+            - PCA
+            - dimension reduction
+          packages:
+            - geoChronR
+
+  - caption: Data Manipulation
+    chapters:
+      - shortname: Plot Timeseries Stack
+        filename: PlotTimeseriesStack
+        thumbnail: plot_stack.png
+        tags:
+          domains:
+            - visualization
+          packages:
+            - geoChronR
+            - ggplot2
+      - shortname: Filtering & Mapping
+        filename: TsFilteringAndMapping
+        thumbnail: filter_map.png
+        tags:
+          domains:
+            - data wrangling
+            - mapping
+          packages:
+            - geoChronR
+      - shortname: Tidy Filtering & Mapping
+        filename: tidyIso2k
+        thumbnail: tidy_filter.png
+        tags:
+          domains:
+            - data wrangling
+            - tidyverse
+          packages:
+            - geoChronR
+            - dplyr
+            - purrr
+
+  - caption: Extensions
+    chapters:
+      - shortname: OxCal Integration
+        filename: oxCal
+        thumbnail: oxcal.png
+        tags:
+          domains:
+            - age modeling
+          packages:
+            - geoChronR
+            - oxcAAR
+      - shortname: Add Ensemble to LiPD
+        filename: AddEnsemble
+        thumbnail: add_ensemble.png
+        tags:
+          domains:
+            - LiPD
+            - ensemble
+          packages:
+            - geoChronR
