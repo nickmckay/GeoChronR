@@ -9,6 +9,10 @@ parts:
       - shortname: Introduction
         filename: Introduction
         thumbnail: introduction.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - age modeling
@@ -19,6 +23,10 @@ parts:
       - shortname: Ensemble Correlation
         filename: correlation
         thumbnail: correlation.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - correlation
@@ -29,6 +37,10 @@ parts:
       - shortname: Regression & Calibration-in-Time
         filename: regression
         thumbnail: regression.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - regression
@@ -40,6 +52,10 @@ parts:
       - shortname: Spectral Analysis
         filename: spectral_analysis
         thumbnail: spectral_analysis.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - spectral analysis
@@ -49,6 +65,10 @@ parts:
       - shortname: Ensemble PCA
         filename: PCA
         thumbnail: PCA.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - PCA
@@ -61,6 +81,10 @@ parts:
       - shortname: Plot Timeseries Stack
         filename: PlotTimeseriesStack
         thumbnail: plot_stack.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - visualization
@@ -70,6 +94,10 @@ parts:
       - shortname: Filtering & Mapping
         filename: TsFilteringAndMapping
         thumbnail: filter_map.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - data wrangling
@@ -79,6 +107,10 @@ parts:
       - shortname: Tidy Filtering & Mapping
         filename: tidyIso2k
         thumbnail: tidy_filter.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - data wrangling
@@ -93,6 +125,10 @@ parts:
       - shortname: OxCal Integration
         filename: oxCal
         thumbnail: oxcal.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - age modeling
@@ -102,6 +138,10 @@ parts:
       - shortname: Add Ensemble to LiPD
         filename: AddEnsemble
         thumbnail: add_ensemble.png
+        published: 
+          - McKay et al., 2021
+        language: 
+          - R
         tags:
           domains:
             - LiPD

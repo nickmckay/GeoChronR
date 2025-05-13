@@ -209,6 +209,7 @@ modeSelektor <- function(x){
 
 #' Simulate uncertainty in a dataset
 #' @description Simulate uncertainty in a dataset given an estimate of standard deviation and an ARIMA model
+#' @family utility
 #' @param n length of output vector
 #' @param sd standard deviation of the output vector
 #' @param mean mean of the output vector
@@ -235,7 +236,7 @@ simulateAutoCorrelatedUncertainty <- function(n, sd, mean = 0, ar = sqrt(.5),ari
 #' @param sd 
 #' @param ar 
 #' @param arima.order 
-#'
+#' @family utility
 #' @return a matrix of ensemble values
 #' @export
 generateEnsembleFromUncertainty <- function(variable,n.ens,sd,ar = sqrt(.5),arima.order = c(1,0,0)){
