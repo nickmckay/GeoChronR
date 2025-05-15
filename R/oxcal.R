@@ -518,6 +518,7 @@ runOxcal <-  function(L,
                       outlier.prob = .05,
                       cal.curve = "IntCal20",
                       oxcal.code.export.path = NA,
+                      update = TRUE,
                       ...){
   
   
@@ -614,7 +615,7 @@ runOxcal <-  function(L,
   unlink(file.path(tempdir(),"MCMC_Sample.csv"))
   
   #run the file!
-  oxcal.result.file.path <- executeOxcalAndUpdate(oxMod$modelText)
+  oxcal.result.file.path <- executeOxcalAndUpdate(oxMod$modelText,update = update)
   
   
   L <- loadOxcalOutput(L,
@@ -627,15 +628,17 @@ runOxcal <-  function(L,
   return(L)
 }
 
-executeOxcalAndUpdate <- function(oxcal_script){
+executeOxcalAndUpdate <- function(oxcal_script,update = TRUE){
   #see if we can plot
-  if("plotly" %in% rownames(installed.packages())){
-    updatePlots <- TRUE
-  }else{
-    updatePlots <- FALSE
-    message("If you would like to (optionally) see a plot that shows how OxCal is working while it runs automatic update, install the plotly package (`install.packages('plotly'))")
+  if(update){
+    if("plotly" %in% rownames(installed.packages())){
+      updatePlots <- TRUE
+    }else{
+      updatePlots <- FALSE
+      message("If you would like to (optionally) see a plot that shows how OxCal is working while it runs automatic update, install the plotly package (`install.packages('plotly'))")
+    }
   }
-
+  
   
   modParams <- getModelParametersFromOxcalText(oxcal_script)
   plotData <- data.frame(depth = modParams$inputData$depth)
@@ -664,90 +667,94 @@ executeOxcalAndUpdate <- function(oxcal_script){
   progress_file <- paste(option_file, ".work", sep = "")
   
   cat(oxcal_script, file = option_file)
-  suppressWarnings(system(paste(shQuote(normalizePath(oxcal_path)),option_file), wait = FALSE, intern = FALSE))
-
+  
+  
   # Check if the progress file exists
-  if (!file.exists(progress_file)) {
-    cat("Progress updates forthcoming...\n")
-    while (!file.exists(progress_file)) {
-      Sys.sleep(1)
-    }
-  }
-  
-  if(updatePlots){
-    d <- plotModelDistributions(L) + 
-    scale_y_reverse("Depth") + 
-    xlab("Age (cal yr BP") +
-      ggtitle("Radiocarbon dates - doing prework, MCMC will start in a bit") +
-    theme_bw() 
-    print(plotly::ggplotly(d))  
-  }
-  
-  
-  
-  # Read progress updates
-  last_size <- 0
-  repeat {
-    if (!file.exists(progress_file)) break
-    
-    # Read the new content from the progress file
-    lines <- readr::read_file(progress_file) |> stringr::str_remove_all("\\n")
-    
-    pctDone <- as.numeric(regmatches(lines, regexpr("(?<=work\\.done=)[0-9\\.]+", lines, perl = TRUE)))
-    if(length(pctDone) == 0){
-      pctDone <- 0
-    }
-
-    if(is.na(pctDone)){
-      pctDone <- 0
-    }
-    
-    # Print status update on the same line
-    cat(sprintf("\r%s", lines))
-    
-    # Check if the external program is done
-    if (pctDone >= 100) {
-      cat("\rNearly done...")
-      if(as.numeric(lubridate::as.duration(lubridate::now() - file.mtime(output_file))) < 30){
-      cat("\rFinished!")
-      Sys.sleep(5)
-      break
+  if(update){
+  suppressWarnings(system(paste(shQuote(normalizePath(oxcal_path)),option_file), wait = FALSE, intern = FALSE))
+    if (!file.exists(progress_file)) {
+      cat("Progress updates forthcoming...\n")
+      while (!file.exists(progress_file)) {
+        Sys.sleep(1)
       }
     }
     
     if(updatePlots){
- 
-      #update a graph
-    if (file.exists(file.path(tempdir(),"MCMC_Sample.csv"))){
-      file_size <- file.size(file.path(tempdir(),"MCMC_Sample.csv"))
-      if(file_size > 10000 & file_size != last_size){
-    ens <- read.csv(file.path(tempdir(),"MCMC_Sample.csv"))
-    last_size <- file_size
-    recent <- as.data.frame(t(as.matrix(ens[max(1,nrow(ens)-9):(nrow(ens)-1),-1][,1:nrow(plotData)])))
-    recent$depth <- plotData$depth
+      d <- plotModelDistributions(L) + 
+        scale_y_reverse("Depth") + 
+        xlab("Age (cal yr BP") +
+        ggtitle("Radiocarbon dates - doing prework, MCMC will start in a bit") +
+        theme_bw() 
+      print(plotly::ggplotly(d))  
+    }
     
-    tp <- tidyr::pivot_longer(recent,-depth,names_to = "ensemble_member",values_to = "AD") |> 
-      mutate(age = convertAD2BP(AD),
-             ensemble_member = as.numeric(ensemble_member) * modParams$parameters$thin)
     
-    # Plot progress dynamically
-    p <- d + 
-      geom_line(data = tp,aes(x = as.numeric(age), y = depth,alpha = ensemble_member,color = as.character(ensemble_member))) +
-      scale_color_brewer("Ensemble Member") + 
-      scale_alpha_continuous("Ensemble Member",range = c(.4,1),guide = FALSE) + 
-      ggtitle(glue::glue("Updated age model - {max(as.numeric(tp$ensemble_member))}"))
     
-    # Print the updated plot (refreshes the plot window)
-    #print(p)
-    #remove the plot files
-    pfs <- list.files(tempdir(),pattern = "viewhtml")
-    unlink(file.path(tempdir(),pfs),recursive = TRUE)
-    print(plotly::ggplotly(p))  
-    }}}
-    Sys.sleep(5)  # Avoid high CPU usage
+    # Read progress updates
+    last_size <- 0
+    repeat {
+      if (!file.exists(progress_file)) break
+      
+      # Read the new content from the progress file
+      lines <- readr::read_file(progress_file) |> stringr::str_remove_all("\\n")
+      
+      pctDone <- as.numeric(regmatches(lines, regexpr("(?<=work\\.done=)[0-9\\.]+", lines, perl = TRUE)))
+      if(length(pctDone) == 0){
+        pctDone <- 0
+      }
+      
+      if(is.na(pctDone)){
+        pctDone <- 0
+      }
+      
+      # Print status update on the same line
+      cat(sprintf("\r%s", lines))
+      
+      # Check if the external program is done
+      if (pctDone >= 100) {
+        cat("\rNearly done...")
+        if(as.numeric(lubridate::as.duration(lubridate::now() - file.mtime(output_file))) < 30){
+          cat("\rFinished!")
+          Sys.sleep(5)
+          break
+        }
+      }
+      
+      if(updatePlots){
+        
+        #update a graph
+        if (file.exists(file.path(tempdir(),"MCMC_Sample.csv"))){
+          file_size <- file.size(file.path(tempdir(),"MCMC_Sample.csv"))
+          if(file_size > 10000 & file_size != last_size){
+            ens <- read.csv(file.path(tempdir(),"MCMC_Sample.csv"))
+            last_size <- file_size
+            recent <- as.data.frame(t(as.matrix(ens[max(1,nrow(ens)-9):(nrow(ens)-1),-1][,1:nrow(plotData)])))
+            recent$depth <- plotData$depth
+            
+            tp <- tidyr::pivot_longer(recent,-depth,names_to = "ensemble_member",values_to = "AD") |> 
+              mutate(age = convertAD2BP(AD),
+                     ensemble_member = as.numeric(ensemble_member) * modParams$parameters$thin)
+            
+            # Plot progress dynamically
+            p <- d + 
+              geom_line(data = tp,aes(x = as.numeric(age), y = depth,alpha = ensemble_member,color = as.character(ensemble_member))) +
+              scale_color_brewer("Ensemble Member") + 
+              scale_alpha_continuous("Ensemble Member",range = c(.4,1),guide = FALSE) + 
+              ggtitle(glue::glue("Updated age model - {max(as.numeric(tp$ensemble_member))}"))
+            
+            # Print the updated plot (refreshes the plot window)
+            #print(p)
+            #remove the plot files
+            pfs <- list.files(tempdir(),pattern = "viewhtml")
+            unlink(file.path(tempdir(),pfs),recursive = TRUE)
+            print(plotly::ggplotly(p))  
+          }}}
+      Sys.sleep(5)  # Avoid high CPU usage
+    }
+    
+  }else{
+    suppressWarnings(system(paste(shQuote(normalizePath(oxcal_path)),option_file), wait = TRUE, intern = FALSE))
   }
-  
-  
   
   return(output_file)
   

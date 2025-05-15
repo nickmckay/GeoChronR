@@ -71,7 +71,8 @@ L <- runOxcal(L,
               surface.age = 0,
               surface.age.unc = 25,
               depth.interval = 10,
-              events.per.unit.length = .1)
+              events.per.unit.length = .1,
+              update = FALSE)
 ```
 
 Great. After OxCal finishes running successfully, it will return this table showing some diagnostics of the MCMC statistics for the dated levels. If the table is empty, that's a sure sign that there was an error in your run. 
