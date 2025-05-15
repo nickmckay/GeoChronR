@@ -1,0 +1,19 @@
+format: jb-book
+root: Introduction
+parts:
+  - caption: Core Methods
+    chapters:
+      - file: articles/Introduction.html
+      - file: articles/correlation.html
+      - file: articles/regression.html
+      - file: articles/spectral_analysis.html
+      - file: articles/PCA.html
+  - caption: Data Manipulation
+    chapters:
+      - file: articles/PlotTimeseriesStack.html
+      - file: articles/TsFilteringAndMapping.html
+      - file: articles/tidyIso2k.html
+  - caption: Extensions
+    chapters:
+      - file: articles/oxCal.html
+      - file: articles/AddEnsemble.html
