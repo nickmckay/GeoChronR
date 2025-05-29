@@ -38,9 +38,10 @@ library(ggplot2) #for plotting
 ``` 
 
 ## Load the LiPD file
-OK, we'll begin by loading in the Kurupa Lake record from Boldt et al., 2015. `The system.file(...)` part of this pulls the example file from the package directory. You'd like just enter the path as a string for typical use.
+OK, we'll begin by loading in the Kurupa Lake record from Boldt et al., 2015. We'll download the file from lipdverse, (using purrr::insistently to avoid issues with buildling) but you could also load it from a local file.
 ```{r}
-K <- lipdR::readLipd("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
+readLipdInsistently <- purrr::insistently(f  = lipdR::readLipd,quiet = TRUE)
+K <- readLipdInsistently("http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd")
 ```
 
 ## Check out the contents
