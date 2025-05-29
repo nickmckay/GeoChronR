@@ -172,7 +172,9 @@ runBacon <-  function(L,
   
   #run bacon
   setwd(bacon.dir)
-  #if(is.null(baconFile)){baconFile = "Bacon.R"}
+
+  #remove duplicates
+  rbacon::Bacon.cleanup()
   
   #run Bacon
   rbacon::Bacon(core=site.name,coredir = bacon.dir,thick=thick,acc.mean = bacon.acc.mean,...)
