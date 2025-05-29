@@ -29,11 +29,13 @@ Other utility:
 \code{\link{convertAD2BP}()},
 \code{\link{convertBP2AD}()},
 \code{\link{createChronMeasInputDf}()},
+\code{\link{generateEnsembleFromUncertainty}()},
 \code{\link{getLastVarString}()},
 \code{\link{getOs}()},
 \code{\link{heuristicUnits}()},
 \code{\link{loadRemote}()},
 \code{\link{pullInstance}()},
+\code{\link{simulateAutoCorrelatedUncertainty}()},
 \code{\link{stringifyVariables}()},
 \code{\link{surrogateDataFun}()}
 }

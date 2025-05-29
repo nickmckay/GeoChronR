@@ -29,3 +29,21 @@ a matrix of ensemble values
 \description{
 Create an ensemble from an uncertainty and AR1 estimate
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{simulateAutoCorrelatedUncertainty}()},
+\code{\link{stringifyVariables}()},
+\code{\link{surrogateDataFun}()}
+}
+\concept{utility}

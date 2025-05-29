@@ -485,6 +485,7 @@ loadOxcalOutput <- function(L,
 #' @param surface.age.unc surface age uncertainty
 #' @param surface.age.depth depth of the surface age
 #' @param oxcal.code.export.path optionally output the oxcal code by specifying a path (default = NA)
+#' @param update plot and print updates of the oxcal modelling process
 #' @inheritParams createChronMeasInputDf
 #' @inheritParams writeBacon
 #' @inheritDotParams createChronMeasInputDf

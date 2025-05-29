@@ -23,11 +23,13 @@ Other utility:
 \code{\link{convertBP2AD}()},
 \code{\link{createChronMeasInputDf}()},
 \code{\link{gaussianize}()},
+\code{\link{generateEnsembleFromUncertainty}()},
 \code{\link{getLastVarString}()},
 \code{\link{getOs}()},
 \code{\link{heuristicUnits}()},
 \code{\link{loadRemote}()},
 \code{\link{pullInstance}()},
+\code{\link{simulateAutoCorrelatedUncertainty}()},
 \code{\link{stringifyVariables}()}
 }
 \concept{utility}

@@ -32,3 +32,21 @@ ts simulated from a from an ARIMA model with a defined mean and variance
 \description{
 Simulate uncertainty in a dataset given an estimate of standard deviation and an ARIMA model
 }
+\seealso{
+Other utility: 
+\code{\link{askUser}()},
+\code{\link{concatEnsembleTimeseries}()},
+\code{\link{convertAD2BP}()},
+\code{\link{convertBP2AD}()},
+\code{\link{createChronMeasInputDf}()},
+\code{\link{gaussianize}()},
+\code{\link{generateEnsembleFromUncertainty}()},
+\code{\link{getLastVarString}()},
+\code{\link{getOs}()},
+\code{\link{heuristicUnits}()},
+\code{\link{loadRemote}()},
+\code{\link{pullInstance}()},
+\code{\link{stringifyVariables}()},
+\code{\link{surrogateDataFun}()}
+}
+\concept{utility}
