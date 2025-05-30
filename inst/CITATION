@@ -1,0 +1,11 @@
+bibentry(
+  bibtype  = "Article",
+  title="geoChronR--an R package to model, analyze, and visualize age-uncertain data",
+  author="McKay, Nicholas P and Emile-Geay, Julien and Khider, Deborah",
+  journal="Geochronology",
+  volume="3",
+  number="1",
+  pages="149--169",
+  year="2021",
+  publisher='Copernicus Publications G{\"o}ttingen, Germany'
+)

@@ -638,7 +638,7 @@ loadBaconOutput <- function(L,
   summTable = read.table(st,header = TRUE)
   
   #assign names in.
-  if(packageVersion("rBacon") > "3.5.0"){
+  if(packageVersion("rbacon") > "3.5.0"){
     origNames = c("depth","min.95","max.95","median","mean")
   }else{
     origNames = c("depth","min","max","median","mean")
