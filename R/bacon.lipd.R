@@ -174,7 +174,7 @@ runBacon <-  function(L,
   setwd(bacon.dir)
 
   #remove duplicates
-  rbacon::Bacon.cleanup()
+  try(rbacon::Bacon.cleanup(),silent = TRUE)
   
   #run Bacon
   rbacon::Bacon(core=site.name,coredir = bacon.dir,thick=thick,acc.mean = bacon.acc.mean,...)
@@ -638,7 +638,11 @@ loadBaconOutput <- function(L,
   summTable = read.table(st,header = TRUE)
   
   #assign names in.
-  origNames = c("depth","min","max","median","mean")
+  if(packageVersion("rBacon") > "3.5.0"){
+    origNames = c("depth","min.95","max.95","median","mean")
+  }else{
+    origNames = c("depth","min","max","median","mean")
+  }
   newNames = c("depth","age.rangeLow","age.rangeHigh","age","age")
   
   depth.units = L$chronData[[chron.num]]$measurementTable[[1]]$depth$units
