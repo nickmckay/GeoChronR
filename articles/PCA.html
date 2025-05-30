@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.16</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2024-09-11</h4>
+            <h4 data-toc-skip class="date">2025-05-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -158,7 +158,7 @@ analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426
 compilation, which we load here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">FD</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/py/lcjn3y352g1106vf1rqk521r0000gn/T//Rtmpg7iwEF/lpdDownload..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/tp/bfmjfn9s0hd59bm9z80j3mgm0000gn/T//RtmpJkyhhG/lpdDownload..."</span></span>
 <span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Austfonna.Isaksson.2005.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-CampCentury.Fisher.1969.lpd"</span></span>
@@ -283,18 +283,18 @@ timeseries:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">quantileData</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
-<span><span class="co">##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.051</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.047<span style="text-decoration: underline;">7</span>  0.103   0.155    0.259</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.024<span style="text-decoration: underline;">1</span>  0.093<span style="text-decoration: underline;">4</span>  0.132   0.167    0.241</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.049<span style="text-decoration: underline;">3</span>  0.123   0.163   0.207    0.274</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.100   0.178   0.208   0.233    0.294</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.082<span style="text-decoration: underline;">8</span>  0.148   0.176   0.201    0.248</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.024</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.053<span style="text-decoration: underline;">1</span>  0.094<span style="text-decoration: underline;">6</span>  0.132    0.212</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.039</span><span style="color: #BB0000; text-decoration: underline;">4</span>  0.017<span style="text-decoration: underline;">0</span>  0.045<span style="text-decoration: underline;">5</span>  0.072<span style="text-decoration: underline;">9</span>   0.126</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.093</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.026</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.009<span style="text-decoration: underline;">69</span> 0.044<span style="text-decoration: underline;">2</span>   0.117</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.071</span><span style="color: #BB0000; text-decoration: underline;">0</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">51</span> 0.026<span style="text-decoration: underline;">7</span>  0.061<span style="text-decoration: underline;">0</span>   0.135</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.052</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.007<span style="text-decoration: underline;">41</span> 0.042<span style="text-decoration: underline;">7</span>  0.083<span style="text-decoration: underline;">2</span>   0.159</span></span>
+<span><span class="co">##     ages `0.025`   `0.25`  `0.5` `0.75` `0.975`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.063</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.035<span style="text-decoration: underline;">3</span>  0.095<span style="text-decoration: underline;">7</span> 0.147    0.275</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.021<span style="text-decoration: underline;">2</span>  0.091<span style="text-decoration: underline;">7</span>  0.130  0.175    0.257</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.044<span style="text-decoration: underline;">8</span>  0.127   0.169  0.214    0.290</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.116   0.181   0.214  0.240    0.285</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.080<span style="text-decoration: underline;">0</span>  0.148   0.175  0.200    0.249</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.025</span><span style="color: #BB0000; text-decoration: underline;">4</span>  0.052<span style="text-decoration: underline;">4</span>  0.089<span style="text-decoration: underline;">5</span> 0.127    0.208</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.036</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.016<span style="text-decoration: underline;">5</span>  0.043<span style="text-decoration: underline;">5</span> 0.070<span style="text-decoration: underline;">6</span>   0.133</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.105</span>  -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.013<span style="text-decoration: underline;">2</span> 0.047<span style="text-decoration: underline;">9</span>   0.118</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.059</span><span style="color: #BB0000; text-decoration: underline;">7</span> -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">67</span> 0.023<span style="text-decoration: underline;">3</span> 0.058<span style="text-decoration: underline;">2</span>   0.127</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.057</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.005<span style="text-decoration: underline;">68</span> 0.044<span style="text-decoration: underline;">5</span> 0.083<span style="text-decoration: underline;">5</span>   0.154</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 190 more rows</span></span></span></code></pre>
 </div>
 </div>
@@ -404,7 +404,7 @@ PC2 from the first analysis.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>

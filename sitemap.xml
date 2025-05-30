@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://nickmckay.github.io/geoChronR/404.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/LICENSE-text.html</loc></url>
+<url><loc>https://nickmckay.github.io/geoChronR/LICENSE.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/articles/AddEnsemble.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/articles/Introduction.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/articles/PCA.html</loc></url>
@@ -48,6 +49,7 @@
 <url><loc>https://nickmckay.github.io/geoChronR/reference/fdr.master.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/fdrBasic.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/gaussianize.html</loc></url>
+<url><loc>https://nickmckay.github.io/geoChronR/reference/generateEnsembleFromUncertainty.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/geoChronRPlotTheme.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/getBaconDir.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/getLastVarString.html</loc></url>
@@ -108,6 +110,7 @@
 <url><loc>https://nickmckay.github.io/geoChronR/reference/sampleBaconAges.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/selectData.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/setBaconDir.html</loc></url>
+<url><loc>https://nickmckay.github.io/geoChronR/reference/simulateAutoCorrelatedUncertainty.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/simulateBam.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/storey.html</loc></url>
 <url><loc>https://nickmckay.github.io/geoChronR/reference/stringifyVariables.html</loc></url>
