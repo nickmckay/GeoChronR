@@ -2,7 +2,7 @@ Package: geoChronR
 Type: Package
 Title: Tools to Analyze and Visualize Time-Uncertain Data
 Version: 1.1.16
-Date: 2021-02-01
+Date: 2025-05-30
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-3598-5113")
@@ -16,7 +16,7 @@ Authors@R: c(
   )
 Maintainer: Nick McKay <nick@nau.edu>
 Description: Time uncertain chronology developement and analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
-License: MIT + file LICENSE
+License: MIT
 LazyData: TRUE
 RoxygenNote: 7.3.1
 Encoding: UTF-8

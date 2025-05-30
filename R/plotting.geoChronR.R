@@ -636,19 +636,25 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   np = min(n.ens.plot,ncol(X)*ncol(Y))
   #sample randomly what to plot
   pX = sample.int(ncol(X),size = np,replace = TRUE)
+  pXn <- paste0("x",pX)
   pY = sample.int(ncol(Y),size = np,replace = TRUE)
+  pYn <- paste0("Y",pY)
   
-  Xplot <- tidyr::pivot_longer(X[,pX],cols = everything(),names_to = "xEns",values_to = "x")
-  Yplot <- tidyr::pivot_longer(Y[,pY],cols = everything(),names_to = "yEns",values_to = "y")
+  Xs <- X[,pX]
+  colnames(Xs) <- pXn
+  Ys <- Y[,pY]
+  colnames(Ys) <- pYn
+  
+  Xplot <- tidyr::pivot_longer(Xs,cols = everything(),names_to = "xEns",values_to = "x")
+  Yplot <- tidyr::pivot_longer(Ys,cols = everything(),names_to = "yEns",values_to = "y")
   
   dfXY <- dplyr::bind_cols(Xplot,Yplot)
-  
-  #  names(dfXY) <- c("xEns","x","yEns","y")
   dfXY <- dplyr::arrange(dfXY,xEns)
   
   if(na.rm){
-    dfXY <- filter(dfXY,!is.na(x)) %>% 
-      filter(!is.na(y))
+    dfXY <- filter(dfXY,
+                   !is.na(x),
+                   !is.na(y))
   }
   
   #deal with colors

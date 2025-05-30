@@ -71,8 +71,13 @@ This is a high-level function that uses BAM to simulate age uncertainty in layer
 L = runBam(L)
 
 #Run in noninteractive mode, describing everything:
-L = runBam(L,paleo.num = 1, paleo.meas.table.num = 1, model.num = 3, make.new = TRUE,
-nEns = 100, model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
+L = runBam(L,
+           paleo.num = 1, 
+           paleo.meas.table.num = 1, 
+           model.num = 3, 
+           make.new = TRUE,
+           nEns = 100, 
+           model = list(name = "poisson",param = 0.05, resize = 0, ns = n.ens))
 }
 }
 \seealso{

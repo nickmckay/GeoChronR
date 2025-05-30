@@ -199,7 +199,12 @@ This is a high-level function that uses Bacon to simulate an age model, and stor
 L = runBacon(L)
 
 #Run in noninteractive mode, describing everything:
-L = runBacon(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+L = runBacon(L,chron.num = 1, 
+             meas.table.num = 1, 
+             model.num = 3, 
+             bacon.dir = "~/Bacon/",
+             site.name = "MSB2K", 
+             cc = 1)
 }
 }
 \seealso{

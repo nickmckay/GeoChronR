@@ -109,7 +109,11 @@ This is a high-level function that uses Bchron to simulate an age model, and sto
 L = runBchron(L)
 
 #Run in noninteractive mode:
-L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine20") 
+L = runBchron(L,
+             chron.num = 1, 
+             site.name = "MyWonderfulSite",
+             model.num = 3, 
+             cal.curves = "marine20") 
 }
 }
 \author{

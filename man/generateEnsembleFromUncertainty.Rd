@@ -15,13 +15,13 @@ generateEnsembleFromUncertainty(
 \arguments{
 \item{variable}{LiPD variable object or vector of data}
 
-\item{n.ens}{}
+\item{n.ens}{Number of ensemble members to create (default = 1000)}
 
-\item{sd}{}
+\item{sd}{Standard deviation of the uncertainty to simulate}
 
-\item{ar}{}
+\item{ar}{Autocorrelation coefficient to use for modelling uncertainty, what fraction of the uncertainties are autocorrelated? (default = sqrt(0.5); or 50 percent autocorrelated uncertainty)}
 
-\item{arima.order}{}
+\item{arima.order}{Order to use for ARIMA model used in modelling uncertainty (default = c(1,0,0))}
 }
 \value{
 a matrix of ensemble values

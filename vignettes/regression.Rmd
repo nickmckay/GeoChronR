@@ -53,7 +53,7 @@ print(sp)
 
 ## Create an age model with Bacon
 
-```{r,results="hide",fig.keep="all",cache=TRUE}
+```{r,results="hide",fig.keep="all"}
 K <- runBacon(K,
               lab.id.var = 'labID', 
               age.14c.var = 'age14C', 

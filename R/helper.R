@@ -232,10 +232,10 @@ simulateAutoCorrelatedUncertainty <- function(n, sd, mean = 0, ar = sqrt(.5),ari
 #' Create an ensemble from an uncertainty and AR1 estimate
 #'
 #' @param variable LiPD variable object or vector of data
-#' @param n.ens 
-#' @param sd 
-#' @param ar 
-#' @param arima.order 
+#' @param n.ens Number of ensemble members to create (default = 1000)
+#' @param sd Standard deviation of the uncertainty to simulate
+#' @param ar Autocorrelation coefficient to use for modelling uncertainty, what fraction of the uncertainties are autocorrelated? (default = sqrt(0.5); or 50 percent autocorrelated uncertainty)
+#' @param arima.order Order to use for ARIMA model used in modelling uncertainty (default = c(1,0,0))
 #' @family utility
 #' @return a matrix of ensemble values
 #' @export

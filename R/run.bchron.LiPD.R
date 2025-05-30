@@ -25,7 +25,11 @@
 #'L = runBchron(L)
 #'
 #'#Run in noninteractive mode:
-#'L = runBchron(L,chron.num = 1, site.name = "MyWonderfulSite", model.num = 3, cal.curves = "marine20") 
+#'L = runBchron(L,
+#'              chron.num = 1, 
+#'              site.name = "MyWonderfulSite",
+#'              model.num = 3, 
+#'              cal.curves = "marine20") 
 #'}
 
 runBchron =  function(L,

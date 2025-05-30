@@ -70,7 +70,15 @@ This generates the csv file that is used for input to Bacon. Will be run in inte
 writeBacon(L)
 #Run in interactive mode
 
-writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
+writeBacon(L,
+           chron.num=1,
+           meas.table.num = 1,
+           bacon.dir="~/Bacon/",
+           remove.rejected=TRUE,
+           overwrite=TRUE,
+           cc=NA,
+           site.name=L$dataSetName,
+           model.num=NA)
 }
 }
 \seealso{

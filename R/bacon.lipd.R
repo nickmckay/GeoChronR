@@ -68,7 +68,12 @@ setBaconDir <- function(bacon.dir){
 #' L = runBacon(L)
 #' 
 #' #Run in noninteractive mode, describing everything:
-#' L = runBacon(L,chron.num = 1, meas.table.num = 1, model.num = 3, bacon.dir = "~/Bacon/",site.name = "MSB2K", cc = 1)
+#' L = runBacon(L,chron.num = 1, 
+#'              meas.table.num = 1, 
+#'              model.num = 3, 
+#'              bacon.dir = "~/Bacon/",
+#'              site.name = "MSB2K", 
+#'              cc = 1)
 #' }
 #' @section Long-form example:
 #' \href{http://nickmckay.github.io/GeoChronR/articles/Introduction.html}{View a full-fledged example of how to use this function.}
@@ -326,7 +331,15 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
 #' writeBacon(L)
 #' #Run in interactive mode
 #' 
-#' writeBacon(L,chron.num=1,meas.table.num = 1,bacon.dir="~/Bacon/",remove.rejected=TRUE,overwrite=TRUE,cc=NA,site.name=L$dataSetName,model.num=NA)
+#' writeBacon(L,
+#'            chron.num=1,
+#'            meas.table.num = 1,
+#'            bacon.dir="~/Bacon/",
+#'            remove.rejected=TRUE,
+#'            overwrite=TRUE,
+#'            cc=NA,
+#'            site.name=L$dataSetName,
+#'            model.num=NA)
 #' }
 writeBacon <-  function(L,
                         bacon.dir=NA,
