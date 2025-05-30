@@ -34,7 +34,6 @@ Imports:
     mapproj,
     maps,
     rbacon,
-    reshape2,
     scales,
     tibble,
     ggridges,

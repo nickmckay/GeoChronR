@@ -64,7 +64,7 @@ AD2BP_trans <- function() scales::trans_new("AD2BP",convertAD2BP,convertAD2BP)
 #' @return a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2
-#' @import reshape2
+#' @importFrom tidyr pivot_longer
 plotSpectraEns = function (spec.ens,
                            cl.df = NULL,
                            x.lims = NULL,
@@ -111,8 +111,8 @@ plotSpectraEns = function (spec.ens,
     xlab("Period") + ylab("PSD")
   
   if (!is.null(cl.df)) {# if data about confidence limit are provided, plot them
-    cl.df = reshape2::melt(cl.df,id = 1) # reshape to facilitate on-line plotting call
-    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),color=color.cl)
+    cl.df.rs = tidyr::pivot_longer(cl.df,cols = -freq,values_to = "value",names_to = "variable") # reshape to facilitate one-line plotting call
+    specPlot <- specPlot + geom_line(data=cl.df.rs,aes(x=1/freq,y=value,linetype=variable),color=color.cl)
   }
   
   #if(any(!is.na(spec.ens$powerSyn))){
@@ -139,7 +139,7 @@ plotSpectraEns = function (spec.ens,
 #' @return a ggplot object
 #' @author Julien Emile-Geay
 #' @import ggplot2
-#' @import reshape2
+#' @importFrom tidyr pivot_longer
 plotSpectrum = function (spec.df,
                          cl.df = NULL,
                          x.lims=NULL,
@@ -175,8 +175,8 @@ plotSpectrum = function (spec.df,
     xlab("Period") + ylab("Power")
   
   if (!is.null(cl.df)) {# if data about confidence limit are provided, plot them
-    cl.df = reshape2::melt(cl.df,id = 1) # reshape to facilitate one-line plotting call
-    specPlot <- specPlot + geom_line(data=cl.df,aes(x=1/freq,y=value,linetype=variable),color=color.cl)
+    cl.df.rs = tidyr::pivot_longer(cl.df,cols = -freq,values_to = "value",names_to = "variable") # reshape to facilitate one-line plotting call
+    specPlot <- specPlot + geom_line(data=cl.df.rs,aes(x=1/freq,y=value,linetype=variable),color=color.cl)
   }
   
   return(specPlot)
@@ -1144,7 +1144,7 @@ plotPvalsEnsFdr = function(cor.df,alpha = 0.05){
   pvalsA = sort(cor.df$pSerial)
   # Implement this strategy: https://stackoverflow.com/questions/38962700/ggplot-legend-order-mismatch
   df <- data.frame(pvals, pvalsA, FDR = fdr_thresh, level = lvl_thresh, x = rk)
-  mm <- reshape2::melt(df,id.var="x")
+  mm <- tidyr::pivot_longer(df,cols = -x, values_to = "value",names_to = "variable")
   lbl <- c("p-value, IID","p-value, Serial","FDR", bquote(alpha==.(alpha)))
   pvalPlot <- ggplot(data = mm, aes(x,value,color=variable,linetype=variable)) + geom_line()
   pvalPlot <- pvalPlot + scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
