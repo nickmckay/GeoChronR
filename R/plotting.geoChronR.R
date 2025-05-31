@@ -652,9 +652,9 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   #dfXY <- dplyr::arrange(dfXY,xEns)
   
   if(na.rm){
-    dfXY <- filter(dfXY,
-                   !is.na(x),
-                   !is.na(y))
+    # dfXY <- filter(dfXY,
+    #                !is.na(x),
+    #                !is.na(y))
   }
   
   #deal with colors
