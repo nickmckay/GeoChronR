@@ -649,7 +649,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   Yplot <- tidyr::pivot_longer(Ys,cols = everything(),names_to = "yEns",values_to = "y")
   
   dfXY <- dplyr::bind_cols(Xplot,Yplot)
-  dfXY <- dplyr::arrange(dfXY,xEns)
+  #dfXY <- dplyr::arrange(dfXY,xEns)
   
   if(na.rm){
     dfXY <- filter(dfXY,
