@@ -1,3 +1,5 @@
+# geoChronR 1.1.17
+
 # geoChronR 1.1.16
 
 * Moved installation of BChron to github, since it was removed from CRAN. [See issue 90](https://github.com/nickmckay/GeoChronR/issues/90), and thanks @kurtlindberg for the bug report. 
