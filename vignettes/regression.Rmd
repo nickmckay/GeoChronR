@@ -95,8 +95,23 @@ kae <-  selectData(K,"ageEnsemble")
 rabd <- selectData(K,"RABD")
 ```
 
+## Calculate sedrate
+Now that we have an age model, we can also take a look at what the age model implies about sedimentation rates, and their uncertainties. So let's calculate an ensemble of sedimentation rates using the members in the age ensemble. The `createSedRateEnsemble()` function will do this, and create a new paleoData model ensemble table. 
 
-## Now load in the instrumental data we want to correlate and regress agains
+```{r}
+#create the table
+L <- createSedRateEnsemble(L) #you may need to modify some parameters to this function if you have a complex LiPD object
+
+#now let's see how it looks. We can pull sed rates and the corresponding ages out of that table
+srEns <- selectData(L,table.type = "ensemble",var.name = "sedimentationRate")
+srAgeEns <- selectData(L,table.type = "ensemble",var.name = "ageEnsemble")
+
+#and plot it
+plotTimeseriesEnsRibbons(X = srAgeEns, Y = srEns,probs = c(0.25,0.5,0.75), x.bin = seq(-70,5500,by = 20))
+```
+There's quite a bit of uncertainty here. This is because we're looking at both the uncertainty in age, and the uncertainty in sedimentation rate, which is the first derivative of age. If we wanted to convert our chla concentrations to flux, we'd start here. But we'll stick with concentrations.
+
+## Now load in the instrumental data we want to correlate and regress against
 ```{r}
 kurupa.instrumental <- readr::read_csv("http://lipdverse.org/geoChronR-examples/KurupaInstrumental.csv")
 ```

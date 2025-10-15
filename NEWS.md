@@ -1,5 +1,7 @@
 # geoChronR 1.1.17
 
+* Added a new function `createSedRateEnsemble()` that creates a sed rate ensemble from a chron model. An example of its use can be found in [the regression vignette](https://nickmckay.org/GeoChronR/articles/regression.html).
+
 # geoChronR 1.1.16
 
 * Moved installation of BChron to github, since it was removed from CRAN. [See issue 90](https://github.com/nickmckay/GeoChronR/issues/90), and thanks @kurtlindberg for the bug report. 

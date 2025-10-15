@@ -1,3 +1,81 @@
+#' Create sed rate ensemble table
+#'
+#' @param L 
+#' @param chron.number What chron number contains the age ensemble (default = 1)?
+#' @param chron.model.number What chron model number contains the age ensemble (default = 1)?
+#' @param chron.ensemble.table.number What chron model number contains the age ensemble (default = 1)?
+#' @param depth.variable.name What is depth called in the age ensemble table? (default = "depth")
+#' @param age.variable.name What is age called in the age ensemble table? (default = "ageEnsemble")
+#' @param paleo.number Which paleo number should we put the new model (default = 1)?
+#' @param paleo.model.number Which paleo model number should we put the new model (default = 1)?
+#' @param paleo.ensemble.table.number Which paleo model ensembleTable number should we put the new model (default = 1)?
+#' @param overwrite Do you want to overwrite the model if it already exists (default = FALSE)?
+#'
+#' @returns a LiPD object with a new sed rate ensemble table
+#' @export
+createSedRateEnsemble <- function(L, chron.number = 1, 
+                                     chron.model.number = 1,  
+                                     chron.ensemble.table.number = 1, 
+                                     depth.variable.name = "depth",
+                                     age.variable.name = "ageEnsemble",
+                                     paleo.number = 1,
+                                     paleo.model.number = 1,
+                                     paleo.ensemble.table.number = 1,
+                                     overwrite = FALSE){
+  
+  # get chron depth and age ensemble
+  cet <- L$chronData[[chron.number]]$model[[chron.model.number]]$ensembleTable[[chron.ensemble.table.number]] 
+  
+  c.depth <- cet[[depth.variable.name]]
+  c.age <- cet[[age.variable.name]]
+  
+  
+  
+  delta.c.ae <- apply(c.age$values,2,diff)
+  delta.c.depth.mat <- matrix(diff(c.depth$values),
+                              byrow = FALSE,
+                              nrow = nrow(delta.c.ae),
+                              ncol = ncol(delta.c.ae))
+  if(any(delta.c.depth <= 0)){
+    stop("1 or more of the depth steps is <= 0")
+  }
+  
+  sed.rate.ens <- delta.c.depth.mat/delta.c.ae
+  sed.rate.depths <- rowMeans(cbind(c.depth$values[-1],cbind(c.depth$values[-length(c.depth$values)])))
+  
+  if(!is.null(L$paleoData[[paleo.number]]$model[[paleo.model.number]]$ensembleTable[[paleo.ensemble.table.number]])){
+    if(!overwrite){
+      stop("This model ensemble table already exists. Either set overwrite to TRUE or specify a new model/ensembleTable")
+    }
+  }
+  
+  L <- createModel(L,paleo.or.chron = "paleoData",
+                   paleo.or.chron.num = paleo.number,
+                   make.new = TRUE,
+                   model.num = paleo.model.number,
+                   depth.or.age.var = depth.variable.name,
+                   depth.or.age.vector = sed.rate.depths,
+                   create.summary.table = TRUE,
+                   depth.or.age.units = c.depth$units,
+                   ens.var = "sedimentationRate",
+                   ensemble.data = sed.rate.ens,
+                   ens.table.num = paleo.ensemble.table.number,
+                   ens.units = paste0(c.depth$units,"/",stringr::str_extract(c.age$units, pattern = "^[^ ]+"))
+  )
+  
+  sed.rate.age.ens <- apply(c.age$values,2,\(x) approx(c.depth$values, x, xout = sed.rate.depths)$y)
+  
+  L$paleoData[[paleo.number]]$model[[paleo.model.number]]$ensembleTable[[paleo.ensemble.table.number]]$ageEnsemble <- list(
+    values = sed.rate.age.ens,
+    variableName = "ageEnsemble",
+    units = c.age$units
+  )
+  
+  
+  return(L)
+}
+
+
 #' Create a summary table from an ensemble table
 #' @inheritParams selectData
 #' @param ens.var The name of the ensemble variable (default = "ageEnsemble")
