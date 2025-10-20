@@ -100,11 +100,11 @@ Now that we have an age model, we can also take a look at what the age model imp
 
 ```{r}
 #create the table
-L <- createSedRateEnsemble(L) #you may need to modify some parameters to this function if you have a complex LiPD object
+K <- createSedRateEnsemble(K) #you may need to modify some parameters to this function if you have a complex LiPD object
 
 #now let's see how it looks. We can pull sed rates and the corresponding ages out of that table
-srEns <- selectData(L,table.type = "ensemble",var.name = "sedimentationRate")
-srAgeEns <- selectData(L,table.type = "ensemble",var.name = "ageEnsemble")
+srEns <- selectData(K,table.type = "ensemble",var.name = "sedimentationRate")
+srAgeEns <- selectData(K,table.type = "ensemble",var.name = "ageEnsemble")
 
 #and plot it
 plotTimeseriesEnsRibbons(X = srAgeEns, Y = srEns,probs = c(0.25,0.5,0.75), x.bin = seq(-70,5500,by = 20))

@@ -36,7 +36,7 @@ createSedRateEnsemble <- function(L, chron.number = 1,
                               byrow = FALSE,
                               nrow = nrow(delta.c.ae),
                               ncol = ncol(delta.c.ae))
-  if(any(delta.c.depth <= 0)){
+  if(any(delta.c.depth.mat <= 0)){
     stop("1 or more of the depth steps is <= 0")
   }
   
