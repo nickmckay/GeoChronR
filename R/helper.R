@@ -55,18 +55,18 @@ heuristicUnits = function(X,range.min = 25){
     
     #now work out some scenarios
     if(todayCheckBP & !todayCheckAD){
-        unitGuess <- "AD"
+        unitGuess <- "yr AD"
     }else if(!todayCheckBP & todayCheckAD){
-      unitGuess <- "BP"
+      unitGuess <- "yr BP"
     }else if(rangeCheck){
-      unitGuess <- "ka"
+      unitGuess <- "yr ka"
     }else if(todayCheckBP & todayCheckAD){
       unitGuess <- "somethings wrong here, doesn't seem to be AD, BP, or ka"
     }else{
       if(miv > 0 & mav > 1900){
-        unitGuess <- "AD"
+        unitGuess <- "yr AD"
       }else if(miv >-50  & mav < 100){
-          unitGuess <- "BP"
+          unitGuess <- "yr BP"
       }else{
         unitGuess <- "cant make a reasonable guess"
       }
