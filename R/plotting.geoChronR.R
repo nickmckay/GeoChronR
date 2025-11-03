@@ -2231,7 +2231,7 @@ plotTimeseriesStack <- function(plot.df,
   
   
   plot.df <- plot.df %>%
-    dplyr::mutate(scaled = scale(paleoData_values)*scale.factor) %>%
+    dplyr::mutate(scaled = as.numeric(scale(paleoData_values)*scale.factor)) %>%
     dplyr::filter(is.finite(scaled))
   
   if(!is.na(invert.var)){# then make some negative
