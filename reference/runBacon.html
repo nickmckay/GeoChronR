@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.17</span>
       </span>
     </div>
 
@@ -320,19 +320,13 @@ allow for a large range of posterior memory values. Please note that the default
 <dd><p>For southern hemisphere 14C dates (SHCal20).</p></dd>
 
     <dt><code>cc4</code></dt>
-<dd><p>Provide the name of an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). It is important here to first produce a tailor-made folder for your and the default calibration curves to live in. See <code>cc.dir</code>. Defaults to <code>cc4="mixed.14C"</code>.</p></dd>
+<dd><p>Use an alternative curve (3 columns: cal BP, 14C age, error, separated by white spaces and saved as a plain-text file). See <code>cc.dir</code>.</p></dd>
 
     <dt><code>cc.dir</code></dt>
-<dd><p>Directory where the calibration curves for C14 dates <code>cc</code> are located. By default uses the location of the rintcal package which provides the calibration curves. If you want to use custom-made calibration curves, first set up a new folder using the function new.ccdir() in the rintcal package, e.g., <code>new.ccdir="MyCurves"</code>, then place the custom curve in that folder using <code>rintcal::mix.ccurves(, cc.dir="MyCurves", save=TRUE)</code>.</p></dd>
+<dd><p>Directory where the calibration curves for C14 dates <code>cc</code> are located. By default uses the location of the rintcal package which provides the calibration curves. If you want to use custom-made calibration curves, first set up a new folder using the function new.ccdir() in the rintcal package, e.g., <code>new.ccdir="MyCurves"</code>, then place the custom curve in that folder using <code>mix.ccurves(, cc.dir="MyCurves", save=TRUE)</code>.</p></dd>
 
     <dt><code>postbomb</code></dt>
 <dd><p>Use a postbomb curve for negative (i.e. postbomb) 14C ages. <code>0 = none, 1 = NH1, 2 = NH2, 3 = NH3, 4 = SH1-2, 5 = SH3</code></p></dd>
-
-    <dt><code>F14C</code></dt>
-<dd><p>Radiocarbon ages can be provided as F14C values. If doing so, please indicate here which dates were entered as F14C (e.g., if the first 4 dates are in F14C, write <code>F14C=1:4</code>). The F14C values in your .csv file will then be replaced by their corresponding C14 ages.</p></dd>
-
-    <dt><code>pMC</code></dt>
-<dd><p>Radiocarbon ages can be provided as pMC values. If doing so, please indicate here which dates were entered as pMC (e.g., if the first 4 dates are in pMC, write <code>pMC=1:4</code>). The pMC values in your .csv file will then be replaced by their corresponding C14 ages.</p></dd>
 
     <dt><code>delta.R</code></dt>
 <dd><p>Mean of core-wide age offsets (e.g., regional marine offsets).</p></dd>
@@ -441,9 +435,6 @@ Lower values will result in lighter grey but values &gt;1 are not allowed.</p></
 
     <dt><code>close.connections</code></dt>
 <dd><p>Internal option to close connections after a run. Default <code>close.connections=TRUE</code>.</p></dd>
-
-    <dt><code>save.info</code></dt>
-<dd><p>By default, a variable called `info' with relevant information about the run (e.g., core name, priors, settings, ages, output) is saved into the working directory. Note that this will overwrite any existing variable with the same name - as an alternative, one could run, e.g., <code>myvar &lt;- Bacon()</code>, followed by supplying the variable <code>myvar</code> in any subsequent commands.</p></dd>
 
     <dt><code>older.than</code></dt>
 <dd><p>an option to enable dates at the limit of C-14 dating. If there are older.than dates, they tell us that the core should be older than a certain age at that depth. For example, if the 7th and 8th dates in the core's .csv file are older-than dates, use as <code>older.than=c(7,8)</code>. The MCMC run could be problematic if the older-than ages do not fit with the other information.</p></dd>
