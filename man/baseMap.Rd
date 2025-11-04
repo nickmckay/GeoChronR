@@ -45,7 +45,7 @@ baseMap(
     \code{map} or a spatial object of class \code{SpatialPolygons} or \code{SpatialLines}.
     The string choices include a \code{\link[maps]{world}} map,
     three USA databases (\code{\link[maps]{usa}}, \code{\link[maps]{state}},
-    \code{\link[maps]{county}}), and more (type \code{help(package='maps')} to see the package index). If the required database is in a different package that has not been attached, the string may be started with "packagename::". The
+    \code{\link[maps]{county}}), and more (type \code{help(package='maps')} to see the package index). If the requied database is in a different package that has not been attached, the string may be started with "packagename::". The
     location of the map databases may be overridden by setting the
     \code{R_MAP_DATA_DIR} environment variable.
   }

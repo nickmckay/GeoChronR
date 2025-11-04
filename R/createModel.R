@@ -10,7 +10,7 @@
 #' @param paleo.model.number Which paleo model number should we put the new model (default = 1)?
 #' @param paleo.ensemble.table.number Which paleo model ensembleTable number should we put the new model (default = 1)?
 #' @param overwrite Do you want to overwrite the model if it already exists (default = FALSE)?
-#'
+#' @family LiPD manipulation
 #' @returns a LiPD object with a new sed rate ensemble table
 #' @export
 createSedRateEnsemble <- function(L, chron.number = 1, 
