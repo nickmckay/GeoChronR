@@ -133,13 +133,13 @@ Let's take a look at this estimate of chloropigment flux:
 ```{r}
 
 #now let's see how it looks. We can pull sed rates and the corresponding ages out of that table
-chlFlux <- selectData(K,model.num = 6,table.type = "ensemble",var.name = "flux")
-chlFluxAge <- selectData(K,model.num = 6,table.type = "ensemble",var.name = "age")
+chlFlux <- selectData(K,model.num = 2,table.type = "ensemble",var.name = "flux")
+chlFluxAge <- selectData(K,model.num = 2,table.type = "ensemble",var.name = "age")
 
 #and plot it
 plotTimeseriesEnsRibbons(X = chlFluxAge, Y = chlFlux,probs = c(0.25,0.5,0.75), x.bin = chlFluxAge$values)
 ```
-
+Interesting. It looks a lot like sed rate, as fluxes often do. For now, we'll stick with concentration.
 
 ## Now load in the instrumental data we want to correlate and regress against
 ```{r}
