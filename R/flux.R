@@ -19,6 +19,7 @@
 #' @param ens.var.name What is the output variable name (default = "flux")
 #' @param bin.step What timestep are you calculating flux over?
 #' @param bin.vec Optionall specify a vector to calculate flux over
+#' @family LiPD manipulation
 #'
 #' @returns A LiPD object
 #' @export
