@@ -52,6 +52,7 @@ Selects and extracts a LiPD "variable list"
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},

@@ -46,6 +46,7 @@ Create sed rate ensemble table
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},

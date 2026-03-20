@@ -68,3 +68,18 @@ A LiPD object
 \description{
 Calculate a flux ensemble
 }
+\seealso{
+Other LiPD manipulation: 
+\code{\link{createConcatenatedEnsembleMeasurementTable}()},
+\code{\link{createModel}()},
+\code{\link{createMultiModelEnsemble}()},
+\code{\link{createSedRateEnsemble}()},
+\code{\link{createSummaryTableFromEnsembleTable}()},
+\code{\link{createTSid}()},
+\code{\link{estimateUncertaintyFromRange}()},
+\code{\link{getVariableIndex}()},
+\code{\link{mapAgeEnsembleToPaleoData}()},
+\code{\link{pullTsVariable}()},
+\code{\link{selectData}()}
+}
+\concept{LiPD manipulation}

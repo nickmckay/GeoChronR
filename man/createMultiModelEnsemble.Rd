@@ -43,6 +43,7 @@ Create a multi-model ensemble
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createSedRateEnsemble}()},

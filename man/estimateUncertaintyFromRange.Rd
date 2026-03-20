@@ -37,6 +37,7 @@ Estimate uncertainty (plus/minus values) from a range of values
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},
