@@ -229,9 +229,13 @@ createModel <- function(L,
       #no models, this is first
       model.num=1
     }else{
+      if(make.new){
+        model.num <- length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model)+1
+      }else{
       print(paste("You already have", length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model), "model(s) in",paleo.or.chron,paleo.or.chron.num))
       print(paste("If you want to create a new model, enter", length(L[[paleo.or.chron]][[paleo.or.chron.num]]$model)+1))
       model.num=as.integer(readline(prompt = "Enter the number for this model- will overwrite if necessary "))
+      }
     }
   }
   

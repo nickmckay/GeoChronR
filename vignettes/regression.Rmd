@@ -4,22 +4,22 @@ author: "Nick McKay"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Regression}
+%\VignetteIndexEntry{Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
+  ---
   
   
-```{r,echo = FALSE}
+  ```{r,echo = FALSE}
 knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
 knitr::opts_knit$set(progress = FALSE,verbose = FALSE)
 ```
 
-  1. [Introduction to geoChronR](Introduction.html)
-  2. [Age-uncertain correlation](correlation.html)
-  3. [**Age-uncertain regression and calibration-in-time**](regression.html)
-  4. [Age-uncertain spectral analysis](spectral.html)
-  5. [Age-uncertain PCA analysis](pca.html)
+1. [Introduction to geoChronR](Introduction.html)
+2. [Age-uncertain correlation](correlation.html)
+3. [**Age-uncertain regression and calibration-in-time**](regression.html)
+4. [Age-uncertain spectral analysis](spectral.html)
+5. [Age-uncertain PCA analysis](pca.html)
 
 # Ensemble Regression and Calibration-in-time
 
@@ -109,7 +109,37 @@ srAgeEns <- selectData(K,table.type = "ensemble",var.name = "ageEnsemble")
 #and plot it
 plotTimeseriesEnsRibbons(X = srAgeEns, Y = srEns,probs = c(0.25,0.5,0.75), x.bin = seq(-70,5500,by = 20))
 ```
-There's quite a bit of uncertainty here. This is because we're looking at both the uncertainty in age, and the uncertainty in sedimentation rate, which is the first derivative of age. If we wanted to convert our chla concentrations to flux, we'd start here. But we'll stick with concentrations.
+There's quite a bit of uncertainty here. This is because we're looking at both the uncertainty in age, and the uncertainty in sedimentation rate, which is the first derivative of age. Often, it's useful to estimate flux, which is the product of sedimentation rate, density and concentration (for mass based concentrations), or sedimentation rate and concentration (for volumetric concentrations). Let's calculate chla flux. Spectrally-inferred chla is representative of volumetric concentration (g/cm^3), so we don't need density for this. 
+
+We already selected our sed rate ensembles, so now let's get our concentration proxy (RABD)
+
+```{r}
+
+  concEns <- selectData(K,table.type = "meas",var.name = "RABD")
+  concAgeEns <- selectData(K,table.type = "meas",var.name = "ageEnsemble")
+  
+
+K <- calculateFlux(K, 
+                   sed.rate.ens = srEns, 
+                   sed.rate.age = srAgeEns,
+                   density.var = NA,
+                   density.var.age = NA,
+                   concentration.var = concEns,
+                   concentration.var.age = concAgeEns,
+                   bin.step = 50)
+```
+Let's take a look at this estimate of chloropigment flux:
+
+```{r}
+
+#now let's see how it looks. We can pull sed rates and the corresponding ages out of that table
+chlFlux <- selectData(K,model.num = 6,table.type = "ensemble",var.name = "flux")
+chlFluxAge <- selectData(K,model.num = 6,table.type = "ensemble",var.name = "age")
+
+#and plot it
+plotTimeseriesEnsRibbons(X = chlFluxAge, Y = chlFlux,probs = c(0.25,0.5,0.75), x.bin = chlFluxAge$values)
+```
+
 
 ## Now load in the instrumental data we want to correlate and regress against
 ```{r}
@@ -160,12 +190,12 @@ Mixed results. But encouraging enough to move forward.
 OK, you've convinced yourself that you want to use RABD to model temperature back through time. We can do this simply (perhaps naively) with regession, and lets do it with age uncertainty, both in the building of the model, and the reconstructing
 ```{r,results="hide",fig.keep="all"}
 regout <- regressEns(time.x = kae,
-                    values.x = rabd,
-                    time.y =kyear,
-                    values.y =kinst,
-                    bin.step=3,
-                    gaussianize = FALSE,
-                    recon.bin.vec = seq(-4010,2010,by=20))
+                     values.x = rabd,
+                     time.y =kyear,
+                     values.y =kinst,
+                     bin.step=3,
+                     gaussianize = FALSE,
+                     recon.bin.vec = seq(-4010,2010,by=20))
 ```
 
 ## And plot the output
