@@ -123,7 +123,7 @@ uncertainties</h1>
                         <h4 data-toc-skip class="author">Julien
 Emile-Geay</h4>
             
-            <h4 data-toc-skip class="date">2025-11-04</h4>
+            <h4 data-toc-skip class="date">2026-03-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/spectral_analysis.Rmd" class="external-link"><code>vignettes/spectral_analysis.Rmd</code></a></small>
       <div class="hidden name"><code>spectral_analysis.Rmd</code></div>
@@ -182,7 +182,7 @@ on your connectivity, this may take a minute as the file is fairly large
 <span><span class="va">age</span> <span class="op">=</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,<span class="st">"ageEnsemble"</span>,meas.table.num <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">temp</span> <span class="op">=</span> <span class="fu">geoChronR</span><span class="fu">::</span><span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">L</span>,<span class="st">"temp muller"</span>,meas.table.num <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span>,X<span class="op">=</span><span class="va">age</span>,Y<span class="op">=</span><span class="va">temp</span>,color.low<span class="op">=</span><span class="st">"orchid"</span>,color.high<span class="op">=</span><span class="st">"darkorange3"</span>,color.line<span class="op">=</span><span class="st">"orange"</span>,line.width<span class="op">=</span><span class="fl">0.5</span>,alp<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="768"></p>
 <p>This paleoclimate record features:</p>
 <ul>
 <li>a long-term cooling trend
@@ -212,7 +212,7 @@ contrained by this tuned age model:</p>
 <span><span class="va">dt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">dt</span>,y <span class="op">=</span> <span class="va">..density..</span><span class="op">)</span>, bins <span class="op">=</span> <span class="fl">25</span>, ,alpha <span class="op">=</span> <span class="fl">0.8</span>, fill <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Distribution of time intervals"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">Delta</span><span class="op">*</span><span class="st">"t"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="768"></p>
 <p>We see that over the past 1 Ma, the time increments
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math>)
 are sharply peaked around 2 ka, but they range from 0 to about 7.5 ka.
@@ -265,7 +265,7 @@ power-law, characteristic of many paleoclimate records (e.g. <a href="https://w
 <span><span class="co"># label periodicities of interest</span></span>
 <span><span class="va">p.ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.ls</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">8</span><span class="op">)</span>,color <span class="op">=</span> <span class="st">"purple"</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.ls</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/lomb-scargle-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/lomb-scargle-1.png" class="r-plt" alt="" width="768"></p>
 <p>It is clearly seen that the data contain significant energy (peaks)
 near, but not exactly at, the famed Milankovitch periodicities (100, 41,
 23, and 19 kyr). These periodicities (particularly the eccentricity
@@ -296,7 +296,7 @@ which differs slightly from the published algorithm (see
 <span><span class="co"># label periodicities of interest</span></span>
 <span><span class="va">p.ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.ls</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">100</span><span class="op">)</span>,color <span class="op">=</span> <span class="st">"purple"</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.ls</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/REDFIT-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/REDFIT-1.png" class="r-plt" alt="" width="768"></p>
 <p>Now, this clearly is smoother, perhaps a little too much. One could
 play with <code>n50</code>, the size of the window, or
 <code>iwin</code>, its shape, to reduce the smoothing. There are still
@@ -348,7 +348,7 @@ package.</p>
 <span><span class="va">dfs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>time<span class="op">=</span><span class="va">t</span>,temp<span class="op">=</span><span class="va">X</span><span class="op">)</span></span>
 <span><span class="va">dti</span> <span class="op">=</span> <span class="fl">2.5</span>  <span class="co"># interpolation interval, corresponding to the mode of the \Delta t distribution</span></span>
 <span><span class="va">dfe</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/astrochron/man/linterp.html" class="external-link">linterp</a></span><span class="op">(</span><span class="va">dfs</span>,dt<span class="op">=</span><span class="va">dti</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/interpolation-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/interpolation-1.png" class="r-plt" alt="" width="768"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tbw</span> <span class="op">=</span> <span class="fl">2</span>  <span class="co">#time-bandwidth product for the analysis; we use the minimum allowed to limit smoothing.</span></span></code></pre></div>
 <p>Most of the <code>astrochron</code> routines produce a diagnostic
@@ -380,7 +380,7 @@ with the default option of a test against an AR(1) background.</p>
 <span><span class="va">p.mtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtm</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-6</span>,<span class="fl">1</span><span class="op">)</span>,color <span class="op">=</span> <span class="st">"purple"</span><span class="op">)</span></span>
 <span><span class="va">p.mtm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtm</span>, periods <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="va">sig.freq</span><span class="op">$</span><span class="va">Frequency</span>,color <span class="op">=</span> <span class="st">"darkgreen"</span>,y.lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-6</span>,<span class="fl">.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.mtm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/MTM-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/MTM-1.png" class="r-plt" alt="" width="768"></p>
 <p>You may notice a few differences to the Lomb-Scargle periodogram.
 First, the high frequency part is much smoother, getting rid of a lot of
 high-frequency noise. There is also a clear power law behavior from
@@ -445,7 +445,7 @@ app for that:</p>
 <span><span class="va">p.mtmPL</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtmPL</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-6</span>,<span class="fl">1</span><span class="op">)</span>,color <span class="op">=</span> <span class="st">"purple"</span><span class="op">)</span></span>
 <span><span class="va">p.mtmPL</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtmPL</span>, periods <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="va">sig.freqPL</span><span class="op">$</span><span class="va">Frequency</span>,color <span class="op">=</span> <span class="st">"darkgreen"</span>,y.lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-6</span>,<span class="fl">.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.mtmPL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="768"></p>
 <p>Sure enough, this gets rid of a few cycles, but many remain. A few
 regions of the spectrum poke above the 95% confidence limit, but one
 should not be so foolish as to identify every single periodicity in
@@ -537,7 +537,7 @@ Now, let’s plot the result:</p>
 <span><span class="co"># label periodicities of interest</span></span>
 <span><span class="va">p.mtm.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtm.ens</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.mtm.ens</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/ensemble-mode%20MTM,%20plot-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/ensemble-mode%20MTM,%20plot-1.png" class="r-plt" alt="" width="768"></p>
 <p>To this we can add the periods identified as significant owing to
 MTM’s harmonic ratio test. geoChronR deals with it by computing at each
 frequency the fraction of ensemble members that exhibit a significant
@@ -549,7 +549,7 @@ are identified as significant more than 50% of the time.</p>
 <span><span class="va">sig_per</span> <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">mtm.ens.spec</span><span class="op">$</span><span class="va">sig.freq</span><span class="op">&gt;</span><span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">p.mtm.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.mtm.ens</span>, periods <span class="op">=</span> <span class="va">per</span><span class="op">[</span><span class="va">sig_per</span><span class="op">]</span>,color <span class="op">=</span> <span class="st">"darkgreen"</span>,y.lims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1e-5</span>,<span class="fl">5e-4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.mtm.ens</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/MTM%20ensemble,%20with%20significant%20frequencies-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/MTM%20ensemble,%20with%20significant%20frequencies-1.png" class="r-plt" alt="" width="768"></p>
 <p>One could of course, impose a more stringent criterion (e.g. 80%,
 90%, etc). To do that, specify
 <code>which(mtm.ens.spec$sig.freq&gt;0.8)</code> or
@@ -584,7 +584,7 @@ precessional peaks.</p>
 <span><span class="co"># label periodicities of interest</span></span>
 <span><span class="va">p.redfit.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/periodAnnotate.html">periodAnnotate</a></span><span class="op">(</span><span class="va">p.redfit.ens</span>, periods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">23</span>,<span class="fl">41</span>,<span class="fl">100</span><span class="op">)</span>, y.lims <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">show</span><span class="op">(</span><span class="va">p.redfit.ens</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spectral_analysis_files/figure-html/ensemble-mode%20REDFIT%20plot-1.png" width="768"></p>
+<p><img src="spectral_analysis_files/figure-html/ensemble-mode%20REDFIT%20plot-1.png" class="r-plt" alt="" width="768"></p>
 <p>The result is quite a bit smoother here, perhaps because of the
 choice of parameters.</p>
 </div>
@@ -644,7 +644,7 @@ Atlantic.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

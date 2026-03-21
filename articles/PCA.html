@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2025-11-04</h4>
+            <h4 data-toc-skip class="date">2026-03-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -158,7 +158,7 @@ analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426
 compilation, which we load here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">FD</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//Rtmpwc5egM/lpdDownload..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//RtmphUBc44/lpdDownload..."</span></span>
 <span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Austfonna.Isaksson.2005.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-CampCentury.Fisher.1969.lpd"</span></span>
@@ -188,7 +188,7 @@ compilation, which we load here:</p>
 geoChronR’s <code>mapLipd</code> function can create quick maps:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">FD</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="768"></p>
 <p>More map projections are available too. A list is available here:
 <code>?mapproject</code></p>
 </div>
@@ -237,7 +237,7 @@ the tidyverse framework.</p>
 <span>                    fill.alpha <span class="op">=</span> <span class="fl">.05</span>,</span>
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    lab.space <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 <p>Now bin all the data in the TS from 1400 to 2000, an interval of
 pretty good data coverage, into 5 year bins.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -256,7 +256,7 @@ we look at the results let’s take a look at a scree plot to get a sense
 of how many significant components we should expect.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="768"></p>
 <p>It looks like the first two components, shown in black with gray
 uncertainty shading, stand out above the null model (in red), but the
 third and beyond look marginal to insignficant. Let’s focus on the first
@@ -269,7 +269,7 @@ will create multiple diagnostic figures of the results, and stitch them
 together.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plotPCA</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotPcaEns.html">plotPcaEns</a></span><span class="op">(</span><span class="va">pcout</span>,TS <span class="op">=</span> <span class="va">TS.filtered</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,bound.circ <span class="op">=</span> <span class="cn">T</span>,restrict.map.range <span class="op">=</span> <span class="cn">T</span>,f<span class="op">=</span><span class="fl">.1</span>,legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">.6</span><span class="op">)</span>,which.pcs <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,which.leg <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="768"></p>
 <p>Nice! A summary plot that combines the major features is produced,
 but all of the components, are included in the “plotPCA” list that was
 exported.</p>
@@ -283,18 +283,18 @@ timeseries:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">quantileData</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
-<span><span class="co">##     ages `0.025`   `0.25`   `0.5` `0.75` `0.975`</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.065</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.045<span style="text-decoration: underline;">3</span>  0.105   0.158    0.283</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.022<span style="text-decoration: underline;">1</span>  0.094<span style="text-decoration: underline;">8</span>  0.135   0.174    0.266</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.037<span style="text-decoration: underline;">9</span>  0.126   0.169   0.208    0.293</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.099<span style="text-decoration: underline;">0</span>  0.173   0.209   0.239    0.297</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.086<span style="text-decoration: underline;">3</span>  0.144   0.174   0.201    0.248</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.048<span style="text-decoration: underline;">6</span>  0.088<span style="text-decoration: underline;">3</span>  0.125    0.208</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.038</span><span style="color: #BB0000; text-decoration: underline;">5</span>  0.012<span style="text-decoration: underline;">9</span>  0.040<span style="text-decoration: underline;">8</span>  0.067<span style="text-decoration: underline;">5</span>   0.114</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.100</span>  -<span style="color: #BB0000;">0.029</span><span style="color: #BB0000; text-decoration: underline;">5</span>  0.006<span style="text-decoration: underline;">89</span> 0.047<span style="text-decoration: underline;">1</span>   0.111</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.078</span><span style="color: #BB0000; text-decoration: underline;">3</span> -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">93</span> 0.024<span style="text-decoration: underline;">6</span>  0.054<span style="text-decoration: underline;">9</span>   0.126</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.052</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.005<span style="text-decoration: underline;">02</span> 0.041<span style="text-decoration: underline;">4</span>  0.083<span style="text-decoration: underline;">1</span>   0.152</span></span>
+<span><span class="co">##     ages `0.025`   `0.25`  `0.5` `0.75` `0.975`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> <span style="text-decoration: underline;">1</span>408. -<span style="color: #BB0000;">0.068</span><span style="color: #BB0000; text-decoration: underline;">6</span>  0.035<span style="text-decoration: underline;">9</span>  0.094<span style="text-decoration: underline;">1</span> 0.152    0.263</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> <span style="text-decoration: underline;">1</span>410.  0.021<span style="text-decoration: underline;">2</span>  0.093<span style="text-decoration: underline;">6</span>  0.133  0.175    0.256</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> <span style="text-decoration: underline;">1</span>413.  0.051<span style="text-decoration: underline;">6</span>  0.131   0.172  0.212    0.290</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> <span style="text-decoration: underline;">1</span>416.  0.118   0.184   0.214  0.240    0.284</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> <span style="text-decoration: underline;">1</span>419.  0.087<span style="text-decoration: underline;">1</span>  0.151   0.176  0.203    0.248</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> <span style="text-decoration: underline;">1</span>422. -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.054<span style="text-decoration: underline;">0</span>  0.088<span style="text-decoration: underline;">4</span> 0.128    0.202</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">1</span>425. -<span style="color: #BB0000;">0.042</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.017<span style="text-decoration: underline;">9</span>  0.044<span style="text-decoration: underline;">3</span> 0.070<span style="text-decoration: underline;">7</span>   0.130</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">1</span>428. -<span style="color: #BB0000;">0.105</span>  -<span style="color: #BB0000;">0.024</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.013<span style="text-decoration: underline;">7</span> 0.050<span style="text-decoration: underline;">0</span>   0.120</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">1</span>431. -<span style="color: #BB0000;">0.071</span><span style="color: #BB0000; text-decoration: underline;">4</span> -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">59</span> 0.024<span style="text-decoration: underline;">7</span> 0.057<span style="text-decoration: underline;">4</span>   0.125</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">1</span>434. -<span style="color: #BB0000;">0.057</span><span style="color: #BB0000; text-decoration: underline;">3</span>  0.003<span style="text-decoration: underline;">40</span> 0.046<span style="text-decoration: underline;">3</span> 0.084<span style="text-decoration: underline;">3</span>   0.152</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 190 more rows</span></span></span></code></pre>
 </div>
 </div>
@@ -347,7 +347,7 @@ data, now nicely arranged.</p>
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    lab.space <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    lab.buff <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="768"></p>
 <p>Well that sure is nice and tidy. Again, it looks like binning from
 1400-2000 will give us good data coverage.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -364,7 +364,7 @@ important option to consider when possible.</p>
 <p>Once again, let’s take a look at the scree plot:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/unnamed-chunk-24-1.png" width="384"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="384"></p>
 <pre><code>Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
 
 
@@ -377,7 +377,7 @@ plotPCA2 &lt;-  plotPcaEns(pcout2,
                         bound.circ = T,
                         restrict.map.range = T,
                         f=.2)</code></pre>
-<p><img src="PCA_files/figure-html/unnamed-chunk-25-1.png" width="768"></p>
+<p><img src="PCA_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="768"></p>
 <p>Using only the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>δ</mi><mn>18</mn></msup><mi>O</mi></mrow><annotation encoding="application/x-tex">\delta^{18}O</annotation></semantics></math>
 data and a covariance matrix, we get somewhat different results. The
@@ -404,7 +404,7 @@ PC2 from the first analysis.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

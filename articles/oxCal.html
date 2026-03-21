@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Intro to OxCal in geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2025-11-04</h4>
+            <h4 data-toc-skip class="date">2026-03-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/oxCal.Rmd" class="external-link"><code>vignettes/oxCal.Rmd</code></a></small>
       <div class="hidden name"><code>oxCal.Rmd</code></div>
@@ -156,7 +156,7 @@ will tell you.</p>
 <p>OK, let’s get a LiPD file from the LinkedEarth Wiki:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"https://lipdverse.org/geoChronR-examples/BJ8-03-70GGC.Linsley.2010.lpd"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//RtmpwsD5gz/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
+<span><span class="co">#&gt; [1] "Loading 1 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//RtmpDWDqGS/BJ8-03-70GGC.Linsley.2010.lpd..."</span></span>
 <span><span class="co">#&gt; [1] "reading: BJ8-03-70GGC.Linsley.2010.lpd"</span></span></code></pre></div>
 <p>Now we can run it through oxcal. First, we specify our oxcal path,
 then use the <code>runOxcal</code> function. Like the other
@@ -249,7 +249,7 @@ methods.</p>
 <span><span class="co">#&gt; [1] "Found it! Moving on..."</span></span>
 <span><span class="co">#&gt; [1] "Found it! Moving on..."</span></span>
 <span><span class="co">#&gt; [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre></div>
-<p><img src="oxCal_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
+<p><img src="oxCal_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="768"></p>
 <p>To map the the age ensembles onto the proxy data, use
 <code>mapAgeEnsembleToPaleoData</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -272,7 +272,7 @@ methods.</p>
 <span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">ageEns</span>, Y <span class="op">=</span> <span class="va">SST</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">x</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre></div>
-<p><img src="oxCal_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+<p><img src="oxCal_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="768"></p>
 <p>It looks reasonable, so we can now proceed to use this ensemble like
 any other.</p>
 <p>Happy modeling!</p>
@@ -295,7 +295,7 @@ any other.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

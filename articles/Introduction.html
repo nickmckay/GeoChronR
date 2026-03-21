@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Introduction to geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2025-11-04</h4>
+            <h4 data-toc-skip class="date">2026-03-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/Introduction.Rmd" class="external-link"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -167,7 +167,7 @@ directory), or enter the path to file or the directory that you want:
 <code>L &lt;- readLipd("~/Downloads/my.lpd")</code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//Rtmpg840Xy/Hulucave.Wang.2001.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//Rtmp3y3MEn/Hulucave.Wang.2001.lpd..."</span></span>
 <span><span class="co">## [1] "reading: Hulucave.Wang.2001.lpd"</span></span></code></pre>
 <p>Data from five stalagmites are stored in this file. Age model output,
 including ensemble data, can be stored in LiPD files, but we don’t have
@@ -211,7 +211,7 @@ but you can run this with just:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chronPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">hulu</span>,truncate.dist <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80000</span>,<span class="fl">30000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">chronPlot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="Introduction_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="700"></p>
 <p><code><a href="../reference/plotChron.html">plotChron()</a></code> is a wrapper for multiple plotting
 functions, and has a lot of options, which probably require tinkering to
 produce a nice plot. See all the options by running
@@ -251,7 +251,7 @@ members.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.05</span>,n.ens.plot <span class="op">=</span> <span class="fl">50</span>,color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="Introduction_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="creating-a-timeseries-plot-with-a-ribbon-confidence-intervals">Creating a timeseries plot with a ribbon confidence intervals<a class="anchor" aria-label="anchor" href="#creating-a-timeseries-plot-with-a-ribbon-confidence-intervals"></a>
@@ -260,7 +260,7 @@ members.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,n.bins <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">35000</span>,<span class="fl">75000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="Introduction_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="combining-the-two-kinds-of-timeseries-plots">Combining the two kinds of timeseries plots<a class="anchor" aria-label="anchor" href="#combining-the-two-kinds-of-timeseries-plots"></a>
@@ -269,7 +269,7 @@ members.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.1</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span>,color <span class="op">=</span> <span class="st">"red"</span>,add.to.plot <span class="op">=</span> <span class="va">hulu.ts.plot</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Hulu Cave d18O"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="Introduction_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 </div>
 <div class="section level3">
@@ -278,7 +278,7 @@ members.</p>
 <p>Let’s compare these data to the GISP2 ice core.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">gisp2</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/xc/cl1fyykn2pj4ryhdw6r1mqtc0000gn/T//Rtmpg840Xy/GISP2.Alley.2000.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//Rtmp3y3MEn/GISP2.Alley.2000.lpd..."</span></span>
 <span><span class="co">## [1] "reading: GISP2.Alley.2000.lpd"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -355,7 +355,7 @@ magrittr pipe to streamline the process</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"GISP2 temperature"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gisp2.ts.plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="Introduction_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 </div>
 <div class="section level3">
@@ -371,7 +371,7 @@ magrittr pipe to streamline the process</p>
 <span><span class="co">## Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span>
 <span><span class="co">## Scale for <span style="color: #00BB00;">x</span> is already present.</span></span>
 <span><span class="co">## Adding another scale for <span style="color: #00BB00;">x</span>, which will replace the existing scale.</span></span></code></pre>
-<p><img src="Introduction_files/figure-html/unnamed-chunk-16-1.png" width="700">
+<p><img src="Introduction_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700">
 Interesting. There’s a hint of a negative relationship during this time
 interval. In <a href="correlation.html">the next vignette</a> we’ll
 explore ensemble correlation to explore this further. explicitly. Let’s
@@ -395,7 +395,7 @@ calculate an ensemble correlation and see if shows up.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
