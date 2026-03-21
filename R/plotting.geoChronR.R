@@ -8,12 +8,15 @@
 #' @return a list of x and y ranges
 getPlotRanges <- function(h){
   if(packageVersion("ggplot2") >= "2"){ #deal with ggplot versions
-    if(packageVersion("ggplot2") >= "3"){#then version > 3
+    if(packageVersion("ggplot2") == "3"){#then version > 3
       y.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits())
       x.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits())
-    }else{#version 2
+    }else if(packageVersion("ggplot2") == "2"){#version 2
       y.lims = ggplot_build(h)$layout$panel_scales$y[[1]]$get_limits()
       x.lims = ggplot_build(h)$layout$panel_scales$x[[1]]$get_limits()
+    }else{#version 4
+      y.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_y[[1]]$get_limits())
+      x.lims = suppressWarnings(ggplot_build(h)$layout$panel_scales_x[[1]]$get_limits())
     }
   }else{#version 1
     y.lims = ggplot_build(h)$panel$ranges[[1]]$y.range # get y range
@@ -1214,7 +1217,7 @@ plotHistEns = function(ens.data,
     #make labels better
     lineTypes <- rep(2,times = length(quantiles))
     lineTypes[quantiles==.5] <- 1
-    labelPositionY <- geoChronR::getPlotRanges(histPlot)$y.lims[2] * label.vert.position
+    labelPositionY <- getPlotRanges(histPlot)$y.lims[2] * label.vert.position
     quants = quantile(ens.data,quantiles)
     if(all(is.na(line.labels))){
       line.labels <- names(quants)
@@ -2294,13 +2297,13 @@ plotTimeseriesStack <- function(plot.df,
   colVec <- color.fun(nColors,color.ramp)
   axisStats$colors <- colVec[match(axisStats$color.var,levels(axisStats$color.var))]
   
-  spag <- ggplot(plot.df, aes(height = scaled, y = paleoData_TSid,color = cv, fill = cv)) +
-    geom_ridgeline(aes_string(x = time.var),min_height = -Inf,alpha = fill.alpha,size = line.size)+
+  spag <- ggplot(plot.df) +
+    geom_ridgeline(aes(x = .data[[time.var]],height = scaled, y = paleoData_TSid,color = cv, fill = cv),
+                   min_height = -Inf,alpha = fill.alpha,size = line.size)+
     scale_color_manual(name = color.var,values = colVec)+
     scale_fill_manual(name = color.var,values = colVec)+
     theme_ridges(grid = TRUE)+
     theme_bw()
-  
   
   ylow <- seq_len(nlines)-scale.height
   yhigh <-  seq_len(nlines)+scale.height
