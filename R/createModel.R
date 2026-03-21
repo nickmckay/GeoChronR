@@ -1,6 +1,6 @@
 #' Create sed rate ensemble table
 #'
-#' @param L 
+#' @param L Lipd object
 #' @param chron.number What chron number contains the age ensemble (default = 1)?
 #' @param chron.model.number What chron model number contains the age ensemble (default = 1)?
 #' @param chron.ensemble.table.number What chron model number contains the age ensemble (default = 1)?

@@ -18,7 +18,7 @@ createSedRateEnsemble(
 )
 }
 \arguments{
-\item{L}{}
+\item{L}{Lipd object}
 
 \item{chron.number}{What chron number contains the age ensemble (default = 1)?}
 
