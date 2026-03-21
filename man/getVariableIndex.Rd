@@ -37,9 +37,11 @@ Gets the index for a LiPD "variable list"
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},
+\code{\link{createSedRateEnsemble}()},
 \code{\link{createSummaryTableFromEnsembleTable}()},
 \code{\link{createTSid}()},
 \code{\link{estimateUncertaintyFromRange}()},

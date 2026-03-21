@@ -57,8 +57,10 @@ plotTimeseriesEnsLines(X = cmt$ageEnsemble,Y = cmt$C28d2HComposite,n.ens.plot = 
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},
+\code{\link{createSedRateEnsemble}()},
 \code{\link{createSummaryTableFromEnsembleTable}()},
 \code{\link{createTSid}()},
 \code{\link{estimateUncertaintyFromRange}()},

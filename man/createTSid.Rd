@@ -14,9 +14,11 @@ Create a random TSid
 }
 \seealso{
 Other LiPD manipulation: 
+\code{\link{calculateFlux}()},
 \code{\link{createConcatenatedEnsembleMeasurementTable}()},
 \code{\link{createModel}()},
 \code{\link{createMultiModelEnsemble}()},
+\code{\link{createSedRateEnsemble}()},
 \code{\link{createSummaryTableFromEnsembleTable}()},
 \code{\link{estimateUncertaintyFromRange}()},
 \code{\link{getVariableIndex}()},
