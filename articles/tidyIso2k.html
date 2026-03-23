@@ -155,7 +155,7 @@ web.</p>
 files using <code><a href="../reference/mapLipd.html">mapLipd()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">iso</span>, global <span class="op">=</span> <span class="cn">TRUE</span>,size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"iso2k v1.0.0"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="768"></p>
 <p>Now we’ve seen an overview of all the files we’ve loaded, but now
 we’d like to filter the data.</p>
 <p>First, we’ll extract a TS object, the primary way to work with
@@ -189,7 +189,7 @@ the data coverage represented in <code>iTS</code>.</p>
 <span>      <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></code></pre></div>
-<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="768"></p>
 <p>You can change the mapping options by passing options to
 <code>basemap()</code> which creates the base map. Try
 <code>?basemap</code> for options.</p>
@@ -199,7 +199,7 @@ the data coverage represented in <code>iTS</code>.</p>
 <p>You can also quickly make a plot of availability through time.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs</a></span><span class="op">(</span><span class="va">iTS</span>,age.range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">2000</span><span class="op">)</span>,age.var <span class="op">=</span> <span class="st">"year"</span>,step <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="plot-a-stack">Plot a stack<a class="anchor" aria-label="anchor" href="#plot-a-stack"></a>
@@ -213,7 +213,7 @@ datasets for the past millennium.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">iTS</span>,color.var <span class="op">=</span> <span class="st">"paleoData_inferredMaterialGroup"</span>,</span>
 <span>                    color.ramp <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">nColors</span><span class="op">)</span><span class="op">{</span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="va">nColors</span>,<span class="st">"Set1"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
+<p><img src="tidyIso2k_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
