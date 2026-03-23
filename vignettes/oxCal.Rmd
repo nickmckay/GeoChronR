@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, dev = "ragg_png")
 ```
 
 # Use oxCal to create an age model 

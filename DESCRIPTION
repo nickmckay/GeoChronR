@@ -56,8 +56,9 @@ Imports:
     readr,
     lubridate,
     data.table
-Suggests: 
+Suggests:
     knitr,
+    ragg,
     rmarkdown,
     testthat,
     neotoma2,

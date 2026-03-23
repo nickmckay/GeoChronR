@@ -8,7 +8,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-  
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, dev = "ragg_png")
+```
+
 # Welcome to geoChronR!
   
   This is the introductory vignette that showcases the functionality of geoChronR to solve real problems with age uncertain data. Here is a table of contents of the other guides included here:

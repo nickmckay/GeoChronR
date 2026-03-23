@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r,echo = FALSE}
-knitr::opts_chunk$set(fig.width = 8,fig.height = 6) 
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, dev = "ragg_png")
 ```
 
 
