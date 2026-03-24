@@ -143,7 +143,7 @@ Interesting. It looks a lot like sed rate, as fluxes often do. For now, we'll st
 
 ## Now load in the instrumental data we want to correlate and regress against
 ```{r}
-kurupa.instrumental <- readr::read_csv("http://lipdverse.org/geoChronR-examples/KurupaInstrumental.csv")
+kurupa.instrumental <- readr::read_csv(system.file("extdata", "KurupaInstrumental.csv", package = "geoChronR"))
 ```
 
 ## Check age/time units before proceeding
