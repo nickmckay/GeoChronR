@@ -42,7 +42,6 @@ Imports:
     matrixStats,
     pbapply,
     oxcAAR,
-    Hmisc,
     glue,
     rEDM (>= 1.15),
     crayon,

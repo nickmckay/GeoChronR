@@ -298,7 +298,18 @@ mapAgeEnsembleToPaleoData = function(L,
     
     na.depth.i = which(!is.na(depth) & depth >= min(paleo.depth.range) & depth <= max(paleo.depth.range))
     aei = matrix(nrow = length(depth),ncol = ncol(ens))
-    aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) Hmisc::approxExtrap(ensDepth,y,xout=depth[na.depth.i],na.rm=TRUE)$y)
+    aeig=pbapply::pbapply(X=ens,MARGIN = 2,FUN = function(y) {
+      good <- !is.na(ensDepth) & !is.na(y)
+      xs <- ensDepth[good]; ys <- y[good]
+      ord <- order(xs); xs <- xs[ord]; ys <- ys[ord]
+      n <- length(xs)
+      out <- approx(xs, ys, xout = depth[na.depth.i], rule = 1)$y
+      lo <- depth[na.depth.i] < xs[1]
+      hi <- depth[na.depth.i] > xs[n]
+      if(any(lo)) out[lo] <- ys[1] + (ys[2]-ys[1])/(xs[2]-xs[1]) * (depth[na.depth.i][lo] - xs[1])
+      if(any(hi)) out[hi] <- ys[n] + (ys[n]-ys[n-1])/(xs[n]-xs[n-1]) * (depth[na.depth.i][hi] - xs[n])
+      out
+    })
     aei[na.depth.i,] = aeig
     
     
