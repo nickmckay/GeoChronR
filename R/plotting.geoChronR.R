@@ -655,9 +655,7 @@ plotTimeseriesEnsLines = function(add.to.plot=ggplot(),
   dfXY <- dfXY[order(dfXY$xEns), ]
   
   if(na.rm){
-    dfXY <- filter(dfXY,
-                   !is.na(x),
-                   !is.na(y))
+    dfXY <- dfXY[!is.na(dfXY$x) & !is.na(dfXY$y), ]
   }
   
   #deal with colors
@@ -987,7 +985,7 @@ plotCorEns = function(corout,
                       bar.colors = c("grey50","Chartreuse4","DarkOrange")){
   
   #pull data frames out of the list
-  cor.df <- filter(corout$cor.df,!is.na(r))
+  cor.df <- corout$cor.df[!is.na(corout$cor.df$r), ]
   cor.stats <- corout$cor.stats
   
   
