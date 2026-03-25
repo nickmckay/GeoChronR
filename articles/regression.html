@@ -136,7 +136,7 @@
 <td>author: “Nick McKay”</td>
 </tr>
 <tr class="odd">
-<td>date: “2026-03-24”</td>
+<td>date: “2026-03-25”</td>
 </tr>
 <tr class="even">
 <td>output: rmarkdown::html_vignette</td>
@@ -177,7 +177,6 @@ issues.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span> <span class="co">#to read and write LiPD files</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span> <span class="co">#of course</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span> <span class="co">#to load in the instrumental data we need</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co">#for plotting</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="load-the-lipd-file">Load the LiPD file<a class="anchor" aria-label="anchor" href="#load-the-lipd-file"></a>
@@ -189,7 +188,7 @@ load it from a local file.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">readLipdInsistently</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/insistently.html" class="external-link">insistently</a></span><span class="op">(</span>f  <span class="op">=</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span>,quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu">readLipdInsistently</span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//RtmpdlUgwq/Kurupa.Boldt.2015.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/t5/f77_gwnj6p95qxy9py3fckx00000gn/T//RtmpSNYj4m/Kurupa.Boldt.2015.lpd..."</span></span>
 <span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -369,29 +368,22 @@ we’ll stick with concentration.</p>
 against<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-against"></a>
 </h3>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"KurupaInstrumental.csv"</span>, package <span class="op">=</span> <span class="st">"geoChronR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">134</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">2</span></span></span>
-<span><span class="co">## <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">## <span style="font-weight: bold;">Delimiter:</span> ","</span></span>
-<span><span class="co">## <span style="color: #00BB00;">dbl</span> (2): Year (AD), JJAS Temperature (deg C)</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"KurupaInstrumental.csv"</span>, package <span class="op">=</span> <span class="st">"geoChronR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="check-agetime-units-before-proceeding">Check age/time units before proceeding<a class="anchor" aria-label="anchor" href="#check-agetime-units-before-proceeding"></a>
 </h3>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kae</span><span class="op">$</span><span class="va">units</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "yr BP"</span></span></code></pre>
 <p>yep, we need to convert the units from BP to AD</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertBP2AD.html">convertBP2AD</a></span><span class="op">(</span><span class="va">kae</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-variable-list-for-the-instrumental-data">Create a “variable list” for the instrumental data<a class="anchor" aria-label="anchor" href="#create-a-variable-list-for-the-instrumental-data"></a>
 </h3>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">kyear</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="va">kurupa.instrumental</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">kyear</span><span class="op">$</span><span class="va">variableName</span> <span class="op">&lt;-</span> <span class="st">"year"</span></span>
@@ -406,7 +398,7 @@ against<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental
 <h3 id="calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data">Calculate an ensmeble correlation between the RABD and local summer
 temperature data<a class="anchor" aria-label="anchor" href="#calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data"></a>
 </h3>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">kae</span>,<span class="va">rabd</span>,<span class="va">kyear</span>,<span class="va">kinst</span>,bin.step<span class="op">=</span><span class="fl">2</span>,percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>,<span class="fl">.5</span>,<span class="fl">.95</span> <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -414,7 +406,7 @@ temperature data<a class="anchor" aria-label="anchor" href="#calculate-an-ensmeb
 </h3>
 <p>Note that here we use the “Effective-N” significance option as we
 mimic the Boldt et al. (2015) paper.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,significance.option <span class="op">=</span> <span class="st">"eff-n"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="768"></p>
 <p>Mixed results. But encouraging enough to move forward.</p>
@@ -426,7 +418,7 @@ mimic the Boldt et al. (2015) paper.</p>
 temperature back through time. We can do this simply (perhaps naively)
 with regession, and lets do it with age uncertainty, both in the
 building of the model, and the reconstructing</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regressEns.html">regressEns</a></span><span class="op">(</span>time.x <span class="op">=</span> <span class="va">kae</span>,</span>
 <span>                     values.x <span class="op">=</span> <span class="va">rabd</span>,</span>
 <span>                     time.y <span class="op">=</span><span class="va">kyear</span>,</span>
@@ -438,7 +430,7 @@ building of the model, and the reconstructing</p>
 <div class="section level3">
 <h3 id="and-plot-the-output-1">And plot the output<a class="anchor" aria-label="anchor" href="#and-plot-the-output-1"></a>
 </h3>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regPlots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotRegressEns.html">plotRegressEns</a></span><span class="op">(</span><span class="va">regout</span>,alp <span class="op">=</span> <span class="fl">0.01</span>,font.size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="768"></p>
 <p>This result is consistent with that produced by Boldt et al., (2015),
