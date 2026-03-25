@@ -33,7 +33,6 @@ Let's start by loading the packages we'll need.
 ```{r, results = FALSE, warning = FALSE, message= FALSE }
 library(lipdR) #to read and write LiPD files
 library(geoChronR) #of course
-library(readr) #to load in the instrumental data we need
 library(ggplot2) #for plotting
 ``` 
 
@@ -143,7 +142,7 @@ Interesting. It looks a lot like sed rate, as fluxes often do. For now, we'll st
 
 ## Now load in the instrumental data we want to correlate and regress against
 ```{r}
-kurupa.instrumental <- readr::read_csv(system.file("extdata", "KurupaInstrumental.csv", package = "geoChronR"))
+kurupa.instrumental <- read.csv(system.file("extdata", "KurupaInstrumental.csv", package = "geoChronR"))
 ```
 
 ## Check age/time units before proceeding
