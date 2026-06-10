@@ -394,7 +394,7 @@ loadOxcalOutput <- function(L,
   
   #get version
   vers <- try(stringr::str_split(oxText[5],pattern = "OxCal v")[[1]][2])
-  if(class(vers) == "character"){
+  if(is.character(vers)){
     methods$version <- vers
   }
   

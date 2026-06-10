@@ -182,7 +182,7 @@ mapTs <- function(TS,
   
   #get the color variable if possible
   cvar <- try(pullTsVariable(TS,color),silent = TRUE)
-  if(class(cvar) == "try-error"){
+  if(inherits(cvar,"try-error")){
     man.color = TRUE
     cvar <- color
   }else{
@@ -191,7 +191,7 @@ mapTs <- function(TS,
   
   #get the color variable if possible
   shapevar <- try(pullTsVariable(TS,shape),silent = TRUE)
-  if(class(shapevar) == "try-error"){
+  if(inherits(shapevar,"try-error")){
     man.shape = TRUE
     shapevar <- shape
   }else{
@@ -457,7 +457,7 @@ baseMap = function(lon,
       
     }else{
       dum = try(maps::map(xlim = x_lim, ylim = y_lim, plot = FALSE,wrap=TRUE,...),silent = TRUE)
-      if(class(dum) == "try-error"){
+      if(inherits(dum,"try-error")){
         stop("It looks like the region defined by your coordinates might be too small to draw with a line map.\n You should either specify a larger region with `extend.range` or change the map type.")
       }
     }
