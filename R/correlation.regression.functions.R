@@ -598,7 +598,7 @@ binEns = function(time,values,bin.vec,bin.fun=mean,max.ens=NA){
   }
   
   binMat = as.matrix(binMat)
-  bin_x = apply(cbind(bin.vec[-1],bin.vec[-length(bin.vec)]),1,mean)
+  bin_x = (bin.vec[-1] + bin.vec[-length(bin.vec)]) / 2
   binned=list("time"=bin_x,"matrix" = binMat)
   return(binned)
   
@@ -618,17 +618,34 @@ bin = function(time,values,bin.vec,bin.fun = mean){
   #function that puts data into appropriate bins, based on the time and the binning vector
   #the bin vector describes the edges of the bins
   #bin.fun is the function to use for the binning, mean, sum, sd are all reasonable options
-  
-  
-  bin_y = rep(NA,times = length(bin.vec)-1)
-  bin_x = apply(cbind(bin.vec[-1],bin.vec[-length(bin.vec)]),1,mean)
-  
-  for(i in 1:length(bin_y)){
-    be <- sort(bin.vec[i:(i+1)])
-    q = which(time > be[1] & time <= be[2])
-    bin_y[i] = bin.fun(values[q],na.rm=TRUE)
+
+  n.bins <- length(bin.vec) - 1
+  bin_x <- (bin.vec[-1] + bin.vec[-(n.bins + 1)]) / 2
+  time <- as.vector(time)
+  values <- as.vector(values)
+
+  edge.diff <- diff(bin.vec)
+  if(all(edge.diff > 0) || all(edge.diff < 0)){
+    #monotonic bin.vec: assign every observation to its bin in one pass
+    descending <- edge.diff[1] < 0
+    edges <- if(descending) rev(bin.vec) else bin.vec
+    idx <- findInterval(time, edges, left.open = TRUE) #bins are (lower, upper]
+    in.range <- !is.na(idx) & idx >= 1 & idx <= n.bins
+    if(descending){
+      idx <- n.bins + 1 - idx
+    }
+    groups <- split(values[in.range], factor(idx[in.range], levels = seq_len(n.bins)))
+    bin_y <- unlist(lapply(groups, bin.fun, na.rm = TRUE), use.names = FALSE)
+  }else{
+    #non-monotonic bin.vec: bins may overlap, so scan each bin separately
+    bin_y <- rep(NA, times = n.bins)
+    for(i in seq_len(n.bins)){
+      be <- sort(bin.vec[i:(i+1)])
+      q <- which(time > be[1] & time <= be[2])
+      bin_y[i] <- bin.fun(values[q], na.rm = TRUE)
+    }
   }
-  
+
   binned = data.frame(x=bin_x,y=bin_y)
   return(binned)
 }
