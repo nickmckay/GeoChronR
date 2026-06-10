@@ -208,7 +208,6 @@ runBacon <-  function(L,
 #' @param bacon.dir the directory where Bacon is installed on this computer. Willimport if bossible. 
 #' @param max.ens the maximum number of ensemble members to import
 #' @return An ensemble table in the LiPD structure
-#' @importFrom plyr laply
 #' @importFrom data.table fread
 #' @examples 
 #' \dontrun{
@@ -288,9 +287,10 @@ sampleBaconAges <- function(corename,K=NA,bacon.dir=NA,max.ens=NA){
   
   if(is.na(max.ens)){max.ens=nrow(BACages)}
   
-  ages.out <- plyr::laply(1:min(nrow(BACages),max.ens), function(x){approx(x=depths, 
-                                                                          y = BACages[x,], 
-                                                                          xout=depths)$y})
+  ages.out <- t(vapply(1:min(nrow(BACages),max.ens), function(x){approx(x=depths,
+                                                                        y = BACages[x,],
+                                                                        xout=depths)$y},
+                       numeric(length(depths))))
   
   ensembleTable=list()
   ensembleTable$depth$values = depths

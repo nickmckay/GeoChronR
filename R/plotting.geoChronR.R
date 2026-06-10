@@ -850,7 +850,7 @@ plotTimeseriesEnsRibbons = function(add.to.plot=ggplot(),
     
     if(!all(is.na(center))){
       bandPlot <- bandPlot +
-        geom_line(data=center,aes(x=x,y=y),color=color.line,size=line.width)
+        geom_line(data=center,aes(x=x,y=y),color=color.line,linewidth=line.width)
     }
     
   }
@@ -1069,7 +1069,7 @@ plotCorEns = function(corout,
       
     }
     
-    h <- h+geom_histogram(aes(x=plotR,y=..count..,fill = factor(fdrSigPlot)), position = 'stack', color = "white", binwidth = bw) +
+    h <- h+geom_histogram(aes(x=plotR,y=after_stat(count),fill = factor(fdrSigPlot)), position = 'stack', color = "white", binwidth = bw) +
       scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6,0.6)), labels=lbf, guide = guide_legend(title = NULL))
     
   }else{
@@ -1086,7 +1086,7 @@ plotCorEns = function(corout,
       plotR <- c(plotR,3)
     }
     
-    h <- h+geom_histogram(aes(x=plotR,y=..count..,fill = factor(issig)), position = 'stack', color = "white", binwidth = bw) +
+    h <- h+geom_histogram(aes(x=plotR,y=after_stat(count),fill = factor(issig)), position = 'stack', color = "white", binwidth = bw) +
       scale_fill_manual(values=alpha(bar.colors,c(0.8,0.6)), labels=lbf, guide = guide_legend(title = NULL))
   }
   
@@ -1103,7 +1103,7 @@ plotCorEns = function(corout,
     
     
     # add vertical lines at the quantiles specified in cor.stats. 
-    h = h + geom_vline(data = cor.stats, aes(xintercept = r), color="red", size = 1,
+    h = h + geom_vline(data = cor.stats, aes(xintercept = r), color="red", linewidth = 1,
                        linetype=lineType, show.legend = FALSE) +
       ylim(c(y.lims[1],y.lims[2]*1.1)) # expand vertical range
     ymax = max(y.lims)
@@ -1208,7 +1208,7 @@ plotHistEns = function(ens.data,
   
   
   histPlot = add.to.plot+
-    geom_histogram(data=plotData,aes(x=r,y=..density..),color="white",bins=bins,fill=fill,alpha=alp)+
+    geom_histogram(data=plotData,aes(x=r,y=after_stat(density)),color="white",bins=bins,fill=fill,alpha=alp)+
     geoChronRPlotTheme()+
     ylab("Probability density")
   if(!all(is.na(quantiles))){
@@ -1274,7 +1274,7 @@ plotScreeEns <- function(pcaout,
     ggplot2::geom_line(aes(x = seq_len(nPCs),y = nullLine),colour = null.color)+
     ggplot2::scale_x_continuous("Component number",breaks = seq_len(nPCs))+
     ggplot2::scale_y_continuous("Fraction of variance explained",limits=c(NA,NA))+
-    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",size = .05,linetype = 2))+
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",linewidth = .05,linetype = 2))+
     ggtitle("PCA Scree Plot")
   
   return(scree)
@@ -1616,7 +1616,7 @@ plotModelDistributions = function(L,
     this.df = data.frame(x= this.dist[[dist.var]]$values,ymin = this.dist[[y.var]] - pd,ymax = this.dist[[y.var]] + pd )
     if(dist.type == "up" | dist.type == "high"){this.df$ymin =  this.dist[[y.var]]}
     if(dist.type == "down" | dist.type == "low"){this.df$ymax =  this.dist[[y.var]]}
-    add.to.plot = add.to.plot + geom_ribbon(data = this.df, aes(x = x,ymin = ymin,ymax = ymax),color = color,fill = color, alpha = alp,size = thick)
+    add.to.plot = add.to.plot + geom_ribbon(data = this.df, aes(x = x,ymin = ymin,ymax = ymax),color = color,fill = color, alpha = alp,linewidth = thick)
   }
   add.to.plot = add.to.plot + geoChronRPlotTheme()
   return(add.to.plot)
@@ -2297,7 +2297,7 @@ plotTimeseriesStack <- function(plot.df,
   
   spag <- ggplot(plot.df) +
     geom_ridgeline(aes(x = .data[[time.var]],height = scaled, y = paleoData_TSid,color = cv, fill = cv),
-                   min_height = -Inf,alpha = fill.alpha,size = line.size)+
+                   min_height = -Inf,alpha = fill.alpha,linewidth = line.size)+
     scale_color_manual(name = color.var,values = colVec)+
     scale_fill_manual(name = color.var,values = colVec)+
     theme_ridges(grid = TRUE)+

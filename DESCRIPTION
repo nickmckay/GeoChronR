@@ -49,7 +49,6 @@ Imports:
     magrittr,
     astrochron,
     MASS,
-    plyr,
     stringr,
     lipdR,
     readr,
