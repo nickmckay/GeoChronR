@@ -80,7 +80,16 @@ test_that("corEns matches pre-refactor reference output", {
   set.seed(13)
   out <- corEns(d$time1, d$vals1, d$time2, d$vals2, bin.step = 50,
                 isospectral = FALSE, isopersistent = FALSE, max.ens = 100)
-  expect_equal(out, ref$corEns)
+  # the FDR columns were 1-column matrices pre-refactor and are now plain
+  # numeric vectors, so compare values rather than structure
+  expect_equal(names(out$cor.df), names(ref$corEns$cor.df))
+  for (nm in names(out$cor.df)) {
+    expect_equal(as.numeric(out$cor.df[[nm]]),
+                 as.numeric(ref$corEns$cor.df[[nm]]))
+  }
+  expect_false(is.matrix(out$cor.df$pSerialFDR))
+  expect_equal(out$cor.stats, ref$corEns$cor.stats)
+  expect_equal(out$cor.fdr.stats, ref$corEns$cor.fdr.stats)
 })
 
 test_that("corMatrix Monte Carlo p-values are sane", {

@@ -358,7 +358,7 @@ regressEns = function(time.x,
   
   #check for a reconstruction bin.vec
   if(all(is.na(recon.bin.vec))){
-    recon.bin.vec = seq(min(time.x,na.rm=TRUE),max(time.x,na.rm=TRUE),by=abs(aligned$bin.step))
+    recon.bin.vec = seq(min(time.x$values,na.rm=TRUE),max(time.x$values,na.rm=TRUE),by=abs(aligned$bin.step))
   }
   
   #get full X for the reconstruction
@@ -408,20 +408,19 @@ regressEns = function(time.x,
     B=regress(X = cbind(binX[,rX[i]],ones),Y = binY[,rY[i]])
     m[i]=B[1]
     b[i]=B[2]
-    
+
     #calculate reconstruction
     XC=cbind(as.matrix(fullX$matrix[,rX[i]]),matrix(1,nrow=length(as.matrix(fullX$matrix[,rX[i]]))))
-    modeled.Y.mat[,i] = XC%*%B 
-    
-    modeled = list(values = modeled.Y.mat,units = ovy$units, variableName = ovy$variableName, variableType= "inferredVariable")
-    
-    
+    modeled.Y.mat[,i] = XC%*%B
+
     if(i%%100==0){
       setTxtProgressBar(pb, i)
     }
   }
   close(pb)
-  
+
+  modeled = list(values = modeled.Y.mat,units = ovy$units, variableName = ovy$variableName, variableType= "inferredVariable")
+
   #calculate some default statistics
   if(!all(is.na(percentiles))){
     ms = sort(m)
@@ -429,6 +428,8 @@ regressEns = function(time.x,
     N=length(ms)
     regStats = data.frame(percentiles,"m" = ms[round(percentiles*N)],"b" = bs[round(percentiles*N)])
     row.names(regStats)=format(regStats$percentiles,digits = 2)
+  }else{
+    regStats = NA
   }
   reg.ens.data=list("m"=m,"b"=b,"regStats"=regStats,"binX"=binX,"binY"=binY,"rX"=rX,"rY"=rY,"modeledY"=modeled.Y.mat,time.x = otx,values.x= ovx,time.y=oty,values.y=ovy,modeled = modeled,yearX = yearX,modeledYear = fullX$time)
   
@@ -537,15 +538,13 @@ corEns = function(time.1,
   
   cor.df = corMatrix(bin1,bin2,max.ens = max.ens,...)
   
-  #calculate the FDR adjusted values
-  for(co in 2:ncol(cor.df)){
-    cn <- names(cor.df)[co]
-    ncn <- paste0(cn,"FDR")
-    fdrOut <- fdr(cor.df[,co],qlevel=fdr.qlevel,method="original",adjustment.method='mean')
-    sig_fdr = matrix(0,nrow(cor.df))
-    sig_fdr[fdrOut] = 1
-    cor.df[ncn] <- sig_fdr
+  #calculate the FDR adjusted significance for each p-value column
+  fdrSig <- function(pvals){
+    sig <- numeric(length(pvals))
+    sig[fdr(pvals,qlevel = fdr.qlevel,method = "original",adjustment.method = 'mean')] <- 1
+    return(sig)
   }
+  cor.df <- dplyr::mutate(cor.df,dplyr::across(-"r",fdrSig,.names = "{.col}FDR"))
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
