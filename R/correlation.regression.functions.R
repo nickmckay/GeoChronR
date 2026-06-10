@@ -539,12 +539,16 @@ corEns = function(time.1,
   cor.df = corMatrix(bin1,bin2,max.ens = max.ens,...)
   
   #calculate the FDR adjusted significance for each p-value column
+  #(base R rather than dplyr::mutate/across: dplyr's C++ internals segfault
+  #sporadically on macOS GitHub Actions runners)
   fdrSig <- function(pvals){
     sig <- numeric(length(pvals))
     sig[fdr(pvals,qlevel = fdr.qlevel,method = "original",adjustment.method = 'mean')] <- 1
     return(sig)
   }
-  cor.df <- dplyr::mutate(cor.df,dplyr::across(-"r",fdrSig,.names = "{.col}FDR"))
+  for(cn in setdiff(names(cor.df),"r")){
+    cor.df[[paste0(cn,"FDR")]] <- fdrSig(cor.df[[cn]])
+  }
   
   #calculate some default statistics
   if(!all(is.na(percentiles))){
