@@ -179,62 +179,92 @@ corMatrix = function(ens.1,
   ens.1=as.matrix(ens.1)
   ens.2=as.matrix(ens.2)
   if(nrow(ens.1)!=nrow(ens.2)){stop("ens.1 and ens.2 must have the same number of rows")}
-  
+
   if(gaussianize){
     ens.1 <- gaussianize(ens.1)
     ens.2 <- gaussianize(ens.2)
   }
-  
-  p=matrix(NA,nrow = ncol(ens.1)*ncol(ens.2))
-  pIsospectral <- pIsopersistent <- pAdj <- p
-  r=p
-  n.ens=nrow(p) # number of ensemble members
-  ncor <- ifelse(is.na(max.ens),n.ens,max.ens)
-  pb <- txtProgressBar(min=0,max=n.ens,style=3)
+
+  n1 <- ncol(ens.1)
+  n2 <- ncol(ens.2)
+  n.pairs <- n1*n2
+  ncor <- ifelse(is.na(max.ens),n.pairs,max.ens)
   print(paste("Calculating",ncor,"correlations"))
-  
-  for(i in 1:ncol(ens.1)){
-    for(j in 1:ncol(ens.2)){
-      #test for singularity
-      effN = try(effectiveN(ens.1[,i],ens.2[,j]),silent = TRUE)
-      if(is.numeric(effN)){
-        r[j+ncol(ens.2)*(i-1)] <- cor(ens.1[,i],ens.2[,j],use="pairwise",method = cor.method)
-        #calculate raw
-        if(cor.method == "kendall"){#just NAs here
-          p[j+ncol(ens.2)*(i-1)] <- NA
-          #calculate adjust p-value (Bretherton 1999)
-          pAdj[j+ncol(ens.2)*(i-1)] <- NA
-        }else{
-          p[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],sum(!is.na(ens.1[,i])&!is.na(ens.2[,j])))
-          #calculate adjust p-value (Bretherton 1999)
-          pAdj[j+ncol(ens.2)*(i-1)] <- pvalPearsonSerialCorrected(r[j+ncol(ens.2)*(i-1)],effN)
-        }
-        #calculate isopersist
-        if(isopersistent){
-          pIsopersistent[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],
-                                                                ens.2[,j],
-                                                                n.sim = p.ens,
-                                                                method = "isopersistent",
-                                                                cor.method = cor.method)
-        }
-        #calculate isospectral
-        if(isospectral){
-          pIsospectral[j+ncol(ens.2)*(i-1)] <- pvalMonteCarlo(ens.1[,i],
-                                                              ens.2[,j],
-                                                              n.sim = p.ens,
-                                                              method = "isospectral",
-                                                              cor.method = cor.method)
-        }
-        
-        
-      }
-      setTxtProgressBar(pb, j+ncol(ens.2)*(i-1))
-    }
+
+  #AR(1) coefficients depend only on individual columns, so fit them once per
+  #column rather than once per pair. A pair is skipped (all NAs) if AR(1)
+  #estimation fails for either column, matching the old singularity test.
+  ar.1 <- vapply(seq_len(n1),
+                 function(i) tryCatch(ar1(ens.1[,i]),error = function(e) NA_real_),
+                 numeric(1))
+  ar.2 <- vapply(seq_len(n2),
+                 function(j) tryCatch(ar1(ens.2[,j]),error = function(e) NA_real_),
+                 numeric(1))
+  good.pair <- outer(!is.na(ar.1),!is.na(ar.2))
+
+  #all pairwise correlations in a single call
+  r.mat <- cor(ens.1,ens.2,use = "pairwise",method = cor.method)
+  r.mat[!good.pair] <- NA
+
+  #pairwise sample sizes for all pairs at once
+  n.raw <- crossprod(!is.na(ens.1),!is.na(ens.2))
+  n.fin <- crossprod(is.finite(ens.1)*1,is.finite(ens.2)*1)
+
+  #effective sample size (Bretherton et al., 1999), vectorized over pairs.
+  #The correction is meaningless if either AR(1) coefficient is negative.
+  ar.prod <- outer(ar.1,ar.2)
+  eff.n <- n.fin*(1-ar.prod)/(1+ar.prod)
+  neg.ar <- which(outer(ar.1 < 0,ar.2 < 0,FUN = "|"))
+  eff.n[neg.ar] <- n.fin[neg.ar]
+
+  if(cor.method == "kendall"){#the t-test is inappropriate for Kendall's tau
+    p.mat <- pAdj.mat <- matrix(NA,nrow = n1,ncol = n2)
+  }else{
+    p.mat <- pvalPearsonSerialCorrected(r.mat,n.raw)
+    pAdj.mat <- pvalPearsonSerialCorrected(r.mat,eff.n)
+    p.mat[!good.pair] <- NA
+    pAdj.mat[!good.pair] <- NA
   }
-  
+
+  #flatten row-major so index j + n2*(i-1) matches the historical ordering
+  r <- c(t(r.mat))
+  p <- c(t(p.mat))
+  pAdj <- c(t(pAdj.mat))
+
+  #Monte Carlo significance estimates still require a per-pair loop, but only
+  #for the pairs that will be returned (the old code computed all pairs and
+  #then discarded everything beyond max.ens)
+  pIsospectral <- pIsopersistent <- rep(NA,n.pairs)
+  if(isospectral | isopersistent){
+    n.mc <- min(ncor,n.pairs)
+    pb <- txtProgressBar(min=0,max=n.mc,style=3)
+    for(ind in seq_len(n.mc)){
+      i <- (ind-1) %/% n2 + 1
+      j <- (ind-1) %% n2 + 1
+      if(good.pair[i,j]){
+        if(isopersistent){
+          pIsopersistent[ind] <- pvalMonteCarlo(ens.1[,i],
+                                                ens.2[,j],
+                                                n.sim = p.ens,
+                                                method = "isopersistent",
+                                                cor.method = cor.method)
+        }
+        if(isospectral){
+          pIsospectral[ind] <- pvalMonteCarlo(ens.1[,i],
+                                              ens.2[,j],
+                                              n.sim = p.ens,
+                                              method = "isospectral",
+                                              cor.method = cor.method)
+        }
+      }
+      setTxtProgressBar(pb, ind)
+    }
+    close(pb)
+  }
+
   pAdj[!is.finite(pAdj)]=1#This is for instances whenn NEff <=2. I guess this is a reasonable solution?
-  
-  
+
+
   out <- data.frame("r"=r,
                     "pSerial"=pAdj,
                     "pRaw"=p,
@@ -251,7 +281,6 @@ corMatrix = function(ens.1,
   if(!is.na(max.ens)){
     out <- out[seq_len(max.ens),]
   }
-  close(pb)
   return(out)
 }
 
