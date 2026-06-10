@@ -127,9 +127,9 @@ git commit -m "Descriptive message about what changed"
 
 - **roxygen2** for documentation: All exported functions use roxygen2 comments (#')
 - **Dependencies**: Heavy reliance on Bacon, Bchron (now from GitHub), oxcAAR, lipdR (from GitHub)
-- **Testing**: Minimal test coverage in tests/testthat/ - primarily uses vignettes for validation
+- **Testing**: tests/testthat/test-binning.R locks bin/binEns/corMatrix/corEns behavior against golden reference outputs (regenerate with tools/capture_reference.R); vignettes validate the rest
 - **Vignettes**: Comprehensive tutorials in vignettes/ demonstrate full workflows
-- **CI/CD**: GitHub Actions R-CMD-check runs on Windows only (macOS testing disabled)
+- **CI/CD**: GitHub Actions R-CMD-check runs on Windows and macOS with full vignette builds. Caution: the macOS runners sporadically segfault inside dplyr's C++ internals, so avoid introducing new dplyr calls in package code paths that vignettes exercise (use base R there); existing dplyr usage that passes CI is fine
 
 ## Common Gotchas
 
