@@ -391,7 +391,7 @@ plotScreeEns <- function(pcaout,
     ggplot2::geom_line(aes(x = seq_len(nPCs),y = nullLine),colour = null.color)+
     ggplot2::scale_x_continuous("Component number",breaks = seq_len(nPCs))+
     ggplot2::scale_y_continuous("Fraction of variance explained",limits=c(NA,NA))+
-    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(seq_len(nPCs),colour = "black",linewidth = .05,linetype = 2))+
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(colour = "black",linewidth = .05,linetype = 2))+
     ggtitle("PCA Scree Plot")
   
   return(scree)
