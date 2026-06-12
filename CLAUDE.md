@@ -2,6 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT: this repo has been split into a package family (June 2026)
+
+This repository (`nickmckay/GeoChronR`) is the **original monolithic geoChronR**, preserved
+on `master` and the `refactor` branch. The codebase it documents below still lives here, but
+active development moved to a family of smaller, interoperable packages in **separate local
+repos** under `~/GitHub/`. When continuing this work, edit those repos, not this one.
+
+Dependency DAG (no cycles): **ens ← lipdViz ← geoChronR**, with actR and compositeR on top.
+
+| Repo (local dir = `~/GitHub/...`) | GitHub | Branch | Role |
+|---|---|---|---|
+| `ens` | nickmckay/ens | main | Ensemble methods: uncertainty propagation + null-hypothesis engine (`propagateUncertainty`/`testNullHypothesis`/`kdePval`), correlation, regression, PCA, spectra, binning, BAM core (`simulateBam`), LiPD ensemble plumbing (`selectData`, `mapAgeEnsembleToPaleoData`). Foundation of the family. |
+| `lipdViz` | nickmckay/lipdViz | main | All plotting + mapping; imports ens; provides `plot.*` methods for ens result classes |
+| `geoChronR-chronOnly` | nickmckay/geoChronR-chronOnly | main | **geoChronR 2.0** — age modeling only (Bacon/Bchron/OxCal/BAM) + LiPD model infra; imports and re-exports the full ens+lipdViz API so `library(geoChronR)` keeps the 1.x interface |
+| `actR` | **LinkedEarth/actR** | refactor | Abrupt-change detection; each detector is a `changeFun(time,vals,...)` on the ens engine |
+| `compositeR` | nickmckay/compositeR | refactor | Record compositing on ens/lipdViz; `binFun`/`stanFun` plugin pattern |
+
+Status: all 5 repos pass R CMD check + CI on Windows/Linux/macOS with full vignettes.
+See memory `[[three-package-split]]` and `[[actr-compositer-stack]]`, and plan file
+`~/.claude/plans/velvety-sprouting-finch.md`. Deferred TODOs: actR vctrs/dplyr class-restore;
+eval-string param-storage refactor in the UQ engine.
+
+Everything below describes the **monolithic** package as it was before the split (still
+accurate for this repo's code, and for understanding what each piece does).
+
 ## Overview
 
 geoChronR is an R package for analyzing and visualizing time-uncertain paleoscience data. It provides tools for:
