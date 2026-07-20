@@ -41,7 +41,7 @@ pullTsVariable = function(TS,variable){
   var <- sapply(TS,"[[",variable)
   
   
-  if(is.list(var) & !grepl("author",variable) &!grepl("inCompilationBeta[0-9]+_compilationVersion",variable)){#if it's a list, try to unpack it. Unless it's author then don't
+  if(is.list(var) & !grepl("author",variable) &!grepl("inCompilation(Beta)?[0-9]+_compilationVersion",variable)){#if it's a list, try to unpack it. Unless it's author then don't
     if(length(unlist(var)) < length(var)){#there are some NULlS
       newVar <- matrix(NA,nrow = length(var))
       isNull <- sapply(var, is.null)
