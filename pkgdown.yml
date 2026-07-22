@@ -1,5 +1,5 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   AddEnsemble: AddEnsemble.html
@@ -12,7 +12,7 @@ articles:
   spectral_analysis: spectral_analysis.html
   tidyIso2k: tidyIso2k.html
   TsFilteringAndMapping: TsFilteringAndMapping.html
-last_built: 2026-03-25T17:17Z
+last_built: 2026-07-22T19:39Z
 urls:
   reference: https://nickmckay.github.io/geoChronR/reference
   article: https://nickmckay.github.io/geoChronR/articles
