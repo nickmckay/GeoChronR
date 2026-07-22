@@ -208,8 +208,9 @@ createOxcalModel <- function(cdf,
   
   return(list(modelText = modText,
               parameters= parameters,
-              inputData = age2m))
-  
+              inputData = age2m,
+              inputDataAll = age2m))
+
 }
 
 
@@ -419,7 +420,8 @@ loadOxcalOutput <- function(L,
     dTable$probabilityDensity = list(values = oxData[[dd]]$raw_probabilities$probabilities , 
                                      variableName = "probabilityDensity")
     dTable$labId <- oxData[[dd]]$name
-    dTable$depth  <- model.parameters$inputDataAll$depth[which(model.parameters$inputDataAll$labID == oxData[[dd]]$name)]
+    matchedDepth <- model.parameters$inputDataAll$depth[which(model.parameters$inputDataAll$labID == oxData[[dd]]$name)]
+    dTable$depth  <- if(length(matchedDepth) == 1) matchedDepth else NA_real_
     dTable$depth.units = depth.units
     L$chronData[[chron.num]]$model[[model.num]]$distributionTable[[dd]] = dTable
   }
