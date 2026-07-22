@@ -268,35 +268,36 @@ getModelParametersFromOxcalText <- function(modText){
                         uncertainties = as.numeric(matches[[1]][,3]),
                         depths = as.numeric(matches[[1]][,4]))
   
-  age2m <- stringr::str_extract_all(modText, "(?<=z=)\\d+\\.?\\d*") |> 
-    unlist() |> 
-    as.numeric() |> 
-    as.data.frame() |> 
-    setNames("depth")
-  
-  # now get all the lab IDs
-  labIds <- stringr::str_extract_all(modText, '(?<=Date\\(|Prior\\(|Boundary\\(")(.+?)(?=\\))') |> 
-    unlist() |> 
-    stringr::str_remove_all('"') |> 
+  #parse each dated/boundary element (R_Date, C_Date, Date, Boundary) as its own block, in
+  #document order, so labels, depths, and outlier-exclusion stay aligned even when some
+  #entries are involved. A date flagged with a bare "Outlier();" (no model, no probability)
+  #is fully dropped by OxCal itself from its posterior output, so it must be excluded here too,
+  #or the depth count won't match the number of columns OxCal actually writes to MCMC_Sample.csv.
+  blocks <- stringr::str_match_all(modText, "(?s)(R_Date|C_Date|Date|Boundary)\\(([^)]*)\\)\\s*\\{(.*?)\\};")[[1]]
+
+  labIds <- stringr::str_match(blocks[,3], '^\\s*"?([^",]+)"?')[,2] |>
+    stringr::str_remove_all('"') |>
     stringr::str_remove_all('\\\\')
-  
-  
-  if(length(labIds) == nrow(age2m)){#it seems right!
-    bad <- which(!stringr::str_detect(labIds,",")) #these are not dates
-    
-    if(length(bad) > 0){
-      labIds[bad] <- NA
-    }
-    labIds <- stringr::str_split(labIds,",") |> 
-      purrr::map_chr(purrr::pluck,1)
-    age2m$labID <- labIds
-  }else{
+
+  depths <- stringr::str_extract(blocks[,4], "(?<=z=)-?\\d+\\.?\\d*") |>
+    as.numeric()
+
+  isExcludedOutlier <- stringr::str_detect(blocks[,4], "Outlier\\(\\s*\\);")
+
+  #inputDataAll keeps every dated/boundary point (including bare-Outlier-excluded ones) so
+  #calibration-curve/distribution lookups by labID still work for them; inputData is filtered
+  #down to what OxCal actually writes to MCMC_Sample.csv, for matching ensemble columns.
+  inputDataAll <- data.frame(depth = depths, labID = labIds)
+  age2m <- inputDataAll[!isExcludedOutlier, ]
+
+  if(nrow(age2m) == 0){
     stop("Couldn't extract lab IDs properly")
   }
-  
+
   return(list(modelText = modText,
               parameters= parameters,
               inputData = age2m,
+              inputDataAll = inputDataAll,
               c14Data = c14Data))
   
 }
@@ -418,7 +419,7 @@ loadOxcalOutput <- function(L,
     dTable$probabilityDensity = list(values = oxData[[dd]]$raw_probabilities$probabilities , 
                                      variableName = "probabilityDensity")
     dTable$labId <- oxData[[dd]]$name
-    dTable$depth  <- model.parameters$inputData$depth[which(model.parameters$inputData$labID == oxData[[dd]]$name)]
+    dTable$depth  <- model.parameters$inputDataAll$depth[which(model.parameters$inputDataAll$labID == oxData[[dd]]$name)]
     dTable$depth.units = depth.units
     L$chronData[[chron.num]]$model[[model.num]]$distributionTable[[dd]] = dTable
   }
@@ -429,11 +430,18 @@ loadOxcalOutput <- function(L,
   MCMCfile <- file.path(dirname(oxcal.result.file.path),"MCMC_Sample.csv")
   
   oxEns <- read.csv(MCMCfile)
-  
+
+  if(nrow(oxEns) == 0){
+    stop(glue::glue("OxCal finished (it printed an 'MCMC analysis' convergence table), but wrote zero posterior samples to MCMC_Sample.csv ({MCMCfile}). ",
+                     "This means the OxCal process exited or crashed partway through the real sampling pass, after the initial trial run. ",
+                     "This has been observed to happen intermittently with the OxCal binary running under Rosetta translation on Apple Silicon Macs. ",
+                     "Try re-running the model (it may succeed on a retry), or check for a crash report in ~/Library/Logs/DiagnosticReports/ named OxCalMac-*.ips."))
+  }
+
   log.file <- readr::read_file(file.path(dirname(oxcal.result.file.path),paste0(stripExtension(oxcal.result.file.path),".log")))
   #print(log.file)
   # nMCMC <- stringr::str_extract()
-  
+
   if(nrow(oxEns) > model.parameters$parameters$n.it){
     cat(crayon::blue(crayon::bold(glue::glue("It looks like youre MCMC_Sample parameters aren't large enough.")))) 
   }
@@ -444,11 +452,18 @@ loadOxcalOutput <- function(L,
   ensembleTable$depth$variableName  <-  "depth"
   ensembleTable$depth$units <- depth.units
   
-  goodColumns <- seq(3,ncol(oxEns)-2)
+  #drop the leading "Pass" column and any trailing blank column (oxcal's csv output ends each row with a trailing comma)
+  isBlankColumn <- grepl("^X?$", colnames(oxEns)) & sapply(oxEns, function(x) all(is.na(x) | x == ""))
+  goodColumns <- which(colnames(oxEns) != "Pass" & !isBlankColumn)
+
   if(length(goodColumns) != length( ensembleTable$depth$values)){
-    goodColumns <- seq(2,ncol(oxEns)-2)
+    #fall back to previous fixed-offset guesses, in case the column layout is from an older/different oxcal version
+    goodColumns <- seq(3,ncol(oxEns)-2)
     if(length(goodColumns) != length( ensembleTable$depth$values)){
-      stop("depths and age ensemble levels don't match!")
+      goodColumns <- seq(2,ncol(oxEns)-2)
+      if(length(goodColumns) != length( ensembleTable$depth$values)){
+        stop("depths and age ensemble levels don't match!")
+      }
     }
   }
   
@@ -750,7 +765,7 @@ executeOxcalAndUpdate <- function(oxcal_script,update = TRUE){
             unlink(file.path(tempdir(),pfs),recursive = TRUE)
             print(plotly::ggplotly(p))  
           }}}
-      Sys.sleep(5)  # Avoid high CPU usage
+      Sys.sleep(15)  # Avoid high CPU usage
     }
     
   }else{
