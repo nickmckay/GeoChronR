@@ -1,3 +1,9 @@
+# geoChronR 1.1.18
+
+* Fixed a bug in `loadOxcalOutput()`/`getModelParametersFromOxcalText()` where dates flagged with a bare `Outlier();` (no model or probability, i.e. fully excluded from OxCal's posterior) caused a column-count mismatch against `MCMC_Sample.csv`, throwing `"undefined columns selected"` during OxCal's live-update plotting.
+* Added a clear diagnostic error when OxCal writes zero posterior samples (previously a cryptic `"depths and age ensemble levels don't match!"`).
+* Made `MCMC_Sample.csv` ensemble-column detection in `loadOxcalOutput()` content-based instead of relying on guessed fixed offsets.
+
 # geoChronR 1.1.17
 
 * Added a new function `createSedRateEnsemble()` that creates a sed rate ensemble from a chron model. An example of its use can be found in [the regression vignette](https://nickmckay.org/GeoChronR/articles/regression.html).
