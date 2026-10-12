@@ -650,12 +650,20 @@ loadBaconOutput <- function(L,
   K=as.numeric(regmatches(st, gregexpr("[0-9]*?(?=\\_ages.txt)", st, perl=TRUE))[[1]])[1]
   summTable = read.table(st,header = TRUE)
   
-  #assign names in.
-  if(packageVersion("rbacon") > "3.5.0"){
-    origNames = c("depth","min.95","max.95","median","mean")
-  }else{
-    origNames = c("depth","min","max","median","mean")
-  }
+  #assign names in. rbacon has renamed these columns across versions, so match on any known name
+  #(<= 3.5.0: depth,min,max; 3.5.x: depth,min.95,max.95; >= 4.0.0: depths,qmin,qmax)
+  nameOptions = list(c("depth","depths"),
+                     c("min.95","min","qmin"),
+                     c("max.95","max","qmax"),
+                     "median",
+                     "mean")
+  origNames = sapply(nameOptions,function(no){
+    found = intersect(no,names(summTable))
+    if(length(found) == 0){
+      stop(glue::glue("Couldn't find a {no[1]} column in {st}. Columns found: {paste(names(summTable),collapse = ', ')}"))
+    }
+    found[1]
+  })
   newNames = c("depth","age.rangeLow","age.rangeHigh","age","age")
   
   depth.units = L$chronData[[chron.num]]$measurementTable[[1]]$depth$units
