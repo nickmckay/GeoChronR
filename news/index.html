@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
       </span>
     </div>
 
@@ -93,6 +93,13 @@
       <small>Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.19" id="geochronr-1119">geoChronR 1.1.19<a class="anchor" aria-label="anchor" href="#geochronr-1119"></a></h2>
+<ul><li>Fixed <code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code> failing under ggplot2 &gt;= 4.0 with <code>Can't convert x &lt;double[,1]&gt; to &lt;double&gt;</code>. Using <code>invert.var</code> created a single-column matrix that ggplot2 4 no longer accepts. <a href="https://github.com/nickmckay/GeoChronR/issues/91" class="external-link">See issue 91</a>.</li>
+<li>
+<code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code> now accepts TS lists and wide <code>lipd_ts_tibble</code> objects (one row per timeseries), converting them to long format with <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs()</a></code> internally, rather than failing in <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code>. Rows with non-finite time values are also dropped. Thanks <a href="https://github.com/georgyfalster" class="external-link">@georgyfalster</a> for the bug report and suggested fix.</li>
+<li>Fixed <code><a href="../reference/runBacon.html">runBacon()</a></code> failing with <code>undefined columns selected</code> under rbacon 4.0.0, which renamed the columns in Bacon’s <code>_ages.txt</code> output (<code>depths</code>, <code>qmin</code>, <code>qmax</code>). <code><a href="../reference/loadBaconOutput.html">loadBaconOutput()</a></code> now matches the column names used by any rbacon version.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.18" id="geochronr-1118">geoChronR 1.1.18<a class="anchor" aria-label="anchor" href="#geochronr-1118"></a></h2>
 <ul><li>Fixed a bug in <code><a href="../reference/loadOxcalOutput.html">loadOxcalOutput()</a></code>/<code><a href="../reference/getModelParametersFromOxcalText.html">getModelParametersFromOxcalText()</a></code> where dates flagged with a bare <code>Outlier();</code> (no model or probability, i.e. fully excluded from OxCal’s posterior) caused a column-count mismatch against <code>MCMC_Sample.csv</code>, throwing <code>"undefined columns selected"</code> during OxCal’s live-update plotting.</li>
