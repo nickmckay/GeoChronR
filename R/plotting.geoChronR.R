@@ -2196,8 +2196,21 @@ plotTimeseriesStack <- function(plot.df,
                                 lab.size = 3,  
                                 lab.space= 2,
                                 color.ramp = NA){
-  
-  
+
+  #convert a TS list or wide TS tibble (one row per timeseries, list columns) into a long, tidy data.frame
+  if(!is.data.frame(plot.df)){
+    plot.df <- lipdR::tidyTs(plot.df,age.var = time.var)
+  }else if(is.list(plot.df$paleoData_values)){
+    plot.df <- lipdR::tidyTs(purrr::transpose(dplyr::ungroup(plot.df)),age.var = time.var)
+  }
+
+  #flatten single column matrices into vectors, ggplot2 >= 4 will not accept them
+  for(v in intersect(c(time.var,"paleoData_values"),names(plot.df))){
+    if(NCOL(plot.df[[v]]) == 1){
+      plot.df[[v]] <- as.vector(plot.df[[v]])
+    }
+  }
+
   #force grouping by TSid
   plot.df <- dplyr::group_by(plot.df,paleoData_TSid)
   
@@ -2233,17 +2246,17 @@ plotTimeseriesStack <- function(plot.df,
   
   plot.df <- plot.df %>%
     dplyr::mutate(scaled = as.numeric(scale(paleoData_values)*scale.factor)) %>%
-    dplyr::filter(is.finite(scaled))
+    dplyr::filter(is.finite(scaled), is.finite(.data[[time.var]]))
   
   if(!is.na(invert.var)){# then make some negative
     iv <- plot.df[[invert.var]]
     if(is.character(iv)){
-      ivn <- matrix(1,nrow(plot.df))
+      ivn <- rep(1,nrow(plot.df))
       ivn[grepl("neg",iv,ignore.case = TRUE)] <- -1
       ivn[grepl("-1",iv,ignore.case = TRUE)] <- -1
       iv <- ivn
     }else if(is.numeric(iv)){
-      ivn <- matrix(1,nrow(plot.df))
+      ivn <- rep(1,nrow(plot.df))
       ivn[iv<0] <- -1
       iv <- ivn
     }
