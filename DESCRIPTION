@@ -16,13 +16,12 @@ Authors@R: c(
   )
 Maintainer: Nick McKay <nick@nau.edu>
 Description: A wrapper that provides the complete interfaces of the agemodelR (age modeling), ens (ensemble analysis) and lipdViz (visualization) packages for time-uncertain paleogeoscientific data, so that code written against geoChronR 1.x keeps working.
-License: MIT
+License: MIT + file LICENSE
 RoxygenNote: 7.3.3
 Encoding: UTF-8
 Imports:
     agemodelR,
     ens,
-    glue,
     lipdViz,
     utils
 Suggests:
