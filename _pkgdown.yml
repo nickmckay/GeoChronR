@@ -9,6 +9,7 @@ articles:
 - title: Getting Started With geoChronR
   navbar: Getting Started With geoChronR
   contents:
+  - overview
   - Introduction
   - correlation
   - regression
