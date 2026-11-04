@@ -9,3 +9,10 @@
 ^CITATION\.cff$
 ^LICENSE\.md$
 ^\.claude$
+^vignettes/(AddEnsemble|correlation|Introduction|oxCal|PCA|PlotTimeseriesStack|regression|spectral_analysis|tidyIso2k|TsFilteringAndMapping)\.Rmd$
+^tools$
+^logo.*$
+^thumbnails$
+^_toc\.yml$
+^chapter_meta\.yml$
+^GeoChronR-package\.Rproj$

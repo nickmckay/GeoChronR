@@ -1,3 +1,10 @@
+# geoChronR 2.0.0
+
+* geoChronR is now a thin wrapper. Age modeling moved to agemodelR, ensemble methods to ens, and plotting and mapping to lipdViz. `library(geoChronR)` re-exports all of them, so code written for 1.x keeps working. To work with fewer dependencies, use the sub-packages directly.
+* All 1.1.19 fixes are carried over to the new packages.
+* The tutorials remain on the package website. They are no longer installed with the package.
+* The original single package stays available at tag `v1.1.19` and on the `monolith-1.x` branch.
+
 # geoChronR 1.1.19
 
 * Fixed `plotTimeseriesStack()` failing under ggplot2 >= 4.0 with `Can't convert x <double[,1]> to <double>`. Using `invert.var` created a single-column matrix that ggplot2 4 no longer accepts. [See issue 91](https://github.com/nickmckay/GeoChronR/issues/91).
