@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -94,123 +94,47 @@
 
 <div id="claudemd" class="section level1">
 
-<p>This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.</p>
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a></h2>
-<p>geoChronR is an R package for analyzing and visualizing time-uncertain paleoscience data. It provides tools for: - Generating age models using Bacon, Bchron, OxCal, and BAM - Creating and analyzing age-ensemble data - Time-uncertain correlation, regression, spectral analysis, and PCA - Visualizing paleoclimate data and uncertainty</p>
-<p>The package is designed to work with LiPD (Linked Paleo Data) formatted files.</p>
-</div>
-<div class="section level2">
-<h2 id="development-commands">Development Commands<a class="anchor" aria-label="anchor" href="#development-commands"></a></h2>
-<div class="section level3">
-<h3 id="building-and-testing">Building and Testing<a class="anchor" aria-label="anchor" href="#building-and-testing"></a></h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install from source (for development)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"nickmckay/geoChronR"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Load the package in development mode</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Build documentation</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">document</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run R CMD check</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">check</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run tests</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># Or using testthat directly:</span></span>
-<span><span class="fu">testthat</span><span class="fu">::</span><span class="fu"><a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link">test_check</a></span><span class="op">(</span><span class="st">"geoChronR"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="package-building">Package Building<a class="anchor" aria-label="anchor" href="#package-building"></a></h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Build vignettes</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build_vignettes</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Build package</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="git-workflow">Git Workflow<a class="anchor" aria-label="anchor" href="#git-workflow"></a></h3>
-<p><strong>When making changes to the codebase, always create a git commit after completing work.</strong> This makes it easy to track changes and revert if needed.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># After making changes, stage and commit</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">git</span> add .</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Descriptive message about what changed"</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># For code changes, use descriptive commit messages like:</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># - "Add function to calculate sediment accumulation rates"</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># - "Fix bug in age uncertainty calculation for radiocarbon dates"</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># - "Update plotChronEns() to support custom color palettes"</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># - "Refactor ensemble interpolation for better performance"</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="architecture">Architecture<a class="anchor" aria-label="anchor" href="#architecture"></a></h2>
-<div class="section level3">
-<h3 id="core-components">Core Components<a class="anchor" aria-label="anchor" href="#core-components"></a></h3>
-<p><strong>Age Model Generation (R/bacon.lipd.R, R/run.bchron.LiPD.R, R/oxcal.R, R/BAM.lipd.R)</strong> - <code><a href="reference/runBacon.html">runBacon()</a></code> - Bayesian accumulation model using rbacon - <code><a href="reference/runBchron.html">runBchron()</a></code> - Bayesian chronology using Bchron - <code><a href="reference/runOxcal.html">runOxcal()</a></code> - OxCal integration for calibration - <code><a href="reference/runBam.html">runBam()</a></code> - Bacon-derived age models - These functions create ensemble tables stored in LiPD chronData/model structure</p>
-<p><strong>LiPD Data Manipulation (R/lipd.manipulation.R)</strong> - Functions for working with LiPD objects (lists with nested structure) - <code><a href="reference/selectData.html">selectData()</a></code> - Extract variables from LiPD objects - <code><a href="reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code> - Map chronology ensembles to paleo measurements - <code><a href="reference/pullTsVariable.html">pullTsVariable()</a></code> - Extract variables from TS (timeseries) objects - LiPD structure: L<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>h</mi><mi>r</mi><mi>o</mi><mi>n</mi><mi>D</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">chronData[[i]]</annotation></semantics></math>model[[j]]<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mi>m</mi><mi>b</mi><mi>l</mi><mi>e</mi><mi>T</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mo stretchy="false" form="prefix">[</mo><mo stretchy="false" form="prefix">[</mo><mi>k</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">]</mo><mi>a</mi><mi>n</mi><mi>d</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">ensembleTable[[k]] and L</annotation></semantics></math>paleoData[[i]]$measurementTable[[j]]</p>
-<p><strong>Chronology Building Utilities (R/chronBuilding.R)</strong> - <code><a href="reference/createChronMeasInputDf.html">createChronMeasInputDf()</a></code> - Standardize chron measurement data into dataframes for age models - Interactive functions that prompt users for variable selection - Uses a global environment (<code>geoChronREnv</code>) to store session variables like <code>chron_varUsedStr</code></p>
-<p><strong>Ensemble Analysis</strong> - R/correlation.regression.functions.R - <code><a href="reference/corEns.html">corEns()</a></code>, <code><a href="reference/regressEns.html">regressEns()</a></code> - R/power.spectra.ens.R - <code><a href="reference/computeSpectraEns.html">computeSpectraEns()</a></code>, spectral analysis - R/PCA.geoChronR.R - <code><a href="reference/pcaEns.html">pcaEns()</a></code> for ensemble PCA - All ensemble functions operate on matrices where columns are ensemble members</p>
-<p><strong>Visualization (R/plotting.geoChronR.R)</strong> - ggplot2-based plotting functions - <code><a href="reference/plotChronEns.html">plotChronEns()</a></code> - Visualize age model ensembles - <code><a href="reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons()</a></code>, <code><a href="reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines()</a></code> - Timeseries with uncertainty - <code><a href="reference/plotCorEns.html">plotCorEns()</a></code>, <code><a href="reference/plotRegressEns.html">plotRegressEns()</a></code>, <code><a href="reference/plotSpectraEns.html">plotSpectraEns()</a></code>, <code><a href="reference/plotPcaEns.html">plotPcaEns()</a></code> - Analysis plots - Many plotting functions use magrittr pipes (%&gt;%) for composability</p>
-<p><strong>Statistical Utilities (R/helper.R, R/fdr.R)</strong> - <code><a href="reference/gaussianize.html">gaussianize()</a></code> - Transform data to normal distribution - <code><a href="reference/convertBP2AD.html">convertBP2AD()</a></code>, <code><a href="reference/convertAD2BP.html">convertAD2BP()</a></code> - Year conversion utilities - <code><a href="reference/simulateAutoCorrelatedUncertainty.html">simulateAutoCorrelatedUncertainty()</a></code> - Generate AR1 noise - <code><a href="reference/fdr.html">fdr()</a></code> - False discovery rate calculations</p>
-<p><strong>Model Creation (R/createModel.R)</strong> - <code><a href="reference/createModel.html">createModel()</a></code> - Generic model creation framework - <code><a href="reference/createMultiModelEnsemble.html">createMultiModelEnsemble()</a></code> - Combine multiple age models</p>
-</div>
-<div class="section level3">
-<h3 id="data-flow-pattern">Data Flow Pattern<a class="anchor" aria-label="anchor" href="#data-flow-pattern"></a></h3>
-<ol style="list-style-type: decimal"><li>
-<strong>Load LiPD data</strong> - Using lipdR package: <code>L &lt;- readLipd()</code>
-</li>
+<p>geoChronR 2.0 is a <strong>thin wrapper</strong>. There is almost no code here: <code>R/reexports.R</code> re-exports agemodelR, ens and lipdViz so <code><a href="https://github.com/nickmckay/GeoChronR" class="external-link">library(geoChronR)</a></code> keeps the 1.x interface. Work on actual functionality belongs in those repos.</p>
+<p>Dependency order: <strong>ens &lt;- lipdViz &lt;- agemodelR &lt;- geoChronR</strong>, with actR and compositeR built on ens + lipdViz.</p>
+<table class="table"><colgroup><col width="25%"><col width="25%"><col width="25%"><col width="25%"></colgroup><thead><tr><th>Repo (<code>~/GitHub/...</code>)</th>
+<th>GitHub</th>
+<th>Branch</th>
+<th>Role</th>
+</tr></thead><tbody><tr><td>lipdR</td>
+<td>nickmckay/lipdR</td>
+<td>main</td>
+<td>Read and write LiPD; foundation for everything</td>
+</tr><tr><td>ens</td>
+<td>nickmckay/ens</td>
+<td>main</td>
+<td>Ensemble methods</td>
+</tr><tr><td>lipdViz</td>
+<td>nickmckay/lipdViz</td>
+<td>main</td>
+<td>Plotting and mapping</td>
+</tr><tr><td>agemodelR</td>
+<td>nickmckay/agemodelR</td>
+<td>main</td>
+<td>Age modeling (Bacon, Bchron, OxCal, BAM)</td>
+</tr><tr><td>GeoChronR (this repo)</td>
+<td>nickmckay/GeoChronR</td>
+<td>master</td>
+<td>Wrapper</td>
+</tr><tr><td>actR</td>
+<td>LinkedEarth/actR</td>
+<td>main</td>
+<td>Abrupt-change detection</td>
+</tr><tr><td>compositeR</td>
+<td>nickmckay/compositeR</td>
+<td>master</td>
+<td>Record compositing</td>
+</tr></tbody></table><ul><li>
+<code>R/reexports.R</code> is generated. After any export changes in a sub-package, run <code>Rscript tools/gen_reexports.R</code> and <code>devtools::document()</code>.</li>
 <li>
-<strong>Create age model</strong> - Using runBacon/runBchron/runOxcal, stores ensemble in chronData</li>
-<li>
-<strong>Map to measurements</strong> - <code><a href="reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code> interpolates age ensemble to paleo depths</li>
-<li>
-<strong>Extract variables</strong> - <code><a href="reference/selectData.html">selectData()</a></code> pulls age and paleo data ensembles</li>
-<li>
-<strong>Analyze ensembles</strong> - Use corEns(), regressEns(), computeSpectraEns(), etc.</li>
-<li>
-<strong>Visualize results</strong> - Plot functions that handle ensemble uncertainty</li>
-</ol></div>
-<div class="section level3">
-<h3 id="key-design-patterns">Key Design Patterns<a class="anchor" aria-label="anchor" href="#key-design-patterns"></a></h3>
-<p><strong>Interactive Mode</strong>: Many functions (runBacon, runBchron, createChronMeasInputDf) run interactively if parameters are NA, prompting user with <code><a href="reference/askUser.html">askUser()</a></code> function using crayon-colored output.</p>
-<p><strong>Ensemble Representation</strong>: Ensembles stored as matrices with rows=observations, columns=ensemble members. Individual ensemble members selected with <code><a href="reference/pullInstance.html">pullInstance()</a></code>.</p>
-<p><strong>LiPD Variable Structure</strong>: Variables are lists with <code>$values</code>, <code>$variableName</code>, <code>$units</code>, <code>$description</code> components.</p>
-<p><strong>Parameter Reuse</strong>: Functions like <code><a href="reference/createChronMeasInputDf.html">createChronMeasInputDf()</a></code> store used parameters in <code>geoChronREnv</code> for reuse via <code><a href="reference/getLastVarString.html">getLastVarString()</a></code>.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="important-notes">Important Notes<a class="anchor" aria-label="anchor" href="#important-notes"></a></h2>
-<ul><li>
-<strong>roxygen2</strong> for documentation: All exported functions use roxygen2 comments (#’)</li>
-<li>
-<strong>Dependencies</strong>: Heavy reliance on Bacon, Bchron (now from GitHub), oxcAAR, lipdR (from GitHub)</li>
-<li>
-<strong>Testing</strong>: Minimal test coverage in tests/testthat/ - primarily uses vignettes for validation</li>
-<li>
-<strong>Vignettes</strong>: Comprehensive tutorials in vignettes/ demonstrate full workflows</li>
-<li>
-<strong>CI/CD</strong>: GitHub Actions R-CMD-check runs on Windows only (macOS testing disabled)</li>
+<code>tests/testthat/exports-1x.txt</code> is the frozen 1.x export list; every name must stay available.</li>
+<li>The tutorials in <code>vignettes/</code> (all but <code>overview.Rmd</code>) are website-only: <code>.Rbuildignore</code> keeps them out of the package and <code>pkgdown</code> builds them, which keeps their public URLs. They use <code><a href="https://github.com/nickmckay/GeoChronR" class="external-link">library(geoChronR)</a></code>, so a pkgdown build tests the whole family.</li>
+<li>The monolith is at tag <code>v1.1.19</code> and branch <code>monolith-1.x</code>. Do not develop there.</li>
 </ul></div>
-<div class="section level2">
-<h2 id="common-gotchas">Common Gotchas<a class="anchor" aria-label="anchor" href="#common-gotchas"></a></h2>
-<ol style="list-style-type: decimal"><li>
-<strong>Bacon directory handling</strong>: Uses temp directories by default; manage with <code><a href="reference/getBaconDir.html">getBaconDir()</a></code>/<code><a href="reference/setBaconDir.html">setBaconDir()</a></code>
-</li>
-<li>
-<strong>Year 0 issue</strong>: AD/BP conversion accounts for lack of year 0 (see convertBP2AD/convertAD2BP)</li>
-<li>
-<strong>Interactive functions</strong>: Set parameters explicitly for non-interactive/reproducible workflows</li>
-<li>
-<strong>Unit conversions</strong>: Functions check for ka vs yr and convert automatically in age model creation</li>
-<li>
-<strong>LiPD nested structure</strong>: Navigate carefully - chronData/paleoData are lists of lists of lists</li>
-<li>
-<strong>Global environment</strong>: Package uses <code>geoChronREnv</code> to maintain state between function calls</li>
-</ol></div>
-</div>
 
   </div>
 

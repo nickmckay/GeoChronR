@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Ensemble Correlation</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2026-10-12</h4>
+            <h4 data-toc-skip class="date">2026-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/correlation.Rmd" class="external-link"><code>vignettes/correlation.Rmd</code></a></small>
       <div class="hidden name"><code>correlation.Rmd</code></div>
@@ -155,7 +155,7 @@ between these two datasets. First we’ll load the packages we need.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></span></code></pre></div>
 <p>And the data we generated in the <a href="Introduction.html">introduction</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/loadRemote.html">loadRemote</a></span><span class="op">(</span><span class="st">"https://lipdverse.org/geoChronR-examples/introductionOutput.RData"</span>,useSavedNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ens/man/loadRemote.html" class="external-link">loadRemote</a></span><span class="op">(</span><span class="st">"https://lipdverse.org/geoChronR-examples/introductionOutput.RData"</span>,useSavedNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="the-corens-function">The corEns() function<a class="anchor" aria-label="anchor" href="#the-corens-function"></a>
 </h3>
@@ -168,7 +168,7 @@ mechanistic relationship between two timeseries. Still, it illustrates
 how age uncertainty can affect apparent alignment between two datasets,
 which is the purpose of this example.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span>time.1 <span class="op">=</span> <span class="va">gisp2.ens</span>,</span>
+<code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/corEns.html" class="external-link">corEns</a></span><span class="op">(</span>time.1 <span class="op">=</span> <span class="va">gisp2.ens</span>,</span>
 <span>                 values.1 <span class="op">=</span> <span class="va">gisp2.d18O</span>,</span>
 <span>                 time.2 <span class="op">=</span> <span class="va">hulu.ae</span>,</span>
 <span>                 values.2 <span class="op">=</span> <span class="va">hulu.d18O</span>,</span>
@@ -179,7 +179,7 @@ which is the purpose of this example.</p>
 <span>                 gaussianize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Note that there are many parameters available for the
 <code>corEns</code> function (check out the help at
-<code><a href="../reference/corEns.html">?corEns</a></code>). Some of the key ones to pay attention to are:</p>
+<code><a href="https://rdrr.io/pkg/ens/man/corEns.html" class="external-link">?corEns</a></code>). Some of the key ones to pay attention to are:</p>
 <ul>
 <li><p><strong>bin.step</strong> This variable sets the size of the bins
 that the data will be averaged into to align before correlation. Smaller
@@ -219,7 +219,7 @@ data.frame that summarizes the output.</p>
 <p>This gives us a first order sense of the results, but let’s use the
 <code>plotCorEns</code> function to dig in deeper.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
 <span>           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,</span>
 <span>           significance.option <span class="op">=</span> <span class="st">"raw"</span>,</span>
@@ -254,7 +254,7 @@ the correlated signal.</p></li>
 </ol>
 <p>Let’s take a look at each of these three options,</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
 <span>           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,</span>
 <span>           significance.option <span class="op">=</span> <span class="st">"eff-n"</span>,</span>
@@ -268,7 +268,7 @@ dramatically reduces the effective degrees of freedom and has been shown
 to be overly conservative in many cases. So let’s take a look at the
 surrogate-based approaches.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
 <span>           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,</span>
 <span>           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,</span>
@@ -295,7 +295,7 @@ account of repeated testing. In effect, it filters the set of
 isopersistent, or isospectral). Let’s plot this again, but turn the
 <code>use.fdr</code> option to <code>TRUE</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
 <span>           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,</span>
 <span>           significance.option <span class="op">=</span> <span class="st">"isopersistent"</span>,</span>
@@ -312,7 +312,7 @@ than deriving p-values, and can be applied to any of the
 significance.options in geoChronR. For our final example we’ll take a
 look at isospectral significance testing and account for FDR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,</span>
 <span>           legend.position <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.8</span><span class="op">)</span>,</span>
 <span>           f.sig.lab.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.85</span>,<span class="fl">.6</span><span class="op">)</span>,</span>
 <span>           significance.option <span class="op">=</span> <span class="st">"isospectral"</span>,</span>
@@ -352,8 +352,8 @@ perform this calculation with the Hulu Cave
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>δ</mi><mn>18</mn></msup><annotation encoding="application/x-tex">\delta^{18}</annotation></semantics></math>O
 record</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coroutHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,<span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,bin.step <span class="op">=</span> <span class="fl">200</span>,max.ens <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="va">corPlotHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">coroutHulu</span>,</span>
+<code class="sourceCode R"><span><span class="va">coroutHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/corEns.html" class="external-link">corEns</a></span><span class="op">(</span><span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,<span class="va">hulu.ae</span>,<span class="va">hulu.d18O</span>,bin.step <span class="op">=</span> <span class="fl">200</span>,max.ens <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="va">corPlotHulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">coroutHulu</span>,</span>
 <span>                          legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.8</span><span class="op">)</span>,</span>
 <span>                          significance.option <span class="op">=</span> <span class="st">"isospectral"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>

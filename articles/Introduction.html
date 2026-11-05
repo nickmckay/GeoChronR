@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Introduction to geoChronR</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2026-10-12</h4>
+            <h4 data-toc-skip class="date">2026-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/Introduction.Rmd" class="external-link"><code>vignettes/Introduction.Rmd</code></a></small>
       <div class="hidden name"><code>Introduction.Rmd</code></div>
@@ -167,7 +167,7 @@ directory), or enter the path to file or the directory that you want:
 <code>L &lt;- readLipd("~/Downloads/my.lpd")</code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Hulucave.Wang.2001.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/36/tjdph2t965j8snz9_vkdnw0r0000gn/T//Rtmp1klQnS/Hulucave.Wang.2001.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T//RtmpZmAQoH/Hulucave.Wang.2001.lpd..."</span></span>
 <span><span class="co">## [1] "reading: Hulucave.Wang.2001.lpd"</span></span></code></pre>
 <p>Data from five stalagmites are stored in this file. Age model output,
 including ensemble data, can be stored in LiPD files, but we don’t have
@@ -183,7 +183,7 @@ but you can run this with just:</p>
 <p><code>hulu &lt;- runBchron(L)</code></p>
 <p>and it will prompt you for the details.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runBchron.html">runBchron</a></span><span class="op">(</span><span class="va">hulu</span>,</span>
+<code class="sourceCode R"><span><span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/runBchron.html" class="external-link">runBchron</a></span><span class="op">(</span><span class="va">hulu</span>,</span>
 <span>                  cal.curves <span class="op">=</span> <span class="st">"normal"</span>,</span>
 <span>                  iter <span class="op">=</span> <span class="fl">10000</span>,</span>
 <span>                  extractDate <span class="op">=</span> <span class="fl">10000</span>,</span>
@@ -209,13 +209,13 @@ but you can run this with just:</p>
 </h4>
 <p>OK, let’s take a look at the model.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chronPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">hulu</span>,truncate.dist <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80000</span>,<span class="fl">30000</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">chronPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotChronEns.html" class="external-link">plotChronEns</a></span><span class="op">(</span><span class="va">hulu</span>,truncate.dist <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80000</span>,<span class="fl">30000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">chronPlot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Introduction_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="768"></p>
-<p><code><a href="../reference/plotChron.html">plotChron()</a></code> is a wrapper for multiple plotting
+<p><code><a href="https://rdrr.io/pkg/lipdViz/man/plotChron.html" class="external-link">plotChron()</a></code> is a wrapper for multiple plotting
 functions, and has a lot of options, which probably require tinkering to
 produce a nice plot. See all the options by running
-<code><a href="../reference/plotChron.html">?plotChron</a></code></p>
+<code><a href="https://rdrr.io/pkg/lipdViz/man/plotChron.html" class="external-link">?plotChron</a></code></p>
 </div>
 <div class="section level4">
 <h4 id="mapping-the-age-ensemble-to-the-paleodata-measurements">Mapping the age ensemble to the paleoData measurements<a class="anchor" aria-label="anchor" href="#mapping-the-age-ensemble-to-the-paleodata-measurements"></a>
@@ -225,20 +225,20 @@ corresponding to the paleoclimatic or paleoenvironmental measurements in
 paleoData. To map the model ensemble values to a measurement table in
 paleoData, use</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">hulu</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span>,paleo.meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hulu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/mapAgeEnsembleToPaleoData.html" class="external-link">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">hulu</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span>,paleo.meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="selecting-the-variables-of-interest">Selecting the variables of interest<a class="anchor" aria-label="anchor" href="#selecting-the-variables-of-interest"></a>
 </h4>
 <p>Let’s take a look at the this timeseries.</p>
 <p>First we’re going to pull out the age ensemble and d18O data for
-future reference. The <code><a href="../reference/selectData.html">selectData()</a></code> function makes this
+future reference. The <code><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData()</a></code> function makes this
 easy.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu.ae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">hulu</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span>,meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hulu.ae</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">hulu</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span>,meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">hulu</span>,var.name <span class="op">=</span> <span class="st">"d18O"</span>,meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">hulu.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">hulu</span>,var.name <span class="op">=</span> <span class="st">"d18O"</span>,meas.table.num <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 </div>
 <div class="section level4">
@@ -249,7 +249,7 @@ ensemble of lines for these</p>
 <p>Here we will just plot 50 the data with 50 of its ensemble
 members.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.05</span>,n.ens.plot <span class="op">=</span> <span class="fl">50</span>,color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsLines.html" class="external-link">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.05</span>,n.ens.plot <span class="op">=</span> <span class="fl">50</span>,color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Introduction_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="768"></p>
 </div>
@@ -258,7 +258,7 @@ members.</p>
 </h4>
 <p>We can also plot this as a ribbon plot of quantiles</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,n.bins <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">35000</span>,<span class="fl">75000</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,n.bins <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">35000</span>,<span class="fl">75000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Introduction_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 </div>
@@ -267,7 +267,7 @@ members.</p>
 </h4>
 <p>Or a combination of the two with the “add.to.plot option”</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.1</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span>,color <span class="op">=</span> <span class="st">"red"</span>,add.to.plot <span class="op">=</span> <span class="va">hulu.ts.plot</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Hulu Cave d18O"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hulu.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsLines.html" class="external-link">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">hulu.ae</span>,Y <span class="op">=</span> <span class="va">hulu.d18O</span>,alp <span class="op">=</span> <span class="fl">0.1</span>,n.ens.plot <span class="op">=</span> <span class="fl">10</span>,color <span class="op">=</span> <span class="st">"red"</span>,add.to.plot <span class="op">=</span> <span class="va">hulu.ts.plot</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Hulu Cave d18O"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hulu.ts.plot</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Introduction_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="768"></p>
 </div>
@@ -278,7 +278,7 @@ members.</p>
 <p>Let’s compare these data to the GISP2 ice core.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">gisp2</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/GISP2.Alley.2000.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/36/tjdph2t965j8snz9_vkdnw0r0000gn/T//Rtmp1klQnS/GISP2.Alley.2000.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T//RtmpZmAQoH/GISP2.Alley.2000.lpd..."</span></span>
 <span><span class="co">## [1] "reading: GISP2.Alley.2000.lpd"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -289,7 +289,7 @@ tie points. Let’s use BAM (Banded Age Model) to estimate a 2% counting
 uncertainty on this. Here we specify all the parameters so it runs in
 non-interactive mode.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gisp2</span> <span class="op">=</span> <span class="fu"><a href="../reference/runBam.html">runBam</a></span><span class="op">(</span><span class="va">gisp2</span>,</span>
+<code class="sourceCode R"><span><span class="va">gisp2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/runBam.html" class="external-link">runBam</a></span><span class="op">(</span><span class="va">gisp2</span>,</span>
 <span>               paleo.num <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>               paleo.meas.table.num <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>               chron.num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -311,10 +311,10 @@ mode, and it will list all of the variables.</p>
 <h4 id="select-the-relevant-variables">Select the relevant variables<a class="anchor" aria-label="anchor" href="#select-the-relevant-variables"></a>
 </h4>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gisp2.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">gisp2</span>,var.name <span class="op">=</span> <span class="st">"temp"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">gisp2.d18O</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">gisp2</span>,var.name <span class="op">=</span> <span class="st">"temp"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">gisp2</span>,var.name <span class="op">=</span> <span class="st">"yearEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">gisp2</span>,var.name <span class="op">=</span> <span class="st">"yearEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gisp2.ens</span><span class="op">$</span><span class="va">values</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code></pre></div>
@@ -342,7 +342,7 @@ BP. Let’s check the units</p>
 <pre><code><span><span class="co">## [1] "AD"</span></span></code></pre>
 <p>yep. We’d better convert it to BP for comparison with Hulu.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertAD2BP.html">convertAD2BP</a></span><span class="op">(</span><span class="va">gisp2.ens</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">gisp2.ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/convertAD2BP.html" class="external-link">convertAD2BP</a></span><span class="op">(</span><span class="va">gisp2.ens</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-the-timeseries">Plot the timeseries<a class="anchor" aria-label="anchor" href="#plot-the-timeseries"></a>
@@ -350,8 +350,8 @@ BP. Let’s check the units</p>
 <p>Let’s make another ribbon and lines plot, this time useing the
 magrittr pipe to streamline the process</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gisp2.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">gisp2.ens</span>,Y <span class="op">=</span> <span class="va">gisp2.d18O</span>,n.bins <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/plotTimeseriesEnsLines.html">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">gisp2.ens</span>,Y <span class="op">=</span> <span class="va">gisp2.d18O</span>,n.ens.plot <span class="op">=</span> <span class="fl">5</span>,color <span class="op">=</span> <span class="st">"Reds"</span>,alp <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span><span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">gisp2.ts.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">gisp2.ens</span>,Y <span class="op">=</span> <span class="va">gisp2.d18O</span>,n.bins <span class="op">=</span> <span class="fl">500</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsLines.html" class="external-link">plotTimeseriesEnsLines</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">gisp2.ens</span>,Y <span class="op">=</span> <span class="va">gisp2.d18O</span>,n.ens.plot <span class="op">=</span> <span class="fl">5</span>,color <span class="op">=</span> <span class="st">"Reds"</span>,alp <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"GISP2 temperature"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">gisp2.ts.plot</span><span class="op">)</span></span></code></pre></div>

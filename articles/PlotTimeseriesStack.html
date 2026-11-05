@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Plot a stack of proxy timeseries</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2026-10-12</h4>
+            <h4 data-toc-skip class="date">2026-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PlotTimeseriesStack.Rmd" class="external-link"><code>vignettes/PlotTimeseriesStack.Rmd</code></a></small>
       <div class="hidden name"><code>PlotTimeseriesStack.Rmd</code></div>
@@ -146,7 +146,7 @@ and explore some of these options.</p>
 </h3>
 <p>We’ll be using a handful of libraries in this example</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span> <span class="co">#to read and interact with LiPD data</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/lipdR" class="external-link">lipdR</a></span><span class="op">)</span> <span class="co">#to read and interact with LiPD data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span> <span class="co">#for plotting mostly</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co">#we'll be using the magrittr pipe ( %&gt;% ) for simplicity</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co">#and dplyr for data.frame manipulation</span></span>
@@ -225,23 +225,23 @@ data frame, and will also control the order of the stack.</p>
 plot.<a class="anchor" aria-label="anchor" href="#ok-we-have-a-tidy-data-frame-that-includes-the-data-we-want-to-plot-"></a>
 </h3>
 <p>The key function for this is plotTimeseriesStack(), and has many
-options (<code><a href="../reference/plotTimeseriesStack.html">?plotTimeseriesStack</a></code>). We can start simply by
+options (<code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">?plotTimeseriesStack</a></code>). We can start simply by
 giving it the data frame and using the default options:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#plot the stack and color by Archive type</span></span>
-<span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="768">
 ## Adjusting the options</p>
 <p>OK! We have a plot! It looks decent, and by default it colors it by
 the TSid, but we might rather color it by archiveType. We do that
 simply:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,color.var <span class="op">=</span>  <span class="st">"archiveType"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,color.var <span class="op">=</span>  <span class="st">"archiveType"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PlotTimeseriesStack_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 <p>Better. But we need to make the axis labels smaller, and want to give
 it some more intuitive colors for each archive</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>,</span>
 <span>                    color.var <span class="op">=</span>  <span class="st">"archiveType"</span>,</span>
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    color.ramp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"coral"</span>,<span class="st">"black"</span>,<span class="st">"blue"</span>,<span class="st">"magenta"</span>,<span class="st">"dark green"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -252,7 +252,7 @@ we also want to arrange the lines by latitude instead of archive.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">plot.df</span>,<span class="va">geo_latitude</span><span class="op">)</span> <span class="co">#order by latitude</span></span>
 <span>                   </span>
-<span><span class="va">myPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>, <span class="co">#create another plot, storing the output</span></span>
+<span><span class="va">myPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">plot.df</span>, <span class="co">#create another plot, storing the output</span></span>
 <span>                    lab.size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                    color.ramp <span class="op">=</span> <span class="st">"black"</span>,<span class="co">#if we specify one color, all the records will get that</span></span>
 <span>                    fill.alpha <span class="op">=</span> <span class="fl">0</span>, <span class="co">#make the fill transparent</span></span>

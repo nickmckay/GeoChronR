@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@
       <h1 data-toc-skip>Ensemble PCA</h1>
                         <h4 data-toc-skip class="author">Nick McKay</h4>
             
-            <h4 data-toc-skip class="date">2026-10-12</h4>
+            <h4 data-toc-skip class="date">2026-11-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/nickmckay/GeoChronR/blob/master/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
       <div class="hidden name"><code>PCA.Rmd</code></div>
@@ -143,7 +143,7 @@ calibration-in-time</a></li>
 analysis</strong></a></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/lipdR" class="external-link">lipdR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -158,7 +158,7 @@ analysis. Data are from the <a href="https://www.nature.com/articles/sdata201426
 compilation, which we load here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">FD</span> <span class="op">&lt;-</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/arc2k/Arctic2k.zip"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/36/tjdph2t965j8snz9_vkdnw0r0000gn/T//RtmpPbhW1D/lpdDownload..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 19 datasets from /var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T//RtmpSlsVps/lpdDownload..."</span></span>
 <span><span class="co">## [1] "reading: Arc-Agassiz.Vinther.2008.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-Austfonna.Isaksson.2005.lpd"</span></span>
 <span><span class="co">## [1] "reading: Arc-CampCentury.Fisher.1969.lpd"</span></span>
@@ -187,7 +187,7 @@ compilation, which we load here:</p>
 <p>First, let’s take a quick look at where these records are located.
 geoChronR’s <code>mapLipd</code> function can create quick maps:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/mapLipd.html">mapLipd</a></span><span class="op">(</span><span class="va">FD</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/mapLipd.html" class="external-link">mapLipd</a></span><span class="op">(</span><span class="va">FD</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="768"></p>
 <p>More map projections are available too. A list is available here:
 <code>?mapproject</code></p>
@@ -230,7 +230,7 @@ the tidyverse framework.</p>
 <p>A tidy data.frame is also the input for the
 <code>plotTimeseriesStack</code> function in geoChronR.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyDf</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyDf</span>, </span>
 <span>                    color.var <span class="op">=</span> <span class="st">"paleoData_variableName"</span>, </span>
 <span>                    color.ramp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DarkBlue"</span>,<span class="st">"Orange"</span>,<span class="st">"Black"</span>,<span class="st">"Dark Green"</span><span class="op">)</span>,</span>
 <span>                    line.size <span class="op">=</span> <span class="fl">.1</span>, </span>
@@ -241,7 +241,7 @@ the tidyverse framework.</p>
 <p>Now bin all the data in the TS from 1400 to 2000, an interval of
 pretty good data coverage, into 5 year bins.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">binned.TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">TS.filtered</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,time.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">binned.TS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/binTs.html" class="external-link">binTs</a></span><span class="op">(</span><span class="va">TS.filtered</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,time.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <p>We’re now ready to calculate the PCA!</p>
 </div>
 </div>
@@ -250,12 +250,12 @@ pretty good data coverage, into 5 year bins.</p>
 </h3>
 <p>Calculate PCA on each ensemble member:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pcout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pcout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/pcaEns.html" class="external-link">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS</span><span class="op">)</span></span></code></pre></div>
 <p>That was easy (because of all the work we did beforehand). But before
 we look at the results let’s take a look at a scree plot to get a sense
 of how many significant components we should expect.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotScreeEns.html" class="external-link">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="768"></p>
 <p>It looks like the first two components, shown in black with gray
 uncertainty shading, stand out above the null model (in red), but the
@@ -268,18 +268,18 @@ two components.</p>
 will create multiple diagnostic figures of the results, and stitch them
 together.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">plotPCA</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/plotPcaEns.html">plotPcaEns</a></span><span class="op">(</span><span class="va">pcout</span>,TS <span class="op">=</span> <span class="va">TS.filtered</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,bound.circ <span class="op">=</span> <span class="cn">T</span>,restrict.map.range <span class="op">=</span> <span class="cn">T</span>,f<span class="op">=</span><span class="fl">.1</span>,legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">.6</span><span class="op">)</span>,which.pcs <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,which.leg <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">plotPCA</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotPcaEns.html" class="external-link">plotPcaEns</a></span><span class="op">(</span><span class="va">pcout</span>,TS <span class="op">=</span> <span class="va">TS.filtered</span>,map.type <span class="op">=</span> <span class="st">"line"</span>,projection <span class="op">=</span> <span class="st">"stereo"</span>,bound.circ <span class="op">=</span> <span class="cn">T</span>,restrict.map.range <span class="op">=</span> <span class="cn">T</span>,f<span class="op">=</span><span class="fl">.1</span>,legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">.6</span><span class="op">)</span>,which.pcs <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,which.leg <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="768"></p>
 <p>Nice! A summary plot that combines the major features is produced,
 but all of the components, are included in the “plotPCA” list that was
 exported.</p>
 <p>For comparison with other datasets it can be useful to export
 quantile timeseries shown in the figures.
-<code><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons()</a></code> can optionally be used to export
+<code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons()</a></code> can optionally be used to export
 the data rather than plotting them. The following will export the PC1
 timeseries:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">quantileData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">age</span>,Y <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">PCs</span><span class="op">[</span>,<span class="fl">1</span>,<span class="op">]</span>,export.quantiles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">quantileData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">age</span>,Y <span class="op">=</span> <span class="va">pcout</span><span class="op">$</span><span class="va">PCs</span><span class="op">[</span>,<span class="fl">1</span>,<span class="op">]</span>,export.quantiles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">quantileData</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 200 × 6</span></span></span>
@@ -308,11 +308,11 @@ data, keep them in their native values, and use a covariance matrix in
 the PCA analysis.</p>
 <p>First, it looks like let’s look at all the names in the TS</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"variableName"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/pullTsVariable.html" class="external-link">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"variableName"</span><span class="op">)</span></span></code></pre></div>
 <p>Oops - looks like we didn’t use quite the correct name. Next time
 use:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullTsVariable.html">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"paleoData_variableName"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">var.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/pullTsVariable.html" class="external-link">pullTsVariable</a></span><span class="op">(</span><span class="va">TS</span>, <span class="st">"paleoData_variableName"</span><span class="op">)</span></span></code></pre></div>
 <p>and take a look at the unique variableNames in the TS</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">var.names</span><span class="op">)</span></span></code></pre></div>
@@ -339,7 +339,7 @@ data by the length of the observations</p>
 <p>Again we’ll use <code>plotTimeseriesStack</code> to show all the
 data, now nicely arranged.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyd18O</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack</a></span><span class="op">(</span><span class="va">tidyd18O</span>, </span>
 <span>                    color.var <span class="op">=</span> <span class="st">"paleoData_variableName"</span>, <span class="co"># Color the data by the variable name (all the same in the case)</span></span>
 <span>                    color.ramp <span class="op">=</span> <span class="st">"DarkBlue"</span>, <span class="co">#colors to use</span></span>
 <span>                    line.size <span class="op">=</span> <span class="fl">.1</span>, </span>
@@ -351,7 +351,7 @@ data, now nicely arranged.</p>
 <p>Well that sure is nice and tidy. Again, it looks like binning from
 1400-2000 will give us good data coverage.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">binned.TS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/binTs.html">binTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,na.col.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">binned.TS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/binTs.html" class="external-link">binTs</a></span><span class="op">(</span><span class="va">d18OTS</span>,bin.vec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1400</span>,<span class="fl">2000</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span>,na.col.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p>And calculate the ensemble PCA, this time using a covariance matrix.
 By using a covariance, we’ll allow records that have larger variability
 in
@@ -360,10 +360,10 @@ to influence the PCA more, and those that have little variability will
 have little impact. This may or may not be a good idea, but it’s an
 important option to consider when possible.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pcout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaEns.html">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS2</span>,pca.type <span class="op">=</span> <span class="st">"cov"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pcout2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/pcaEns.html" class="external-link">pcaEns</a></span><span class="op">(</span><span class="va">binned.TS2</span>,pca.type <span class="op">=</span> <span class="st">"cov"</span><span class="op">)</span></span></code></pre></div>
 <p>Once again, let’s take a look at the scree plot:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScreeEns.html">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotScreeEns.html" class="external-link">plotScreeEns</a></span><span class="op">(</span><span class="va">pcout2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="384"></p>
 <pre><code>Once again, the first two components look good, but the third also looks to be likely above the 95% significance level, so let's include the third PC in our plot this time as well. 
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -94,21 +94,28 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="2.0.0" id="geochronr-200">geoChronR 2.0.0<a class="anchor" aria-label="anchor" href="#geochronr-200"></a></h2>
+<ul><li>geoChronR is now a thin wrapper. Age modeling moved to agemodelR, ensemble methods to ens, and plotting and mapping to lipdViz. <code><a href="https://github.com/nickmckay/GeoChronR" class="external-link">library(geoChronR)</a></code> re-exports all of them, so code written for 1.x keeps working. To work with fewer dependencies, use the sub-packages directly.</li>
+<li>All 1.1.19 fixes are carried over to the new packages.</li>
+<li>The tutorials remain on the package website. They are no longer installed with the package.</li>
+<li>The original single package stays available at tag <code>v1.1.19</code> and on the <code>monolith-1.x</code> branch.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.19" id="geochronr-1119">geoChronR 1.1.19<a class="anchor" aria-label="anchor" href="#geochronr-1119"></a></h2>
-<ul><li>Fixed <code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code> failing under ggplot2 &gt;= 4.0 with <code>Can't convert x &lt;double[,1]&gt; to &lt;double&gt;</code>. Using <code>invert.var</code> created a single-column matrix that ggplot2 4 no longer accepts. <a href="https://github.com/nickmckay/GeoChronR/issues/91" class="external-link">See issue 91</a>.</li>
+<ul><li>Fixed <code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack()</a></code> failing under ggplot2 &gt;= 4.0 with <code>Can't convert x &lt;double[,1]&gt; to &lt;double&gt;</code>. Using <code>invert.var</code> created a single-column matrix that ggplot2 4 no longer accepts. <a href="https://github.com/nickmckay/GeoChronR/issues/91" class="external-link">See issue 91</a>.</li>
 <li>
-<code><a href="../reference/plotTimeseriesStack.html">plotTimeseriesStack()</a></code> now accepts TS lists and wide <code>lipd_ts_tibble</code> objects (one row per timeseries), converting them to long format with <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs()</a></code> internally, rather than failing in <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code>. Rows with non-finite time values are also dropped. Thanks <a href="https://github.com/georgyfalster" class="external-link">@georgyfalster</a> for the bug report and suggested fix.</li>
-<li>Fixed <code><a href="../reference/runBacon.html">runBacon()</a></code> failing with <code>undefined columns selected</code> under rbacon 4.0.0, which renamed the columns in Bacon’s <code>_ages.txt</code> output (<code>depths</code>, <code>qmin</code>, <code>qmax</code>). <code><a href="../reference/loadBaconOutput.html">loadBaconOutput()</a></code> now matches the column names used by any rbacon version.</li>
+<code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">plotTimeseriesStack()</a></code> now accepts TS lists and wide <code>lipd_ts_tibble</code> objects (one row per timeseries), converting them to long format with <code><a href="https://rdrr.io/pkg/lipdR/man/tidyTs.html" class="external-link">tidyTs()</a></code> internally, rather than failing in <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code>. Rows with non-finite time values are also dropped. Thanks <a href="https://github.com/georgyfalster" class="external-link">@georgyfalster</a> for the bug report and suggested fix.</li>
+<li>Fixed <code><a href="https://rdrr.io/pkg/agemodelR/man/runBacon.html" class="external-link">runBacon()</a></code> failing with <code>undefined columns selected</code> under rbacon 4.0.0, which renamed the columns in Bacon’s <code>_ages.txt</code> output (<code>depths</code>, <code>qmin</code>, <code>qmax</code>). <code><a href="https://rdrr.io/pkg/agemodelR/man/loadBaconOutput.html" class="external-link">loadBaconOutput()</a></code> now matches the column names used by any rbacon version.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.18" id="geochronr-1118">geoChronR 1.1.18<a class="anchor" aria-label="anchor" href="#geochronr-1118"></a></h2>
-<ul><li>Fixed a bug in <code><a href="../reference/loadOxcalOutput.html">loadOxcalOutput()</a></code>/<code><a href="../reference/getModelParametersFromOxcalText.html">getModelParametersFromOxcalText()</a></code> where dates flagged with a bare <code>Outlier();</code> (no model or probability, i.e. fully excluded from OxCal’s posterior) caused a column-count mismatch against <code>MCMC_Sample.csv</code>, throwing <code>"undefined columns selected"</code> during OxCal’s live-update plotting.</li>
+<ul><li>Fixed a bug in <code><a href="https://rdrr.io/pkg/agemodelR/man/loadOxcalOutput.html" class="external-link">loadOxcalOutput()</a></code>/<code><a href="https://rdrr.io/pkg/agemodelR/man/getModelParametersFromOxcalText.html" class="external-link">getModelParametersFromOxcalText()</a></code> where dates flagged with a bare <code>Outlier();</code> (no model or probability, i.e. fully excluded from OxCal’s posterior) caused a column-count mismatch against <code>MCMC_Sample.csv</code>, throwing <code>"undefined columns selected"</code> during OxCal’s live-update plotting.</li>
 <li>Added a clear diagnostic error when OxCal writes zero posterior samples (previously a cryptic <code>"depths and age ensemble levels don't match!"</code>).</li>
-<li>Made <code>MCMC_Sample.csv</code> ensemble-column detection in <code><a href="../reference/loadOxcalOutput.html">loadOxcalOutput()</a></code> content-based instead of relying on guessed fixed offsets.</li>
+<li>Made <code>MCMC_Sample.csv</code> ensemble-column detection in <code><a href="https://rdrr.io/pkg/agemodelR/man/loadOxcalOutput.html" class="external-link">loadOxcalOutput()</a></code> content-based instead of relying on guessed fixed offsets.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.17" id="geochronr-1117">geoChronR 1.1.17<a class="anchor" aria-label="anchor" href="#geochronr-1117"></a></h2>
-<ul><li>Added a new function <code><a href="../reference/createSedRateEnsemble.html">createSedRateEnsemble()</a></code> that creates a sed rate ensemble from a chron model. An example of its use can be found in <a href="https://nickmckay.org/GeoChronR/articles/regression.html" class="external-link">the regression vignette</a>.</li>
+<ul><li>Added a new function <code><a href="https://rdrr.io/pkg/agemodelR/man/createSedRateEnsemble.html" class="external-link">createSedRateEnsemble()</a></code> that creates a sed rate ensemble from a chron model. An example of its use can be found in <a href="https://nickmckay.org/GeoChronR/articles/regression.html" class="external-link">the regression vignette</a>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.16" id="geochronr-1116">geoChronR 1.1.16<a class="anchor" aria-label="anchor" href="#geochronr-1116"></a></h2>
@@ -116,12 +123,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.15" id="geochronr-1115">geoChronR 1.1.15<a class="anchor" aria-label="anchor" href="#geochronr-1115"></a></h2>
-<ul><li>fixed a bug in <code><a href="../reference/ar1Surrogates.html">ar1Surrogates()</a></code> that would pop up with the isosopersistent option in rare occasions. <a href="https://github.com/nickmckay/GeoChronR/issues/89" class="external-link">See issue 89</a>, and thanks <a href="https://github.com/laurastreib" class="external-link">@laurastreib</a> for the bug report.</li>
+<ul><li>fixed a bug in <code><a href="https://rdrr.io/pkg/ens/man/ar1Surrogates.html" class="external-link">ar1Surrogates()</a></code> that would pop up with the isosopersistent option in rare occasions. <a href="https://github.com/nickmckay/GeoChronR/issues/89" class="external-link">See issue 89</a>, and thanks <a href="https://github.com/laurastreib" class="external-link">@laurastreib</a> for the bug report.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.14" id="geochronr-1114">geoChronR 1.1.14<a class="anchor" aria-label="anchor" href="#geochronr-1114"></a></h2>
 <ul><li>Dealt with changes to R’s handling of package versions that was throwing errors.</li>
-<li>Added some better error messages in <code><a href="../reference/storey.html">storey()</a></code> to try to help <a href="https://github.com/nickmckay/GeoChronR/issues/89" class="external-link">with issue 89</a>
+<li>Added some better error messages in <code><a href="https://rdrr.io/pkg/ens/man/storey.html" class="external-link">storey()</a></code> to try to help <a href="https://github.com/nickmckay/GeoChronR/issues/89" class="external-link">with issue 89</a>
 </li>
 </ul></div>
     <div class="section level2">
@@ -130,7 +137,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.12" id="geochronr-1112">geoChronR 1.1.12<a class="anchor" aria-label="anchor" href="#geochronr-1112"></a></h2>
-<ul><li>added <code>oxcal.code.export.path</code> option to <code><a href="../reference/runOxcal.html">runOxcal()</a></code> to allow users to optionally save the oxcal model code before it runs</li>
+<ul><li>added <code>oxcal.code.export.path</code> option to <code><a href="https://rdrr.io/pkg/agemodelR/man/runOxcal.html" class="external-link">runOxcal()</a></code> to allow users to optionally save the oxcal model code before it runs</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.11" id="geochronr-1111">geoChronR 1.1.11<a class="anchor" aria-label="anchor" href="#geochronr-1111"></a></h2>
@@ -144,11 +151,11 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.9" id="geochronr-119">geoChronR 1.1.9<a class="anchor" aria-label="anchor" href="#geochronr-119"></a></h2>
-<ul><li>Fixed a bug in <code><a href="../reference/writeBacon.html">writeBacon()</a></code> where <code>remove.rejected</code> didn’t work properly if there was exactly one rejected date. Thanks <a href="https://github.com/JanPetrik1" class="external-link">@JanPetrik1</a> for reporting - see <a href="https://github.com/nickmckay/GeoChronR/issues/71" class="external-link">issue 71</a>.</li>
+<ul><li>Fixed a bug in <code><a href="https://rdrr.io/pkg/agemodelR/man/writeBacon.html" class="external-link">writeBacon()</a></code> where <code>remove.rejected</code> didn’t work properly if there was exactly one rejected date. Thanks <a href="https://github.com/JanPetrik1" class="external-link">@JanPetrik1</a> for reporting - see <a href="https://github.com/nickmckay/GeoChronR/issues/71" class="external-link">issue 71</a>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.8" id="geochronr-118">geoChronR 1.1.8<a class="anchor" aria-label="anchor" href="#geochronr-118"></a></h2>
-<ul><li>Added an <code>ask.reservoir</code> option to <code><a href="../reference/runBacon.html">runBacon()</a></code> that connects to the same parameter in <code><a href="../reference/writeBacon.html">writeBacon()</a></code>. Setting <code>ask.reservoir = FALSE</code> will allow for non-interactive code that uses <code><a href="../reference/runBacon.html">runBacon()</a></code> and includes reservoir corrections. Thanks <a href="https://github.com/JanPetrik1" class="external-link">@JanPetrik1</a> for reporting - see <a href="https://github.com/nickmckay/GeoChronR/issues/70" class="external-link">issue 70</a> for details.</li>
+<ul><li>Added an <code>ask.reservoir</code> option to <code><a href="https://rdrr.io/pkg/agemodelR/man/runBacon.html" class="external-link">runBacon()</a></code> that connects to the same parameter in <code><a href="https://rdrr.io/pkg/agemodelR/man/writeBacon.html" class="external-link">writeBacon()</a></code>. Setting <code>ask.reservoir = FALSE</code> will allow for non-interactive code that uses <code><a href="https://rdrr.io/pkg/agemodelR/man/runBacon.html" class="external-link">runBacon()</a></code> and includes reservoir corrections. Thanks <a href="https://github.com/JanPetrik1" class="external-link">@JanPetrik1</a> for reporting - see <a href="https://github.com/nickmckay/GeoChronR/issues/70" class="external-link">issue 70</a> for details.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.7" id="geochronr-117">geoChronR 1.1.7<a class="anchor" aria-label="anchor" href="#geochronr-117"></a></h2>
@@ -163,58 +170,58 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.5" id="geochronr-115">geoChronR 1.1.5<a class="anchor" aria-label="anchor" href="#geochronr-115"></a></h2>
 <ul><li>Add an option to erase the bacon tempdir (if using) before each run, and set to default.</li>
-<li>Fixed bug in <code><a href="../reference/writeBacon.html">writeBacon()</a></code> that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.</li>
+<li>Fixed bug in <code><a href="https://rdrr.io/pkg/agemodelR/man/writeBacon.html" class="external-link">writeBacon()</a></code> that was making the model overwriting option not work properly. Thanks Sofia Kjellman for reporting the bug.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.4" id="geochronr-114">geoChronR 1.1.4<a class="anchor" aria-label="anchor" href="#geochronr-114"></a></h2>
-<ul><li>Better error messages in <code><a href="../reference/binTs.html">binTs()</a></code>
+<ul><li>Better error messages in <code><a href="https://rdrr.io/pkg/ens/man/binTs.html" class="external-link">binTs()</a></code>
 </li>
-<li>Better error handling in <code><a href="../reference/pcaEns.html">pcaEns()</a></code>
+<li>Better error handling in <code><a href="https://rdrr.io/pkg/ens/man/pcaEns.html" class="external-link">pcaEns()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.3" id="geochronr-113">geoChronR 1.1.3<a class="anchor" aria-label="anchor" href="#geochronr-113"></a></h2>
 <ul><li>Fixed bug in <code>createOxCalModel()</code> that was causing errors with IntCal20</li>
-<li>Suppressed non important warning (“Density was normalised within the computed range of x values [0, 1]”“) in <code><a href="../reference/pvalMonteCarlo.html">pvalMonteCarlo()</a></code> that occurred during ecdf estimation</li>
+<li>Suppressed non important warning (“Density was normalised within the computed range of x values [0, 1]”“) in <code><a href="https://rdrr.io/pkg/ens/man/pvalMonteCarlo.html" class="external-link">pvalMonteCarlo()</a></code> that occurred during ecdf estimation</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.2" id="geochronr-112">geoChronR 1.1.2<a class="anchor" aria-label="anchor" href="#geochronr-112"></a></h2>
-<ul><li>add time.var option to <code><a href="../reference/runBam.html">runBam()</a></code>
+<ul><li>add time.var option to <code><a href="https://rdrr.io/pkg/agemodelR/man/runBam.html" class="external-link">runBam()</a></code>
 </li>
-<li>better error handling in <code><a href="../reference/ar1Surrogates.html">ar1Surrogates()</a></code>
+<li>better error handling in <code><a href="https://rdrr.io/pkg/ens/man/ar1Surrogates.html" class="external-link">ar1Surrogates()</a></code>
 </li>
-<li>better logic and consistency checking in <code><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code>
+<li>better logic and consistency checking in <code><a href="https://rdrr.io/pkg/ens/man/mapAgeEnsembleToPaleoData.html" class="external-link">mapAgeEnsembleToPaleoData()</a></code>
 </li>
-<li>Create median variable option now included in <code><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData()</a></code>
+<li>Create median variable option now included in <code><a href="https://rdrr.io/pkg/ens/man/mapAgeEnsembleToPaleoData.html" class="external-link">mapAgeEnsembleToPaleoData()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.1" id="geochronr-111">geoChronR 1.1.1<a class="anchor" aria-label="anchor" href="#geochronr-111"></a></h2>
-<ul><li>Fix (at least temporarily) rare bugs in <code><a href="../reference/pcaEns.html">pcaEns()</a></code> and <code><a href="../reference/fdr.html">fdr()</a></code>
+<ul><li>Fix (at least temporarily) rare bugs in <code><a href="https://rdrr.io/pkg/ens/man/pcaEns.html" class="external-link">pcaEns()</a></code> and <code><a href="https://rdrr.io/pkg/ens/man/fdr.html" class="external-link">fdr()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1.0" id="geochronr-110">geoChronR 1.1.0<a class="anchor" aria-label="anchor" href="#geochronr-110"></a></h2>
 <ul><li>A bunch of quality of life improvements</li>
 <li>Better integration with new lipdR classes</li>
-<li>A new function to create multi-model ensembles! <code><a href="../reference/createMultiModelEnsemble.html">createMultiModelEnsemble()</a></code>
+<li>A new function to create multi-model ensembles! <code><a href="https://rdrr.io/pkg/agemodelR/man/createMultiModelEnsemble.html" class="external-link">createMultiModelEnsemble()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.14" id="geochronr-1014">geoChronR 1.0.14<a class="anchor" aria-label="anchor" href="#geochronr-1014"></a></h2>
-<ul><li>removed unused arima() in <code><a href="../reference/createSyntheticTimeseries.html">createSyntheticTimeseries()</a></code>
+<ul><li>removed unused arima() in <code><a href="https://rdrr.io/pkg/ens/man/createSyntheticTimeseries.html" class="external-link">createSyntheticTimeseries()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.13" id="geochronr-1013">geoChronR 1.0.13<a class="anchor" aria-label="anchor" href="#geochronr-1013"></a></h2>
-<ul><li>Added explicit references to astrochron function <code><a href="https://rdrr.io/pkg/astrochron/man/linterp.html" class="external-link">linterp()</a></code> in <code><a href="../reference/computeSpectraEns.html">computeSpectraEns()</a></code>. <a href="https://github.com/nickmckay/GeoChronR/issues/55" class="external-link">See issue 55</a>
+<ul><li>Added explicit references to astrochron function <code><a href="https://rdrr.io/pkg/astrochron/man/linterp.html" class="external-link">linterp()</a></code> in <code><a href="https://rdrr.io/pkg/ens/man/computeSpectraEns.html" class="external-link">computeSpectraEns()</a></code>. <a href="https://github.com/nickmckay/GeoChronR/issues/55" class="external-link">See issue 55</a>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.12" id="geochronr-1012">geoChronR 1.0.12<a class="anchor" aria-label="anchor" href="#geochronr-1012"></a></h2>
 <ul><li>Improved documentation</li>
 <li>
-<code><a href="../reference/runBchron.html">runBchron()</a></code>: <code>which.table</code> parameter changed to <code>meas.table.num</code> for consistency.</li>
+<code><a href="https://rdrr.io/pkg/agemodelR/man/runBchron.html" class="external-link">runBchron()</a></code>: <code>which.table</code> parameter changed to <code>meas.table.num</code> for consistency.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.11" id="geochronr-1011">geoChronR 1.0.11<a class="anchor" aria-label="anchor" href="#geochronr-1011"></a></h2>
@@ -223,7 +230,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.10" id="geochronr-1010">geoChronR 1.0.10<a class="anchor" aria-label="anchor" href="#geochronr-1010"></a></h2>
-<ul><li>Added handling for shapes in <code><a href="../reference/mapTs.html">mapTs()</a></code> for tibbles.</li>
+<ul><li>Added handling for shapes in <code><a href="https://rdrr.io/pkg/lipdViz/man/mapTs.html" class="external-link">mapTs()</a></code> for tibbles.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.9" id="geochronr-109">geoChronR 1.0.9<a class="anchor" aria-label="anchor" href="#geochronr-109"></a></h2>
@@ -246,22 +253,22 @@
 <h2 class="page-header" data-toc-text="1.0.5" id="geochronr-105">geoChronR 1.0.5<a class="anchor" aria-label="anchor" href="#geochronr-105"></a></h2>
 <ul><li>Improve and document the <code>export.quantiles</code> option in <code>plotTimeseriesEnsRibbons</code>
 </li>
-<li>Fix bug in <code><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs()</a></code> when only one instance of the <code>group.var</code> <a href="https://github.com/nickmckay/GeoChronR/issues/49" class="external-link">see issue 49</a>
+<li>Fix bug in <code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeAvailabilityTs.html" class="external-link">plotTimeAvailabilityTs()</a></code> when only one instance of the <code>group.var</code> <a href="https://github.com/nickmckay/GeoChronR/issues/49" class="external-link">see issue 49</a>
 </li>
-<li>Added support for flipping timeseries vertically in <code>plotTimeseriesStack</code> to match interpertations, based on TS metadata, specified in <code>invert.var</code>. Details in <code><a href="../reference/plotTimeseriesStack.html">?plotTimeseriesStack</a></code>. <a href="https://github.com/nickmckay/GeoChronR/issues/30" class="external-link">See issue 30</a>
+<li>Added support for flipping timeseries vertically in <code>plotTimeseriesStack</code> to match interpertations, based on TS metadata, specified in <code>invert.var</code>. Details in <code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesStack.html" class="external-link">?plotTimeseriesStack</a></code>. <a href="https://github.com/nickmckay/GeoChronR/issues/30" class="external-link">See issue 30</a>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.4" id="geochronr-104">geoChronR 1.0.4<a class="anchor" aria-label="anchor" href="#geochronr-104"></a></h2>
-<ul><li>Better automatic detection for mapping ranges in <code><a href="../reference/baseMap.html">baseMap()</a></code>
+<ul><li>Better automatic detection for mapping ranges in <code><a href="https://rdrr.io/pkg/lipdViz/man/baseMap.html" class="external-link">baseMap()</a></code>
 </li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.3" id="geochronr-103">geoChronR 1.0.3<a class="anchor" aria-label="anchor" href="#geochronr-103"></a></h2>
 <ul><li>Added interoperability with “tidyTs” objects, that is, TS objects expressed as tidy (or nested) tibbles.</li>
-<li>Fixed binding warning in <code><a href="../reference/plotTimeAvailabilityTs.html">plotTimeAvailabilityTs()</a></code>
+<li>Fixed binding warning in <code><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeAvailabilityTs.html" class="external-link">plotTimeAvailabilityTs()</a></code>
 </li>
-<li>Fixed bug in <code><a href="../reference/mapTs.html">mapTs()</a></code> when the regions were really small</li>
+<li>Fixed bug in <code><a href="https://rdrr.io/pkg/lipdViz/man/mapTs.html" class="external-link">mapTs()</a></code> when the regions were really small</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.2" id="geochronr-102">geoChronR 1.0.2<a class="anchor" aria-label="anchor" href="#geochronr-102"></a></h2>
@@ -272,7 +279,7 @@
 <ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
 <li>Added pkgdown documentation, website available at nickmckay.github.io/GeoChronR</li>
 <li>Updated vignettes for consistency with Geochronology manuscript and version 1.0.0</li>
-<li>Fixed typo in <code><a href="../reference/plotCorEns.html">plotCorEns()</a></code> legend when using <code>use.fdr = FALSE</code>
+<li>Fixed typo in <code><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns()</a></code> legend when using <code>use.fdr = FALSE</code>
 </li>
 </ul></div>
     <div class="section level2">

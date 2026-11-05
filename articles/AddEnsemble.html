@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -129,9 +129,9 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/lipdR" class="external-link">lipdR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Welcome to geoChronR version 1.1.19!</span></span></code></pre>
+<pre><code><span><span class="co">## Welcome to geoChronR version 2.0.0</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Attaching package: 'geoChronR'</span></span></code></pre>
 <pre><code><span><span class="co">## The following objects are masked from 'package:lipdR':</span></span>
@@ -147,14 +147,14 @@ may want to add ensemble that you’ve created elsewhere into a LiPD file,
 and then analyze it using geoChronR. This could be an age ensemble that
 you’ve created using a specialized or custom process, or paleo ensemble
 calculated with a novel approach. Either way, the
-<code><a href="../reference/createModel.html">createModel()</a></code> function is designed to simplify that
+<code><a href="https://rdrr.io/pkg/agemodelR/man/createModel.html" class="external-link">createModel()</a></code> function is designed to simplify that
 process.</p>
 <p>In the LiPD framework, chron or paleo ensemble tables are always
-stored within models, so <code><a href="../reference/createModel.html">createModel()</a></code> will simplify adding
+stored within models, so <code><a href="https://rdrr.io/pkg/agemodelR/man/createModel.html" class="external-link">createModel()</a></code> will simplify adding
 an ensemble table to a new model object, which is typically the best
 approach.</p>
 <p>As always, check out the help documentation for details
-<code><a href="../reference/createModel.html">?createModel</a></code> of all the parameters and how they work.</p>
+<code><a href="https://rdrr.io/pkg/agemodelR/man/createModel.html" class="external-link">?createModel</a></code> of all the parameters and how they work.</p>
 <div class="section level3">
 <h3 id="an-example-with-lake-kurupa">An example with Lake Kurupa<a class="anchor" aria-label="anchor" href="#an-example-with-lake-kurupa"></a>
 </h3>
@@ -205,10 +205,10 @@ separate variables for clarity:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depth</span> <span class="op">&lt;-</span> <span class="va">ens</span><span class="op">$</span><span class="va">`depth (mm)`</span></span>
 <span><span class="va">ageEns</span> <span class="op">&lt;-</span> <span class="va">ens</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="co">#here we use negative indexing to select all but the first column</span></span></code></pre></div>
-<p>Now we can use <code><a href="../reference/createModel.html">createModel()</a></code> to add in our ensemble
+<p>Now we can use <code><a href="https://rdrr.io/pkg/agemodelR/man/createModel.html" class="external-link">createModel()</a></code> to add in our ensemble
 table:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createModel.html">createModel</a></span><span class="op">(</span>L <span class="op">=</span>  <span class="va">K</span>,<span class="co">#our starting lipd object</span></span>
+<code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/createModel.html" class="external-link">createModel</a></span><span class="op">(</span>L <span class="op">=</span>  <span class="va">K</span>,<span class="co">#our starting lipd object</span></span>
 <span>                    depth.or.age.vector <span class="op">=</span> <span class="va">depth</span>,<span class="co">#our depth vector</span></span>
 <span>                    ensemble.data <span class="op">=</span> <span class="va">ageEns</span>,<span class="co">#our age ensemble</span></span>
 <span>                    depth.or.age.units <span class="op">=</span> <span class="st">"mm"</span>,<span class="co">#and we'll specify that our depth units are different than the default.</span></span>
@@ -224,7 +224,7 @@ function, that you may need to specify depending on your data and goals,
 but it’s often as simple as this.</p>
 <p>Let’s take a look.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotChronEns.html">plotChronEns</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotChronEns.html" class="external-link">plotChronEns</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre>
@@ -244,7 +244,7 @@ radiocarbon data, calibrated or otherwise.</p>
 <p>You can now go on to use the ensemble in geoChronR any way you’d
 like. For example, we can map the age ensemble to the paleodata:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">Kens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/mapAgeEnsembleToPaleoData.html" class="external-link">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">Kens</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Kurupa.Boldt.2015"</span></span>
 <span><span class="co">## [1] "Looking for age ensemble...."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
@@ -255,13 +255,13 @@ like. For example, we can map the age ensemble to the paleodata:</p>
 <span><span class="co">## mapAgeEnsembleToPaleoData also created new variable ageMedian in paleo 1 measurement table 1</span></span></code></pre>
 <p>And then make a plot:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">Kens</span>,<span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mae</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">Kens</span>,<span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rabd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">Kens</span>,<span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">rabd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">Kens</span>,<span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">mae</span>,Y <span class="op">=</span> <span class="va">rabd</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">mae</span>,Y <span class="op">=</span> <span class="va">rabd</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AddEnsemble_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 <p>That’s it! You could now save this LiPD file for future analysis with
 <code><a href="https://rdrr.io/pkg/lipdR/man/writeLipd.html" class="external-link">lipdR::writeLipd()</a></code>, or continue on with this workflow in

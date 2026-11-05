@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geoChronR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
 <td>author: “Nick McKay”</td>
 </tr>
 <tr class="odd">
-<td>date: “2026-10-12”</td>
+<td>date: “2026-11-05”</td>
 </tr>
 <tr class="even">
 <td>output: rmarkdown::html_vignette</td>
@@ -175,7 +175,7 @@ events in the reconstruction). geoChronR simplifies handling these
 issues.</p>
 <p>Let’s start by loading the packages we’ll need.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lipdR</span><span class="op">)</span> <span class="co">#to read and write LiPD files</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/lipdR" class="external-link">lipdR</a></span><span class="op">)</span> <span class="co">#to read and write LiPD files</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nickmckay/GeoChronR" class="external-link">geoChronR</a></span><span class="op">)</span> <span class="co">#of course</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co">#for plotting</span></span></code></pre></div>
 <div class="section level3">
@@ -188,14 +188,14 @@ load it from a local file.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">readLipdInsistently</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/insistently.html" class="external-link">insistently</a></span><span class="op">(</span>f  <span class="op">=</span> <span class="fu">lipdR</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/lipdR/man/readLipd.html" class="external-link">readLipd</a></span>,quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu">readLipdInsistently</span><span class="op">(</span><span class="st">"http://lipdverse.org/geoChronR-examples/Kurupa.Boldt.2015.lpd"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/36/tjdph2t965j8snz9_vkdnw0r0000gn/T//RtmpkPRNSQ/Kurupa.Boldt.2015.lpd..."</span></span>
+<pre><code><span><span class="co">## [1] "Loading 1 datasets from /var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T//RtmpJb5UYO/Kurupa.Boldt.2015.lpd..."</span></span>
 <span><span class="co">## [1] "reading: Kurupa.Boldt.2015.lpd"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="check-out-the-contents">Check out the contents<a class="anchor" aria-label="anchor" href="#check-out-the-contents"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotSummary.html">plotSummary</a></span><span class="op">(</span><span class="va">K</span>,paleo.data.var <span class="op">=</span> <span class="st">"RABD"</span>,summary.font.size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotSummary.html" class="external-link">plotSummary</a></span><span class="op">(</span><span class="va">K</span>,paleo.data.var <span class="op">=</span> <span class="st">"RABD"</span>,summary.font.size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
@@ -215,7 +215,7 @@ load it from a local file.</p>
 <h3 id="create-an-age-model-with-bacon">Create an age model with Bacon<a class="anchor" aria-label="anchor" href="#create-an-age-model-with-bacon"></a>
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runBacon.html">runBacon</a></span><span class="op">(</span><span class="va">K</span>,</span>
+<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/runBacon.html" class="external-link">runBacon</a></span><span class="op">(</span><span class="va">K</span>,</span>
 <span>              lab.id.var <span class="op">=</span> <span class="st">'labID'</span>, </span>
 <span>              age.14c.var <span class="op">=</span> <span class="st">'age14C'</span>, </span>
 <span>              age.14c.uncertainty.var <span class="op">=</span> <span class="st">'age14CUncertainty'</span>,</span>
@@ -232,10 +232,11 @@ load it from a local file.</p>
 <span>              bacon.dir <span class="op">=</span> <span class="st">"~/Cores"</span>,</span>
 <span>              suggest <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>              close.connection <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## I cleaned up /Users/runner/Cores/Kurupa.Boldt.2015/Kurupa.Boldt.2015.csv</span></span></code></pre>
 <pre><code><span><span class="co">##  Using a mix of cal BP and calibrated C-14 dates</span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="768"></p>
 <pre><code><span><span class="co">##  Will run 16,500,000 iterations and store 4,000</span></span></code></pre>
-<pre><code><span><span class="co">## Good MCMC mixing (effective sample size=830.52, &gt;200)</span></span></code></pre>
+<pre><code><span><span class="co">## Excellent MCMC mixing (effective sample size=Inf, &gt;1000)</span></span></code></pre>
 <pre><code><span><span class="co">## No sign of MCMC drift (z=1.65, &lt;1.96), OK</span></span></code></pre>
 <pre><code><span><span class="co">## Warning, this will take quite some time to calculate. I suggest increasing d.by to, e.g., 10</span></span></code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-5-2.png" class="r-plt" alt="" width="768"></p>
@@ -250,8 +251,8 @@ load it from a local file.</p>
 <div class="section level3">
 <h3 id="and-plot-the-ensemble-output">And plot the ensemble output<a class="anchor" aria-label="anchor" href="#and-plot-the-ensemble-output"></a>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotChron.html">plotChron</a></span><span class="op">(</span><span class="va">K</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span>,dist.scale <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotChron.html" class="external-link">plotChron</a></span><span class="op">(</span><span class="va">K</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span>,dist.scale <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "plotting your chron ensemble. This make take a few seconds..."</span></span></code></pre>
@@ -264,8 +265,8 @@ load it from a local file.</p>
 </h3>
 <p>This is to get ensemble age estimates for each depth in the paleoData
 measurement table</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mapAgeEnsembleToPaleoData.html">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">K</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/mapAgeEnsembleToPaleoData.html" class="external-link">mapAgeEnsembleToPaleoData</a></span><span class="op">(</span><span class="va">K</span>,age.var <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Kurupa.Boldt.2015"</span></span>
 <span><span class="co">## [1] "Looking for age ensemble...."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
@@ -279,11 +280,11 @@ measurement table</p>
 <h3 id="select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate">Select the paleodata age ensemble, and RABD data that we’d like to
 regress and calibrate<a class="anchor" aria-label="anchor" href="#select-the-paleodata-age-ensemble-and-rabd-data-that-wed-like-to-regress-and-calibrate"></a>
 </h3>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,<span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,<span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rabd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,<span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rabd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,<span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -292,26 +293,26 @@ regress and calibrate<a class="anchor" aria-label="anchor" href="#select-the-pal
 <p>Now that we have an age model, we can also take a look at what the
 age model implies about sedimentation rates, and their uncertainties. So
 let’s calculate an ensemble of sedimentation rates using the members in
-the age ensemble. The <code><a href="../reference/createSedRateEnsemble.html">createSedRateEnsemble()</a></code> function will
+the age ensemble. The <code><a href="https://rdrr.io/pkg/agemodelR/man/createSedRateEnsemble.html" class="external-link">createSedRateEnsemble()</a></code> function will
 do this, and create a new paleoData model ensemble table.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#create the table</span></span>
-<span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createSedRateEnsemble.html">createSedRateEnsemble</a></span><span class="op">(</span><span class="va">K</span><span class="op">)</span> <span class="co">#you may need to modify some parameters to this function if you have a complex LiPD object</span></span></code></pre></div>
+<span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/createSedRateEnsemble.html" class="external-link">createSedRateEnsemble</a></span><span class="op">(</span><span class="va">K</span><span class="op">)</span> <span class="co">#you may need to modify some parameters to this function if you have a complex LiPD object</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## [1] "Found it! Moving on..."</span></span>
 <span><span class="co">## Created a model in paleoData-1, model-1, ensembleTable 1 with variables: depth, sedimentationRate</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Also created a summary table in paleoData-1, model-1</span></span></code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#now let's see how it looks. We can pull sed rates and the corresponding ages out of that table</span></span>
-<span><span class="va">srEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"sedimentationRate"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">srEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"sedimentationRate"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">srAgeEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">srAgeEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#and plot it</span></span>
-<span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">srAgeEns</span>, Y <span class="op">=</span> <span class="va">srEns</span>,probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span><span class="op">)</span>, x.bin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">70</span>,<span class="fl">5500</span>,by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">srAgeEns</span>, Y <span class="op">=</span> <span class="va">srEns</span>,probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span><span class="op">)</span>, x.bin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">70</span>,<span class="fl">5500</span>,by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768">
 There’s quite a bit of uncertainty here. This is because we’re looking
 at both the uncertainty in age, and the uncertainty in sedimentation
@@ -323,14 +324,14 @@ flux. Spectrally-inferred chla is representative of volumetric
 concentration (g/cm^3), so we don’t need density for this.</p>
 <p>We already selected our sed rate ensembles, so now let’s get our
 concentration proxy (RABD)</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">concEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"meas"</span>,var.name <span class="op">=</span> <span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="va">concEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"meas"</span>,var.name <span class="op">=</span> <span class="st">"RABD"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">concAgeEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"meas"</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="va">concAgeEns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,table.type <span class="op">=</span> <span class="st">"meas"</span>,var.name <span class="op">=</span> <span class="st">"ageEnsemble"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateFlux.html">calculateFlux</a></span><span class="op">(</span><span class="va">K</span>, </span>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">K</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/agemodelR/man/calculateFlux.html" class="external-link">calculateFlux</a></span><span class="op">(</span><span class="va">K</span>, </span>
 <span>                   sed.rate.ens <span class="op">=</span> <span class="va">srEns</span>, </span>
 <span>                   sed.rate.age <span class="op">=</span> <span class="va">srAgeEns</span>,</span>
 <span>                   density.var <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -344,16 +345,16 @@ concentration proxy (RABD)</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Also created a summary table in paleoData-1, model-2</span></span></code></pre>
 <p>Let’s take a look at this estimate of chloropigment flux:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#now let's see how it looks. We can pull sed rates and the corresponding ages out of that table</span></span>
-<span><span class="va">chlFlux</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,model.num <span class="op">=</span> <span class="fl">2</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"flux"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">chlFlux</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,model.num <span class="op">=</span> <span class="fl">2</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"flux"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">chlFluxAge</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/selectData.html">selectData</a></span><span class="op">(</span><span class="va">K</span>,model.num <span class="op">=</span> <span class="fl">2</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"age"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">chlFluxAge</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/selectData.html" class="external-link">selectData</a></span><span class="op">(</span><span class="va">K</span>,model.num <span class="op">=</span> <span class="fl">2</span>,table.type <span class="op">=</span> <span class="st">"ensemble"</span>,var.name <span class="op">=</span> <span class="st">"age"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Found it! Moving on..."</span></span></code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#and plot it</span></span>
-<span><span class="fu"><a href="../reference/plotTimeseriesEnsRibbons.html">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">chlFluxAge</span>, Y <span class="op">=</span> <span class="va">chlFlux</span>,probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span><span class="op">)</span>, x.bin <span class="op">=</span> <span class="va">chlFluxAge</span><span class="op">$</span><span class="va">values</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotTimeseriesEnsRibbons.html" class="external-link">plotTimeseriesEnsRibbons</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">chlFluxAge</span>, Y <span class="op">=</span> <span class="va">chlFlux</span>,probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span><span class="op">)</span>, x.bin <span class="op">=</span> <span class="va">chlFluxAge</span><span class="op">$</span><span class="va">values</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="768">
 Interesting. It looks a lot like sed rate, as fluxes often do. For now,
 we’ll stick with concentration.</p>
@@ -362,23 +363,23 @@ we’ll stick with concentration.</p>
 <h3 id="now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-against">Now load in the instrumental data we want to correlate and regress
 against<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental-data-we-want-to-correlate-and-regress-against"></a>
 </h3>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kurupa.instrumental</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"KurupaInstrumental.csv"</span>, package <span class="op">=</span> <span class="st">"geoChronR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="check-agetime-units-before-proceeding">Check age/time units before proceeding<a class="anchor" aria-label="anchor" href="#check-agetime-units-before-proceeding"></a>
 </h3>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kae</span><span class="op">$</span><span class="va">units</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "yr BP"</span></span></code></pre>
 <p>yep, we need to convert the units from BP to AD</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convertBP2AD.html">convertBP2AD</a></span><span class="op">(</span><span class="va">kae</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kae</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/convertBP2AD.html" class="external-link">convertBP2AD</a></span><span class="op">(</span><span class="va">kae</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-variable-list-for-the-instrumental-data">Create a “variable list” for the instrumental data<a class="anchor" aria-label="anchor" href="#create-a-variable-list-for-the-instrumental-data"></a>
 </h3>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">kyear</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">kyear</span><span class="op">$</span><span class="va">values</span> <span class="op">&lt;-</span> <span class="va">kurupa.instrumental</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">kyear</span><span class="op">$</span><span class="va">variableName</span> <span class="op">&lt;-</span> <span class="st">"year"</span></span>
@@ -393,16 +394,16 @@ against<a class="anchor" aria-label="anchor" href="#now-load-in-the-instrumental
 <h3 id="calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data">Calculate an ensmeble correlation between the RABD and local summer
 temperature data<a class="anchor" aria-label="anchor" href="#calculate-an-ensmeble-correlation-between-the-rabd-and-local-summer-temperature-data"></a>
 </h3>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corEns.html">corEns</a></span><span class="op">(</span><span class="va">kae</span>,<span class="va">rabd</span>,<span class="va">kyear</span>,<span class="va">kinst</span>,bin.step<span class="op">=</span><span class="fl">2</span>,percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>,<span class="fl">.5</span>,<span class="fl">.95</span> <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">corout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/corEns.html" class="external-link">corEns</a></span><span class="op">(</span><span class="va">kae</span>,<span class="va">rabd</span>,<span class="va">kyear</span>,<span class="va">kinst</span>,bin.step<span class="op">=</span><span class="fl">2</span>,percentiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>,<span class="fl">.5</span>,<span class="fl">.95</span> <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="and-plot-the-output">And plot the output<a class="anchor" aria-label="anchor" href="#and-plot-the-output"></a>
 </h3>
 <p>Note that here we use the “Effective-N” significance option as we
 mimic the Boldt et al. (2015) paper.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotCorEns.html">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,significance.option <span class="op">=</span> <span class="st">"eff-n"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotCorEns.html" class="external-link">plotCorEns</a></span><span class="op">(</span><span class="va">corout</span>,significance.option <span class="op">=</span> <span class="st">"eff-n"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="768"></p>
 <p>Mixed results. But encouraging enough to move forward.</p>
 </div>
@@ -413,8 +414,8 @@ mimic the Boldt et al. (2015) paper.</p>
 temperature back through time. We can do this simply (perhaps naively)
 with regession, and lets do it with age uncertainty, both in the
 building of the model, and the reconstructing</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">regout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regressEns.html">regressEns</a></span><span class="op">(</span>time.x <span class="op">=</span> <span class="va">kae</span>,</span>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ens/man/regressEns.html" class="external-link">regressEns</a></span><span class="op">(</span>time.x <span class="op">=</span> <span class="va">kae</span>,</span>
 <span>                     values.x <span class="op">=</span> <span class="va">rabd</span>,</span>
 <span>                     time.y <span class="op">=</span><span class="va">kyear</span>,</span>
 <span>                     values.y <span class="op">=</span><span class="va">kinst</span>,</span>
@@ -425,8 +426,8 @@ building of the model, and the reconstructing</p>
 <div class="section level3">
 <h3 id="and-plot-the-output-1">And plot the output<a class="anchor" aria-label="anchor" href="#and-plot-the-output-1"></a>
 </h3>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">regPlots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotRegressEns.html">plotRegressEns</a></span><span class="op">(</span><span class="va">regout</span>,alp <span class="op">=</span> <span class="fl">0.01</span>,font.size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regPlots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lipdViz/man/plotRegressEns.html" class="external-link">plotRegressEns</a></span><span class="op">(</span><span class="va">regout</span>,alp <span class="op">=</span> <span class="fl">0.01</span>,font.size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="768"></p>
 <p>This result is consistent with that produced by Boldt et al., (2015),
 and was much simpler to produce with geoChronR.</p>

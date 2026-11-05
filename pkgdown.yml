@@ -5,6 +5,7 @@ articles:
   AddEnsemble: AddEnsemble.html
   correlation: correlation.html
   Introduction: Introduction.html
+  overview: overview.html
   oxCal: oxCal.html
   PCA: PCA.html
   PlotTimeseriesStack: PlotTimeseriesStack.html
@@ -12,7 +13,7 @@ articles:
   spectral_analysis: spectral_analysis.html
   tidyIso2k: tidyIso2k.html
   TsFilteringAndMapping: TsFilteringAndMapping.html
-last_built: 2026-10-12T22:40Z
+last_built: 2026-11-05T17:40Z
 urls:
   reference: https://nickmckay.github.io/geoChronR/reference
   article: https://nickmckay.github.io/geoChronR/articles
