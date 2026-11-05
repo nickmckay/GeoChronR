@@ -1,0 +1,22 @@
+---
+title: "The geoChronR package family"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The geoChronR package family}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+As of version 2.0, geoChronR is a thin wrapper. `library(geoChronR)` gives you the complete
+interface of three focused packages, so code written for geoChronR 1.x keeps working:
+
+| Package | Role |
+|---|---|
+| [agemodelR](https://github.com/nickmckay/agemodelR) | Age modeling with Bacon, Bchron, OxCal and BAM, plus LiPD model infrastructure |
+| [ens](https://github.com/nickmckay/ens) | Ensemble correlation, regression, spectra, PCA, binning and data selection |
+| [lipdViz](https://github.com/nickmckay/lipdViz) | Plotting and mapping |
+
+If you only need part of this, for example ensemble methods without the age modeling software,
+install and load just that package. The last release of the original single package is tag
+`v1.1.19`, on the `monolith-1.x` branch. Worked examples are at
+<https://nickmckay.github.io/GeoChronR/>.

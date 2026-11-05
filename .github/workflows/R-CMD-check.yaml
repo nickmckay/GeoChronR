@@ -23,6 +23,7 @@ jobs:
         config:
           - {os: windows-latest, r: 'release'}
           - {os: macos-latest,   r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -47,4 +48,8 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          # Temporary: lipdverse.org sends an incomplete certificate chain, which Linux R
+          # can't verify, so vignettes that download data can't build there. Restore the
+          # vignette build on Ubuntu once the chain is fixed (lipdverse-updater #30).
+          build_args: ${{ matrix.config.os == 'ubuntu-latest' && 'c("--no-manual","--no-build-vignettes")' || 'c("--no-manual","--compact-vignettes=gs+qpdf")' }}
+          args: ${{ matrix.config.os == 'ubuntu-latest' && 'c("--no-manual","--as-cran","--ignore-vignettes")' || 'c("--no-manual","--as-cran")' }}

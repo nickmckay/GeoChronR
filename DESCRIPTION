@@ -1,8 +1,8 @@
 Package: geoChronR
 Type: Package
-Title: Tools to Analyze and Visualize Time-Uncertain Data
-Version: 1.1.19
-Date: 2025-05-30
+Title: Tools to Generate, Analyze and Visualize Time-Uncertain Data
+Version: 2.0.0
+Date: 2026-11-04
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-3598-5113")
@@ -15,60 +15,36 @@ Authors@R: c(
     )
   )
 Maintainer: Nick McKay <nick@nau.edu>
-Description: Time uncertain chronology developement and analysis, including correlation, regression, spectral, and PCA for paleogeoscientific data.
-License: MIT
-LazyData: TRUE
+Description: A wrapper that provides the complete interfaces of the agemodelR (age modeling), ens (ensemble analysis) and lipdViz (visualization) packages for time-uncertain paleogeoscientific data, so that code written against geoChronR 1.x keeps working.
+License: MIT + file LICENSE
 RoxygenNote: 7.3.3
 Encoding: UTF-8
-biocViews: 
+biocViews:
 Imports:
-    Bchron,
-    RColorBrewer,
-    dplR,
+    agemodelR,
+    ens,
+    lipdViz,
+    utils
+Suggests:
+    astrochron,
     dplyr,
     ggplot2,
-    ggmap,
-    grDevices,
-    grid,
-    lomb,
-    mapproj,
-    maps,
-    rbacon,
-    scales,
-    tibble,
-    ggridges,
     gridExtra,
-    purrr,
-    matrixStats,
-    pbapply,
-    oxcAAR,
-    glue,
-    rEDM (>= 1.15),
-    crayon,
-    tidyr,
-    magrittr,
-    astrochron,
-    MASS,
-    plyr,
-    stringr,
-    lipdR,
-    readr,
-    lubridate,
-    data.table
-Suggests:
     knitr,
-    ragg,
-    rmarkdown,
-    testthat,
-    neotoma2,
-    BiocManager,
+    lipdR (>= 0.7.0),
+    magrittr,
+    oxcAAR,
     pcaMethods,
-    plotly,
-    nuspectral
+    purrr,
+    ragg,
+    readr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
-URL: https://github.com/nickmckay/GeoChronR
+URL: https://github.com/nickmckay/GeoChronR, https://nickmckay.github.io/GeoChronR/
 BugReports: https://github.com/nickmckay/GeoChronR/issues
-Remotes: 
-    nickmckay/lipdR,  
-    nickmckay/nuspectral,
-    andrewcparnell/Bchron
+Remotes:
+    nickmckay/agemodelR,
+    nickmckay/ens,
+    nickmckay/lipdViz,
+    nickmckay/lipdR

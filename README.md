@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R-CMD-check](https://github.com/nickmckay/GeoChronR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nickmckay/GeoChronR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
-# geoChronR <img src='man/figures/logo.png' align="right" height="139" />
+# geoChronR
 
 ## What is it?
 
@@ -12,6 +12,18 @@ Quantifying age uncertainties is a critical component of paleoscience (paleoclim
 
 A peer-reviewed paper describing geoChronR was published in March 2021 in Geochronology, [check it out here](https://doi.org/10.5194/gchron-3-149-2021)
 
+
+## What changed in version 2.0
+
+As of version 2.0, geoChronR is a thin wrapper around three focused packages. `library(geoChronR)` still gives you the complete 1.x interface, so existing scripts keep working:
+
+| Package | Role |
+|---|---|
+| [agemodelR](https://github.com/nickmckay/agemodelR) | Age modeling with Bacon, Bchron, OxCal and BAM, plus LiPD model infrastructure |
+| [ens](https://github.com/nickmckay/ens) | Ensemble correlation, regression, spectra, PCA, binning and data selection |
+| [lipdViz](https://github.com/nickmckay/lipdViz) | Plotting and mapping |
+
+If you only need part of this, install just that package. The last release of the original single package is tag `v1.1.19`, on the `monolith-1.x` branch.
 
 ## Pre-Installation
 
@@ -41,7 +53,7 @@ library(geoChronR)
 
 ## Getting started with geoChronR
 
-A great way to get started with geoChronR is to work through [some of the tutorials avialable at the top of the geoChronR documentation page](http://nickmckay.github.io/GeoChronR). These are also provided as "vignettes" that come installed with geoChronR, which you can access by running `browseVignettes("geoChronR")`. These examples run through how to create an age model ensemble, perform ensemble correlation, regression, spectral and principal components analysis, and visualize the results. They also show off some of the tools we've built for efficiently working with and visualizing LiPD datasets. 
+A great way to get started with geoChronR is to work through [some of the tutorials avialable at the top of the geoChronR documentation page](http://nickmckay.github.io/GeoChronR). These examples run through how to create an age model ensemble, perform ensemble correlation, regression, spectral and principal components analysis, and visualize the results. They also show off some of the tools we've built for efficiently working with and visualizing LiPD datasets. 
 
 Once you're ready to start applying these techniques to your new data, you'll need one more LiPD files. [Thousands of LiPD datasets are available at lipdverse.org](http://lipdverse.org) and the [World Data Service for Paleoclimatology](https://www.ncdc.noaa.gov/data-access/paleoclimatology-data). If you'd like to create your own dataset, the easiest way is using the [lipd.net/playground](http://lipd.net/playground). This can be a bit daunting at first, but check out the tutorial on the playground, and/or this [youtube tutorial](https://youtu.be/rHZ1oZXmF84) to get started.
 
