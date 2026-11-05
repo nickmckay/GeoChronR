@@ -19,6 +19,7 @@ Description: A wrapper that provides the complete interfaces of the agemodelR (a
 License: MIT + file LICENSE
 RoxygenNote: 7.3.3
 Encoding: UTF-8
+biocViews:
 Imports:
     agemodelR,
     ens,
@@ -33,6 +34,7 @@ Suggests:
     lipdR (>= 0.7.0),
     magrittr,
     oxcAAR,
+    pcaMethods,
     purrr,
     ragg,
     readr,
