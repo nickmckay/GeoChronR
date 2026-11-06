@@ -28,6 +28,10 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # Windows R refuses a download when it can't reach the certificate authority's
+      # revocation servers, and emSign's (which lipdverse.org's certificate uses) were
+      # unreachable on 2026-11-06. This still rejects a certificate known to be revoked.
+      R_LIBCURL_SSL_REVOKE_BEST_EFFORT: true
 
     steps:
       - uses: actions/checkout@v4
@@ -48,8 +52,5 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          # Temporary: lipdverse.org sends an incomplete certificate chain, which Linux R
-          # can't verify, so vignettes that download data can't build there. Restore the
-          # vignette build on Ubuntu once the chain is fixed (lipdverse-updater #30).
-          build_args: ${{ matrix.config.os == 'ubuntu-latest' && 'c("--no-manual","--no-build-vignettes")' || 'c("--no-manual","--compact-vignettes=gs+qpdf")' }}
-          args: ${{ matrix.config.os == 'ubuntu-latest' && 'c("--no-manual","--as-cran","--ignore-vignettes")' || 'c("--no-manual","--as-cran")' }}
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          args: 'c("--no-manual","--as-cran")'
