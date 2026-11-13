@@ -1,7 +1,7 @@
 Package: geoChronR
 Type: Package
 Title: Tools to Generate, Analyze and Visualize Time-Uncertain Data
-Version: 2.0.0
+Version: 2.0.1
 Date: 2026-11-04
 Authors@R: c(
     person("Nicholas", "McKay" ,email = "nick@nau.edu", role = c("aut", "cre"),
@@ -31,7 +31,7 @@ Suggests:
     ggplot2,
     gridExtra,
     knitr,
-    lipdR (>= 0.7.0),
+    lipdR (>= 0.8.4),
     magrittr,
     oxcAAR,
     pcaMethods,

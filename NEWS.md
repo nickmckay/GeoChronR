@@ -1,3 +1,7 @@
+# geoChronR 2.0.1
+
+* Requires lipdR 0.8.4 or later, which includes the `pullTsVariable()` fix from 0.8.3 and `filterByInterpretation()`.
+
 # geoChronR 2.0.0
 
 * geoChronR is now a thin wrapper. Age modeling moved to agemodelR, ensemble methods to ens, and plotting and mapping to lipdViz. `library(geoChronR)` re-exports all of them, so code written for 1.x keeps working. To work with fewer dependencies, use the sub-packages directly.
